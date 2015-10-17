@@ -1,0 +1,11 @@
+int attr alphaFactor 0x7f010001
+int attr hover 0x7f010002
+int attr rippleColor 0x7f010000
+int drawable ic_launcher 0x7f020000
+int string app_name 0x7f040000
+int style AppBaseTheme 0x7f030000
+int style AppTheme 0x7f030001
+int[] styleable RippleView { 0x7f010000, 0x7f010001, 0x7f010002 }
+int styleable RippleView_alphaFactor 1
+int styleable RippleView_hover 2
+int styleable RippleView_rippleColor 0

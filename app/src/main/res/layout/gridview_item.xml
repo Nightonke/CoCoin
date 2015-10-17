@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.balysv.materialripple.MaterialRippleLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/material_ripple_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:mrl_rippleAlpha="0.2"
+    app:mrl_rippleColor="#0000ff"
+    app:mrl_rippleHover="true"
+    app:mrl_rippleOverlay="false">
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textSize="50sp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:clickable="false"
+        android:textColor="#2196F3"
+        />
+
+</com.balysv.materialripple.MaterialRippleLayout>

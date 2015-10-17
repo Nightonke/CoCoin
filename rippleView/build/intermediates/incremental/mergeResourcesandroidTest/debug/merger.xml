@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="debug"><source path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\intermediates\bundles\debug\res"><file name="ic_launcher" path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\intermediates\bundles\debug\res\drawable-hdpi\ic_launcher.png" qualifiers="hdpi" type="drawable"/><file name="ic_launcher" path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\intermediates\bundles\debug\res\drawable-mdpi\ic_launcher.png" qualifiers="mdpi" type="drawable"/><file name="ic_launcher" path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\intermediates\bundles\debug\res\drawable-xhdpi\ic_launcher.png" qualifiers="xhdpi" type="drawable"/><file path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\intermediates\bundles\debug\res\values\values.xml" qualifiers=""><declare-styleable name="RippleView"><attr format="color" name="rippleColor"/><attr format="float" name="alphaFactor"/><attr format="boolean" name="hover"/></declare-styleable><style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style><string name="app_name">RippleView</string><style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style></file><file path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\intermediates\bundles\debug\res\values-v11\values-v11.xml" qualifiers="v11"><style name="AppBaseTheme" parent="android:Theme.Holo.Light">
+        <!-- API 11 theme customizations can go here. -->
+    </style></file><file path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\intermediates\bundles\debug\res\values-v14\values-v14.xml" qualifiers="v14"><style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- API 14 theme customizations can go here. -->
+    </style></file></source></dataSet><dataSet config="main"><source path="F:\AndroidStudioProjects\Saver\Saver\rippleView\src\androidTest\res"/><source path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\generated\res\rs\androidTest\debug"/><source path="F:\AndroidStudioProjects\Saver\Saver\rippleView\build\generated\res\resValues\androidTest\debug"/></dataSet><mergedItems><configuration qualifiers=""><declare-styleable name="RippleView"><attr format="color" name="rippleColor"/><attr format="float" name="alphaFactor"/><attr format="boolean" name="hover"/></declare-styleable></configuration></mergedItems></merger>
