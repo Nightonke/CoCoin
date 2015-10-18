@@ -3,4 +3,9 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+
+    <string name="profile">PROFILE</string>
+    <string name="feed">FEED</string>
+    <string name="activity">ACTIVITY</string>
+    <string name="settings">SETTINGS</string>
 </resources>

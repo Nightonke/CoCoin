@@ -6,7 +6,10 @@ import android.graphics.Typeface;
 /**
  * Created by 伟平 on 2015/10/16.
  */
+
 public class Utils {
+
+    public static String PASSWORD = "1234";
 
     public static String[] FLOATINGLABELS = {"", "", "十", "百", "千", "万", "十万", "百万", "千万", "亿", "十亿"};
 

@@ -1,53 +1,104 @@
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="10dp"
+    android:background="#2196F3"
     tools:context=".MainActivity"
-    android:orientation="vertical"
     >
+
+    <View
+        android:layout_gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/guillotine_actionbar_background_view_height"
+        android:background="#2196F3"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edit_view"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:contentInsetStart="0dp"
+            style="@style/Toolbar">
+
+            <ImageView
+                android:id="@+id/content_hamburger"
+                style="@style/ImageView.Hamburger"
+                android:src="@drawable/ic_menu_90" />
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#0000ff"
-            android:textSize="60sp"
-            android:maxLength="10"
-            android:editable="false"
-            android:gravity="right"
-            app:met_floatingLabel="normal"
-            app:met_baseColor="#007688"
-            app:met_primaryColor="#2196F3"
-            app:met_textColor="#0000ff"
-            app:met_textColorHint="#33ff0000"
-            app:met_errorColor="#ddaa00"
-            app:met_helperTextColor="#0000ff"
-            app:met_underlineColor="#003587"
-            app:met_floatingLabelTextColor="#0000ff"/>
+            android:layout_height="match_parent"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="#ffffff"
+                >
+
+                <LinearLayout
+                    android:id="@+id/edit_view_ly"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    >
+
+                    <com.rengwuxian.materialedittext.MaterialEditText
+                        android:id="@+id/edit_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#0000ff"
+                        android:textSize="60sp"
+                        android:maxLength="10"
+                        android:editable="false"
+                        android:gravity="right"
+                        app:met_floatingLabel="normal"
+                        app:met_baseColor="#007688"
+                        app:met_primaryColor="#2196F3"
+                        app:met_textColor="#0000ff"
+                        app:met_textColorHint="#33ff0000"
+                        app:met_errorColor="#ddaa00"
+                        app:met_helperTextColor="#0000ff"
+                        app:met_underlineColor="#003587"
+                        app:met_floatingLabelTextColor="#0000ff"
+                        />
+
+                </LinearLayout>
+
+                <com.nightonke.saver.MyGridView
+                    android:id="@+id/gridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:numColumns="3"
+                    android:verticalSpacing="1sp"
+                    android:horizontalSpacing="1sp"
+                    android:stretchMode="columnWidth"
+                    android:background="#ffffff"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/toolbar_dropshadow" />
+
+        </FrameLayout>
 
     </LinearLayout>
 
-    <com.nightonke.saver.MyGridView
-        android:id="@+id/gridview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|bottom"
-        android:numColumns="3"
-        android:verticalSpacing="1sp"
-        android:horizontalSpacing="1sp"
-        android:stretchMode="columnWidth"
-        />
-
-</LinearLayout>
+</FrameLayout>
