@@ -1,6 +1,7 @@
 package com.nightonke.saver;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ public class MyGridViewAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = this.inflater.inflate(R.layout.gridview_item, null);
+            holder.iv = (ImageView)convertView.findViewById(R.id.imageview);
             holder.tv = (TextView) convertView.findViewById(R.id.textview);
             holder.ml = (MaterialRippleLayout)convertView.findViewById(R.id.material_ripple_layout);
             convertView.setTag(holder);
@@ -54,15 +56,30 @@ public class MyGridViewAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tv.setTypeface(Utils.typefaceBernhardFashion);
-        holder.tv.setText(Utils.BUTTONS[position]);
-        holder.ml.setRippleDelayClick(false);
+        if (position == 11) {
+            holder.iv.setImageResource(R.drawable.atm);
+            holder.tv.setVisibility(View.INVISIBLE);
+            holder.ml.setRippleColor(Color.parseColor("#0000ff"));
+            holder.ml.setRippleAlpha(50);
+        } else if (position == 9) {
+            holder.iv.setImageResource(R.drawable.erase);
+            holder.tv.setVisibility(View.INVISIBLE);
+            holder.ml.setRippleColor(Color.parseColor("#ff0000"));
+            holder.ml.setRippleAlpha(50);
+        } else {
+            holder.tv.setTypeface(Utils.typefaceBernhardFashion);
+            holder.tv.setText(Utils.BUTTONS[position]);
+            holder.ml.setRippleDelayClick(false);
+        }
+
+        holder.ml.setRippleDuration(300);
 
         return convertView;
     }
 
     private class ViewHolder {
         TextView tv;
+        ImageView iv;
         MaterialRippleLayout ml;
     }
 }

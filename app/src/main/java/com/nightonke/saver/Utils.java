@@ -1,7 +1,10 @@
 package com.nightonke.saver;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 
 /**
  * Created by 伟平 on 2015/10/16.
@@ -19,6 +22,10 @@ public class Utils {
 
     public static void init(Context context) {
         typefaceBernhardFashion = Typeface.createFromAsset(context.getAssets(), "fonts/BernhardFashion BT.ttf");
+        relativeSizeSpan = new RelativeSizeSpan(2f);
+        redForegroundSpan = new ForegroundColorSpan(Color.parseColor("#ff5252"));
+        greenForegroundSpan = new ForegroundColorSpan(Color.parseColor("#4ca550"));
+        whiteForegroundSpan = new ForegroundColorSpan(Color.parseColor("#ffffff"));
     }
 
     public static boolean ClickButtonDelete(int position) {
@@ -32,5 +39,20 @@ public class Utils {
     public static boolean ClickButtonIsZero(int position) {
         return position == 10;
     }
+
+    public static double ToDollas(double money, String currency) {
+
+        return 1.0 * money;
+
+    }
+
+    public static boolean IsStringRelation(String s1, String s2) {
+        return true;
+    }
+
+    public static RelativeSizeSpan relativeSizeSpan;
+    public static ForegroundColorSpan redForegroundSpan;
+    public static ForegroundColorSpan greenForegroundSpan;
+    public static ForegroundColorSpan whiteForegroundSpan;
 
 }

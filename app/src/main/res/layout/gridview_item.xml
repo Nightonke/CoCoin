@@ -11,15 +11,32 @@
     app:mrl_rippleHover="true"
     app:mrl_rippleOverlay="false">
 
-    <TextView
-        android:id="@+id/textview"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:textSize="50sp"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:clickable="false"
-        android:textColor="#2196F3"
-        />
+        >
+
+        <TextView
+            android:id="@+id/textview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="50sp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:clickable="false"
+            android:textColor="#2196F3"
+            />
+
+        <ImageView
+            android:id="@+id/imageview"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:clickable="false"
+            android:adjustViewBounds="true"
+            />
+
+    </FrameLayout>
 
 </com.balysv.materialripple.MaterialRippleLayout>
