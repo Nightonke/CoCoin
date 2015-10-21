@@ -6,7 +6,6 @@
       <module fileurl="file://$PROJECT_DIR$/GuillotineMenu-Android/GuillotineMenu-Android.iml" filepath="$PROJECT_DIR$/GuillotineMenu-Android/GuillotineMenu-Android.iml" />
       <module fileurl="file://$PROJECT_DIR$/Saver.iml" filepath="$PROJECT_DIR$/Saver.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/codeinputlib/codeinputlib.iml" filepath="$PROJECT_DIR$/codeinputlib/codeinputlib.iml" />
     </modules>
   </component>
 </project>

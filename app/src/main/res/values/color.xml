@@ -11,4 +11,8 @@
     <color name="book_loading_book">#ffffff</color>
     <color name="book_loading_page">#2196F3</color>
 
+    <color name="status_bar">#2196F3</color>
+
+    <color name="my_blue">#2196F3</color>
+
 </resources>

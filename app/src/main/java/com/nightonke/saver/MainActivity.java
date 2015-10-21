@@ -1,53 +1,39 @@
 package com.nightonke.saver;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
+import android.os.Handler;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Display;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.balysv.materialmenu.MaterialMenuDrawable;
+import com.balysv.materialmenu.MaterialMenuView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.github.glomadrian.codeinputlib.CodeInput;
-import com.jungly.gridpasswordview.GridPasswordView;
-import com.liangfeizc.RubberIndicator;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.victor.loading.book.BookLoading;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
+import java.io.IOException;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import in.srain.cube.views.ptr.PtrClassicFrameLayout;
-import in.srain.cube.views.ptr.PtrFrameLayout;
-import in.srain.cube.views.ptr.PtrHandler;
-import in.srain.cube.views.ptr.PtrUIHandler;
-import in.srain.cube.views.ptr.header.StoreHouseHeader;
-import in.srain.cube.views.ptr.indicator.PtrIndicator;
-import in.srain.cube.views.ptr.util.PtrLocalDisplay;
-
-import android.support.v7.widget.Toolbar;
-
-import java.io.IOException;
+import carbon.widget.RadioButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -67,12 +53,20 @@ public class MainActivity extends AppCompatActivity {
     private GuillotineAnimation animation;
 
     private String inputPassword = "";
-    private int passwordIndex = 0;
-
-    private TextView passwordTip;
 
     private float x1, y1, x2, y2;
     static final int MIN_DISTANCE = 150;
+
+    private RadioButton radioButton0;
+    private RadioButton radioButton1;
+    private RadioButton radioButton2;
+    private RadioButton radioButton3;
+
+    private MaterialMenuView statusButton;
+
+    private LinearLayout radioButtonLy;
+
+    private View guillotineMenu;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -88,6 +82,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
+
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+
+        Log.d("Saver", "Version number: " + currentapiVersion);
+
+        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
+            // Do something for lollipop and above versions
+            Window window = this.getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
+        } else{
+            // do something for phones running an SDK before lollipop
+        }
 
         Utils.init(mContext);
 
@@ -133,12 +141,22 @@ public class MainActivity extends AppCompatActivity {
 
         toolbar.hideOverflowMenu();
 
-        View guillotineMenu = LayoutInflater.from(this).inflate(R.layout.guillotine, null);
+        guillotineMenu = LayoutInflater.from(this).inflate(R.layout.guillotine, null);
         root.addView(guillotineMenu);
 
         transparentLy = (LinearLayout)guillotineMenu.findViewById(R.id.transparent_ly);
 
-        passwordTip = (TextView)guillotineMenu.findViewById(R.id.password_tip);
+        radioButton0 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_0);
+        radioButton1 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_1);
+        radioButton2 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_2);
+        radioButton3 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_3);
+
+        radioButtonLy = (LinearLayout)guillotineMenu.findViewById(R.id.radio_button_ly);
+
+        statusButton = (MaterialMenuView)guillotineMenu.findViewById(R.id.status_button);
+        statusButton.setState(MaterialMenuDrawable.IconState.ARROW);
+
+        statusButton.setOnClickListener(statusButtonOnClickListener);
 
         animation = new GuillotineAnimation.GuillotineBuilder(guillotineMenu,
                         guillotineMenu.findViewById(R.id.guillotine_hamburger), contentHamburger)
@@ -155,11 +173,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onGuillotineClosed() {
                         isPassword = false;
                         editView.requestFocus();
-                        Spannable span = new SpannableString("PASSWORD");
-                        span.setSpan(Utils.whiteForegroundSpan, 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                        passwordTip.setText(span);
+                        radioButton0.setChecked(false);
+                        radioButton1.setChecked(false);
+                        radioButton2.setChecked(false);
+                        radioButton3.setChecked(false);
                         inputPassword = "";
-                        passwordIndex = 0;
+                        statusButton.setState(MaterialMenuDrawable.IconState.ARROW);
                     }
                 })
                 .build();
@@ -170,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 animation.open();
             }
         });
+
     }
 
     private AdapterView.OnItemLongClickListener gridViewLongClickListener
@@ -182,10 +202,11 @@ public class MainActivity extends AppCompatActivity {
                     editView.setHelperText(Utils.FLOATINGLABELS[editView.getText().toString().length()]);
                 }
             } else {
+                radioButton0.setChecked(false);
+                radioButton1.setChecked(false);
+                radioButton2.setChecked(false);
+                radioButton3.setChecked(false);
                 inputPassword = "";
-                Spannable span = new SpannableString("PASSWORD");
-                span.setSpan(Utils.whiteForegroundSpan, 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                passwordTip.setText(span);
             }
             return false;
         }
@@ -194,23 +215,46 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkPassword() {
         if (inputPassword.length() != 4) {
-            Spannable span = new SpannableString("PASSWORD");
-            span.setSpan(Utils.greenForegroundSpan, 0, 0 + inputPassword.length() * 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            passwordTip.setText(span);
             return;
         }
         if (Utils.PASSWORD.equals(inputPassword)) {
+            statusButton.animateState(MaterialMenuDrawable.IconState.CHECK);
+            statusButton.setClickable(false);
             Toast.makeText(mContext, "Correct!", Toast.LENGTH_SHORT).show();
-            Spannable span = new SpannableString("PASSWORD");
-            span.setSpan(Utils.greenForegroundSpan, 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            passwordTip.setText(span);
+            final Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    statusButton.setClickable(true);
+                    Intent intent = new Intent(mContext, AccountBook.class);
+                    mContext.startActivity(intent);
+                }
+            }, 1500);
+            final Handler handler2 = new Handler();
+            handler2.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    animation.close();
+                }
+            }, 3000);
         } else {
             Toast.makeText(mContext, "Incorrect!", Toast.LENGTH_SHORT).show();
-            Spannable span = new SpannableString("PASSWORD");
-            span.setSpan(Utils.redForegroundSpan, 0, span.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            passwordTip.setText(span);
+            YoYo.with(Techniques.Shake).duration(700).playOn(radioButtonLy);
+            radioButton0.setChecked(false);
+            radioButton1.setChecked(false);
+            radioButton2.setChecked(false);
+            radioButton3.setChecked(false);
+            inputPassword = "";
+            statusButton.animateState(MaterialMenuDrawable.IconState.X);
         }
     }
+
+    private View.OnClickListener statusButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            animation.close();
+        }
+    };
 
     private AdapterView.OnItemClickListener gridViewClickListener
             = new AdapterView.OnItemClickListener() {
@@ -245,10 +289,35 @@ public class MainActivity extends AppCompatActivity {
                     if (inputPassword.length() == 0) {
                         inputPassword = "";
                     } else {
+                        if (inputPassword.length() == 1) {
+                            radioButton0.setChecked(false);
+                        } else if (inputPassword.length() == 2) {
+                            radioButton1.setChecked(false);
+                        } else if (inputPassword.length() == 3) {
+                            radioButton2.setChecked(false);
+                        } else {
+                            radioButton3.setChecked(false);
+                        }
                         inputPassword = inputPassword.substring(0, inputPassword.length() - 1);
                     }
                 } else if (Utils.ClickButtonCommit(position)) {
                 } else {
+                    if (statusButton.getState() == MaterialMenuDrawable.IconState.X) {
+                        statusButton.animateState(MaterialMenuDrawable.IconState.ARROW);
+                    }
+                    if (inputPassword.length() == 0) {
+                        radioButton0.setChecked(true);
+                        YoYo.with(Techniques.Bounce).duration(1000).playOn(radioButton0);
+                    } else if (inputPassword.length() == 1) {
+                        radioButton1.setChecked(true);
+                        YoYo.with(Techniques.Bounce).duration(1000).playOn(radioButton1);
+                    } else if (inputPassword.length() == 2) {
+                        radioButton2.setChecked(true);
+                        YoYo.with(Techniques.Bounce).duration(1000).playOn(radioButton2);
+                    } else if (inputPassword.length() == 3) {
+                        radioButton3.setChecked(true);
+                        YoYo.with(Techniques.Bounce).duration(1000).playOn(radioButton3);
+                    }
                     if (inputPassword.length() < 4) {
                         inputPassword += Utils.BUTTONS[position];
                     }

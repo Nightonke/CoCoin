@@ -10,6 +10,9 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+
+        renderscriptTargetApi 20
+        renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
@@ -31,8 +34,19 @@ dependencies {
     compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile project(':GuillotineMenu-Android')
-    compile project(':codeinputlib')
     compile 'com.jungly:GridPasswordView:0.2'
     compile 'com.victor:lib:1.0.1'
     compile project(':AndroidRubberIndicator')
+
+    compile ('com.github.florent37:materialviewpager:1.1.2@aar'){
+        transitive = true
+    }
+
+    compile 'tk.zielony:carbon:0.10.1'
+
+    compile 'com.balysv.materialmenu:material-menu:1.5.4'
+
+    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
+
+    compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
 }

@@ -48,53 +48,13 @@
             >
 
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical"
                 android:layout_gravity="center"
                 >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:orientation="horizontal"
-                    >
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:src="@drawable/password"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="30dp"
-                        android:text="Input"
-                        android:textColor="#ffffff"
-                        android:gravity="left|center_vertical"
-                        />
-
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/password_tip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="PASSWORD"
-                    android:textColor="#ffffff"
-                    android:textSize="30sp"
-                    />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:text="to check account book"
-                    android:textColor="#ffffff"
-                    android:gravity="right|center_vertical"
-                    />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
@@ -102,40 +62,69 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="1sp"
-                    android:background="#ffffff"
+                    android:layout_height="48dp"
+                    android:text="Input password to account book"
+                    android:textColor="#ffffff"
                     android:gravity="center"
                     />
+
+                <LinearLayout
+                    android:id="@+id/radio_button_ly"
+                    android:layout_width="192dp"
+                    android:layout_height="48dp"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:paddingLeft="16sp"
+                    >
+
+                    <carbon.widget.RadioButton
+                        android:id="@+id/radio_button_0"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        />
+
+                    <carbon.widget.RadioButton
+                        android:id="@+id/radio_button_1"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        />
+
+                    <carbon.widget.RadioButton
+                        android:id="@+id/radio_button_2"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        />
+
+                    <carbon.widget.RadioButton
+                        android:id="@+id/radio_button_3"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="15dp"
                     />
-
-                <LinearLayout
-                    android:id="@+id/forget_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    >
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        />
-
-                    <TextView
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:text="forgot it?"
-                        android:textColor="#ffffff"
-                        android:gravity="right|center_vertical"
-                        />
-
-                </LinearLayout>
 
             </LinearLayout>
+
+            <com.balysv.materialmenu.MaterialMenuView
+                android:id="@+id/status_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:paddingRight="20dp"
+                android:paddingBottom="20dp"
+                app:mm_color="#ffffff"
+                app:mm_scale="1"
+                app:mm_strokeWidth="2"
+                app:mm_transformDuration="1000" />
 
         </LinearLayout>
 

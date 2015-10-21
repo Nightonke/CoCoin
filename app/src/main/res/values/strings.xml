@@ -8,4 +8,5 @@
     <string name="feed">FEED</string>
     <string name="activity">ACTIVITY</string>
     <string name="settings">SETTINGS</string>
+    <string name="title_activity_account_book">AccountBook</string>
 </resources>

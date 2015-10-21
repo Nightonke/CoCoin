@@ -29,7 +29,7 @@ public class RecordManager {
     public static List<String> TAGS;
 
     private boolean ISDEBUG = true;
-    private int RANDOM_DATA_NUMBER = 100;
+    private int RANDOM_DATA_NUMBER = 1000;
 
     private RecordManager(Context context) {
         try {
