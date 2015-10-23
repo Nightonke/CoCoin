@@ -8,9 +8,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by 伟平 on 2015/10/20.
@@ -76,7 +74,9 @@ public class DB {
         values.put("REMARK", record.getRemark());
         long insertId = sqliteDatabase.insert("Record", null, values);
         record.setId(insertId);
-        Log.d("Saver", "DB: Insert record: " + record.toString());
+        if (RecordManager.SHOW_LOG) {
+            Log.d("Saver", "DB: Insert record: " + record.toString());
+        }
         return insertId;
     }
 
@@ -100,7 +100,9 @@ public class DB {
         long updateId = sqliteDatabase.update("Record", values,
                 "ID = ?",
                 new String[]{record.getId() + ""});
-        Log.d("Saver", "DB: Update record: " + record.toString());
+        if (RecordManager.SHOW_LOG) {
+            Log.d("Saver", "DB: Update record: " + record.toString());
+        }
         return updateId;
     }
 

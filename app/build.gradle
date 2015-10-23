@@ -49,4 +49,6 @@ dependencies {
     compile 'com.daimajia.numberprogressbar:library:1.2@aar'
 
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
+
+    compile 'com.nispok:snackbar:2.11.+'
 }

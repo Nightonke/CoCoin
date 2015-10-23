@@ -15,4 +15,23 @@
 
     <color name="my_blue">#2196F3</color>
 
+    <color name="snack_bar">#03A9F4</color>
+
+    <color name="sum_header">#2196F3</color>
+    <color name="book_header">#8BC34A</color>
+    <color name="closet_header">#795548</color>
+    <color name="donation_header">#00BCD4</color>
+    <color name="education_header">#F44336</color>
+    <color name="entertainment_header">#CDDC39</color>
+    <color name="friend_header">#512DA8</color>
+    <color name="hobby_header">#9E9E9E</color>
+    <color name="home_header">#00BCD4</color>
+    <color name="insurance_header">#009688</color>
+    <color name="internet_header">#FF9800</color>
+    <color name="meal_header">#FFEB3B</color>
+    <color name="medical_header">#03A9F4</color>
+    <color name="snack_header">#8BC34A</color>
+    <color name="sport_header">#536DFE</color>
+    <color name="traffic_header">#9C27B0</color>
+    <color name="vehicle_maintenance_header">#FF4081</color>
 </resources>

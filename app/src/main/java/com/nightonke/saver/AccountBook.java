@@ -1,5 +1,11 @@
 package com.nightonke.saver;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -7,15 +13,25 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
+import java.util.Calendar;
+
 public class AccountBook extends AppCompatActivity {
+
+    private final int TAG_MODE = 0;
+    private final int YEAR_MODE = 1;
+    private final int MONTH_MODE = 2;
+
+    private int MODE = TAG_MODE;
 
     private MaterialViewPager mViewPager;
 
@@ -24,9 +40,14 @@ public class AccountBook extends AppCompatActivity {
     private Toolbar toolbar;
     private MyFragmentAdapter myAdapter;
 
+    private Context mContext;
+
+    private boolean isLoading = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_account_book);
 
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
@@ -52,40 +73,21 @@ public class AccountBook extends AppCompatActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, 0, 0);
         mDrawer.setDrawerListener(mDrawerToggle);
 
-        myAdapter = new MyFragmentAdapter(getSupportFragmentManager());
+//        loadMode();
 
+        myAdapter = new MyFragmentAdapter(getSupportFragmentManager());
+        mViewPager.getViewPager().setOffscreenPageLimit(myAdapter.getCount());
         mViewPager.getViewPager().setAdapter(myAdapter);
+        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
-                switch (page) {
-                    case 0:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.green,
-                                "https://fs01.androidpit.info/a/63/0e/android-l-wallpapers-630ea6-h900.jpg");
-                    case 1:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.blue,
-                                "http://cdn1.tnwcdn.com/wp-content/blogs.dir/1/files/2014/06/wallpaper_51.jpg");
-                    case 2:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.cyan,
-                                "http://www.droid-life.com/wp-content/uploads/2014/10/lollipop-wallpapers10.jpg");
-                    case 3:
-                        return HeaderDesign.fromColorResAndUrl(
-                                R.color.red,
-                                "http://www.tothemobile.com/wp-content/uploads/2014/07/original.jpg");
-                }
-
-                //execute others actions if needed (ex : modify your header logo)
-
-                return null;
+                return HeaderDesign.fromColorResAndDrawable(
+                        Utils.GetTagColor(RecordManager.TAGS.get(page)),
+                        Utils.GetTagDrawable(RecordManager.TAGS.get(page), mContext));
             }
         });
-
-        mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
-        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
         View logo = findViewById(R.id.logo_white);
         if (logo != null) {
@@ -93,12 +95,75 @@ public class AccountBook extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     mViewPager.notifyHeaderChanged();
-                    Toast.makeText(getApplicationContext(), "Yes, the title is clickable", Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
+        Button button = (Button)mDrawer.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMode(TAG_MODE);
+            }
+        });
 
+    }
+
+    private void loadMode(int mode) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("Saver", "Start run");
+                loadTagMode();
+                Log.d("Saver", "Finish run");
+                Message msg = new Message();
+                msg.what = 1;
+                handler.sendMessage(msg);
+            }
+        }).start();
+    }
+
+    private Handler handler = new Handler() {
+      public void handleMessage(Message msg) {
+          if (msg.what == 1) {
+              Log.d("Saver", "Start UI");
+              myAdapter.notifyDataSetChanged();
+              Log.d("Saver", "Finish UI");
+          }
+      }
+    };
+
+    private void loadTagMode() {
+
+        Log.d("Saver", "TAGMODE");
+
+        myAdapter = new MyFragmentAdapter(getSupportFragmentManager());
+
+//        mViewPager.getViewPager().setAdapter(myAdapter);
+//
+//        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+//            @Override
+//            public HeaderDesign getHeaderDesign(int page) {
+//                return HeaderDesign.fromColorResAndDrawable(
+//                        Utils.GetTagColor(RecordManager.TAGS.get(page)),
+//                        Utils.GetTagDrawable(RecordManager.TAGS.get(page), mContext));
+//            }
+//        });
+//
+//        mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
+//        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+//
+//        mViewPager.getViewPager().getCurrentItem();
+//
+//        View logo = findViewById(R.id.logo_white);
+//        if (logo != null) {
+//            logo.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    mViewPager.notifyHeaderChanged();
+//                }
+//            });
+//        }
     }
 
 }

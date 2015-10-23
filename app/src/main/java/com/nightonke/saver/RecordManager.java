@@ -5,12 +5,9 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -28,8 +25,9 @@ public class RecordManager {
     public static List<Record> RECORDS;
     public static List<String> TAGS;
 
-    private boolean ISDEBUG = true;
-    private int RANDOM_DATA_NUMBER = 1000;
+    public static boolean SHOW_LOG = false;
+    public static boolean RANDOM_DATA = true;
+    private int RANDOM_DATA_NUMBER = 3000;
 
     private RecordManager(Context context) {
         try {
@@ -38,7 +36,7 @@ public class RecordManager {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        if (ISDEBUG) {
+        if (RANDOM_DATA) {
 
             SharedPreferences preferences =
                     context.getSharedPreferences("Values", Context.MODE_PRIVATE);
@@ -78,18 +76,25 @@ public class RecordManager {
                     return lhs.compareTo(rhs);
                 }
             });
+            TAGS.add(0, "Sum");
         }
         return recordManager;
     }
 
     public static long saveRecord(Record record) {
         long insertId = -1;
-        Log.d("Saver", "Manager: Save record: " + record.toString());
+        if (RecordManager.SHOW_LOG) {
+            Log.d("Saver", "Manager: Save record: " + record.toString());
+        }
         insertId = db.saveRecord(record);
         if (insertId == -1) {
-            Log.d("Saver", "Save the above record FAIL!");
+            if (RecordManager.SHOW_LOG) {
+                Log.d("Saver", "Save the above record FAIL!");
+            }
         } else {
-            Log.d("Saver", "Save the above record SUCCESSFULLY!");
+            if (RecordManager.SHOW_LOG) {
+                Log.d("Saver", "Save the above record SUCCESSFULLY!");
+            }
             RECORDS.add(record);
         }
         if (!TAGS.contains(record.getTag())) {
@@ -193,17 +198,33 @@ public class RecordManager {
 
         Random random = new Random();
 
-        String[] tagStrings = {"Food", "Party", "Traffic", "Snack", "Game", "Develop", "Book"};
+        String[] tagStrings = {
+                "Meal",
+                "Snack",
+                "Traffic",
+                "Hobby",
+                "Clothing & Footwear",
+                "Book",
+                "Medical",
+                "Insurance",
+                "Internet",
+                "Friend",
+                "Home",
+                "Donation",
+                "Education",
+                "Vehicle Maintenance",
+                "Sport",
+                "Entertainment"};
 
         for (int i = 0; i < RANDOM_DATA_NUMBER; i++) {
             Record record = new Record();
 
-            record.setMoney(random.nextFloat() * 200);
+            record.setMoney(random.nextFloat() * 50);
             record.setRemark("Remark " + i);
             record.setTag(tagStrings[random.nextInt(tagStrings.length)]);
             record.setCurrency("RMB");
             Calendar calendar = Calendar.getInstance();
-            calendar.set(random.nextInt(2) + 2014,
+            calendar.set(random.nextInt(3) + 2013,
                          random.nextInt(12),
                          random.nextInt(28) + 1,
                          random.nextInt(24),

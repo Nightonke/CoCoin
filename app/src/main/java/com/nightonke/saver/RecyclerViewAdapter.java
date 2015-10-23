@@ -1,11 +1,23 @@
 package com.nightonke.saver;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.enums.SnackbarType;
+import com.nispok.snackbar.listeners.ActionClickListener;
 
 import org.w3c.dom.Text;
 
@@ -19,7 +31,9 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
+import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.SubcolumnValue;
@@ -32,6 +46,8 @@ import lecho.lib.hellocharts.view.ColumnChartView;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.viewHolder> {
 
+    private Context mContext;
+
     private List<List<Record>> contents;
     private float Sum;
     private int year;
@@ -41,10 +57,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private int endYear;
     private int endMonth;
 
+    private String tag;
+
     static final int TYPE_HEADER = 0;
     static final int TYPE_CELL = 1;
 
-    public RecyclerViewAdapter(List<Record> records) {
+    public RecyclerViewAdapter(List<Record> records, Context context) {
+        mContext = context;
         Sum = 0;
         Collections.sort(records, new Comparator<Record>() {
             @Override
@@ -60,7 +79,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         List<Record> anItem = new ArrayList<>();
         for (Record record : records) {
             Sum += record.getMoney();
-            Log.d("Saver", "Every: " + record.toString());
             if (record.getCalendar().get(Calendar.YEAR) == year
                     && record.getCalendar().get(Calendar.MONTH) == month - 1) {
                 anItem.add(record);
@@ -73,12 +91,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         }
         contents.add(anItem);
-        for (List<Record> list : contents) {
-            Log.d("Saver", list.get(0).getCalendar().get(Calendar.YEAR) + " " + list.get(0).getCalendar().get(Calendar.MONTH));
-            for (Record r : list) {
-                Log.d("Saver", r.toString());
-            }
-        }
+        tag = contents.get(0).get(0).getTag();
         endYear = year;
         endMonth = month;
     }
@@ -123,9 +136,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(viewHolder holder, int position) {
         switch (getItemViewType(position)) {
             case TYPE_HEADER:
-                holder.from.setText("From " + startYear + "-" + startMonth);
-                holder.sum.setText(Sum + "");
-                holder.to.setText("To " + endYear + "-" + endMonth);
+                holder.from.setText("From " + startYear + " " + Utils.MONTHS[startMonth]);
+                holder.sum.setText((int)Sum + "");
+                holder.to.setText("To " + endYear + " " + Utils.MONTHS[endMonth]);
                 break;
             case TYPE_CELL:
                 int year = contents.get(position - 1).get(0).getCalendar().get(Calendar.YEAR);
@@ -133,8 +146,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 Calendar tempCal = new GregorianCalendar(year, month - 1, 1);
                 int daysInMonth = tempCal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
-                Log.d("Saver", "" + daysInMonth);
 
                 float Sum = 0;
                 int p = 0;
@@ -147,18 +158,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 for (int i = 0; i < numColumns; ++i) {
                     values = new ArrayList<>();
-                    if (p < contents.get(position - 1).size()
+                    while (p < contents.get(position - 1).size()
                             && contents.get(position - 1).get(p).getCalendar().
                             get(Calendar.DAY_OF_MONTH) == i + 1) {
-                        values.add(new SubcolumnValue((float)
+                        SubcolumnValue value = new SubcolumnValue((float)
                                 contents.get(position - 1).get(p).getMoney(),
-                                ChartUtils.pickColor()));
-                        Log.d("Saver", "" + year + " " + month + " " + p + 1 + " " + contents.get(position - 1).get(p).getMoney());
+                                Utils.GetRandomColor());
+                        values.add(value);
                         Sum += contents.get(position - 1).get(p).getMoney();
                         p++;
-                    } else {
-                        values.add(new SubcolumnValue((float)0,
-                                ChartUtils.pickColor()));
                     }
                     Column column = new Column(values);
                     column.setHasLabels(false);
@@ -169,14 +177,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 data = new ColumnChartData(columns);
 
                 Axis axisX = new Axis();
+                List<AxisValue> axisValueList = new ArrayList<>();
+                for (int i = 0; i < daysInMonth; i++) {
+                    axisValueList.add(new AxisValue(i).setLabel(i + 1 + ""));
+                }
+                axisX.setValues(axisValueList);
                 Axis axisY = new Axis().setHasLines(true);
                 data.setAxisXBottom(axisX);
                 data.setAxisYLeft(axisY);
+                data.setStacked(true);
 
                 holder.chart.setColumnChartData(data);
                 holder.chart.setZoomEnabled(false);
+                holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
 
-                holder.date.setText(year + "-" + month + ": " + (int)Sum);
+                holder.date.setText(year + " " + Utils.MONTHS[month]);
+                holder.expanse.setText("" + (int)Sum);
 
                 break;
         }
@@ -198,6 +214,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         @Optional
         @InjectView(R.id.date)
         TextView date;
+        @Optional
+        @InjectView(R.id.expanse)
+        TextView expanse;
 
         viewHolder(View view) {
             super(view);
@@ -209,5 +228,56 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             });
         }
+    }
+
+    private class ValueTouchListener implements ColumnChartOnValueSelectListener {
+
+        private int position;
+
+        public ValueTouchListener(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onValueSelected(int columnIndex, int subColumnIndex, SubcolumnValue value) {
+            int count = 0;
+            for (Record record : contents.get(position)) {
+                if (record.getCalendar().get(Calendar.DAY_OF_MONTH) == columnIndex + 1) {
+                    if (count == subColumnIndex) {
+                        String text = "";
+                        text += "Spend " + (int)record.getMoney() +
+                                " at " + record.getCalendarString() + ".\n";
+                        text += record.getRemark() + ".";
+                        Snackbar snackbar =
+                                Snackbar
+                                .with(mContext)
+                                .type(SnackbarType.MULTI_LINE)
+                                .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                                .position(Snackbar.SnackbarPosition.BOTTOM)
+                                .margin(15, 15)
+                                .backgroundDrawable(Utils.GetSnackBarBackground(record.getTag()))
+                                .text(text)
+                                .textColor(Color.WHITE)
+                                .actionLabel("Edit")
+                                .actionColor(Color.WHITE)
+                                .actionListener(new ActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(Snackbar snackbar) {
+                                        Toast.makeText(mContext, "To be continue...", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                        SnackbarManager.show(snackbar);
+                        return;
+                    }
+                    count++;
+                }
+            }
+        }
+
+        @Override
+        public void onValueDeselected() {
+
+        }
+
     }
 }

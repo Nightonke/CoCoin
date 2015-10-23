@@ -1,5 +1,6 @@
 package com.nightonke.saver;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -33,6 +34,8 @@ public class mFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+    private Context mContext;
+
     public static mFragment newInstance(int position) {
         mFragment fragment = new mFragment();
         Bundle args = new Bundle();
@@ -44,6 +47,7 @@ public class mFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = getContext();
         position = getArguments() != null ? getArguments().getInt("POSITION") : 1;
     }
 
@@ -61,13 +65,19 @@ public class mFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        for (Record record : RecordManager.RECORDS) {
-            if (record.getTag().equals(RecordManager.TAGS.get(position))) {
+        if (position == 0) {
+            for (Record record : RecordManager.RECORDS) {
                 list.add(record);
+            }
+        } else {
+            for (Record record : RecordManager.RECORDS) {
+                if (record.getTag().equals(RecordManager.TAGS.get(position))) {
+                    list.add(record);
+                }
             }
         }
 
-        mAdapter = new RecyclerViewMaterialAdapter(new RecyclerViewAdapter(list));
+        mAdapter = new RecyclerViewMaterialAdapter(new RecyclerViewAdapter(list, mContext));
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);

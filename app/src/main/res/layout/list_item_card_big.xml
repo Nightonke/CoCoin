@@ -31,6 +31,7 @@
                 android:textColor="@color/my_blue"
                 android:textSize="15sp"
                 android:layout_gravity="left"
+                android:padding="10dp"
                 android:gravity="left|center_vertical"
                 />
 
@@ -51,6 +52,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/my_blue"
                 android:textSize="15sp"
+                android:padding="10dp"
                 android:layout_gravity="right"
                 android:gravity="right|center_vertical"
                 />

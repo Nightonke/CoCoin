@@ -70,6 +70,14 @@ public class Record {
                 && Utils.ToDollas(money2, currency) > Utils.ToDollas(this.money, this.currency);
     }
 
+    public String getCalendarString() {
+        return calendar.get(Calendar.HOUR) + ":"
+                + calendar.get(Calendar.MINUTE) + " "
+                + Utils.MONTHS[calendar.get(Calendar.MONTH) + 1].substring(0, 3).toUpperCase() + " "
+                + calendar.get(Calendar.DAY_OF_MONTH) + " "
+                + calendar.get(Calendar.YEAR);
+    }
+
     public long getId() {
         return id;
     }
