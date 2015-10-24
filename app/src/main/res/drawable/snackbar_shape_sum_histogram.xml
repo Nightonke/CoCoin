@@ -4,6 +4,6 @@
     android:shape="rectangle">
     <corners android:radius="10dp" />
     <solid
-        android:color="@color/sum_header"
+        android:color="@color/sum_header_histogram"
         />
 </shape>

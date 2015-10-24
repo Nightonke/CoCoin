@@ -19,6 +19,8 @@ public class Utils {
 
     public static String[] MONTHS = {"", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
+    public static String[] MONTHS_SHORT = {"", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+
     public static String[] FLOATINGLABELS = {"", "", "十", "百", "千", "万", "十万", "百万", "千万", "亿", "十亿"};
 
     public static String[] BUTTONS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "D", "0", "Y"};
@@ -105,8 +107,10 @@ public class Utils {
 
     public static int GetTagColor(String tag) {
         switch (tag) {
-            case "Sum":
-                return R.color.sum_header;
+            case "Sum Pie":
+                return R.color.sum_header_pie;
+            case "Sum Histogram":
+                return R.color.sum_header_histogram;
             case "Book":
                 return R.color.book_header;
             case "Clothing & Footwear":
@@ -146,8 +150,10 @@ public class Utils {
 
     public static Drawable GetTagDrawable(String tag, Context context) {
         switch (tag) {
-            case "Sum":
-                return context.getResources().getDrawable(R.drawable.sum_header);
+            case "Sum Pie":
+                return context.getResources().getDrawable(R.drawable.sum_header_pie);
+            case "Sum Histogram":
+                return context.getResources().getDrawable(R.drawable.sum_header_histogram);
             case "Book":
                 return context.getResources().getDrawable(R.drawable.book_header);
             case "Clothing & Footwear":
@@ -181,14 +187,59 @@ public class Utils {
             case "Vehicle Maintenance":
                 return context.getResources().getDrawable(R.drawable.vehicle_maintenance_header);
             default:
-                return context.getResources().getDrawable(R.drawable.sum_header);
+                return context.getResources().getDrawable(R.drawable.sum_header_histogram);
+        }
+    }
+
+    public static int GetSnackBarBackground(int position) {
+        switch (position) {
+            case 0:
+                return R.drawable.snackbar_shape_sum_pie;
+            case 1:
+                return R.drawable.snackbar_shape_sum_histogram;
+            case 2:
+                return R.drawable.snackbar_shape_book;
+            case 3:
+                return R.drawable.snackbar_shape_closet;
+            case 4:
+                return R.drawable.snackbar_shape_donation;
+            case 5:
+                return R.drawable.snackbar_shape_education;
+            case 6:
+                return R.drawable.snackbar_shape_entertainment;
+            case 7:
+                return R.drawable.snackbar_shape_friend;
+            case 8:
+                return R.drawable.snackbar_shape_hobby;
+            case 9:
+                return R.drawable.snackbar_shape_home;
+            case 10:
+                return R.drawable.snackbar_shape_insurance;
+            case 11:
+                return R.drawable.snackbar_shape_internet;
+            case 12:
+                return R.drawable.snackbar_shape_meal;
+            case 13:
+                return R.drawable.snackbar_shape_medical;
+            case 14:
+                return R.drawable.snackbar_shape_snack;
+            case 15:
+                return R.drawable.snackbar_shape_sport;
+            case 16:
+                return R.drawable.snackbar_shape_traffic;
+            case 17:
+                return R.drawable.snackbar_shape_vehicle_maintenance;
+            default:
+                return R.drawable.snackbar_shape;
         }
     }
 
     public static int GetSnackBarBackground(String tag) {
         switch (tag) {
-            case "Sum":
-                return R.drawable.snackbar_shape_sum;
+            case "Sum Pie":
+                return R.drawable.snackbar_shape_sum_pie;
+            case "Sum Histogram":
+                return R.drawable.snackbar_shape_sum_histogram;
             case "Book":
                 return R.drawable.snackbar_shape_book;
             case "Clothing & Footwear":

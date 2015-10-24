@@ -69,6 +69,10 @@ public class mFragment extends Fragment {
             for (Record record : RecordManager.RECORDS) {
                 list.add(record);
             }
+        } if (position == 1) {
+            for (Record record : RecordManager.RECORDS) {
+                list.add(record);
+            }
         } else {
             for (Record record : RecordManager.RECORDS) {
                 if (record.getTag().equals(RecordManager.TAGS.get(position))) {
@@ -77,7 +81,7 @@ public class mFragment extends Fragment {
             }
         }
 
-        mAdapter = new RecyclerViewMaterialAdapter(new RecyclerViewAdapter(list, mContext));
+        mAdapter = new RecyclerViewMaterialAdapter(new RecyclerViewAdapter(list, mContext, position));
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);

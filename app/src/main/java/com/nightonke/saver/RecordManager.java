@@ -76,7 +76,8 @@ public class RecordManager {
                     return lhs.compareTo(rhs);
                 }
             });
-            TAGS.add(0, "Sum");
+            TAGS.add(0, "Sum Histogram");
+            TAGS.add(0, "Sum Pie");
         }
         return recordManager;
     }

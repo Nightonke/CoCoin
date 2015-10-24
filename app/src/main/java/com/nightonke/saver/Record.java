@@ -71,8 +71,8 @@ public class Record {
     }
 
     public String getCalendarString() {
-        return calendar.get(Calendar.HOUR) + ":"
-                + calendar.get(Calendar.MINUTE) + " "
+        return String.format("%02d", calendar.get(Calendar.HOUR)) + ":"
+                + String.format("%02d", calendar.get(Calendar.MINUTE)) + " "
                 + Utils.MONTHS[calendar.get(Calendar.MONTH) + 1].substring(0, 3).toUpperCase() + " "
                 + calendar.get(Calendar.DAY_OF_MONTH) + " "
                 + calendar.get(Calendar.YEAR);

@@ -17,7 +17,8 @@
 
     <color name="snack_bar">#03A9F4</color>
 
-    <color name="sum_header">#2196F3</color>
+    <color name="sum_header_pie">#FF9800</color>
+    <color name="sum_header_histogram">#2196F3</color>
     <color name="book_header">#8BC34A</color>
     <color name="closet_header">#795548</color>
     <color name="donation_header">#00BCD4</color>
