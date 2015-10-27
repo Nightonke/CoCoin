@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.nightonke.saver.MyGridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:numColumns="4"
+        android:verticalSpacing="1sp"
+        android:horizontalSpacing="1sp"
+        android:stretchMode="columnWidth"
+        android:background="#ffffff"
+        android:isScrollContainer="false"
+        />
+
+</LinearLayout>

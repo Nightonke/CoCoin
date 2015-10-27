@@ -12,6 +12,9 @@ import android.widget.Toast;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 
+import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
+import net.steamcrafted.materialiconlib.MaterialIconView;
+
 import java.util.Map;
 
 /**
@@ -48,7 +51,7 @@ public class MyGridViewAdapter extends BaseAdapter {
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = this.inflater.inflate(R.layout.gridview_item, null);
-            holder.iv = (ImageView)convertView.findViewById(R.id.imageview);
+            holder.iv = (MaterialIconView)convertView.findViewById(R.id.icon);
             holder.tv = (TextView) convertView.findViewById(R.id.textview);
             holder.ml = (MaterialRippleLayout)convertView.findViewById(R.id.material_ripple_layout);
             convertView.setTag(holder);
@@ -57,16 +60,19 @@ public class MyGridViewAdapter extends BaseAdapter {
         }
 
         if (position == 11) {
-            holder.iv.setImageResource(R.drawable.atm);
+            holder.tv.setTypeface(Utils.typefaceBernhardFashion);
             holder.tv.setVisibility(View.INVISIBLE);
+            holder.iv.setIcon(MaterialDrawableBuilder.IconValue.CHECK);
             holder.ml.setRippleColor(Color.parseColor("#0000ff"));
             holder.ml.setRippleAlpha(50);
         } else if (position == 9) {
-            holder.iv.setImageResource(R.drawable.erase);
+            holder.iv.setIcon(MaterialDrawableBuilder.IconValue.ERASER);
+            holder.tv.setTypeface(Utils.typefaceBernhardFashion);
             holder.tv.setVisibility(View.INVISIBLE);
-            holder.ml.setRippleColor(Color.parseColor("#ff0000"));
+            holder.ml.setRippleColor(Color.parseColor("#0000ff"));
             holder.ml.setRippleAlpha(50);
         } else {
+            holder.iv.setVisibility(View.INVISIBLE);
             holder.tv.setTypeface(Utils.typefaceBernhardFashion);
             holder.tv.setText(Utils.BUTTONS[position]);
             holder.ml.setRippleDelayClick(false);
@@ -79,7 +85,7 @@ public class MyGridViewAdapter extends BaseAdapter {
 
     private class ViewHolder {
         TextView tv;
-        ImageView iv;
+        MaterialIconView iv;
         MaterialRippleLayout ml;
     }
 }

@@ -14,27 +14,30 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#060000ff"
         >
+
 
         <TextView
             android:id="@+id/textview"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:textSize="50sp"
             android:layout_gravity="center"
             android:gravity="center"
             android:clickable="false"
-            android:textColor="#2196F3"
+            android:textColor="@color/my_blue"
+            android:text="1"
             />
 
-        <ImageView
-            android:id="@+id/imageview"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:clickable="false"
-            android:adjustViewBounds="true"
+        <net.steamcrafted.materialiconlib.MaterialIconView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:materialIconColor="@color/my_blue"
+            app:materialIconSize="24dp"
+            android:scaleType="center"
+            android:id="@+id/icon"
+            android:layout_gravity="center_horizontal"
             />
 
     </FrameLayout>

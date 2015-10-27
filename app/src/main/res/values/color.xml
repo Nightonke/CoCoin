@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
+    <color name="transparent">#00ffffff</color>
 
     <color name="guillotine_background">#444153</color>
     <color name="guillotine_background_dark">#383547</color>

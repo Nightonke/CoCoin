@@ -266,7 +266,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                         List<SliceValue> values = new ArrayList<>();
                         for (int i = 2; i < RecordManager.TAGS.size(); i++) {
-                            Log.d("Saver", "Color: " + Utils.GetTagColor(RecordManager.TAGS.get(i)));
                             SliceValue sliceValue = new SliceValue(
                                     (float)(double)tagExpanse.get(RecordManager.TAGS.get(i)),
                                     mContext.getResources().getColor(Utils.GetTagColor(RecordManager.TAGS.get(i))));

@@ -71,33 +71,95 @@
                     android:paddingRight="10dp"
                     >
 
-                    <com.rengwuxian.materialedittext.MaterialEditText
-                        android:id="@+id/edit_view"
+                    <FrameLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        >
+
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_gravity="center|left"
+                            android:paddingLeft="5dp"
+                            >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="10dp"
+                                />
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_horizontal|bottom"
+                                android:src="@drawable/atm"
+                                android:id="@+id/tag_view"/>
+
+                            <TextView
+                                android:id="@+id/tag_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif"
+                                android:textSize="10sp"
+                                android:textColor="#666666"
+                                android:maxLines="2"
+                                android:minLines="2"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:gravity="center_horizontal|center_vertical"
+                                />
+
+                        </LinearLayout>
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edit_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#0000ff"
+                            android:textSize="60sp"
+                            android:maxLength="7"
+                            android:editable="false"
+                            android:gravity="right"
+                            app:met_floatingLabel="normal"
+                            app:met_baseColor="#007688"
+                            app:met_primaryColor="#2196F3"
+                            app:met_textColor="@color/my_blue"
+                            app:met_textColorHint="#33ff0000"
+                            app:met_errorColor="#ddaa00"
+                            app:met_helperTextColor="@color/my_blue"
+                            app:met_underlineColor="#003587"
+                            app:met_floatingLabelTextColor="#0000ff"
+                            />
+
+                        <com.ogaclejapan.smarttablayout.SmartTabLayout
+                            xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/viewpagertab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom|center_horizontal"
+                            app:stl_clickable="false"
+                            app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
+                            app:stl_dividerColor="@color/transparent"
+                            app:stl_dividerThickness="0dp"
+                            app:stl_indicatorColor="@color/my_blue"
+                            app:stl_indicatorCornerRadius="4dp"
+                            app:stl_indicatorGravity="center"
+                            app:stl_indicatorInterpolation="linear"
+                            app:stl_indicatorThickness="8dp"
+                            app:stl_underlineColor="@color/transparent"
+                            app:stl_underlineThickness="0dp"
+                            />
+
+                    </FrameLayout>
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/viewpager"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#0000ff"
-                        android:textSize="60sp"
-                        android:maxLength="10"
-                        android:editable="false"
-                        android:gravity="right"
-                        app:met_floatingLabel="normal"
-                        app:met_baseColor="#007688"
-                        app:met_primaryColor="#2196F3"
-                        app:met_textColor="#0000ff"
-                        app:met_textColorHint="#33ff0000"
-                        app:met_errorColor="#ddaa00"
-                        app:met_helperTextColor="#0000ff"
-                        app:met_underlineColor="#003587"
-                        app:met_floatingLabelTextColor="#0000ff"
                         />
 
                 </LinearLayout>
-
-                <Button
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="BUTTON"
-                    />
 
                 <com.nightonke.saver.MyGridView
                     android:id="@+id/gridview"
@@ -109,6 +171,7 @@
                     android:horizontalSpacing="1sp"
                     android:stretchMode="columnWidth"
                     android:background="#ffffff"
+                    android:isScrollContainer="false"
                     />
 
             </LinearLayout>

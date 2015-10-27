@@ -51,4 +51,11 @@ dependencies {
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
 
     compile 'com.nispok:snackbar:2.11.+'
+
+    compile 'net.steamcrafted:materialiconlib:1.0.5'
+
+    compile 'com.ogaclejapan.smarttablayout:library:1.4.2@aar'
+
+    //Optional: see how to use the utility
+    compile 'com.ogaclejapan.smarttablayout:utils-v4:1.4.2@aar'
 }

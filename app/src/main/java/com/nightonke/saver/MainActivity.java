@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,15 +17,26 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.ogaclejapan.smarttablayout.SmartTabLayout;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
+import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
@@ -68,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
 
     private View guillotineMenu;
 
+    private ViewPager viewPager;
+    private SmartTabLayout smartTabLayout;
+
+    public static TextView tagName;
+
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
     @InjectView(R.id.root)
@@ -105,6 +122,22 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
+
+        FragmentPagerItems pages = new FragmentPagerItems(this);
+        for (int i = 0; i < (RecordManager.TAGS.size() - 2) / 8; i++) {
+            pages.add(FragmentPagerItem.of("1", tagFragment.class));
+        }
+
+        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(), pages);
+
+        viewPager.setOffscreenPageLimit(2);
+
+        viewPager.setAdapter(adapter);
+        smartTabLayout.setViewPager(viewPager);
+
         myGridView = (MyGridView)findViewById(R.id.gridview);
         myGridViewAdapter = new MyGridViewAdapter(this);
         myGridView.setAdapter(myGridViewAdapter);
@@ -131,6 +164,9 @@ public class MainActivity extends AppCompatActivity {
         editView.setTypeface(Utils.typefaceBernhardFashion);
         editView.setText("0");
         editView.requestFocus();
+        editView.setHelperText(" ");
+
+        tagName = (TextView)findViewById(R.id.tag_name);
 
         ButterKnife.inject(this);
 
@@ -167,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onGuillotineOpened() {
                         isPassword = true;
+                        editView.setHelperText(" ");
                     }
 
                     @Override
@@ -189,7 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 animation.open();
             }
         });
-
     }
 
     private AdapterView.OnItemLongClickListener gridViewLongClickListener
@@ -199,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
             if (!isPassword) {
                 if (Utils.ClickButtonDelete(position)) {
                     editView.setText("0");
+                    editView.setHelperText(" ");
                     editView.setHelperText(Utils.FLOATINGLABELS[editView.getText().toString().length()]);
                 }
             } else {
@@ -275,10 +312,12 @@ public class MainActivity extends AppCompatActivity {
                                 .substring(0, editView.getText().toString().length() - 1));
                         if (editView.getText().toString().length() == 0) {
                             editView.setText("0");
+                            editView.setHelperText(" ");
                         }
                     } else if (Utils.ClickButtonCommit(position)) {
                         Toast.makeText(mContext, "Commit", Toast.LENGTH_SHORT).show();
                         editView.setText("0");
+                        editView.setHelperText(" ");
                     } else {
                         editView.setText(editView.getText().toString() + Utils.BUTTONS[position]);
                     }

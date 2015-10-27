@@ -28,7 +28,7 @@ public class Utils {
     public static Typeface typefaceBernhardFashion;
 
     public static void init(Context context) {
-        typefaceBernhardFashion = Typeface.createFromAsset(context.getAssets(), "fonts/BernhardFashion BT.ttf");
+        typefaceBernhardFashion = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Hairline.ttf");
         relativeSizeSpan = new RelativeSizeSpan(2f);
         redForegroundSpan = new ForegroundColorSpan(Color.parseColor("#ff5252"));
         greenForegroundSpan = new ForegroundColorSpan(Color.parseColor("#4ca550"));
