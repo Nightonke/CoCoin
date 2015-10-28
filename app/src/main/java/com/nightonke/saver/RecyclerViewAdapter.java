@@ -53,7 +53,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<List<Record>> contents;
     private List<Integer> type;
     private List<Double> SumList;
-    private List<List<String>> tagList;
+    private List<Map<String, Double>> AllTagExpanse;
     private float Sum;
     private int year;
     private int month;
@@ -86,12 +86,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             chartType = HISTOGRAM;
         }
 
-        if (chartType == PIE) {
-            tagList = new ArrayList<>();
-        }
-
         Sum = 0;
-        SumList = new ArrayList<>();
         Collections.sort(records, new Comparator<Record>() {
             @Override
             public int compare(Record lhs, Record rhs) {
@@ -99,6 +94,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         });
         contents = new ArrayList<>();
+        SumList = new ArrayList<>();
         type = new ArrayList<>();
         year = records.get(0).getCalendar().get(Calendar.YEAR);
         month = records.get(0).getCalendar().get(Calendar.MONTH) + 1;
@@ -119,9 +115,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     monthSum += record.getMoney();
                 } else {
                     contents.add(monthSet);
-                    if (chartType == PIE) {
-                        tagList.add(new ArrayList<String>());
-                    }
                     SumList.add(monthSum);
                     monthSum = record.getMoney();
                     type.add(SHOW_IN_MONTH);
@@ -131,9 +124,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 }
             } else {
                 contents.add(monthSet);
-                if (chartType == PIE) {
-                    tagList.add(new ArrayList<String>());
-                }
                 SumList.add(monthSum);
                 monthSum = record.getMoney();
                 type.add(SHOW_IN_MONTH);
@@ -142,9 +132,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 month = record.getCalendar().get(Calendar.MONTH) + 1;
 
                 contents.add(yearPosition, yearSet);
-                if (chartType == PIE) {
-                    tagList.add(new ArrayList<String>());
-                }
                 SumList.add(yearPosition, yearSum);
                 yearSum = record.getMoney();
                 type.add(yearPosition, SHOW_IN_YEAR);
@@ -158,21 +145,32 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             }
         }
         contents.add(monthSet);
-        if (chartType == PIE) {
-            tagList.add(new ArrayList<String>());
-        }
         SumList.add(monthSum);
         type.add(SHOW_IN_MONTH);
         contents.add(yearPosition, yearSet);
-        if (chartType == PIE) {
-            tagList.add(new ArrayList<String>());
-        }
         SumList.add(yearPosition, yearSum);
         type.add(yearPosition, SHOW_IN_YEAR);
 
         tag = contents.get(0).get(0).getTag();
         endYear = year;
         endMonth = month;
+
+        AllTagExpanse = new ArrayList<>();
+        for (int i = 0; i < contents.size(); i++) {
+            Map<String, Double> tagExpanse = new TreeMap<>();
+
+            for (int j = 2; j < RecordManager.TAGS.size(); j++) {
+                tagExpanse.put(RecordManager.TAGS.get(j), Double.valueOf(0));
+            }
+
+            for (Record record : contents.get(i)) {
+                tagExpanse.put(record.getTag(),
+                        tagExpanse.get(record.getTag())
+                                + Double.valueOf(record.getMoney()));
+            }
+
+            AllTagExpanse.add(tagExpanse);
+        }
     }
 
     @Override
@@ -250,44 +248,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     case TYPE_CELL:
 
-                        Map<String, Double> tagExpanse = new TreeMap<>();
-
-                        for (int i = 2; i < RecordManager.TAGS.size(); i++) {
-                            tagExpanse.put(RecordManager.TAGS.get(i), Double.valueOf(0));
-                        }
-
-                        for (Record record : contents.get(position - 1)) {
-                            tagExpanse.put(record.getTag(),
-                                    tagExpanse.get(record.getTag())
-                                            + Double.valueOf(record.getMoney()));
-                        }
-
-                        List<String> tags = new ArrayList<>();
-
                         List<SliceValue> values = new ArrayList<>();
                         for (int i = 2; i < RecordManager.TAGS.size(); i++) {
                             SliceValue sliceValue = new SliceValue(
-                                    (float)(double)tagExpanse.get(RecordManager.TAGS.get(i)),
-                                    mContext.getResources().getColor(Utils.GetTagColor(RecordManager.TAGS.get(i))));
+                                    (float)(double)AllTagExpanse.get(position - 1)
+                                            .get(RecordManager.TAGS.get(i)),
+                                    mContext.getResources().
+                                            getColor(Utils.GetTagColor(RecordManager.TAGS.get(i))));
+                            sliceValue.setLabel(RecordManager.TAGS.get(i));
                             values.add(sliceValue);
-                            tags.add(RecordManager.TAGS.get(i));
                         }
 
-                        // sort together
-                        for (int i = 0; i < tags.size(); i++) {
-                            for (int j = 0; j < tags.size() - i - 1; j++) {
-                                if (values.get(j).getValue() > values.get(j + 1).getValue()) {
-                                    float tf = values.get(j).getValue();
-                                    values.get(j).setValue(values.get(j + 1).getValue());
-                                    values.get(j + 1).setValue(tf);
-                                    String ts = tags.get(j);
-                                    tags.set(j, tags.get(j + 1));
-                                    tags.set(j + 1, ts);
-                                }
+                        Collections.sort(values, new Comparator<SliceValue>() {
+                            @Override
+                            public int compare(SliceValue lhs, SliceValue rhs) {
+                                return Float.compare(lhs.getValue(), rhs.getValue());
                             }
-                        }
-
-                        tagList.set(position - 1, tags);
+                        });
 
                         PieChartData data = new PieChartData(values);
                         data.setHasLabels(false);
@@ -556,7 +533,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             Double percent = sliceValue.getValue() / SumList.get(position) * 100;
             text += "Spend " + (int)sliceValue.getValue()
                     + "(takes " + String.format("%.2f", percent) + "%)\n"
-                    + " in " + tagList.get(position).get(i) + ".\n";
+                    + " in " + String.valueOf(sliceValue.getLabelAsChars()) + ".\n";
 
             Snackbar snackbar =
                     Snackbar

@@ -75,19 +75,6 @@ public class AccountBook extends AppCompatActivity {
 
 //        loadMode();
 
-        myAdapter = new MyFragmentAdapter(getSupportFragmentManager());
-        mViewPager.getViewPager().setOffscreenPageLimit(myAdapter.getCount());
-        mViewPager.getViewPager().setAdapter(myAdapter);
-        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
-
-        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
-            @Override
-            public HeaderDesign getHeaderDesign(int page) {
-                return HeaderDesign.fromColorResAndDrawable(
-                        Utils.GetTagColor(RecordManager.TAGS.get(page)),
-                        Utils.GetTagDrawable(RecordManager.TAGS.get(page), mContext));
-            }
-        });
 
         View logo = findViewById(R.id.logo_white);
         if (logo != null) {
@@ -107,6 +94,12 @@ public class AccountBook extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadTagMode();
     }
 
     private void loadMode(int mode) {
@@ -138,32 +131,18 @@ public class AccountBook extends AppCompatActivity {
         Log.d("Saver", "TAGMODE");
 
         myAdapter = new MyFragmentAdapter(getSupportFragmentManager());
+        mViewPager.getViewPager().setOffscreenPageLimit(myAdapter.getCount());
+        mViewPager.getViewPager().setAdapter(myAdapter);
+        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
-//        mViewPager.getViewPager().setAdapter(myAdapter);
-//
-//        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
-//            @Override
-//            public HeaderDesign getHeaderDesign(int page) {
-//                return HeaderDesign.fromColorResAndDrawable(
-//                        Utils.GetTagColor(RecordManager.TAGS.get(page)),
-//                        Utils.GetTagDrawable(RecordManager.TAGS.get(page), mContext));
-//            }
-//        });
-//
-//        mViewPager.getViewPager().setOffscreenPageLimit(mViewPager.getViewPager().getAdapter().getCount());
-//        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
-//
-//        mViewPager.getViewPager().getCurrentItem();
-//
-//        View logo = findViewById(R.id.logo_white);
-//        if (logo != null) {
-//            logo.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    mViewPager.notifyHeaderChanged();
-//                }
-//            });
-//        }
+        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+            @Override
+            public HeaderDesign getHeaderDesign(int page) {
+                return HeaderDesign.fromColorResAndDrawable(
+                        Utils.GetTagColor(RecordManager.TAGS.get(page)),
+                        Utils.GetTagDrawable(RecordManager.TAGS.get(page), mContext));
+            }
+        });
     }
 
 }

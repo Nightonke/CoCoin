@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
@@ -51,17 +52,22 @@ public class MyTagGridViewAdapter extends BaseAdapter {
             holder = new ViewHolder();
             convertView = this.inflater.inflate(R.layout.tag_item, null);
             holder.tagName = (TextView)convertView.findViewById(R.id.tag_name);
+            holder.tagImage = (ImageView)convertView.findViewById(R.id.tag_image);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tagName.setText(RecordManager.TAGS.get(fragmentPosition * 8 + position + 2));
+        holder.tagName.setText(
+                RecordManager.TAGS.get(fragmentPosition * 8 + position + 2));
+        holder.tagImage.setImageResource(
+                Utils.GetTagIcon(RecordManager.TAGS.get(fragmentPosition * 8 + position + 2)));
 
         return convertView;
     }
 
     private class ViewHolder {
         TextView tagName;
+        ImageView tagImage;
     }
 }

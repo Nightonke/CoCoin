@@ -58,4 +58,6 @@ dependencies {
 
     //Optional: see how to use the utility
     compile 'com.ogaclejapan.smarttablayout:utils-v4:1.4.2@aar'
+
+    compile 'com.github.johnpersano:supertoasts:1.3.4@aar'
 }

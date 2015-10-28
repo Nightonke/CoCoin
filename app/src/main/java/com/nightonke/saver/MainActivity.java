@@ -2,6 +2,7 @@ package com.nightonke.saver;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +35,7 @@ import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -42,6 +45,7 @@ import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import java.io.IOException;
+import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -50,6 +54,8 @@ import carbon.widget.RadioButton;
 public class MainActivity extends AppCompatActivity {
 
     private Context mContext;
+
+    private SuperToast superToast;
 
     private MyGridView myGridView;
     private MyGridViewAdapter myGridViewAdapter;
@@ -84,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
     private SmartTabLayout smartTabLayout;
 
     public static TextView tagName;
+    public static ImageView tagImage;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -99,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mContext = this;
+
+        superToast = new SuperToast(mContext);
 
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
@@ -167,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
         editView.setHelperText(" ");
 
         tagName = (TextView)findViewById(R.id.tag_name);
+        tagImage = (ImageView)findViewById(R.id.tag_image);
 
         ButterKnife.inject(this);
 
@@ -257,7 +267,13 @@ public class MainActivity extends AppCompatActivity {
         if (Utils.PASSWORD.equals(inputPassword)) {
             statusButton.animateState(MaterialMenuDrawable.IconState.CHECK);
             statusButton.setClickable(false);
-            Toast.makeText(mContext, "Correct!", Toast.LENGTH_SHORT).show();
+            superToast.setText("That's it!");
+            superToast.setAnimations(SuperToast.Animations.FLYIN);
+            superToast.setDuration(SuperToast.Duration.SHORT);
+            superToast.setTextColor(Color.parseColor("#ffffff"));
+            superToast.setBackground(R.color.correct_password);
+            superToast.setTextSize(SuperToast.TextSize.SMALL);
+            superToast.show();
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -275,7 +291,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, 3000);
         } else {
-            Toast.makeText(mContext, "Incorrect!", Toast.LENGTH_SHORT).show();
+            superToast.setText("Ooops...That's wrong!");
+            superToast.setAnimations(SuperToast.Animations.FLYIN);
+            superToast.setDuration(SuperToast.Duration.SHORT);
+            superToast.setTextColor(Color.parseColor("#ffffff"));
+            superToast.setBackground(R.color.wrong_password);
+            superToast.setTextSize(SuperToast.TextSize.SMALL);
+            superToast.show();
             YoYo.with(Techniques.Shake).duration(700).playOn(radioButtonLy);
             radioButton0.setChecked(false);
             radioButton1.setChecked(false);
@@ -315,9 +337,7 @@ public class MainActivity extends AppCompatActivity {
                             editView.setHelperText(" ");
                         }
                     } else if (Utils.ClickButtonCommit(position)) {
-                        Toast.makeText(mContext, "Commit", Toast.LENGTH_SHORT).show();
-                        editView.setText("0");
-                        editView.setHelperText(" ");
+                        commit();
                     } else {
                         editView.setText(editView.getText().toString() + Utils.BUTTONS[position]);
                     }
@@ -365,6 +385,52 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void commit() {
+        if (tagName.getText().equals("")) {
+            superToast.setText("Just...give me a tag~");
+            superToast.setAnimations(SuperToast.Animations.FLYIN);
+            superToast.setDuration(SuperToast.Duration.SHORT);
+            superToast.setTextColor(Color.parseColor("#ffffff"));
+            superToast.setBackground(R.color.my_blue);
+            superToast.setTextSize(SuperToast.TextSize.SMALL);
+            superToast.show();
+            tagAnimation();
+        } else {
+            Calendar calendar = Calendar.getInstance();
+            long saveId = RecordManager.saveRecord(new Record(
+                    -1,
+                    Float.valueOf(editView.getText().toString()),
+                    "RMB",
+                    tagName.getText().toString(),
+                    calendar));
+            if (saveId == -1) {
+                superToast.setText("Ooops...Save fail!");
+                superToast.setAnimations(SuperToast.Animations.FLYIN);
+                superToast.setDuration(SuperToast.Duration.SHORT);
+                superToast.setTextColor(Color.parseColor("#ffffff"));
+                superToast.setBackground(R.color.wrong_password);
+                superToast.setTextSize(SuperToast.TextSize.SMALL);
+                superToast.show();
+            } else {
+                superToast.setText("Save successfully!");
+                superToast.setAnimations(SuperToast.Animations.FLYIN);
+                superToast.setDuration(SuperToast.Duration.SHORT);
+                superToast.setTextColor(Color.parseColor("#ffffff"));
+                superToast.setBackground(R.color.correct_password);
+                superToast.setTextSize(SuperToast.TextSize.SMALL);
+                superToast.show();
+                tagImage.setImageResource(0);
+                tagName.setText("");
+            }
+            editView.setText("0");
+            editView.setHelperText(" ");
+        }
+    }
+
+    private void tagAnimation() {
+
+    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

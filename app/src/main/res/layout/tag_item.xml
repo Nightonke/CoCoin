@@ -16,7 +16,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal|bottom"
         android:src="@drawable/atm"
-        android:id="@+id/tag_view"/>
+        android:id="@+id/tag_image"/>
 
     <TextView
         android:id="@+id/tag_name"

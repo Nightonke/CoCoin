@@ -27,7 +27,7 @@ public class RecordManager {
 
     public static boolean SHOW_LOG = false;
     public static boolean RANDOM_DATA = true;
-    private int RANDOM_DATA_NUMBER = 3000;
+    private int RANDOM_DATA_NUMBER = 300;
 
     private RecordManager(Context context) {
         try {
@@ -225,11 +225,12 @@ public class RecordManager {
             record.setTag(tagStrings[random.nextInt(tagStrings.length)]);
             record.setCurrency("RMB");
             Calendar calendar = Calendar.getInstance();
-            calendar.set(random.nextInt(3) + 2013,
-                         random.nextInt(12),
-                         random.nextInt(28) + 1,
-                         random.nextInt(24),
-                         random.nextInt(60));
+            Calendar now = Calendar.getInstance();
+            calendar.set(2015,
+                    random.nextInt(now.get(Calendar.MONTH)),
+                    random.nextInt(28) + 1,
+                    random.nextInt(24),
+                    random.nextInt(60));
             calendar.add(Calendar.MINUTE, 0);
 //            new SimpleDateFormat("yyyy-MM-dd hh:mm").format(calendar.getTime());
             record.setCalendar(calendar);

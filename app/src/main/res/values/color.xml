@@ -37,4 +37,7 @@
     <color name="sport_header">#536DFE</color>
     <color name="traffic_header">#9C27B0</color>
     <color name="vehicle_maintenance_header">#FF4081</color>
+
+    <color name="correct_password">#8bc34a</color>
+    <color name="wrong_password">#E91E63</color>
 </resources>

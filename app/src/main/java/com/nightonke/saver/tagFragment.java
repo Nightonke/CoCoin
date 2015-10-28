@@ -44,6 +44,9 @@ public class tagFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MainActivity.tagName.setText(
                         RecordManager.TAGS.get(fragmentPosition * 8 + position + 2));
+                MainActivity.tagImage.setImageResource(
+                        Utils.GetTagIcon(
+                                RecordManager.TAGS.get(fragmentPosition * 8 + position + 2)));
             }
         });
 

@@ -276,4 +276,43 @@ public class Utils {
                 return R.drawable.snackbar_shape;
         }
     }
+
+    static int GetTagIcon(String tag) {
+        switch (tag) {
+            case "Book":
+                return R.drawable.book_icon;
+            case "Clothing & Footwear":
+                return R.drawable.closet_icon;
+            case "Donation":
+                return R.drawable.donation_icon;
+            case "Education":
+                return R.drawable.education_icon;
+            case "Entertainment":
+                return R.drawable.entertainment_icon;
+            case "Friend":
+                return R.drawable.friend_icon;
+            case "Hobby":
+                return R.drawable.hobby_icon;
+            case "Home":
+                return R.drawable.home_icon;
+            case "Insurance":
+                return R.drawable.insurance_icon;
+            case "Internet":
+                return R.drawable.internet_icon;
+            case "Meal":
+                return R.drawable.meal_icon;
+            case "Medical":
+                return R.drawable.medical_icon;
+            case "Snack":
+                return R.drawable.snack_icon;
+            case "Sport":
+                return R.drawable.sport_icon;
+            case "Traffic":
+                return R.drawable.traffic_icon;
+            case "Vehicle Maintenance":
+                return R.drawable.vehicle_maintenance_icon;
+            default:
+                return R.drawable.book_icon;
+        }
+    }
 }

@@ -20,7 +20,8 @@
         <activity
             android:name=".AccountBook"
             android:label="@string/title_activity_account_book"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:launchMode= "singleInstance">
         </activity>
     </application>
 
