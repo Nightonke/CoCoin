@@ -69,7 +69,7 @@ public class DB {
         values.put("MONEY", record.getMoney());
         values.put("CURRENCY", record.getCurrency());
         values.put("TAG", record.getTag());
-        values.put("TIME", new SimpleDateFormat("yyyy-MM-dd hh:mm")
+        values.put("TIME", new SimpleDateFormat("yyyy-MM-dd HH:mm")
                 .format(record.getCalendar().getTime()));
         values.put("REMARK", record.getRemark());
         long insertId = sqliteDatabase.insert("Record", null, values);

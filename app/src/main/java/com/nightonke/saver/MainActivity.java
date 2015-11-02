@@ -57,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView toolBarTitle;
     private TextView menuToolBarTitle;
 
+    private TextView passwordTip;
+
     private SuperToast superToast;
     private SuperActivityToast superActivityToast;
 
@@ -221,6 +223,9 @@ public class MainActivity extends AppCompatActivity {
         radioButton1.setTint(R.color.white);
         radioButton2.setTint(R.color.white);
         radioButton3.setTint(R.color.white);
+
+        passwordTip = (TextView)guillotineMenu.findViewById(R.id.password_tip);
+        passwordTip.setTypeface(Utils.typefaceLatoLight);
 
         radioButtonLy = (LinearLayout)guillotineMenu.findViewById(R.id.radio_button_ly);
 

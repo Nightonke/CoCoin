@@ -110,21 +110,18 @@ public class AccountBookActivity extends AppCompatActivity {
             }
         });
 
+        loadTagMode();
+
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        loadTagMode();
     }
 
     @Override
     protected  void onDestroy() {
         super.onDestroy();
-    }
-
-    private void loadMode(int mode) {
-
     }
 
     private void loadTagMode() {

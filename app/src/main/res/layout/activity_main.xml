@@ -30,8 +30,8 @@
                 android:id="@+id/content_hamburger"
                 style="@style/ImageView.Hamburger"
                 android:src="@drawable/ic_menu_90"
-                android:scaleX="0.7"
-                android:scaleY="0.7"
+                android:scaleX="0.5"
+                android:scaleY="0.5"
                 />
 
             <TextView

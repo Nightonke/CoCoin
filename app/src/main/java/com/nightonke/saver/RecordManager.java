@@ -232,7 +232,6 @@ public class RecordManager {
                     random.nextInt(24),
                     random.nextInt(60));
             calendar.add(Calendar.MINUTE, 0);
-//            new SimpleDateFormat("yyyy-MM-dd hh:mm").format(calendar.getTime());
             record.setCalendar(calendar);
 
             saveRecord(record);

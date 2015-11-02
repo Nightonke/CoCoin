@@ -71,7 +71,7 @@ public class Record {
     }
 
     public String getCalendarString() {
-        return String.format("%02d", calendar.get(Calendar.HOUR)) + ":"
+        return String.format("%02d", calendar.get(Calendar.HOUR_OF_DAY)) + ":"
                 + String.format("%02d", calendar.get(Calendar.MINUTE)) + " "
                 + Utils.MONTHS[calendar.get(Calendar.MONTH) + 1].substring(0, 3).toUpperCase() + " "
                 + calendar.get(Calendar.DAY_OF_MONTH) + " "
@@ -115,7 +115,7 @@ public class Record {
     }
 
     public void setCalendar(String calendarString) {
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm");
         try {
             Date date =sdf.parse(calendarString);
             this.calendar = Calendar.getInstance();

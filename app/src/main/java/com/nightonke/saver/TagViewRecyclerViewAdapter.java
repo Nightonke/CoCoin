@@ -38,6 +38,7 @@ import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Column;
 import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.PieChartData;
+import lecho.lib.hellocharts.model.SelectedValue;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.model.SubcolumnValue;
 import lecho.lib.hellocharts.view.ColumnChartView;
@@ -58,6 +59,7 @@ public class TagViewRecyclerViewAdapter
     private List<Map<String, Double>> AllTagExpanse;
     private int[] DayExpanseSum;
     private int[] MonthExpanseSum;
+    private int[] SelectedPosition;
     private float Sum;
     private int year;
     private int month;
@@ -164,21 +166,21 @@ public class TagViewRecyclerViewAdapter
         if (chartType == PIE) {
             AllTagExpanse = new ArrayList<>();
             for (int i = 0; i < contents.size(); i++) {
-                HashMap<String, Double> map = new HashMap<>();
-                SortMapByValue bvc = new SortMapByValue(map);
-                TreeMap tagExpanse = new TreeMap(bvc);
+
+                Map<String, Double> tagExpanse = new TreeMap<>();
 
                 for (int j = 2; j < RecordManager.TAGS.size(); j++) {
-                    map.put(RecordManager.TAGS.get(j), Double.valueOf(0));
+                    tagExpanse.put(RecordManager.TAGS.get(j), Double.valueOf(0));
                 }
 
                 for (Record record : contents.get(i)) {
-                    map.put(record.getTag(),
-                            map.get(record.getTag())
+                    tagExpanse.put(record.getTag(),
+                            tagExpanse.get(record.getTag())
                                     + Double.valueOf(record.getMoney()));
                 }
 
-                tagExpanse.putAll(map);
+                tagExpanse = Utils.SortTreeMapByValues(tagExpanse);
+
                 AllTagExpanse.add(tagExpanse);
             }
         }
@@ -196,6 +198,11 @@ public class TagViewRecyclerViewAdapter
         for (Record record : records) {
             MonthExpanseSum[(record.getCalendar().get(Calendar.YEAR) - startYear) * 12 +
                     record.getCalendar().get(Calendar.MONTH)] += (int)record.getMoney();
+        }
+
+        SelectedPosition = new int[contents.size() + 1];
+        for (int i = 0; i < SelectedPosition.length; i++) {
+            SelectedPosition[i] = 0;
         }
     }
 
@@ -251,7 +258,7 @@ public class TagViewRecyclerViewAdapter
     }
 
     @Override
-    public void onBindViewHolder(viewHolder holder, int position) {
+    public void onBindViewHolder(final viewHolder holder, final int position) {
 
         switch (getItemViewType(position)) {
             case TYPE_HEADER:
@@ -268,7 +275,8 @@ public class TagViewRecyclerViewAdapter
                 ColumnChartData columnChartData;
                 PieChartData pieChartData;
                 List<SubcolumnValue> subcolumnValues;
-                List<SliceValue> sliceValues;
+                final List<Column> columns;
+                final List<SliceValue> sliceValues;
                 holder.date.setTypeface(Utils.typefaceLatoLight);
                 holder.expanse.setTypeface(Utils.typefaceLatoLight);
                 switch (chartType) {
@@ -303,11 +311,40 @@ public class TagViewRecyclerViewAdapter
                         }
 
                         holder.expanse.setText("" + (int) (double) SumList.get(position - 1));
+
+                        holder.iconRight.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SelectedPosition[position]
+                                        = (SelectedPosition[position] + 1) % sliceValues.size();
+                                SelectedValue selectedValue =
+                                        new SelectedValue(
+                                                SelectedPosition[position],
+                                                0,
+                                                SelectedValue.SelectedValueType.COLUMN);
+                                holder.pie.selectValue(selectedValue);
+                            }
+                        });
+
+                        holder.iconLeft.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SelectedPosition[position]
+                                        = (SelectedPosition[position] - 1 + sliceValues.size()) % sliceValues.size();
+                                SelectedValue selectedValue =
+                                        new SelectedValue(
+                                                SelectedPosition[position],
+                                                0,
+                                                SelectedValue.SelectedValueType.COLUMN);
+                                holder.pie.selectValue(selectedValue);
+                            }
+                        });
+
                         break;
                     case SUM_HISTOGRAM:
+                        columns = new ArrayList<>();
                         if (type.get(position - 1).equals(SHOW_IN_YEAR)) {
                             int numColumns = 12;
-                            List<Column> columns = new ArrayList<>();
                             for (int i = 0; i < numColumns; i++) {
                                 subcolumnValues = new ArrayList<>();
                                 SubcolumnValue value = new SubcolumnValue(
@@ -347,8 +384,6 @@ public class TagViewRecyclerViewAdapter
 
                             int numColumns = daysInMonth;
 
-                            List<Column> columns = new ArrayList<>();
-
                             for (int i = 0; i < numColumns; ++i) {
                                 subcolumnValues = new ArrayList<>();
                                 SubcolumnValue value = new SubcolumnValue((float)
@@ -383,11 +418,40 @@ public class TagViewRecyclerViewAdapter
                             holder.date.setText(year + " " + Utils.MONTHS_SHORT[month]);
                             holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
                         }
+
+                        holder.iconRight.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SelectedPosition[position]
+                                        = (SelectedPosition[position] + 1) % columns.size();
+                                SelectedValue selectedValue =
+                                        new SelectedValue(
+                                                SelectedPosition[position],
+                                                0,
+                                                SelectedValue.SelectedValueType.COLUMN);
+                                holder.chart.selectValue(selectedValue);
+                            }
+                        });
+
+                        holder.iconLeft.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SelectedPosition[position]
+                                        = (SelectedPosition[position] - 1 + columns.size()) % columns.size();
+                                SelectedValue selectedValue =
+                                        new SelectedValue(
+                                                SelectedPosition[position],
+                                                0,
+                                                SelectedValue.SelectedValueType.COLUMN);
+                                holder.chart.selectValue(selectedValue);
+                            }
+                        });
+
                         break;
                     case HISTOGRAM:
+                        columns = new ArrayList<>();
                         if (type.get(position - 1).equals(SHOW_IN_YEAR)) {
                             int numColumns = 12;
-                            List<Column> columns = new ArrayList<>();
                             for (int i = 0; i < numColumns; i++) {
                                 subcolumnValues = new ArrayList<>();
                                 SubcolumnValue value = new SubcolumnValue(
@@ -429,8 +493,6 @@ public class TagViewRecyclerViewAdapter
                             int p = contents.get(position - 1).size() - 1;
                             int numColumns = daysInMonth;
 
-                            List<Column> columns = new ArrayList<>();
-
                             for (int i = 0; i < numColumns; ++i) {
                                 subcolumnValues = new ArrayList<>();
                                 while (p >= 0
@@ -469,6 +531,35 @@ public class TagViewRecyclerViewAdapter
                             holder.date.setText(year + " " + Utils.MONTHS_SHORT[month]);
                             holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
                         }
+
+                        holder.iconRight.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SelectedPosition[position]
+                                        = (SelectedPosition[position] + 1) % columns.size();
+                                SelectedValue selectedValue =
+                                        new SelectedValue(
+                                                SelectedPosition[position],
+                                                0,
+                                                SelectedValue.SelectedValueType.NONE);
+                                holder.chart.selectValue(selectedValue);
+                            }
+                        });
+
+                        holder.iconLeft.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                SelectedPosition[position]
+                                        = (SelectedPosition[position] - 1 + columns.size()) % columns.size();
+                                SelectedValue selectedValue =
+                                        new SelectedValue(
+                                                SelectedPosition[position],
+                                                0,
+                                                SelectedValue.SelectedValueType.NONE);
+                                holder.chart.selectValue(selectedValue);
+                            }
+                        });
+
                         break;
                 }
         }
@@ -497,8 +588,11 @@ public class TagViewRecyclerViewAdapter
         @InjectView(R.id.expanse)
         TextView expanse;
         @Optional
-        @InjectView(R.id.icon)
-        MaterialIconView icon;
+        @InjectView(R.id.icon_left)
+        MaterialIconView iconLeft;
+        @Optional
+        @InjectView(R.id.icon_right)
+        MaterialIconView iconRight;
 
         viewHolder(View view) {
             super(view);
@@ -516,7 +610,6 @@ public class TagViewRecyclerViewAdapter
 
         @Override
         public void onValueSelected(final int columnIndex, int subColumnIndex, SubcolumnValue value) {
-            // Todo add a dialog to check the expanse in a day or in a month
             Snackbar snackbar =
                     Snackbar.with(mContext)
                             .type(SnackbarType.MULTI_LINE)
@@ -543,8 +636,6 @@ public class TagViewRecyclerViewAdapter
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
-                            Toast.makeText(mContext, "Check the expanse in this day",
-                                    Toast.LENGTH_SHORT).show();
                             List<Record> shownRecords = new ArrayList<>();
                             boolean isSamed = false;
                             for (Record record : contents.get(position)) {
@@ -607,7 +698,8 @@ public class TagViewRecyclerViewAdapter
                             " on " + timeString + "\n" +
                             "in " + contents.get(position).get(0).getTag() + ".\n";
                     snackbar.text(text);
-                    dialogTitle = "Spend " + (int)value.getValue() + " on " + timeString;
+                    dialogTitle = "Spend " + (int)value.getValue() + " on " + timeString + "\n" +
+                            "in " + contents.get(position).get(0).getTag();
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
@@ -640,7 +732,8 @@ public class TagViewRecyclerViewAdapter
                     text += "Spend " + (int)value.getValue() + "\n" +
                             " in " + timeString + ".\n";
                     snackbar.text(text);
-                    dialogTitle = "Spend " + (int)value.getValue() + " in " + timeString;
+                    dialogTitle = "Spend " + (int)value.getValue() + " in " + timeString + "\n" +
+                            "in " + contents.get(position).get(0).getTag();
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
@@ -689,19 +782,20 @@ public class TagViewRecyclerViewAdapter
             String timeString = contents.get(position).get(0).getCalendarString();
             timeString = timeString.substring(6, timeString.length());
             if (type.get(position).equals(SHOW_IN_YEAR)) {
-                timeString = "\nin " + timeString.substring(timeString.length() - 4, timeString.length());
+                timeString = " in " + timeString.substring(timeString.length() - 4, timeString.length());
             } else {
                 timeString = timeString.substring(0, 3)
                         + " "
                         + timeString.substring(timeString.length() - 4, timeString.length());
-                timeString = "\non " + timeString;
+                timeString = " on " + timeString;
             }
             final String tag = String.valueOf(sliceValue.getLabelAsChars());
             Double percent = sliceValue.getValue() / SumList.get(position) * 100;
             text += "Spend " + (int)sliceValue.getValue()
                     + " (takes " + String.format("%.2f", percent) + "%)\n"
                     + " in " + tag + ".\n";
-            dialogTitle = "Spend " + (int)sliceValue.getValue() + " in " + tag + timeString;
+            dialogTitle = "Spend " + (int)sliceValue.getValue() + timeString + "\n" +
+                    " in " + tag;
             Snackbar snackbar =
                     Snackbar
                             .with(mContext)

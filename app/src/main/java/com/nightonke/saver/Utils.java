@@ -11,7 +11,10 @@ import android.text.style.RelativeSizeSpan;
 
 import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.Random;
+import java.util.TreeMap;
 
 /**
  * Created by 伟平 on 2015/10/16.
@@ -407,5 +410,18 @@ public class Utils {
             default:
                 return R.drawable.book_icon;
         }
+    }
+
+    public static <K, V extends Comparable<V>> Map<K, V> SortTreeMapByValues(final Map<K, V> map) {
+        Comparator<K> valueComparator =  new Comparator<K>() {
+            public int compare(K k1, K k2) {
+                int compare = map.get(k1).compareTo(map.get(k2));
+                if (compare == 0) return 1;
+                else return compare;
+            }
+        };
+        TreeMap<K, V> sortedByValues = new TreeMap<K, V>(valueComparator);
+        sortedByValues.putAll(map);
+        return sortedByValues;
     }
 }

@@ -16,8 +16,8 @@
             android:id="@+id/guillotine_hamburger"
             style="@style/ImageView.Hamburger"
             android:src="@drawable/ic_menu"
-            android:scaleX="0.7"
-            android:scaleY="0.7"
+            android:scaleX="0.5"
+            android:scaleY="0.5"
             />
 
         <TextView
@@ -61,6 +61,7 @@
                     />
 
                 <TextView
+                    android:id="@+id/password_tip"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:text="Input password to account book"
