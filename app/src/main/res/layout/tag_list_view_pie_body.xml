@@ -50,6 +50,19 @@
                     android:padding="10dp"
                     />
 
+                <net.steamcrafted.materialiconlib.MaterialIconView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center|right"
+                    app:materialIcon="format_list_bulleted"
+                    app:materialIconColor="@color/my_blue"
+                    app:materialIconSize="24dp"
+                    android:scaleType="center"
+                    android:background="@color/transparent"
+                    android:id="@+id/icon"
+                    />
+
             </FrameLayout>
 
             <lecho.lib.hellocharts.view.PieChartView

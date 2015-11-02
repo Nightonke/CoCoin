@@ -1,7 +1,7 @@
 package com.nightonke.saver;
 
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,14 +16,24 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 /**
  * Created by 伟平 on 2015/10/27.
  */
-public class tagFragment extends Fragment {
+public class TagChooseFragment extends Fragment {
 
     private int fragmentPosition;
+    public MyGridView myGridView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.tag_fragment, null);
+        myGridView = (MyGridView)view.findViewById(R.id.gridview);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.tag_fragment, container, false);
+        View view = inflater.inflate(R.layout.tag_fragment, container, false);
+        myGridView = (MyGridView)view.findViewById(R.id.gridview);
+        return view;
     }
 
     @Override
@@ -32,10 +42,8 @@ public class tagFragment extends Fragment {
 
         fragmentPosition = FragmentPagerItem.getPosition(getArguments());
 
-        MyGridView myGridView = (MyGridView)view.findViewById(R.id.gridview);
-
-        MyTagGridViewAdapter tagAdapter =
-                new MyTagGridViewAdapter(getActivity(), fragmentPosition);
+        TagChooseGridViewAdapter tagAdapter =
+                new TagChooseGridViewAdapter(getActivity(), fragmentPosition);
 
         myGridView.setAdapter(tagAdapter);
 

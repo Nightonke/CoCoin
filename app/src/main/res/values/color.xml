@@ -7,6 +7,8 @@
     <color name="guillotine_background_dark">#383547</color>
     <color name="selected_item_color">#30d1d5</color>
 
+    <color name="white">#ffffff</color>
+
     <color name="color_alizarin">#e74c3c</color>
 
     <color name="book_loading_background">#2196F3</color>

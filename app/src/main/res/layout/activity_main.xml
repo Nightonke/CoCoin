@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="Cocoin"
+                android:text="CoCoin"
                 android:textColor="#ffffff"
                 android:textSize="25sp"
                 />

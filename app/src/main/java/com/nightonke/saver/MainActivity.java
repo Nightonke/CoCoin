@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,13 +20,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -36,6 +32,7 @@ import com.balysv.materialmenu.MaterialMenuView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -43,6 +40,8 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
+
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -55,10 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
     private Context mContext;
 
+    private TextView toolBarTitle;
+    private TextView menuToolBarTitle;
+
     private SuperToast superToast;
+    private SuperActivityToast superActivityToast;
 
     private MyGridView myGridView;
-    private MyGridViewAdapter myGridViewAdapter;
+    private ButtonGridViewAdapter myGridViewAdapter;
 
     private MaterialEditText editView;
 
@@ -66,14 +69,13 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isPassword = false;
 
-    private static final long RIPPLE_DURATION = 250;
+    private long RIPPLE_DURATION = 250;
 
     private GuillotineAnimation animation;
 
     private String inputPassword = "";
 
     private float x1, y1, x2, y2;
-    static final int MIN_DISTANCE = 150;
 
     private RadioButton radioButton0;
     private RadioButton radioButton1;
@@ -89,8 +91,19 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private SmartTabLayout smartTabLayout;
 
+    private boolean isLoading;
+
     public static TextView tagName;
     public static ImageView tagImage;
+
+    private DummyOperation dummyOperation;
+
+    private final int NO_TAG_TOAST = 0;
+    private final int NO_MONEY_TOAST = 1;
+    private final int PASSWORD_WRONG_TOAST = 2;
+    private final int PASSWORD_CORRECT_TOAST = 3;
+    private final int SAVE_SUCCESSFULLY_TOAST = 4;
+    private final int SAVE_FAILED_TOAST = 5;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -107,7 +120,8 @@ public class MainActivity extends AppCompatActivity {
 
         mContext = this;
 
-        superToast = new SuperToast(mContext);
+        superToast = new SuperToast(this);
+        superActivityToast = new SuperActivityToast(this, SuperToast.Type.PROGRESS_HORIZONTAL);
 
         int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 
@@ -123,20 +137,23 @@ public class MainActivity extends AppCompatActivity {
             // do something for phones running an SDK before lollipop
         }
 
-        Utils.init(mContext);
+        Utils.init(this.getApplicationContext());
 
         try {
-            RecordManager recordManager = RecordManager.getInstance(mContext);
+            RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        toolBarTitle = (TextView)findViewById(R.id.guillotine_title);
+        toolBarTitle.setTypeface(Utils.typefaceLatoLight);
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
 
         FragmentPagerItems pages = new FragmentPagerItems(this);
         for (int i = 0; i < (RecordManager.TAGS.size() - 2) / 8; i++) {
-            pages.add(FragmentPagerItem.of("1", tagFragment.class));
+            pages.add(FragmentPagerItem.of("1", TagChooseFragment.class));
         }
 
         FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
@@ -145,10 +162,11 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setOffscreenPageLimit(2);
 
         viewPager.setAdapter(adapter);
+
         smartTabLayout.setViewPager(viewPager);
 
         myGridView = (MyGridView)findViewById(R.id.gridview);
-        myGridViewAdapter = new MyGridViewAdapter(this);
+        myGridViewAdapter = new ButtonGridViewAdapter(this);
         myGridView.setAdapter(myGridViewAdapter);
 
         myGridView.setOnItemClickListener(gridViewClickListener);
@@ -160,17 +178,17 @@ public class MainActivity extends AppCompatActivity {
                     public void onGlobalLayout() {
                         myGridView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                         View lastChild = myGridView.getChildAt(myGridView.getChildCount() - 1);
-                        myGridView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, lastChild.getBottom()));
-                        Log.d("Saver", "" + myGridView.getHeight());
+                        myGridView.setLayoutParams(
+                                new LinearLayout.LayoutParams(
+                                        ViewGroup.LayoutParams.FILL_PARENT, lastChild.getBottom()));
 
                         ViewGroup.LayoutParams params = transparentLy.getLayoutParams();
-                        Log.d("Saver", "" + myGridView.getMeasuredHeight());
                         params.height = myGridView.getMeasuredHeight();
                     }
                 });
 
         editView = (MaterialEditText)findViewById(R.id.edit_view);
-        editView.setTypeface(Utils.typefaceBernhardFashion);
+        editView.setTypeface(Utils.typefaceLatoHairline);
         editView.setText("0");
         editView.requestFocus();
         editView.setHelperText(" ");
@@ -192,10 +210,17 @@ public class MainActivity extends AppCompatActivity {
 
         transparentLy = (LinearLayout)guillotineMenu.findViewById(R.id.transparent_ly);
 
+        menuToolBarTitle = (TextView)guillotineMenu.findViewById(R.id.guillotine_title);
+        menuToolBarTitle.setTypeface(Utils.typefaceLatoLight);
+
         radioButton0 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_0);
         radioButton1 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_1);
         radioButton2 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_2);
         radioButton3 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_3);
+        radioButton0.setTint(R.color.white);
+        radioButton1.setTint(R.color.white);
+        radioButton2.setTint(R.color.white);
+        radioButton3.setTint(R.color.white);
 
         radioButtonLy = (LinearLayout)guillotineMenu.findViewById(R.id.radio_button_ly);
 
@@ -242,20 +267,10 @@ public class MainActivity extends AppCompatActivity {
             = new AdapterView.OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            if (!isPassword) {
-                if (Utils.ClickButtonDelete(position)) {
-                    editView.setText("0");
-                    editView.setHelperText(" ");
-                    editView.setHelperText(Utils.FLOATINGLABELS[editView.getText().toString().length()]);
-                }
-            } else {
-                radioButton0.setChecked(false);
-                radioButton1.setChecked(false);
-                radioButton2.setChecked(false);
-                radioButton3.setChecked(false);
-                inputPassword = "";
+            if (!isLoading) {
+                buttonClickOperation(true, position);
             }
-            return false;
+            return true;
         }
     };
 
@@ -265,22 +280,22 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
         if (Utils.PASSWORD.equals(inputPassword)) {
+            isLoading = true;
+            YoYo.with(Techniques.Bounce).delay(0).duration(1000).playOn(radioButton3);
             statusButton.animateState(MaterialMenuDrawable.IconState.CHECK);
             statusButton.setClickable(false);
-            superToast.setText("That's it!");
-            superToast.setAnimations(SuperToast.Animations.FLYIN);
-            superToast.setDuration(SuperToast.Duration.SHORT);
-            superToast.setTextColor(Color.parseColor("#ffffff"));
-            superToast.setBackground(R.color.correct_password);
-            superToast.setTextSize(SuperToast.TextSize.SMALL);
-            superToast.show();
+            showToast(PASSWORD_CORRECT_TOAST);
             final Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     statusButton.setClickable(true);
-                    Intent intent = new Intent(mContext, AccountBook.class);
+                    dummyOperation.cancel(true);
+                    SuperToast.cancelAllSuperToasts();
+                    SuperActivityToast.cancelAllSuperActivityToasts();
+                    Intent intent = new Intent(mContext, AccountBookActivity.class);
                     mContext.startActivity(intent);
+                    isLoading = false;
                 }
             }, 1500);
             final Handler handler2 = new Handler();
@@ -291,13 +306,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }, 3000);
         } else {
-            superToast.setText("Ooops...That's wrong!");
-            superToast.setAnimations(SuperToast.Animations.FLYIN);
-            superToast.setDuration(SuperToast.Duration.SHORT);
-            superToast.setTextColor(Color.parseColor("#ffffff"));
-            superToast.setBackground(R.color.wrong_password);
-            superToast.setTextSize(SuperToast.TextSize.SMALL);
-            superToast.show();
+            showToast(PASSWORD_WRONG_TOAST);
             YoYo.with(Techniques.Shake).duration(700).playOn(radioButtonLy);
             radioButton0.setChecked(false);
             radioButton1.setChecked(false);
@@ -319,32 +328,53 @@ public class MainActivity extends AppCompatActivity {
             = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (!isPassword) {
-                if (editView.getText().toString().equals("0")) {
-                    if (Utils.ClickButtonDelete(position)
-                            || Utils.ClickButtonCommit(position)
-                            || Utils.ClickButtonIsZero(position)) {
+            if (!isLoading) {
+                buttonClickOperation(false, position);
+            }
+        }
+    };
 
-                    } else {
-                        editView.setText(Utils.BUTTONS[position]);
-                    }
+    private void buttonClickOperation(boolean longClick, int position) {
+        if (!isPassword) {
+            if (editView.getText().toString().equals("0")
+                    && !Utils.ClickButtonCommit(position)) {
+                if (Utils.ClickButtonDelete(position)
+                        || Utils.ClickButtonIsZero(position)) {
+
                 } else {
-                    if (Utils.ClickButtonDelete(position)) {
+                    editView.setText(Utils.BUTTONS[position]);
+                }
+            } else {
+                if (Utils.ClickButtonDelete(position)) {
+                    if (longClick) {
+                        editView.setText("0");
+                        editView.setHelperText(" ");
+                        editView.setHelperText(
+                                Utils.FLOATINGLABELS[editView.getText().toString().length()]);
+                    } else {
                         editView.setText(editView.getText().toString()
                                 .substring(0, editView.getText().toString().length() - 1));
                         if (editView.getText().toString().length() == 0) {
                             editView.setText("0");
                             editView.setHelperText(" ");
                         }
-                    } else if (Utils.ClickButtonCommit(position)) {
-                        commit();
-                    } else {
-                        editView.setText(editView.getText().toString() + Utils.BUTTONS[position]);
                     }
+                } else if (Utils.ClickButtonCommit(position)) {
+                    commit();
+                } else {
+                    editView.setText(editView.getText().toString() + Utils.BUTTONS[position]);
                 }
-                editView.setHelperText(Utils.FLOATINGLABELS[editView.getText().toString().length()]);
-            } else {
-                if (Utils.ClickButtonDelete(position)) {
+            }
+            editView.setHelperText(Utils.FLOATINGLABELS[editView.getText().toString().length()]);
+        } else {
+            if (Utils.ClickButtonDelete(position)) {
+                if (longClick) {
+                    radioButton0.setChecked(false);
+                    radioButton1.setChecked(false);
+                    radioButton2.setChecked(false);
+                    radioButton3.setChecked(false);
+                    inputPassword = "";
+                } else {
                     if (inputPassword.length() == 0) {
                         inputPassword = "";
                     } else {
@@ -359,44 +389,38 @@ public class MainActivity extends AppCompatActivity {
                         }
                         inputPassword = inputPassword.substring(0, inputPassword.length() - 1);
                     }
-                } else if (Utils.ClickButtonCommit(position)) {
-                } else {
-                    if (statusButton.getState() == MaterialMenuDrawable.IconState.X) {
-                        statusButton.animateState(MaterialMenuDrawable.IconState.ARROW);
-                    }
-                    if (inputPassword.length() == 0) {
-                        radioButton0.setChecked(true);
-                        YoYo.with(Techniques.Bounce).duration(1000).playOn(radioButton0);
-                    } else if (inputPassword.length() == 1) {
-                        radioButton1.setChecked(true);
-                        YoYo.with(Techniques.Bounce).duration(1000).playOn(radioButton1);
-                    } else if (inputPassword.length() == 2) {
-                        radioButton2.setChecked(true);
-                        YoYo.with(Techniques.Bounce).duration(1000).playOn(radioButton2);
-                    } else if (inputPassword.length() == 3) {
-                        radioButton3.setChecked(true);
-                        YoYo.with(Techniques.Bounce).duration(1000).playOn(radioButton3);
-                    }
-                    if (inputPassword.length() < 4) {
-                        inputPassword += Utils.BUTTONS[position];
-                    }
                 }
-                checkPassword();
+            } else if (Utils.ClickButtonCommit(position)) {
+            } else {
+                if (statusButton.getState() == MaterialMenuDrawable.IconState.X) {
+                    statusButton.animateState(MaterialMenuDrawable.IconState.ARROW);
+                }
+                if (inputPassword.length() == 0) {
+                    radioButton0.setChecked(true);
+                    YoYo.with(Techniques.Bounce).delay(0).duration(1000).playOn(radioButton0);
+                } else if (inputPassword.length() == 1) {
+                    radioButton1.setChecked(true);
+                    YoYo.with(Techniques.Bounce).delay(0).duration(1000).playOn(radioButton1);
+                } else if (inputPassword.length() == 2) {
+                    radioButton2.setChecked(true);
+                    YoYo.with(Techniques.Bounce).delay(0).duration(1000).playOn(radioButton2);
+                } else if (inputPassword.length() == 3) {
+                    radioButton3.setChecked(true);
+                }
+                if (inputPassword.length() < 4) {
+                    inputPassword += Utils.BUTTONS[position];
+                }
             }
+            checkPassword();
         }
-    };
+    }
 
     private void commit() {
         if (tagName.getText().equals("")) {
-            superToast.setText("Just...give me a tag~");
-            superToast.setAnimations(SuperToast.Animations.FLYIN);
-            superToast.setDuration(SuperToast.Duration.SHORT);
-            superToast.setTextColor(Color.parseColor("#ffffff"));
-            superToast.setBackground(R.color.my_blue);
-            superToast.setTextSize(SuperToast.TextSize.SMALL);
-            superToast.show();
-            tagAnimation();
-        } else {
+            showToast(NO_TAG_TOAST);
+        } else if (editView.getText().toString().equals("0")) {
+            showToast(NO_MONEY_TOAST);
+        } else  {
             Calendar calendar = Calendar.getInstance();
             long saveId = RecordManager.saveRecord(new Record(
                     -1,
@@ -405,21 +429,13 @@ public class MainActivity extends AppCompatActivity {
                     tagName.getText().toString(),
                     calendar));
             if (saveId == -1) {
-                superToast.setText("Ooops...Save fail!");
-                superToast.setAnimations(SuperToast.Animations.FLYIN);
-                superToast.setDuration(SuperToast.Duration.SHORT);
-                superToast.setTextColor(Color.parseColor("#ffffff"));
-                superToast.setBackground(R.color.wrong_password);
-                superToast.setTextSize(SuperToast.TextSize.SMALL);
-                superToast.show();
+                if (!superToast.isShowing()) {
+                    showToast(SAVE_FAILED_TOAST);
+                }
             } else {
-                superToast.setText("Save successfully!");
-                superToast.setAnimations(SuperToast.Animations.FLYIN);
-                superToast.setDuration(SuperToast.Duration.SHORT);
-                superToast.setTextColor(Color.parseColor("#ffffff"));
-                superToast.setBackground(R.color.correct_password);
-                superToast.setTextSize(SuperToast.TextSize.SMALL);
-                superToast.show();
+                if (!superToast.isShowing()) {
+                    showToast(SAVE_SUCCESSFULLY_TOAST);
+                }
                 tagImage.setImageResource(0);
                 tagName.setText("");
             }
@@ -429,7 +445,86 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void tagAnimation() {
+        YoYo.with(Techniques.Shake).duration(1000).playOn(viewPager);
+    }
 
+    private void showToast(int toastType) {
+        SuperToast.cancelAllSuperToasts();
+        SuperActivityToast.cancelAllSuperActivityToasts();
+
+        superToast.setAnimations(SuperToast.Animations.FLYIN);
+        superToast.setDuration(SuperToast.Duration.SHORT);
+        superToast.setTextColor(Color.parseColor("#ffffff"));
+        superToast.setTextSize(SuperToast.TextSize.SMALL);
+
+        switch (toastType) {
+            case NO_TAG_TOAST:
+
+                superToast.setText("Just...give me a tag~");
+                superToast.setBackground(SuperToast.Background.BLUE);
+                superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
+                tagAnimation();
+
+                break;
+            case NO_MONEY_TOAST:
+
+                superToast.setText("How much U spend?");
+                superToast.setBackground(SuperToast.Background.BLUE);
+                superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
+
+                break;
+            case PASSWORD_WRONG_TOAST:
+
+                superToast.setText("Ooops...That's wrong!");
+                superToast.setBackground(SuperToast.Background.RED);
+                superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
+
+                break;
+            case PASSWORD_CORRECT_TOAST:
+
+                superActivityToast.setText("That's it!");
+                superActivityToast.setAnimations(SuperToast.Animations.FLYIN);
+                superActivityToast.setDuration(SuperToast.Duration.SHORT);
+                superActivityToast.setTextColor(Color.parseColor("#ffffff"));
+                superActivityToast.setBackground(SuperToast.Background.GREEN);
+                superActivityToast.setTextSize(SuperToast.TextSize.SMALL);
+                superActivityToast.getTextView().setTypeface(Utils.typefaceLatoLight);
+                superActivityToast.setIndeterminate(true);
+                dummyOperation = new DummyOperation(superActivityToast);
+
+                break;
+            case SAVE_SUCCESSFULLY_TOAST:
+
+                superToast.setText("Save successfully!");
+                superToast.setBackground(SuperToast.Background.GREEN);
+                superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
+
+                break;
+            case SAVE_FAILED_TOAST:
+
+                superToast.setText("Ooops...Save fail!");
+                superToast.setBackground(SuperToast.Background.RED);
+                superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
+
+                break;
+            default:
+
+                break;
+        }
+
+        switch (toastType) {
+            case PASSWORD_CORRECT_TOAST:
+
+                dummyOperation.execute();
+                superActivityToast.show();
+
+                break;
+            default:
+
+                superToast.show();
+
+                break;
+        }
     }
 
     @Override
@@ -473,5 +568,20 @@ public class MainActivity extends AppCompatActivity {
         if (editView.getText().toString().equals("")) {
             editView.setText("0");
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isLoading = false;
+        editView.setText("0");
+        inputPassword = "";
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        tagImage = null;
+        tagName = null;
     }
 }

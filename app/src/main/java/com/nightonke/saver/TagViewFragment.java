@@ -1,31 +1,26 @@
 package com.nightonke.saver;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by 伟平 on 2015/10/20.
  */
 
-public class mFragment extends Fragment {
+public class TagViewFragment extends Fragment {
 
     private int position;
 
@@ -36,8 +31,8 @@ public class mFragment extends Fragment {
 
     private Context mContext;
 
-    public static mFragment newInstance(int position) {
-        mFragment fragment = new mFragment();
+    public static TagViewFragment newInstance(int position) {
+        TagViewFragment fragment = new TagViewFragment();
         Bundle args = new Bundle();
         args.putInt("POSITION", position);
         fragment.setArguments(args);
@@ -81,7 +76,7 @@ public class mFragment extends Fragment {
             }
         }
 
-        mAdapter = new RecyclerViewMaterialAdapter(new RecyclerViewAdapter(list, mContext, position));
+        mAdapter = new RecyclerViewMaterialAdapter(new TagViewRecyclerViewAdapter(list, mContext, position));
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);

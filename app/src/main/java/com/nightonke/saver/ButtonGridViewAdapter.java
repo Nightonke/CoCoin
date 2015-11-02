@@ -6,26 +6,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
-import java.util.Map;
-
 /**
  * Created by 伟平 on 2015/10/16.
  */
-public class MyGridViewAdapter extends BaseAdapter {
+public class ButtonGridViewAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private Context mContext;
 
-    public MyGridViewAdapter(Context context) {
+    public ButtonGridViewAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
         this.mContext = context;
     }
@@ -60,20 +56,20 @@ public class MyGridViewAdapter extends BaseAdapter {
         }
 
         if (position == 11) {
-            holder.tv.setTypeface(Utils.typefaceBernhardFashion);
+            holder.tv.setTypeface(Utils.typefaceLatoHairline);
             holder.tv.setVisibility(View.INVISIBLE);
             holder.iv.setIcon(MaterialDrawableBuilder.IconValue.CHECK);
             holder.ml.setRippleColor(Color.parseColor("#0000ff"));
             holder.ml.setRippleAlpha(50);
         } else if (position == 9) {
             holder.iv.setIcon(MaterialDrawableBuilder.IconValue.ERASER);
-            holder.tv.setTypeface(Utils.typefaceBernhardFashion);
+            holder.tv.setTypeface(Utils.typefaceLatoHairline);
             holder.tv.setVisibility(View.INVISIBLE);
             holder.ml.setRippleColor(Color.parseColor("#0000ff"));
             holder.ml.setRippleAlpha(50);
         } else {
             holder.iv.setVisibility(View.INVISIBLE);
-            holder.tv.setTypeface(Utils.typefaceBernhardFashion);
+            holder.tv.setTypeface(Utils.typefaceLatoHairline);
             holder.tv.setText(Utils.BUTTONS[position]);
             holder.ml.setRippleDelayClick(false);
         }

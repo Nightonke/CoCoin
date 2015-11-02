@@ -220,7 +220,7 @@ public class RecordManager {
         for (int i = 0; i < RANDOM_DATA_NUMBER; i++) {
             Record record = new Record();
 
-            record.setMoney(random.nextFloat() * 50);
+            record.setMoney((int)(random.nextFloat() * 50) + 1);
             record.setRemark("Remark " + i);
             record.setTag(tagStrings[random.nextInt(tagStrings.length)]);
             record.setCurrency("RMB");

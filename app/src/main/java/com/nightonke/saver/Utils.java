@@ -1,5 +1,7 @@
 package com.nightonke.saver;
 
+import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -7,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 
+import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.Random;
 
 /**
@@ -25,10 +29,14 @@ public class Utils {
 
     public static String[] BUTTONS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "D", "0", "Y"};
 
-    public static Typeface typefaceBernhardFashion;
+    public static Typeface typefaceLatoHairline;
+    public static Typeface typefaceLatoLight;
+    public static Typeface typefaceCodeLight;
 
     public static void init(Context context) {
-        typefaceBernhardFashion = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Hairline.ttf");
+        typefaceLatoHairline = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Hairline.ttf");
+        typefaceLatoLight = Typeface.createFromAsset(context.getAssets(), "fonts/LatoLatin-Light.ttf");
+        typefaceCodeLight = Typeface.createFromAsset(context.getAssets(), "fonts/CODE_Light.otf");
         relativeSizeSpan = new RelativeSizeSpan(2f);
         redForegroundSpan = new ForegroundColorSpan(Color.parseColor("#ff5252"));
         greenForegroundSpan = new ForegroundColorSpan(Color.parseColor("#4ca550"));
@@ -40,6 +48,91 @@ public class Utils {
 
         random = new Random();
     }
+
+    public static boolean WEEK_START_WITH_SUNDAY = false;
+
+    public static Calendar GetDayLeftRange(Calendar today) {
+        Calendar calendar = today;
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetDayRightRange(Calendar today) {
+        Calendar calendar = today;
+        calendar.set(Calendar.HOUR, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetWeekLeftRange(Calendar today) {
+        int nowDayOfWeek = today.get(Calendar.DAY_OF_WEEK);
+        Calendar calendar = today;
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        if (Utils.WEEK_START_WITH_SUNDAY) {
+            int[] diff = new int[]{0, 0, -1, -2, -3, -4, -5, -6};
+            calendar.add(Calendar.DAY_OF_WEEK, diff[nowDayOfWeek]);
+        } else {
+            int[] diff = new int[]{0, -6, 0, -1, -2, -3, -4, -5};
+            calendar.add(Calendar.DAY_OF_WEEK, diff[nowDayOfWeek]);
+        }
+        return calendar;
+    }
+
+    public static Calendar GetWeekRightRange(Calendar today) {
+        Calendar calendar = GetWeekLeftRange(today);
+        calendar.add(Calendar.DAY_OF_WEEK, 7);
+        return calendar;
+    }
+
+    public static Calendar GetMonthLeftRange(Calendar today) {
+        Calendar calendar = today;
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetMonthRightRange(Calendar today) {
+        Calendar calendar = today;
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.MONTH, 1);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetYearLeftRange(Calendar today) {
+        Calendar calendar = today;
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetYearRightRange(Calendar today) {
+        Calendar calendar = today;
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.add(Calendar.YEAR, 1);
+        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static String TODAY_VIEW_TITLE[] = {"Today",
+                                               "This Week",
+                                               "This Month",
+                                               "This Year"};
 
     public static boolean ClickButtonDelete(int position) {
         return position == 9;
@@ -148,46 +241,46 @@ public class Utils {
         }
     }
 
-    public static Drawable GetTagDrawable(String tag, Context context) {
+    public static int GetTagDrawable(String tag) {
         switch (tag) {
             case "Sum Pie":
-                return context.getResources().getDrawable(R.drawable.sum_header_pie);
+                return R.drawable.sum_header_pie;
             case "Sum Histogram":
-                return context.getResources().getDrawable(R.drawable.sum_header_histogram);
+                return R.drawable.sum_header_histogram;
             case "Book":
-                return context.getResources().getDrawable(R.drawable.book_header);
+                return R.drawable.book_header;
             case "Clothing & Footwear":
-                return context.getResources().getDrawable(R.drawable.closet_header);
+                return R.drawable.closet_header;
             case "Donation":
-                return context.getResources().getDrawable(R.drawable.donation_header);
+                return R.drawable.donation_header;
             case "Education":
-                return context.getResources().getDrawable(R.drawable.education_header);
+                return R.drawable.education_header;
             case "Entertainment":
-                return context.getResources().getDrawable(R.drawable.entertainment_header);
+                return R.drawable.entertainment_header;
             case "Friend":
-                return context.getResources().getDrawable(R.drawable.friend_header);
+                return R.drawable.friend_header;
             case "Hobby":
-                return context.getResources().getDrawable(R.drawable.hobby_header);
+                return R.drawable.hobby_header;
             case "Home":
-                return context.getResources().getDrawable(R.drawable.home_header);
+                return R.drawable.home_header;
             case "Insurance":
-                return context.getResources().getDrawable(R.drawable.insurance_header);
+                return R.drawable.insurance_header;
             case "Internet":
-                return context.getResources().getDrawable(R.drawable.internet_header);
+                return R.drawable.internet_header;
             case "Meal":
-                return context.getResources().getDrawable(R.drawable.meal_header);
+                return R.drawable.meal_header;
             case "Medical":
-                return context.getResources().getDrawable(R.drawable.medical_header);
+                return R.drawable.medical_header;
             case "Snack":
-                return context.getResources().getDrawable(R.drawable.snack_header);
+                return R.drawable.snack_header;
             case "Sport":
-                return context.getResources().getDrawable(R.drawable.sport_header);
+                return R.drawable.sport_header;
             case "Traffic":
-                return context.getResources().getDrawable(R.drawable.traffic_header);
+                return R.drawable.traffic_header;
             case "Vehicle Maintenance":
-                return context.getResources().getDrawable(R.drawable.vehicle_maintenance_header);
+                return R.drawable.vehicle_maintenance_header;
             default:
-                return context.getResources().getDrawable(R.drawable.sum_header_histogram);
+                return R.drawable.sum_header_histogram;
         }
     }
 

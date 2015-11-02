@@ -18,13 +18,13 @@ import net.steamcrafted.materialiconlib.MaterialIconView;
  * Created by 伟平 on 2015/10/16.
  */
 
-public class MyTagGridViewAdapter extends BaseAdapter {
+public class TagChooseGridViewAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private Context mContext;
     private int fragmentPosition;
 
-    public MyTagGridViewAdapter(Context context, int fragmentPosition) {
+    public TagChooseGridViewAdapter(Context context, int fragmentPosition) {
         this.inflater = LayoutInflater.from(context);
         this.mContext = context;
         this.fragmentPosition = fragmentPosition;
@@ -60,6 +60,7 @@ public class MyTagGridViewAdapter extends BaseAdapter {
 
         holder.tagName.setText(
                 RecordManager.TAGS.get(fragmentPosition * 8 + position + 2));
+        holder.tagName.setTypeface(Utils.typefaceLatoLight);
         holder.tagImage.setImageResource(
                 Utils.GetTagIcon(RecordManager.TAGS.get(fragmentPosition * 8 + position + 2)));
 
