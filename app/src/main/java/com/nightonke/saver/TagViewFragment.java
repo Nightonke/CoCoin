@@ -70,7 +70,7 @@ public class TagViewFragment extends Fragment {
             }
         } else {
             for (Record record : RecordManager.RECORDS) {
-                if (record.getTag().equals(RecordManager.TAGS.get(position))) {
+                if (record.getTag() == RecordManager.TAGS.get(position).getId()) {
                     list.add(record);
                 }
             }

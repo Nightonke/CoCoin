@@ -15,7 +15,9 @@ import java.util.LinkedList;
  */
 public class DB {
 
-    public static final String DB_NAME_STRING = "Record";
+    public static final String DB_NAME_STRING = "CoCoin Database";
+    public static final String RECORD_DB_NAME_STRING = "Record";
+    public static final String TAG_DB_NAME_STRING = "Tag";
 
     public static final int VERSION = 1;
 
@@ -37,26 +39,37 @@ public class DB {
         return db;
     }
 
-    public void getRecordList() {
+    public void getData() {
         RecordManager.RECORDS = new LinkedList<>();
         RecordManager.TAGS = new LinkedList<>();
+
         Cursor cursor = sqliteDatabase
-                .query(DB_NAME_STRING, null, null, null, null, null, null);
+                .query(TAG_DB_NAME_STRING, null, null, null, null, null, null);
+        if (cursor.moveToFirst()) {
+            do {
+                Tag tag = new Tag();
+                tag.setId(cursor.getInt(cursor.getColumnIndex("ID")) - 1);
+                tag.setName(cursor.getString(cursor.getColumnIndex("NAME")));
+                tag.setWeight(cursor.getInt(cursor.getColumnIndex("WEIGHT")));
+                RecordManager.TAGS.add(tag);
+            } while (cursor.moveToNext());
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        cursor = sqliteDatabase
+                .query(RECORD_DB_NAME_STRING, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
                 Record record = new Record();
                 record.setId(cursor.getLong(cursor.getColumnIndex("ID")));
                 record.setMoney(cursor.getFloat(cursor.getColumnIndex("MONEY")));
                 record.setCurrency(cursor.getString(cursor.getColumnIndex("CURRENCY")));
-                record.setTag(cursor.getString(cursor.getColumnIndex("TAG")));
+                record.setTag(cursor.getInt(cursor.getColumnIndex("TAG")));
                 record.setCalendar(cursor.getString(cursor.getColumnIndex("TIME")));
                 record.setRemark(cursor.getString(cursor.getColumnIndex("REMARK")));
                 RecordManager.RECORDS.add(record);
-
-                if (!RecordManager.TAGS.contains(record.getTag())) {
-                    RecordManager.TAGS.add(record.getTag());
-                }
-
             } while (cursor.moveToNext());
             if (cursor != null) {
                 cursor.close();
@@ -72,7 +85,7 @@ public class DB {
         values.put("TIME", new SimpleDateFormat("yyyy-MM-dd HH:mm")
                 .format(record.getCalendar().getTime()));
         values.put("REMARK", record.getRemark());
-        long insertId = sqliteDatabase.insert("Record", null, values);
+        long insertId = sqliteDatabase.insert(RECORD_DB_NAME_STRING, null, values);
         record.setId(insertId);
         if (RecordManager.SHOW_LOG) {
             Log.d("Saver", "DB: Insert record: " + record.toString());
@@ -80,13 +93,38 @@ public class DB {
         return insertId;
     }
 
+    public int saveTag(Tag tag) {
+        ContentValues values = new ContentValues();
+        values.put("NAME", tag.getName());
+        values.put("WEIGHT", tag.getWeight());
+        int insertId = (int)sqliteDatabase.insert(TAG_DB_NAME_STRING, null, values);
+        tag.setId(insertId);
+        if (RecordManager.SHOW_LOG) {
+            Log.d("Saver", "DB: Insert tag: " + tag.toString());
+        }
+        return insertId - 1;
+    }
+
     public long deleteRecord(long id) {
-        long deletedId = sqliteDatabase.delete("Record",
+        long deletedId = sqliteDatabase.delete(RECORD_DB_NAME_STRING,
                 "ID = ?",
                 new String[]{id + ""});
-        Log.d("Saver",
-                "DB: Delete record: " + "Record(id = " + id + ", deletedId = " + deletedId + ")");
+        if (RecordManager.SHOW_LOG) {
+            Log.d("Saver",
+                    "DB: Delete record: " + "Record(id = " + id + ", deletedId = " + deletedId + ")");
+        }
         return deletedId;
+    }
+
+    public int deleteTag(int id) {
+        int deletedId = sqliteDatabase.delete(TAG_DB_NAME_STRING,
+                "ID = ?",
+                new String[]{(id + 1) + ""});
+        if (RecordManager.SHOW_LOG) {
+            Log.d("Saver",
+                    "DB: Delete tag: " + "tag(id = " + id + ", deletedId = " + deletedId + ")");
+        }
+        return deletedId - 1;
     }
 
     public long updateRecord(Record record) {
@@ -97,7 +135,7 @@ public class DB {
         values.put("TAG", record.getTag());
         values.put("TIME", record.getCalendar().toString());
         values.put("REMARK", record.getRemark());
-        long updateId = sqliteDatabase.update("Record", values,
+        long updateId = sqliteDatabase.update(RECORD_DB_NAME_STRING, values,
                 "ID = ?",
                 new String[]{record.getId() + ""});
         if (RecordManager.SHOW_LOG) {
@@ -106,5 +144,17 @@ public class DB {
         return updateId;
     }
 
-
+    public int updateTag(Tag tag) {
+        ContentValues values = new ContentValues();
+        values.put("ID", tag.getId());
+        values.put("NAME", tag.getName());
+        values.put("WEIGHT", tag.getWeight());
+        int updateId = sqliteDatabase.update(TAG_DB_NAME_STRING, values,
+                "ID = ?",
+                new String[]{(tag.getId() + 1) + ""});
+        if (RecordManager.SHOW_LOG) {
+            Log.d("Saver", "DB: Update tag: " + tag.toString());
+        }
+        return updateId - 1;
+    }
 }

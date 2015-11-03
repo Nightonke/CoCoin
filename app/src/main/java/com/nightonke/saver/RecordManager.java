@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -24,11 +26,20 @@ public class RecordManager {
     private static DB db;
 
     public static List<Record> RECORDS;
-    public static List<String> TAGS;
+    public static List<Tag> TAGS;
+    public static Map<Integer, String> TAG_NAMES;
 
     public static boolean SHOW_LOG = false;
     public static boolean RANDOM_DATA = true;
     private int RANDOM_DATA_NUMBER = 300;
+
+    private static boolean FIRST_TIME = true;
+
+    public static int SAVE_TAG_ERROR_DATABASE_ERROR = -1;
+    public static int SAVE_TAG_ERROR_DUPLICATED_NAME = -2;
+
+    public static int DELETE_TAG_ERROR_DATABASE_ERROR = -1;
+    public static int DELETE_TAG_ERROR_TAG_REFERENCE = -2;
 
     private RecordManager(Context context) {
         try {
@@ -36,6 +47,17 @@ public class RecordManager {
             Log.d("Saver", "Loading database successfully.");
         } catch(IOException e) {
             e.printStackTrace();
+        }
+        if (FIRST_TIME) {
+            SharedPreferences preferences =
+                    context.getSharedPreferences("Values", Context.MODE_PRIVATE);
+            if (preferences.getBoolean("FIRST_TIME", true)) {
+                createTags();
+                SharedPreferences.Editor editor =
+                        context.getSharedPreferences("Values", Context.MODE_PRIVATE).edit();
+                editor.putBoolean("FIRST_TIME", false);
+                editor.commit();
+            }
         }
         if (RANDOM_DATA) {
 
@@ -60,9 +82,10 @@ public class RecordManager {
         if (recordManager == null) {
             RECORDS = new LinkedList<>();
             TAGS = new LinkedList<>();
+            TAG_NAMES = new HashMap<>();
             recordManager = new RecordManager(context);
 
-            db.getRecordList();
+            db.getData();
 
             Log.d("Saver", "Loading " +
                     RECORDS.size() +
@@ -71,14 +94,14 @@ public class RecordManager {
                     TAGS.size() +
                     " tags successfully.");
 
-            Collections.sort(TAGS, new Comparator<String>() {
-                @Override
-                public int compare(String lhs, String rhs) {
-                    return lhs.compareTo(rhs);
-                }
-            });
-            TAGS.add(0, "Sum Histogram");
-            TAGS.add(0, "Sum Pie");
+            TAGS.add(0, new Tag(-1, "Sum Histogram", -1));
+            TAGS.add(0, new Tag(-2, "Sum Pie", -2));
+
+            for (Tag tag : TAGS) {
+                TAG_NAMES.put(tag.getId(), tag.getName());
+            }
+
+            sortTAGS();
         }
         return recordManager;
     }
@@ -99,8 +122,37 @@ public class RecordManager {
             }
             RECORDS.add(record);
         }
-        if (!TAGS.contains(record.getTag())) {
-            TAGS.add(record.getTag());
+        return insertId;
+    }
+
+    public static int saveTag(Tag tag) {
+        int insertId = -1;
+        if (RecordManager.SHOW_LOG) {
+            Log.d("Saver", "Manager: Save tag: " + tag.toString());
+        }
+        boolean duplicatedName = false;
+        for (Tag t : TAGS) {
+            if (t.getName().equals(tag.getName())) {
+                duplicatedName = true;
+                break;
+            }
+        }
+        if (duplicatedName) {
+            return SAVE_TAG_ERROR_DUPLICATED_NAME;
+        }
+        insertId = db.saveTag(tag);
+        if (insertId == -1) {
+            if (RecordManager.SHOW_LOG) {
+                Log.d("Saver", "Save the above tag FAIL!");
+                return SAVE_TAG_ERROR_DATABASE_ERROR;
+            }
+        } else {
+            if (RecordManager.SHOW_LOG) {
+                Log.d("Saver", "Save the above tag SUCCESSFULLY!");
+            }
+            TAGS.add(tag);
+            TAG_NAMES.put(tag.getId(), tag.getName());
+            sortTAGS();
         }
         return insertId;
     }
@@ -124,6 +176,38 @@ public class RecordManager {
         return deletedId;
     }
 
+    public static int deleteTag(int id) {
+        int deletedId = -1;
+        Log.d("Saver",
+                "Manager: Delete tag: " + "Tag(id = " + id + ", deletedId = " + deletedId + ")");
+        boolean tagReference = false;
+        for (Record record : RECORDS) {
+            if (record.getTag() == id) {
+                tagReference = true;
+                break;
+            }
+        }
+        if (tagReference) {
+            return DELETE_TAG_ERROR_TAG_REFERENCE;
+        }
+        deletedId = db.deleteTag(id);
+        if (deletedId == -1) {
+            Log.d("Saver", "Delete the above tag FAIL!");
+            return DELETE_TAG_ERROR_DATABASE_ERROR;
+        } else {
+            Log.d("Saver", "Delete the above tag SUCCESSFULLY!");
+            for (Tag tag : TAGS) {
+                if (tag.getId() == deletedId) {
+                    TAGS.remove(tag);
+                    break;
+                }
+            }
+            TAG_NAMES.remove(id);
+            sortTAGS();
+        }
+        return deletedId;
+    }
+
     public static long updateRecord(Record record) {
         long updateId = -1;
         Log.d("Saver",
@@ -140,8 +224,25 @@ public class RecordManager {
                 }
             }
         }
-        if (!TAGS.contains(record.getTag())) {
-            TAGS.add(record.getTag());
+        return updateId;
+    }
+
+    public static long updateTag(Tag tag) {
+        int updateId = -1;
+        Log.d("Saver",
+                "Manager: Update tag: " + tag.toString());
+        updateId = db.updateTag(tag);
+        if (updateId == -1) {
+            Log.d("Saver", "Update the above tag FAIL!");
+        } else {
+            Log.d("Saver", "Update the above tag SUCCESSFULLY!");
+            for (Tag t : TAGS) {
+                if (t.getId() == updateId) {
+                    t.set(tag);
+                    break;
+                }
+            }
+            sortTAGS();
         }
         return updateId;
     }
@@ -166,10 +267,10 @@ public class RecordManager {
         return list;
     }
 
-    public static List<Record> queryRecordByTag(String tag) {
+    public static List<Record> queryRecordByTag(int tag) {
         List<Record> list = new LinkedList<>();
         for (Record record : RECORDS) {
-            if (record.getTag().equals(tag)) {
+            if (record.getTag() == tag) {
                 list.add(record);
             }
         }
@@ -196,27 +297,29 @@ public class RecordManager {
         return list;
     }
 
+    private void createTags() {
+        saveTag(new Tag(-1, "Meal",                0));
+        saveTag(new Tag(-1, "Clothing & Footwear", 1));
+        saveTag(new Tag(-1, "Home",                2));
+        saveTag(new Tag(-1, "Traffic",             3));
+        saveTag(new Tag(-1, "Vehicle Maintenance", 4));
+        saveTag(new Tag(-1, "Book",                5));
+        saveTag(new Tag(-1, "Hobby",               6));
+        saveTag(new Tag(-1, "Internet",            7));
+        saveTag(new Tag(-1, "Friend",              8));
+        saveTag(new Tag(-1, "Education",           9));
+        saveTag(new Tag(-1, "Entertainment",      10));
+        saveTag(new Tag(-1, "Medical",            11));
+        saveTag(new Tag(-1, "Insurance",          12));
+        saveTag(new Tag(-1, "Donation",           13));
+        saveTag(new Tag(-1, "Sport",              14));
+        saveTag(new Tag(-1, "Snack",              15));
+        sortTAGS();
+    }
+
     private void randomDataCreater() {
 
         Random random = new Random();
-
-        String[] tagStrings = {
-                "Meal",
-                "Snack",
-                "Traffic",
-                "Hobby",
-                "Clothing & Footwear",
-                "Book",
-                "Medical",
-                "Insurance",
-                "Internet",
-                "Friend",
-                "Home",
-                "Donation",
-                "Education",
-                "Vehicle Maintenance",
-                "Sport",
-                "Entertainment"};
 
         List<Record> createdRecords = new ArrayList<>();
 
@@ -225,7 +328,7 @@ public class RecordManager {
 
             record.setMoney((int)(random.nextFloat() * 50) + 1);
             record.setRemark("Remark " + i);
-            record.setTag(tagStrings[random.nextInt(tagStrings.length)]);
+            record.setTag(random.nextInt(TAGS.size()));
             record.setCurrency("RMB");
             Calendar calendar = Calendar.getInstance();
             Calendar now = Calendar.getInstance();
@@ -256,6 +359,21 @@ public class RecordManager {
         for (Record record : createdRecords) {
             saveRecord(record);
         }
+    }
+
+    private static void sortTAGS() {
+        Collections.sort(TAGS, new Comparator<Tag>() {
+            @Override
+            public int compare(Tag lhs, Tag rhs) {
+                if (lhs.getWeight() != rhs.getWeight()) {
+                    return Integer.valueOf(lhs.getWeight()).compareTo(rhs.getWeight());
+                } else if (!lhs.getName().equals(rhs.getName())) {
+                    return lhs.getName().compareTo(rhs.getName());
+                } else {
+                    return Integer.valueOf(lhs.getId()).compareTo(rhs.getId());
+                }
+            }
+        });
     }
 
 }

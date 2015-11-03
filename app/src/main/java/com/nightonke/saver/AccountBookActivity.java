@@ -141,9 +141,9 @@ public class AccountBookActivity extends AppCompatActivity {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
                 return HeaderDesign.fromColorResAndDrawable(
-                        Utils.GetTagColor(RecordManager.TAGS.get(page)),
+                        Utils.GetTagColor(RecordManager.TAGS.get(page).getName()),
                         mContext.getResources().getDrawable(
-                                Utils.GetTagDrawable(RecordManager.TAGS.get(page))));
+                                Utils.GetTagDrawable(RecordManager.TAGS.get(page).getName())));
             }
         });
     }
@@ -166,9 +166,9 @@ public class AccountBookActivity extends AppCompatActivity {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
                 return HeaderDesign.fromColorResAndDrawable(
-                        Utils.GetTagColor(RecordManager.TAGS.get(page)),
+                        Utils.GetTagColor(RecordManager.TAGS.get(page).getName()),
                         mContext.getResources().getDrawable(
-                                Utils.GetTagDrawable(RecordManager.TAGS.get(page))));
+                                Utils.GetTagDrawable(RecordManager.TAGS.get(page).getName())));
             }
         });
     }

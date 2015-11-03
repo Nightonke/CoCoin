@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isLoading;
 
+    public static int tagId;
     public static TextView tagName;
     public static ImageView tagImage;
 
@@ -431,7 +432,7 @@ public class MainActivity extends AppCompatActivity {
                     -1,
                     Float.valueOf(editView.getText().toString()),
                     "RMB",
-                    tagName.getText().toString(),
+                    tagId,
                     calendar));
             if (saveId == -1) {
                 if (!superToast.isShowing()) {

@@ -56,7 +56,7 @@ public class TagViewRecyclerViewAdapter
     private List<List<Record>> contents;
     private List<Integer> type;
     private List<Double> SumList;
-    private List<Map<String, Double>> AllTagExpanse;
+    private List<Map<Integer, Double>> AllTagExpanse;
     private int[] DayExpanseSum;
     private int[] MonthExpanseSum;
     private int[] SelectedPosition;
@@ -83,6 +83,7 @@ public class TagViewRecyclerViewAdapter
     static final int HISTOGRAM = 2;
 
     private int fragmentPosition;
+    private int fragmentTagId;
 
     public TagViewRecyclerViewAdapter(List<Record> records, Context context, int position) {
         mContext = context;
@@ -167,16 +168,15 @@ public class TagViewRecyclerViewAdapter
             AllTagExpanse = new ArrayList<>();
             for (int i = 0; i < contents.size(); i++) {
 
-                Map<String, Double> tagExpanse = new TreeMap<>();
+                Map<Integer, Double> tagExpanse = new TreeMap<>();
 
-                for (int j = 2; j < RecordManager.TAGS.size(); j++) {
-                    tagExpanse.put(RecordManager.TAGS.get(j), Double.valueOf(0));
+                for (Tag tag : RecordManager.TAGS) {
+                    tagExpanse.put(tag.getId(), Double.valueOf(0));
                 }
 
                 for (Record record : contents.get(i)) {
                     tagExpanse.put(record.getTag(),
-                            tagExpanse.get(record.getTag())
-                                    + Double.valueOf(record.getMoney()));
+                            tagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
                 }
 
                 tagExpanse = Utils.SortTreeMapByValues(tagExpanse);
@@ -203,6 +203,14 @@ public class TagViewRecyclerViewAdapter
         SelectedPosition = new int[contents.size() + 1];
         for (int i = 0; i < SelectedPosition.length; i++) {
             SelectedPosition[i] = 0;
+        }
+
+        fragmentTagId = contents.get(0).get(0).getTag();
+        if (fragmentPosition == 0) {
+            fragmentTagId = -2;
+        }
+        if (fragmentPosition == 1) {
+            fragmentTagId = -1;
         }
     }
 
@@ -282,14 +290,14 @@ public class TagViewRecyclerViewAdapter
                 switch (chartType) {
                     case PIE:
                         sliceValues = new ArrayList<>();
-                        for (Map.Entry<String, Double> entry :
+                        for (Map.Entry<Integer, Double> entry :
                                 AllTagExpanse.get(position - 1).entrySet()) {
                             if (entry.getValue() >= 1) {
                                 SliceValue sliceValue = new SliceValue(
                                         (float)(double)entry.getValue(),
                                         mContext.getResources().
                                                 getColor(Utils.GetTagColor(entry.getKey())));
-                                sliceValue.setLabel(entry.getKey());
+                                sliceValue.setLabel(String.valueOf(entry.getKey()));
                                 sliceValues.add(sliceValue);
                             }
                         }
@@ -616,7 +624,7 @@ public class TagViewRecyclerViewAdapter
                             .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                             .position(Snackbar.SnackbarPosition.BOTTOM)
                             .margin(15, 15)
-                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentPosition))
+                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentTagId))
                             .textColor(Color.WHITE)
                             .textTypeface(Utils.typefaceLatoLight)
                             .actionLabel("Check")
@@ -789,13 +797,13 @@ public class TagViewRecyclerViewAdapter
                         + timeString.substring(timeString.length() - 4, timeString.length());
                 timeString = " on " + timeString;
             }
-            final String tag = String.valueOf(sliceValue.getLabelAsChars());
+            final int tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
             Double percent = sliceValue.getValue() / SumList.get(position) * 100;
             text += "Spend " + (int)sliceValue.getValue()
                     + " (takes " + String.format("%.2f", percent) + "%)\n"
-                    + " in " + tag + ".\n";
+                    + " in " + RecordManager.TAG_NAMES.get(tagId) + ".\n";
             dialogTitle = "Spend " + (int)sliceValue.getValue() + timeString + "\n" +
-                    " in " + tag;
+                    " in " + RecordManager.TAG_NAMES.get(tagId);
             Snackbar snackbar =
                     Snackbar
                             .with(mContext)
@@ -803,7 +811,7 @@ public class TagViewRecyclerViewAdapter
                             .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                             .position(Snackbar.SnackbarPosition.BOTTOM)
                             .margin(15, 15)
-                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentPosition))
+                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentTagId))
                             .text(text)
                             .textTypeface(Utils.typefaceLatoLight)
                             .textColor(Color.WHITE)
@@ -815,7 +823,7 @@ public class TagViewRecyclerViewAdapter
                                 public void onActionClicked(Snackbar snackbar) {
                                     List<Record> shownRecords = new ArrayList<>();
                                     for (Record record : contents.get(position)) {
-                                        if (record.getTag().equals(tag)) {
+                                        if (record.getTag() == tagId) {
                                             shownRecords.add(record);
                                         }
                                     }

@@ -53,10 +53,12 @@ public class TagChooseGridViewAdapter extends BaseAdapter {
         }
 
         holder.tagName.setText(
-                RecordManager.TAGS.get(fragmentPosition * 8 + position + 2));
+                RecordManager.TAGS.
+                        get(fragmentPosition * 8 + position + 2).getName());
         holder.tagName.setTypeface(Utils.typefaceLatoLight);
         holder.tagImage.setImageResource(
-                Utils.GetTagIcon(RecordManager.TAGS.get(fragmentPosition * 8 + position + 2)));
+                Utils.GetTagIcon(RecordManager.TAGS.
+                        get(fragmentPosition * 8 + position + 2).getName()));
 
         return convertView;
     }

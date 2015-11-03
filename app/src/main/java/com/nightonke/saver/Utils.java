@@ -364,6 +364,49 @@ public class Utils {
         }
     }
 
+    public static int GetTagColor(int tag) {
+        switch (tag) {
+            case -2:
+                return R.color.sum_header_pie;
+            case -1:
+                return R.color.sum_header_histogram;
+            case 5:
+                return R.color.book_header;
+            case 1:
+                return R.color.closet_header;
+            case 13:
+                return R.color.donation_header;
+            case 9:
+                return R.color.education_header;
+            case 10:
+                return R.color.entertainment_header;
+            case 8:
+                return R.color.friend_header;
+            case 6:
+                return R.color.hobby_header;
+            case 2:
+                return R.color.home_header;
+            case 12:
+                return R.color.insurance_header;
+            case 7:
+                return R.color.internet_header;
+            case 0:
+                return R.color.meal_header;
+            case 11:
+                return R.color.medical_header;
+            case 15:
+                return R.color.snack_header;
+            case 14:
+                return R.color.sport_header;
+            case 3:
+                return R.color.traffic_header;
+            case 4:
+                return R.color.vehicle_maintenance_header;
+            default:
+                return R.color.green;
+        }
+    }
+
     public static int GetTagDrawable(String tag) {
         switch (tag) {
             case "Sum Pie":
@@ -407,43 +450,43 @@ public class Utils {
         }
     }
 
-    public static int GetSnackBarBackground(int position) {
-        switch (position) {
-            case 0:
+    public static int GetSnackBarBackground(int tagId) {
+        switch (tagId) {
+            case -2:
                 return R.drawable.snackbar_shape_sum_pie;
-            case 1:
+            case -1:
                 return R.drawable.snackbar_shape_sum_histogram;
-            case 2:
-                return R.drawable.snackbar_shape_book;
-            case 3:
-                return R.drawable.snackbar_shape_closet;
-            case 4:
-                return R.drawable.snackbar_shape_donation;
             case 5:
-                return R.drawable.snackbar_shape_education;
-            case 6:
-                return R.drawable.snackbar_shape_entertainment;
-            case 7:
-                return R.drawable.snackbar_shape_friend;
-            case 8:
-                return R.drawable.snackbar_shape_hobby;
-            case 9:
-                return R.drawable.snackbar_shape_home;
-            case 10:
-                return R.drawable.snackbar_shape_insurance;
-            case 11:
-                return R.drawable.snackbar_shape_internet;
-            case 12:
-                return R.drawable.snackbar_shape_meal;
+                return R.drawable.snackbar_shape_book;
+            case 1:
+                return R.drawable.snackbar_shape_closet;
             case 13:
+                return R.drawable.snackbar_shape_donation;
+            case 9:
+                return R.drawable.snackbar_shape_education;
+            case 10:
+                return R.drawable.snackbar_shape_entertainment;
+            case 8:
+                return R.drawable.snackbar_shape_friend;
+            case 6:
+                return R.drawable.snackbar_shape_hobby;
+            case 2:
+                return R.drawable.snackbar_shape_home;
+            case 12:
+                return R.drawable.snackbar_shape_insurance;
+            case 7:
+                return R.drawable.snackbar_shape_internet;
+            case 0:
+                return R.drawable.snackbar_shape_meal;
+            case 11:
                 return R.drawable.snackbar_shape_medical;
-            case 14:
-                return R.drawable.snackbar_shape_snack;
             case 15:
+                return R.drawable.snackbar_shape_snack;
+            case 14:
                 return R.drawable.snackbar_shape_sport;
-            case 16:
+            case 3:
                 return R.drawable.snackbar_shape_traffic;
-            case 17:
+            case 4:
                 return R.drawable.snackbar_shape_vehicle_maintenance;
             default:
                 return R.drawable.snackbar_shape;
@@ -526,6 +569,45 @@ public class Utils {
             case "Traffic":
                 return R.drawable.traffic_icon;
             case "Vehicle Maintenance":
+                return R.drawable.vehicle_maintenance_icon;
+            default:
+                return R.drawable.book_icon;
+        }
+    }
+
+    static int GetTagIcon(int tagId) {
+        switch (tagId) {
+            case 5:
+                return R.drawable.book_icon;
+            case 1:
+                return R.drawable.closet_icon;
+            case 13:
+                return R.drawable.donation_icon;
+            case 9:
+                return R.drawable.education_icon;
+            case 10:
+                return R.drawable.entertainment_icon;
+            case 8:
+                return R.drawable.friend_icon;
+            case 6:
+                return R.drawable.hobby_icon;
+            case 2:
+                return R.drawable.home_icon;
+            case 12:
+                return R.drawable.insurance_icon;
+            case 7:
+                return R.drawable.internet_icon;
+            case 0:
+                return R.drawable.meal_icon;
+            case 11:
+                return R.drawable.medical_icon;
+            case 15:
+                return R.drawable.snack_icon;
+            case 14:
+                return R.drawable.sport_icon;
+            case 3:
+                return R.drawable.traffic_icon;
+            case 4:
                 return R.drawable.vehicle_maintenance_icon;
             default:
                 return R.drawable.book_icon;

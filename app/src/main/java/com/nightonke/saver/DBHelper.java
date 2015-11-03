@@ -15,9 +15,15 @@ public class DBHelper extends SQLiteOpenHelper {
             "ID integer primary key autoincrement," +
             "MONEY float," +
             "CURRENCY text," +
-            "TAG text," +
+            "TAG integer," +
             "TIME text," +
             "REMARK text)";
+
+    public static final String CREATE_TAG_STRING =
+            "create table Tag (" +
+            "ID integer primary key autoincrement," +
+            "NAME text," +
+            "WEIGHT integer)";
 
     public DBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory,
                     int version) {
@@ -26,7 +32,10 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+
         db.execSQL(CREATE_RECORD_STRING);
+        db.execSQL(CREATE_TAG_STRING);
+
     }
 
     @Override

@@ -58,8 +58,8 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
     private int fragmentPosition;
 
     final List<SliceValue> sliceValues;
-    private Map<String, Double> TagExpanse;
-    private Map<String, List<Record>> Expanse;
+    private Map<Integer, Double> TagExpanse;
+    private Map<Integer, List<Record>> Expanse;
     private PieChartData pieChartData;
 
     private boolean ISEMPTY;
@@ -85,29 +85,28 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
 
         if (!ISEMPTY) {
             for (int j = 2; j < RecordManager.TAGS.size(); j++) {
-                TagExpanse.put(RecordManager.TAGS.get(j), Double.valueOf(0));
-                Expanse.put(RecordManager.TAGS.get(j), new ArrayList<Record>());
+                TagExpanse.put(RecordManager.TAGS.get(j).getId(), Double.valueOf(0));
+                Expanse.put(RecordManager.TAGS.get(j).getId(), new ArrayList<Record>());
             }
 
             Sum = 0;
 
             for (Record record : records) {
                 TagExpanse.put(record.getTag(),
-                        TagExpanse.get(record.getTag())
-                                + Double.valueOf(record.getMoney()));
+                        TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
                 Expanse.get(record.getTag()).add(record);
                 Sum += record.getMoney();
             }
 
             TagExpanse = Utils.SortTreeMapByValues(TagExpanse);
 
-            for (Map.Entry<String, Double> entry : TagExpanse.entrySet()) {
+            for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
                 if (entry.getValue() >= 1) {
                     SliceValue sliceValue = new SliceValue(
                             (float)(double)entry.getValue(),
                             mContext.getResources().
                                     getColor(Utils.GetTagColor(entry.getKey())));
-                    sliceValue.setLabel(entry.getKey());
+                    sliceValue.setLabel(String.valueOf(entry.getKey()));
                     sliceValues.add(sliceValue);
                 }
             }
@@ -218,10 +217,12 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
 
             case TYPE_CELL:
 
-                holder.imageView.setImageResource(Utils.GetTagIcon(list.get(position - 1).getTag()));
+                holder.imageView.setImageResource(
+                        Utils.GetTagIcon(list.get(position - 1).getTag()));
 
                 holder.money.setText((int) list.get(position - 1).getMoney() + "");
-                holder.money.setTextColor(Utils.GetTagColor(list.get(position - 1).getTag()));
+                holder.money.setTextColor(
+                        Utils.GetTagColor(list.get(position - 1).getTag()));
                 holder.money.setTypeface(Utils.typefaceLatoLight);
 
                 holder.cellDate.setText(list.get(position - 1).getCalendarString());
@@ -277,13 +278,13 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
         @Override
         public void onValueSelected(int i, SliceValue sliceValue) {
             String text = "";
-            final String tag = String.valueOf(sliceValue.getLabelAsChars());
+            final int tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
             Double percent = sliceValue.getValue() / Sum * 100;
             text += "Spend " + (int)sliceValue.getValue()
                     + " (takes " + String.format("%.2f", percent) + "%)\n"
-                    + " in " + tag + ".\n";
+                    + " in " + RecordManager.TAG_NAMES.get(tagId) + ".\n";
             dialogTitle = "Spend " + (int)sliceValue.getValue() + dateShownString + "\n" +
-                    " in " + tag;
+                    " in " + RecordManager.TAG_NAMES.get(tagId);
             Snackbar snackbar =
                     Snackbar
                             .with(mContext)
@@ -301,7 +302,7 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
                             .actionListener(new ActionClickListener() {
                                 @Override
                                 public void onActionClicked(Snackbar snackbar) {
-                                    List<Record> shownRecords = Expanse.get(tag);
+                                    List<Record> shownRecords = Expanse.get(tagId);
                                     ((FragmentActivity)mContext).getSupportFragmentManager()
                                             .beginTransaction()
                                             .add(new RecordCheckDialog(

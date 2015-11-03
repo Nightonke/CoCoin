@@ -16,7 +16,7 @@ public class Record {
     private long id;
     private float money;
     private String currency;
-    private String tag;
+    private int tag;
     private Calendar calendar;
     private String remark;
 
@@ -35,7 +35,7 @@ public class Record {
         this.id = -1;
     }
 
-    public Record(long id, float money, String currency, String tag, Calendar calendar) {
+    public Record(long id, float money, String currency, int tag, Calendar calendar) {
         this.id = id;
         this.money = money;
         this.currency = currency;
@@ -43,7 +43,7 @@ public class Record {
         this.calendar = calendar;
     }
 
-    public Record(long id, float money, String currency, String tag, Calendar calendar, String remark) {
+    public Record(long id, float money, String currency, int tag, Calendar calendar, String remark) {
         this.id = id;
         this.money = money;
         this.currency = currency;
@@ -102,11 +102,11 @@ public class Record {
         this.currency = currency;
     }
 
-    public String getTag() {
+    public int getTag() {
         return tag;
     }
 
-    public void setTag(String tag) {
+    public void setTag(int tag) {
         this.tag = tag;
     }
 
