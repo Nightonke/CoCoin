@@ -46,7 +46,7 @@ public class ButtonGridViewAdapter extends BaseAdapter {
         final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = this.inflater.inflate(R.layout.gridview_item, null);
+            convertView = this.inflater.inflate(R.layout.button_gridview_item, null);
             holder.iv = (MaterialIconView)convertView.findViewById(R.id.icon);
             holder.tv = (TextView) convertView.findViewById(R.id.textview);
             holder.ml = (MaterialRippleLayout)convertView.findViewById(R.id.material_ripple_layout);

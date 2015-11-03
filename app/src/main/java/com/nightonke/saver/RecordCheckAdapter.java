@@ -40,10 +40,13 @@ public class RecordCheckAdapter extends RecyclerView.Adapter<RecordCheckAdapter.
     public void onBindViewHolder(viewHolder holder, int position) {
         holder.imageView.setImageResource(Utils.GetTagIcon(records.get(position).getTag()));
         holder.date.setText(records.get(position).getCalendarString());
-        holder.money.setText(String.valueOf((int)records.get(position).getMoney()));
+        holder.money.setText(String.valueOf((int) records.get(position).getMoney()));
         holder.date.setTypeface(Utils.typefaceLatoLight);
         holder.money.setTypeface(Utils.typefaceLatoLight);
         holder.money.setTextColor(Utils.GetTagColor(records.get(position).getTag()));
+        holder.index.setText((position + 1) + "");
+        holder.index.setTypeface(Utils.typefaceLatoLight);
+
     }
 
     @Override
@@ -58,6 +61,8 @@ public class RecordCheckAdapter extends RecyclerView.Adapter<RecordCheckAdapter.
         TextView date;
         @InjectView(R.id.money)
         TextView money;
+        @InjectView(R.id.index)
+        TextView index;
 
         viewHolder(View view) {
             super(view);

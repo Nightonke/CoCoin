@@ -321,7 +321,7 @@ public class TagViewRecyclerViewAdapter
                                         new SelectedValue(
                                                 SelectedPosition[position],
                                                 0,
-                                                SelectedValue.SelectedValueType.COLUMN);
+                                                SelectedValue.SelectedValueType.NONE);
                                 holder.pie.selectValue(selectedValue);
                             }
                         });
@@ -335,7 +335,7 @@ public class TagViewRecyclerViewAdapter
                                         new SelectedValue(
                                                 SelectedPosition[position],
                                                 0,
-                                                SelectedValue.SelectedValueType.COLUMN);
+                                                SelectedValue.SelectedValueType.NONE);
                                 holder.pie.selectValue(selectedValue);
                             }
                         });

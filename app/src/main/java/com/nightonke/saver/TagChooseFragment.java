@@ -1,11 +1,8 @@
 package com.nightonke.saver;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,14 +21,14 @@ public class TagChooseFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.tag_fragment, null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.tag_choose_fragment, null);
         myGridView = (MyGridView)view.findViewById(R.id.gridview);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tag_fragment, container, false);
+        View view = inflater.inflate(R.layout.tag_choose_fragment, container, false);
         myGridView = (MyGridView)view.findViewById(R.id.gridview);
         return view;
     }

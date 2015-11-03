@@ -14,7 +14,7 @@ public class TodayViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     List<TodayViewFragment> list;
 
-    private static int TODAY_VIEW_FRAGMENT_NUMBER = 4;
+    private static int TODAY_VIEW_FRAGMENT_NUMBER = 8;
 
     public TodayViewFragmentAdapter(android.support.v4.app.FragmentManager fm) {
         super(fm);

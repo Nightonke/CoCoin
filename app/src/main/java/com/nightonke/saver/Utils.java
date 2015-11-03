@@ -1,15 +1,11 @@
 package com.nightonke.saver;
 
-import android.app.Activity;
-import android.app.Service;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 
-import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Map;
@@ -54,88 +50,212 @@ public class Utils {
 
     public static boolean WEEK_START_WITH_SUNDAY = false;
 
-    public static Calendar GetDayLeftRange(Calendar today) {
-        Calendar calendar = today;
-        calendar.set(Calendar.HOUR, 0);
+    public static Calendar GetTodayLeftRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.MINUTE, 0);
         return calendar;
     }
 
-    public static Calendar GetDayRightRange(Calendar today) {
-        Calendar calendar = today;
-        calendar.set(Calendar.HOUR, 23);
+    public static Calendar GetTodayRightRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.MINUTE, 0);
         return calendar;
     }
 
-    public static Calendar GetWeekLeftRange(Calendar today) {
-        int nowDayOfWeek = today.get(Calendar.DAY_OF_WEEK);
-        Calendar calendar = today;
-        calendar.set(Calendar.HOUR, 0);
+    public static Calendar GetYesterdayLeftRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetYesterdayRightRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetThisWeekLeftRange(Calendar today) {
+        int nowDayOfWeek = today.get(Calendar.DAY_OF_WEEK);
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.MINUTE, 0);
         if (Utils.WEEK_START_WITH_SUNDAY) {
             int[] diff = new int[]{0, 0, -1, -2, -3, -4, -5, -6};
             calendar.add(Calendar.DAY_OF_WEEK, diff[nowDayOfWeek]);
         } else {
             int[] diff = new int[]{0, -6, 0, -1, -2, -3, -4, -5};
-            calendar.add(Calendar.DAY_OF_WEEK, diff[nowDayOfWeek]);
+            calendar.add(Calendar.DATE, diff[nowDayOfWeek]);
         }
         return calendar;
     }
 
-    public static Calendar GetWeekRightRange(Calendar today) {
-        Calendar calendar = GetWeekLeftRange(today);
-        calendar.add(Calendar.DAY_OF_WEEK, 7);
+    public static Calendar GetThisWeekRightRange(Calendar today) {
+            Calendar calendar = (Calendar) GetThisWeekLeftRange(today).clone();
+            calendar.add(Calendar.DATE, 7);
         return calendar;
     }
 
-    public static Calendar GetMonthLeftRange(Calendar today) {
-        Calendar calendar = today;
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR, 0);
+    public static Calendar GetLastWeekLeftRange(Calendar today) {
+        int nowDayOfWeek = today.get(Calendar.DAY_OF_WEEK);
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        if (Utils.WEEK_START_WITH_SUNDAY) {
+            int[] diff = new int[]{0, 0, -1, -2, -3, -4, -5, -6};
+            calendar.add(Calendar.DATE, diff[nowDayOfWeek] - 7);
+        } else {
+            int[] diff = new int[]{0, -6, 0, -1, -2, -3, -4, -5};
+            calendar.add(Calendar.DATE, diff[nowDayOfWeek] - 7);
+        }
+        return calendar;
+    }
+
+    public static Calendar GetLastWeekRightRange(Calendar today) {
+        Calendar calendar = (Calendar) GetLastWeekLeftRange(today).clone();
+        calendar.add(Calendar.DATE, 7);
+        return calendar;
+    }
+
+    public static Calendar GetThisWeekRightShownRange(Calendar today) {
+        Calendar calendar = (Calendar) GetThisWeekLeftRange(today).clone();
+        calendar.add(Calendar.DATE, 6);
+        return calendar;
+    }
+
+    public static Calendar GetLastWeekRightShownRange(Calendar today) {
+        Calendar calendar = (Calendar) GetLastWeekLeftRange(today).clone();
+        calendar.add(Calendar.DATE, 6);
+        return calendar;
+    }
+
+    public static Calendar GetThisMonthLeftRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.MINUTE, 0);
         return calendar;
     }
 
-    public static Calendar GetMonthRightRange(Calendar today) {
-        Calendar calendar = today;
+    public static Calendar GetThisMonthRightRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         calendar.add(Calendar.MONTH, 1);
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.MINUTE, 0);
         return calendar;
     }
 
-    public static Calendar GetYearLeftRange(Calendar today) {
-        Calendar calendar = today;
+    public static Calendar GetLastMonthLeftRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.MONTH, -1);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetLastMonthRightRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetThisYearLeftRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
         calendar.set(Calendar.MONTH, 0);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.MINUTE, 0);
         return calendar;
     }
 
-    public static Calendar GetYearRightRange(Calendar today) {
-        Calendar calendar = today;
+    public static Calendar GetThisYearRightRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
         calendar.set(Calendar.MONTH, 0);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         calendar.add(Calendar.YEAR, 1);
-        calendar.set(Calendar.HOUR, 0);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetLastYearLeftRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.YEAR, -1);
+        calendar.add(Calendar.MINUTE, 0);
+        return calendar;
+    }
+
+    public static Calendar GetLastYearRightRange(Calendar today) {
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.MONTH, 0);
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.add(Calendar.MINUTE, 0);
         return calendar;
     }
 
     public static String TODAY_VIEW_TITLE[] = {"Today",
+                                               "Yesterday",
                                                "This Week",
+                                               "Last Week",
                                                "This Month",
-                                               "This Year"};
+                                               "Last Month",
+                                               "This Year",
+                                               "Last Year",};
 
     public static boolean ClickButtonDelete(int position) {
         return position == 9;

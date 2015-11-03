@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -217,6 +218,8 @@ public class RecordManager {
                 "Sport",
                 "Entertainment"};
 
+        List<Record> createdRecords = new ArrayList<>();
+
         for (int i = 0; i < RANDOM_DATA_NUMBER; i++) {
             Record record = new Record();
 
@@ -234,6 +237,23 @@ public class RecordManager {
             calendar.add(Calendar.MINUTE, 0);
             record.setCalendar(calendar);
 
+            createdRecords.add(record);
+        }
+
+        Collections.sort(createdRecords, new Comparator<Record>() {
+            @Override
+            public int compare(Record lhs, Record rhs) {
+                if (lhs.getCalendar().before(rhs.getCalendar())) {
+                    return -1;
+                } else if (lhs.getCalendar().after(rhs.getCalendar())) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            }
+        });
+
+        for (Record record : createdRecords) {
             saveRecord(record);
         }
     }

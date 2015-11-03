@@ -564,15 +564,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (isPassword) {
-            animation.close();
-            return;
-        }
-        editView.setText(editView.getText().toString()
-                .substring(0, editView.getText().toString().length() - 1));
-        if (editView.getText().toString().equals("")) {
-            editView.setText("0");
-        }
+        buttonClickOperation(false, 9);
+//        if (isPassword) {
+//            animation.close();
+//            return;
+//        }
+//        editView.setText(editView.getText().toString()
+//                .substring(0, editView.getText().toString().length() - 1));
+//        if (editView.getText().toString().equals("")) {
+//            editView.setText("0");
+//        }
     }
 
     @Override

@@ -17,48 +17,66 @@
         app:cardPreventCornerOverlap="false"
         app:contentPadding="0dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <FrameLayout
             android:layout_height="match_parent"
-            android:orientation="horizontal"
+            android:layout_width="match_parent"
             >
 
-            <ImageView
-                android:id="@+id/image_view"
-                android:layout_height="40dp"
-                android:layout_width="40dp"
-                android:layout_gravity="center|left"
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/hobby_icon"
-                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:id="@+id/image_view"
+                    android:layout_height="40dp"
+                    android:layout_width="40dp"
+                    android:layout_gravity="center|left"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/hobby_icon"
+                    />
+
+                <TextView
+                    android:id="@+id/money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:textColor="@color/my_blue"
+                    android:textSize="30sp"
+                    android:layout_gravity="center"
+                    android:paddingLeft="20dp"
+                    android:gravity="center"
+                    android:text="777777"
+                    />
+
+                <TextView
+                    android:id="@+id/cell_date"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:textColor="#666666"
+                    android:textSize="10sp"
+                    android:layout_gravity="center"
+                    android:gravity="bottom|right"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="10dp"
+                    android:text="2015-12-10 10:23"
+                    />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/money"
+                android:id="@+id/index"
                 android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:textColor="@color/my_blue"
-                android:textSize="30sp"
-                android:layout_gravity="center"
-                android:paddingLeft="20dp"
-                android:gravity="center"
-                android:text="777777"
-                />
-
-            <TextView
-                android:id="@+id/date"
-                android:layout_width="0dp"
-                android:layout_height="80dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:paddingBottom="5dp"
+                android:textSize="8sp"
                 android:textColor="#666666"
-                android:textSize="10sp"
-                android:layout_gravity="center"
-                android:gravity="bottom|right"
-                android:paddingRight="20dp"
-                android:paddingBottom="10dp"
-                android:text="2015-12-10 10:23"
+                android:text="12"
                 />
 
-        </LinearLayout>
+        </FrameLayout>
 
     </android.support.v7.widget.CardView>
 </FrameLayout>

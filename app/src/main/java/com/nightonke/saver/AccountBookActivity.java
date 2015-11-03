@@ -27,10 +27,10 @@ import com.squareup.leakcanary.RefWatcher;
 public class AccountBookActivity extends AppCompatActivity {
 
     private final int TAG_MODE = 0;
-    private final int YEAR_MODE = 1;
+    private final int TODAY_MODE = 1;
     private final int MONTH_MODE = 2;
 
-    private int MODE = TAG_MODE;
+    private int MODE = -1;
 
     private TextView headerLogo;
 
@@ -110,8 +110,7 @@ public class AccountBookActivity extends AppCompatActivity {
             }
         });
 
-        loadTagMode();
-
+        loadTodayMode();
     }
 
     @Override
@@ -127,6 +126,11 @@ public class AccountBookActivity extends AppCompatActivity {
     private void loadTagMode() {
 
         Log.d("Saver", "TAGMODE");
+
+        if (MODE == TAG_MODE) {
+            return;
+        }
+        MODE = TAG_MODE;
 
         tagModeAdapter = new TagViewFragmentAdapter(getSupportFragmentManager());
         mViewPager.getViewPager().setOffscreenPageLimit(tagModeAdapter.getCount());
@@ -147,6 +151,11 @@ public class AccountBookActivity extends AppCompatActivity {
     private void loadTodayMode() {
 
         Log.d("Saver", "TODAYMODE");
+
+        if (MODE == TODAY_MODE) {
+            return;
+        }
+        MODE = TODAY_MODE;
 
         todayModeAdapter = new TodayViewFragmentAdapter(getSupportFragmentManager());
         mViewPager.getViewPager().setOffscreenPageLimit(todayModeAdapter.getCount());
