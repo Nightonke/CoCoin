@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Saver</string>
+    <string name="app_name">CoCoin</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -9,4 +9,5 @@
     <string name="activity">ACTIVITY</string>
     <string name="settings">SETTINGS</string>
     <string name="title_activity_account_book">AccountBook</string>
+    <string name="title_activity_tag_setting">TagSetting</string>
 </resources>

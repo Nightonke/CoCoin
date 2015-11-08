@@ -6,8 +6,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +23,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuView;
@@ -41,8 +38,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -51,6 +46,8 @@ import butterknife.InjectView;
 import carbon.widget.RadioButton;
 
 public class MainActivity extends AppCompatActivity {
+
+    private final int SETTING_TAG = 0;
 
     private Context mContext;
 
@@ -115,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
     @InjectView(R.id.content_hamburger)
     View contentHamburger;
 
+    private FragmentPagerItemAdapter tagChoicePagerAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -159,12 +158,12 @@ public class MainActivity extends AppCompatActivity {
             pages.add(FragmentPagerItem.of("1", TagChooseFragment.class));
         }
 
-        FragmentPagerItemAdapter adapter = new FragmentPagerItemAdapter(
+        tagChoicePagerAdapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), pages);
 
         viewPager.setOffscreenPageLimit(2);
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(tagChoicePagerAdapter);
 
         smartTabLayout.setViewPager(viewPager);
 
@@ -197,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         editView.setHelperText(" ");
 
         tagName = (TextView)findViewById(R.id.tag_name);
+        tagName.setTypeface(Utils.typefaceLatoLight);
         tagImage = (ImageView)findViewById(R.id.tag_image);
 
         ButterKnife.inject(this);
@@ -300,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
                     SuperToast.cancelAllSuperToasts();
                     SuperActivityToast.cancelAllSuperActivityToasts();
                     Intent intent = new Intent(mContext, AccountBookActivity.class);
-                    mContext.startActivity(intent);
+                    startActivityForResult(intent, SETTING_TAG);
                     isLoading = false;
                 }
             }, 1500);
@@ -320,6 +320,25 @@ public class MainActivity extends AppCompatActivity {
             radioButton3.setChecked(false);
             inputPassword = "";
             statusButton.animateState(MaterialMenuDrawable.IconState.X);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case SETTING_TAG:
+                if (resultCode == RESULT_OK) {
+                    if (data.getBooleanExtra("IS_CHANGED", false)) {
+                        for (int i = 0; i < tagChoicePagerAdapter.getCount(); i++) {
+                            ((TagChooseFragment)tagChoicePagerAdapter.
+                                    getPage(i)).updateTags();
+                        }
+                    }
+                }
+
+                break;
+            default:
+                break;
         }
     }
 
@@ -442,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
                 if (!superToast.isShowing()) {
                     showToast(SAVE_SUCCESSFULLY_TOAST);
                 }
-                tagImage.setImageResource(0);
+                tagImage.setImageResource(R.color.transparent);
                 tagName.setText("");
             }
             editView.setText("0");

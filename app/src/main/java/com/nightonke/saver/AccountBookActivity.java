@@ -2,6 +2,7 @@ package com.nightonke.saver;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +31,9 @@ public class AccountBookActivity extends AppCompatActivity {
     private final int TODAY_MODE = 1;
     private final int MONTH_MODE = 2;
 
+    private final int SETTING_TAG = 0;
+    private boolean TAG_CHANGED = false;
+
     private int MODE = -1;
 
     private TextView headerLogo;
@@ -42,6 +46,7 @@ public class AccountBookActivity extends AppCompatActivity {
 
     private TagViewFragmentAdapter tagModeAdapter;
     private TodayViewFragmentAdapter todayModeAdapter;
+    private MonthViewFragmentAdapter monthModeAdapter;
 
     private Context mContext;
 
@@ -50,6 +55,8 @@ public class AccountBookActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        TAG_CHANGED = false;
 
         mContext = this;
         setContentView(R.layout.activity_account_book);
@@ -110,6 +117,23 @@ public class AccountBookActivity extends AppCompatActivity {
             }
         });
 
+        Button button3 = (Button)mDrawer.findViewById(R.id.loadTagSetting);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, TagSettingActivity.class);
+                startActivityForResult(intent, SETTING_TAG);
+            }
+        });
+
+        Button button4 = (Button)mDrawer.findViewById(R.id.loadMonthModeButton);
+        button4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadMonthMode();
+            }
+        });
+
         loadTodayMode();
     }
 
@@ -119,13 +143,23 @@ public class AccountBookActivity extends AppCompatActivity {
     }
 
     @Override
-    protected  void onDestroy() {
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra("IS_CHANGED", TAG_CHANGED);
+        setResult(RESULT_OK, intent);
+
+        super.finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+
         super.onDestroy();
     }
 
     private void loadTagMode() {
 
-        Log.d("Saver", "TAGMODE");
+        Log.d("Saver", "TAG_MODE");
 
         if (MODE == TAG_MODE) {
             return;
@@ -150,12 +184,12 @@ public class AccountBookActivity extends AppCompatActivity {
 
     private void loadTodayMode() {
 
-        Log.d("Saver", "TODAYMODE");
+        Log.d("Saver", "TODAY_MODE");
 
-        if (MODE == TODAY_MODE) {
+        if (MODE == MONTH_MODE) {
             return;
         }
-        MODE = TODAY_MODE;
+        MODE = MONTH_MODE;
 
         todayModeAdapter = new TodayViewFragmentAdapter(getSupportFragmentManager());
         mViewPager.getViewPager().setOffscreenPageLimit(todayModeAdapter.getCount());
@@ -171,6 +205,50 @@ public class AccountBookActivity extends AppCompatActivity {
                                 Utils.GetTagDrawable(RecordManager.TAGS.get(page).getName())));
             }
         });
+    }
+
+    private void loadMonthMode() {
+
+        Log.d("Saver", "MONTH_MODE");
+
+        if (MODE == TODAY_MODE) {
+            return;
+        }
+        MODE = TODAY_MODE;
+
+        monthModeAdapter = new MonthViewFragmentAdapter(getSupportFragmentManager());
+        mViewPager.getViewPager().setOffscreenPageLimit(monthModeAdapter.getCount());
+        mViewPager.getViewPager().setAdapter(monthModeAdapter);
+        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+
+        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+            @Override
+            public HeaderDesign getHeaderDesign(int page) {
+                return HeaderDesign.fromColorResAndDrawable(
+                        Utils.GetTagColor(RecordManager.TAGS.get(page).getName()),
+                        mContext.getResources().getDrawable(
+                                Utils.GetTagDrawable(RecordManager.TAGS.get(page).getName())));
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case SETTING_TAG:
+                if (resultCode == RESULT_OK) {
+                    if (data.getBooleanExtra("IS_CHANGED", false)) {
+                        TAG_CHANGED = true;
+                    }
+                    if (MODE == TAG_MODE) {
+                            tagModeAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
     @Override

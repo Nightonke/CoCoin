@@ -106,25 +106,25 @@ public class DB {
     }
 
     public long deleteRecord(long id) {
-        long deletedId = sqliteDatabase.delete(RECORD_DB_NAME_STRING,
+        long deletedNumber = sqliteDatabase.delete(RECORD_DB_NAME_STRING,
                 "ID = ?",
                 new String[]{id + ""});
         if (RecordManager.SHOW_LOG) {
             Log.d("Saver",
-                    "DB: Delete record: " + "Record(id = " + id + ", deletedId = " + deletedId + ")");
+                    "DB: Delete record: " + "Record(id = " + id + ", deletedId = " + deletedNumber + ")");
         }
-        return deletedId;
+        return id;
     }
 
     public int deleteTag(int id) {
-        int deletedId = sqliteDatabase.delete(TAG_DB_NAME_STRING,
+        int deletedNumber = sqliteDatabase.delete(TAG_DB_NAME_STRING,
                 "ID = ?",
                 new String[]{(id + 1) + ""});
         if (RecordManager.SHOW_LOG) {
             Log.d("Saver",
-                    "DB: Delete tag: " + "tag(id = " + id + ", deletedId = " + deletedId + ")");
+                    "DB: Delete tag: " + "tag(id = " + id + ", deletedId = " + deletedNumber + ")");
         }
-        return deletedId - 1;
+        return id;
     }
 
     public long updateRecord(Record record) {
@@ -135,26 +135,25 @@ public class DB {
         values.put("TAG", record.getTag());
         values.put("TIME", record.getCalendar().toString());
         values.put("REMARK", record.getRemark());
-        long updateId = sqliteDatabase.update(RECORD_DB_NAME_STRING, values,
+        sqliteDatabase.update(RECORD_DB_NAME_STRING, values,
                 "ID = ?",
                 new String[]{record.getId() + ""});
         if (RecordManager.SHOW_LOG) {
             Log.d("Saver", "DB: Update record: " + record.toString());
         }
-        return updateId;
+        return record.getId();
     }
 
     public int updateTag(Tag tag) {
         ContentValues values = new ContentValues();
-        values.put("ID", tag.getId());
         values.put("NAME", tag.getName());
         values.put("WEIGHT", tag.getWeight());
-        int updateId = sqliteDatabase.update(TAG_DB_NAME_STRING, values,
+        sqliteDatabase.update(TAG_DB_NAME_STRING, values,
                 "ID = ?",
                 new String[]{(tag.getId() + 1) + ""});
         if (RecordManager.SHOW_LOG) {
             Log.d("Saver", "DB: Update tag: " + tag.toString());
         }
-        return updateId - 1;
+        return tag.getId();
     }
 }

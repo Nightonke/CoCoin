@@ -9,6 +9,15 @@ public class Tag {
     private int id;
     private String name;
     private int weight;
+    private int dragId;
+
+    public int getDragId() {
+        return dragId;
+    }
+
+    public void setDragId(int dragId) {
+        this.dragId = dragId;
+    }
 
     public String toString() {
         return "Tag(" +

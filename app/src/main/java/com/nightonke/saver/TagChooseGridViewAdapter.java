@@ -40,8 +40,8 @@ public class TagChooseGridViewAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = this.inflater.inflate(R.layout.tag_choose_item, null);

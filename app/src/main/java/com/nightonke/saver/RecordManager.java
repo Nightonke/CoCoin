@@ -235,7 +235,7 @@ public class RecordManager {
         if (updateId == -1) {
             Log.d("Saver", "Update the above tag FAIL!");
         } else {
-            Log.d("Saver", "Update the above tag SUCCESSFULLY!");
+            Log.d("Saver", "Update the above tag SUCCESSFULLY!" + " - " + updateId);
             for (Tag t : TAGS) {
                 if (t.getId() == updateId) {
                     t.set(tag);
@@ -361,6 +361,7 @@ public class RecordManager {
         }
     }
 
+    // Todo bug here
     private static void sortTAGS() {
         Collections.sort(TAGS, new Comparator<Tag>() {
             @Override

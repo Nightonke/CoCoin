@@ -3,6 +3,7 @@ package com.nightonke.saver;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 
@@ -15,6 +16,8 @@ import java.util.TreeMap;
 /**
  * Created by 伟平 on 2015/10/16.
  */
+
+//Todo delete record method
 
 public class Utils {
 
@@ -102,7 +105,7 @@ public class Utils {
         calendar.add(Calendar.MINUTE, 0);
         if (Utils.WEEK_START_WITH_SUNDAY) {
             int[] diff = new int[]{0, 0, -1, -2, -3, -4, -5, -6};
-            calendar.add(Calendar.DAY_OF_WEEK, diff[nowDayOfWeek]);
+            calendar.add(Calendar.DATE, diff[nowDayOfWeek]);
         } else {
             int[] diff = new int[]{0, -6, 0, -1, -2, -3, -4, -5};
             calendar.add(Calendar.DATE, diff[nowDayOfWeek]);
@@ -137,6 +140,36 @@ public class Utils {
     public static Calendar GetLastWeekRightRange(Calendar today) {
         Calendar calendar = (Calendar) GetLastWeekLeftRange(today).clone();
         calendar.add(Calendar.DATE, 7);
+        return calendar;
+    }
+
+    public static Calendar GetNextWeekLeftRange(Calendar today) {
+        int nowDayOfWeek = today.get(Calendar.DAY_OF_WEEK);
+        Calendar calendar = (Calendar)today.clone();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.add(Calendar.MINUTE, 0);
+        if (Utils.WEEK_START_WITH_SUNDAY) {
+            int[] diff = new int[]{0, 0, -1, -2, -3, -4, -5, -6};
+            calendar.add(Calendar.DATE, diff[nowDayOfWeek] + 7);
+        } else {
+            int[] diff = new int[]{0, -6, 0, -1, -2, -3, -4, -5};
+            calendar.add(Calendar.DATE, diff[nowDayOfWeek] + 7);
+        }
+        return calendar;
+    }
+
+    public static Calendar GetNextWeekRightRange(Calendar today) {
+        Calendar calendar = (Calendar) GetNextWeekLeftRange(today).clone();
+        calendar.add(Calendar.DATE, 7);
+        return calendar;
+    }
+
+    public static Calendar GetNextWeekRightShownRange(Calendar today) {
+        Calendar calendar = (Calendar) GetNextWeekLeftRange(today).clone();
+        calendar.add(Calendar.DATE, 6);
         return calendar;
     }
 
@@ -625,5 +658,13 @@ public class Utils {
         TreeMap<K, V> sortedByValues = new TreeMap<K, V>(valueComparator);
         sortedByValues.putAll(map);
         return sortedByValues;
+    }
+
+    private static final int[] EMPTY_STATE = new int[] {};
+
+    public static void clearState(Drawable drawable) {
+        if (drawable != null) {
+            drawable.setState(EMPTY_STATE);
+        }
     }
 }

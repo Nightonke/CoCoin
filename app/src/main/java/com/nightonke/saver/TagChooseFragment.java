@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 
@@ -15,6 +16,15 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
  */
 public class TagChooseFragment extends Fragment {
 
+    public TagChooseGridViewAdapter getTagAdapter() {
+        return tagAdapter;
+    }
+
+    public void setTagAdapter(TagChooseGridViewAdapter tagAdapter) {
+        this.tagAdapter = tagAdapter;
+    }
+
+    private TagChooseGridViewAdapter tagAdapter;
     private int fragmentPosition;
     public MyGridView myGridView;
 
@@ -39,8 +49,7 @@ public class TagChooseFragment extends Fragment {
 
         fragmentPosition = FragmentPagerItem.getPosition(getArguments());
 
-        TagChooseGridViewAdapter tagAdapter =
-                new TagChooseGridViewAdapter(getActivity(), fragmentPosition);
+        tagAdapter = new TagChooseGridViewAdapter(getActivity(), fragmentPosition);
 
         myGridView.setAdapter(tagAdapter);
 
@@ -59,6 +68,12 @@ public class TagChooseFragment extends Fragment {
             }
         });
 
+    }
+
+    public void updateTags() {
+        ((BaseAdapter)myGridView.getAdapter()).notifyDataSetChanged();
+        ((BaseAdapter)myGridView.getAdapter()).notifyDataSetInvalidated();
+        myGridView.invalidateViews();
     }
 
 }

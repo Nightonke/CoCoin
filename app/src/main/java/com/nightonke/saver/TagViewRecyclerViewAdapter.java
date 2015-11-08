@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -175,8 +176,9 @@ public class TagViewRecyclerViewAdapter
                 }
 
                 for (Record record : contents.get(i)) {
-                    tagExpanse.put(record.getTag(),
-                            tagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
+                    double d = tagExpanse.get(record.getTag());
+                    d += record.getMoney();
+                    tagExpanse.put(record.getTag(), d);
                 }
 
                 tagExpanse = Utils.SortTreeMapByValues(tagExpanse);
