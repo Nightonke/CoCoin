@@ -16,16 +16,16 @@ public class TagViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     public TagViewFragmentAdapter(android.support.v4.app.FragmentManager fm) {
         super(fm);
-        list = new ArrayList<>();
-        for (int i = 0; i < RecordManager.TAGS.size(); i++) {
-            list.add(TagViewFragment.newInstance(i));
-        }
-        Log.d("Saver", "Create");
+//        list = new ArrayList<>();
+//        for (int i = 0; i < RecordManager.TAGS.size(); i++) {
+//            list.add(TagViewFragment.newInstance(i));
+//        }
     }
 
     @Override
     public Fragment getItem(int i) {
-        return list.get(i);
+//        return list.get(i);
+        return TagViewFragment.newInstance(i);
     }
 
     @Override

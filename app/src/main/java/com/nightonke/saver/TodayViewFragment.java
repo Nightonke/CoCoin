@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,6 +33,8 @@ public class TodayViewFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
+
+    private RecyclerView.LayoutManager layoutManager;
 
     static final int TODAY = 0;
     static final int YESTERDAY = 1;
@@ -67,105 +71,167 @@ public class TodayViewFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
         Calendar now = Calendar.getInstance();
-        Calendar leftRange = Calendar.getInstance();
-        Calendar rightRange = Calendar.getInstance();
+        Calendar leftRange;
+        Calendar rightRange;
+
+        RecordManager recordManager = RecordManager.getInstance(mContext.getApplicationContext());
+        int start = -1;
+        int end = 0;
 
         switch (position) {
             case TODAY:
                 leftRange = Utils.GetTodayLeftRange(now);
-                rightRange = Utils.GetTodayRightRange(now);
-                for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-                    if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                    if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                        end = i + 1;
                         break;
                     }
-                    list.add(RecordManager.RECORDS.get(i));
+                    if (start == -1) {
+                        start = i;
+                    }
                 }
                 break;
             case YESTERDAY:
                 leftRange = Utils.GetYesterdayLeftRange(now);
                 rightRange = Utils.GetYesterdayRightRange(now);
-                for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-                    if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                    if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                        end = i + 1;
                         break;
-                    } else if (!RecordManager.RECORDS.get(i).getCalendar().after(rightRange)) {
-                        list.add(RecordManager.RECORDS.get(i));
+                    } else if (!recordManager.RECORDS.get(i).getCalendar().after(rightRange)) {
+                        if (start == -1) {
+                            start = i;
+                        }
                     }
                 }
                 break;
             case THIS_WEEK:
                 leftRange = Utils.GetThisWeekLeftRange(now);
-                rightRange = Utils.GetThisWeekRightRange(now);
-                for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-                    if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                    if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                        end = i + 1;
                         break;
                     }
-                    list.add(RecordManager.RECORDS.get(i));
+                    if (start == -1) {
+                        start = i;
+                    }
                 }
                 break;
             case LAST_WEEK:
                 leftRange = Utils.GetLastWeekLeftRange(now);
                 rightRange = Utils.GetLastWeekRightRange(now);
-                for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-                    if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                    if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                        end = i + 1;
                         break;
-                    } else if (RecordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
-                        list.add(RecordManager.RECORDS.get(i));
+                    } else if (recordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
+                        if (start == -1) {
+                            start = i;
+                        }
                     }
                 }
                 break;
             case THIS_MONTH:
                 leftRange = Utils.GetThisMonthLeftRange(now);
-                rightRange = Utils.GetThisMonthRightRange(now);
-                for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-                    if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                    if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                        end = i + 1;
                         break;
                     }
-                    list.add(RecordManager.RECORDS.get(i));
+                    if (start == -1) {
+                        start = i;
+                    }
                 }
                 break;
             case LAST_MONTH:
                 leftRange = Utils.GetLastMonthLeftRange(now);
                 rightRange = Utils.GetLastMonthRightRange(now);
-                for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-                    if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                    if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                        end = i + 1;
                         break;
-                    } else if (RecordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
-                        list.add(RecordManager.RECORDS.get(i));
+                    } else if (recordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
+                        if (start == -1) {
+                            start = i;
+                        }
                     }
                 }
                 break;
             case THIS_YEAR:
                 leftRange = Utils.GetThisYearLeftRange(now);
-                rightRange = Utils.GetThisYearRightRange(now);
-                for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-                    if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                    if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                        end = i + 1;
                         break;
                     }
-                    list.add(RecordManager.RECORDS.get(i));
+                    if (start == -1) {
+                        start = i;
+                    }
                 }
                 break;
             case LAST_YEAR:
                 leftRange = Utils.GetLastYearLeftRange(now);
                 rightRange = Utils.GetLastYearRightRange(now);
-                for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-                    if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                    if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                        end = i + 1;
                         break;
-                    } else if (RecordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
-                        list.add(RecordManager.RECORDS.get(i));
+                    } else if (recordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
+                        if (start == -1) {
+                            start = i;
+                        }
                     }
                 }
                 break;
         }
 
-        mAdapter = new RecyclerViewMaterialAdapter(new TodayViewRecyclerViewAdapter(list, mContext, position));
+        mAdapter = new RecyclerViewMaterialAdapter(
+                new TodayViewRecyclerViewAdapter(start, end, mContext, position));
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        RefWatcher refWatcher = myApplication.getRefWatcher(getActivity());
+        refWatcher.watch(this);
+
+//        if (mContext != null) {
+//            MaterialViewPagerHelper.unregister(mContext);
+//        }
+
+//        if (mRecyclerView != null) {
+//            layoutManager.removeAllViews();
+//            mRecyclerView.removeAllViews();
+//            mRecyclerView.removeAllViewsInLayout();
+//        }
+//        mRecyclerView = null;
+//        mAdapter = null;
+//
+//        System.gc();
+    }
+
+//    @Override
+//    public void onDestroyView() {
+//        super.onDestroyView();
+//
+//        if (mRecyclerView != null) {
+//            layoutManager.removeAllViews();
+//            mRecyclerView.removeAllViews();
+//            mRecyclerView.removeAllViewsInLayout();
+//        }
+//        mRecyclerView = null;
+//        mAdapter = null;
+//
+//        System.gc();
+//    }
 
 }

@@ -164,10 +164,26 @@ public class AccountBookActivity extends AppCompatActivity {
         if (MODE == TAG_MODE) {
             return;
         }
+
+        mViewPager.getViewPager().removeAllViews();
+        mViewPager.getViewPager().removeAllViewsInLayout();
+        mViewPager.getViewPager().destroyDrawingCache();
+        mViewPager.getViewPager().setAdapter(null);
+
+        mViewPager = null;
+
+        mViewPager = (MaterialViewPager)findViewById(R.id.materialViewPager);
+        mViewPager.getViewPager().setAdapter(null);
+        todayModeAdapter = null;
+        tagModeAdapter = null;
+        monthModeAdapter = null;
+
+        System.gc();
+
         MODE = TAG_MODE;
 
         tagModeAdapter = new TagViewFragmentAdapter(getSupportFragmentManager());
-        mViewPager.getViewPager().setOffscreenPageLimit(tagModeAdapter.getCount());
+        mViewPager.getViewPager().setOffscreenPageLimit(tagModeAdapter.getCount() / 3);
         mViewPager.getViewPager().setAdapter(tagModeAdapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
@@ -186,13 +202,29 @@ public class AccountBookActivity extends AppCompatActivity {
 
         Log.d("Saver", "TODAY_MODE");
 
-        if (MODE == MONTH_MODE) {
+        if (MODE == TODAY_MODE) {
             return;
         }
-        MODE = MONTH_MODE;
+
+        mViewPager.getViewPager().removeAllViews();
+        mViewPager.getViewPager().removeAllViewsInLayout();
+        mViewPager.getViewPager().destroyDrawingCache();
+        mViewPager.getViewPager().setAdapter(null);
+
+        mViewPager = null;
+
+        mViewPager = (MaterialViewPager)findViewById(R.id.materialViewPager);
+        mViewPager.getViewPager().setAdapter(null);
+        todayModeAdapter = null;
+        tagModeAdapter = null;
+        monthModeAdapter = null;
+
+        System.gc();
+
+        MODE = TODAY_MODE;
 
         todayModeAdapter = new TodayViewFragmentAdapter(getSupportFragmentManager());
-        mViewPager.getViewPager().setOffscreenPageLimit(todayModeAdapter.getCount());
+        mViewPager.getViewPager().setOffscreenPageLimit(todayModeAdapter.getCount() / 3);
         mViewPager.getViewPager().setAdapter(todayModeAdapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
@@ -202,7 +234,7 @@ public class AccountBookActivity extends AppCompatActivity {
                 return HeaderDesign.fromColorResAndDrawable(
                         Utils.GetTagColor(RecordManager.TAGS.get(page).getName()),
                         mContext.getResources().getDrawable(
-                                Utils.GetTagDrawable(RecordManager.TAGS.get(page).getName())));
+                                Utils.GetTagDrawable("Transparent")));
             }
         });
     }
@@ -211,13 +243,29 @@ public class AccountBookActivity extends AppCompatActivity {
 
         Log.d("Saver", "MONTH_MODE");
 
-        if (MODE == TODAY_MODE) {
+        if (MODE == MONTH_MODE) {
             return;
         }
-        MODE = TODAY_MODE;
+
+        mViewPager.getViewPager().removeAllViews();
+        mViewPager.getViewPager().removeAllViewsInLayout();
+        mViewPager.getViewPager().destroyDrawingCache();
+        mViewPager.getViewPager().setAdapter(null);
+
+        mViewPager = null;
+
+        mViewPager = (MaterialViewPager)findViewById(R.id.materialViewPager);
+        mViewPager.getViewPager().setAdapter(null);
+        todayModeAdapter = null;
+        tagModeAdapter = null;
+        monthModeAdapter = null;
+
+        System.gc();
+
+        MODE = MONTH_MODE;
 
         monthModeAdapter = new MonthViewFragmentAdapter(getSupportFragmentManager());
-        mViewPager.getViewPager().setOffscreenPageLimit(monthModeAdapter.getCount());
+        mViewPager.getViewPager().setOffscreenPageLimit(monthModeAdapter.getCount() / 3);
         mViewPager.getViewPager().setAdapter(monthModeAdapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 

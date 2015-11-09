@@ -141,11 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
         Utils.init(this.getApplicationContext());
 
-        try {
-            RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
 
         toolBarTitle = (TextView)findViewById(R.id.guillotine_title);
         toolBarTitle.setTypeface(Utils.typefaceLatoLight);
@@ -161,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
         tagChoicePagerAdapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), pages);
 
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(1);
 
         viewPager.setAdapter(tagChoicePagerAdapter);
 
@@ -335,7 +331,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }
-
                 break;
             default:
                 break;
@@ -599,9 +594,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+
+        radioButton0.setChecked(false);
+        radioButton1.setChecked(false);
+        radioButton2.setChecked(false);
+        radioButton3.setChecked(false);
+
         isLoading = false;
         editView.setText("0");
         inputPassword = "";
+        System.gc();
     }
 
     @Override

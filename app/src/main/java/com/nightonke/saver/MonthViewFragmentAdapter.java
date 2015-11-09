@@ -13,7 +13,7 @@ import java.util.List;
 
 public class MonthViewFragmentAdapter extends FragmentStatePagerAdapter {
 
-    List<MonthViewFragment> list;
+    public List<MonthViewFragment> list;
 
     private int monthNumber;
 

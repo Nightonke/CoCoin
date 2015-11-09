@@ -60,19 +60,25 @@ public class MonthViewRecyclerViewAdapter
     private ArrayList<String> dateShownStringList;
     private String dialogTitle;
 
-    private int monthNumber;
     private int startYear;
     private int startMonth;
 
     public MonthViewRecyclerViewAdapter(
-            List<Record> records, Context context, int position, int monthNumber) {
-        list = records;
+            int start, int end, Context context, int position, int monthNumber) {
+        list = new ArrayList<>();
         mContext = context;
         fragmentPosition = position;
 
-        startYear = RecordManager.RECORDS.get(0).getCalendar().get(Calendar.YEAR);
-        startMonth = RecordManager.RECORDS.get(0).getCalendar().get(Calendar.MONTH);
-        this.monthNumber = monthNumber;
+        RecordManager recordManager = RecordManager.getInstance(mContext.getApplicationContext());
+
+        if (start != -1) {
+            for (int i = start; i >= end; i--) {
+                list.add(recordManager.RECORDS.get(i));
+            }
+        }
+
+        startYear = recordManager.RECORDS.get(0).getCalendar().get(Calendar.YEAR);
+        startMonth = recordManager.RECORDS.get(0).getCalendar().get(Calendar.MONTH);
 
         sliceValuesList = new ArrayList<>();
         TagExpanseList = new ArrayList<>();
@@ -99,9 +105,9 @@ public class MonthViewRecyclerViewAdapter
         dateStringList.add(Utils.MONTHS_SHORT[nowMonth + 1] + " " + nowYear);
         dateShownStringList.add(" in " + Utils.MONTHS_SHORT[nowMonth + 1] + " " + nowYear);
         selectedPositionList.add(0);
-        for (int j = 2; j < RecordManager.TAGS.size(); j++) {
-            TagExpanse.put(RecordManager.TAGS.get(j).getId(), Double.valueOf(0));
-            Expanse.put(RecordManager.TAGS.get(j).getId(), new ArrayList<Record>());
+        for (int j = 2; j < recordManager.TAGS.size(); j++) {
+            TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
+            Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
         }
         for (Record record : list) {
             if (record.getCalendar().get(Calendar.MONTH) == nowMonth) {
@@ -155,9 +161,9 @@ public class MonthViewRecyclerViewAdapter
             String dateString = Utils.MONTHS_SHORT[leftWeekRange.get(Calendar.MONTH) + 1] + " " +
                     leftWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                     leftWeekRange.get(Calendar.YEAR) + " - " +
-                    Utils.MONTHS_SHORT[rightWeekRange.get(Calendar.MONTH) + 1] + " " +
-                    rightWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
-                    rightWeekRange.get(Calendar.YEAR);
+                    Utils.MONTHS_SHORT[rightShownWeekRange.get(Calendar.MONTH) + 1] + " " +
+                    rightShownWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
+                    rightShownWeekRange.get(Calendar.YEAR);
             dateStringList.add(dateString);
             dateShownStringList.add(" from " +
                     Utils.MONTHS_SHORT[leftWeekRange.get(Calendar.MONTH) + 1] + " " +
@@ -171,9 +177,9 @@ public class MonthViewRecyclerViewAdapter
             Expanse = new HashMap<>();
             sliceValues = new ArrayList<>();
 
-            for (int j = 2; j < RecordManager.TAGS.size(); j++) {
-                TagExpanse.put(RecordManager.TAGS.get(j).getId(), Double.valueOf(0));
-                Expanse.put(RecordManager.TAGS.get(j).getId(), new ArrayList<Record>());
+            for (int j = 2; j < recordManager.TAGS.size(); j++) {
+                TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
+                Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
             }
             for (Record record : list) {
                 if (!record.getCalendar().before(leftWeekRange) &&
@@ -226,7 +232,7 @@ public class MonthViewRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
-        return dateStringList.size();
+        return 1;
     }
 
     @Override
@@ -390,5 +396,7 @@ public class MonthViewRecyclerViewAdapter
 
         }
     }
+
+
 
 }

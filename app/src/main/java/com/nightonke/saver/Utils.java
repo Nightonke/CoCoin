@@ -17,7 +17,8 @@ import java.util.TreeMap;
  * Created by 伟平 on 2015/10/16.
  */
 
-//Todo delete record method
+// Todo delete record method
+// Todo make Utils singleton
 
 public class Utils {
 
@@ -36,6 +37,7 @@ public class Utils {
     public static Typeface typefaceCodeLight;
 
     public static void init(Context context) {
+
         typefaceLatoHairline = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Hairline.ttf");
         typefaceLatoLight = Typeface.createFromAsset(context.getAssets(), "fonts/LatoLatin-Light.ttf");
         typefaceCodeLight = Typeface.createFromAsset(context.getAssets(), "fonts/CODE_Light.otf");
@@ -478,6 +480,8 @@ public class Utils {
                 return R.drawable.traffic_header;
             case "Vehicle Maintenance":
                 return R.drawable.vehicle_maintenance_header;
+            case "Transparent":
+                return R.drawable.transparent;
             default:
                 return R.drawable.sum_header_histogram;
         }

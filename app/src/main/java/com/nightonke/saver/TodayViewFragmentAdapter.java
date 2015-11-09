@@ -12,21 +12,15 @@ import java.util.List;
 
 public class TodayViewFragmentAdapter extends FragmentStatePagerAdapter {
 
-    List<TodayViewFragment> list;
-
     private static int TODAY_VIEW_FRAGMENT_NUMBER = 8;
 
     public TodayViewFragmentAdapter(android.support.v4.app.FragmentManager fm) {
         super(fm);
-        list = new ArrayList<>();
-        for (int i = 0; i < TODAY_VIEW_FRAGMENT_NUMBER; i++) {
-            list.add(TodayViewFragment.newInstance(i));
-        }
     }
 
     @Override
     public Fragment getItem(int i) {
-        return list.get(i);
+        return TodayViewFragment.newInstance(i);
     }
 
     @Override

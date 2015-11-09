@@ -21,7 +21,7 @@ import java.util.Random;
 
 public class RecordManager {
 
-    private static RecordManager recordManager;
+    private static RecordManager recordManager = null;
 
     private static DB db;
 
@@ -77,8 +77,7 @@ public class RecordManager {
         }
     }
 
-    public synchronized static RecordManager getInstance(Context context)
-            throws IOException {
+    public synchronized static RecordManager getInstance(Context context) {
         if (recordManager == null) {
             RECORDS = new LinkedList<>();
             TAGS = new LinkedList<>();

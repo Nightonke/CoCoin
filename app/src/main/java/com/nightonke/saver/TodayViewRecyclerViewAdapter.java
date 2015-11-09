@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,16 +29,24 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
+import lecho.lib.hellocharts.model.Column;
+import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SelectedValue;
 import lecho.lib.hellocharts.model.SliceValue;
+import lecho.lib.hellocharts.model.SubcolumnValue;
+import lecho.lib.hellocharts.view.Chart;
+import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
 
 /**
  * Created by 伟平 on 2015/10/20.
  */
 
-public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayViewRecyclerViewAdapter.viewHolder> {
+public class TodayViewRecyclerViewAdapter
+        extends RecyclerView.Adapter<TodayViewRecyclerViewAdapter.viewHolder> {
 
     private Context mContext;
 
@@ -57,12 +66,10 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
 
     private int fragmentPosition;
 
-    final List<SliceValue> sliceValues;
     private Map<Integer, Double> TagExpanse;
     private Map<Integer, List<Record>> Expanse;
-    private PieChartData pieChartData;
 
-    private boolean ISEMPTY;
+    private boolean IS_EMPTY;
 
     private double Sum;
     private int selectedPosition = 0;
@@ -70,28 +77,41 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
     private String dateShownString;
     private String dialogTitle;
 
-    public TodayViewRecyclerViewAdapter(List<Record> records, Context context, int position) {
-        list = records;
+    private int tagId;
+    private int lastSelectedPosition = 0;
+
+    public TodayViewRecyclerViewAdapter(int start, int end, Context context, int position) {
+
         mContext = context;
+
+        RecordManager recordManager = RecordManager.getInstance(mContext.getApplicationContext());
+
+        list = new ArrayList<>();
+        if (start != -1) {
+            Log.d("Saver", start + " " + end);
+            for (int i = start; i >= end; i--) {
+                list.add(recordManager.RECORDS.get(i));
+            }
+        }
+
         fragmentPosition = position;
 
-        ISEMPTY = records.isEmpty();
+        IS_EMPTY = list.isEmpty();
 
         setDateString();
 
-        sliceValues = new ArrayList<>();
         TagExpanse = new TreeMap<>();
         Expanse = new HashMap<>();
 
-        if (!ISEMPTY) {
-            for (int j = 2; j < RecordManager.TAGS.size(); j++) {
-                TagExpanse.put(RecordManager.TAGS.get(j).getId(), Double.valueOf(0));
-                Expanse.put(RecordManager.TAGS.get(j).getId(), new ArrayList<Record>());
+        if (!IS_EMPTY) {
+            for (int j = 2; j < recordManager.TAGS.size(); j++) {
+                TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
+                Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
             }
 
             Sum = 0;
 
-            for (Record record : records) {
+            for (Record record : list) {
                 TagExpanse.put(record.getTag(),
                         TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
                 Expanse.get(record.getTag()).add(record);
@@ -99,25 +119,7 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
             }
 
             TagExpanse = Utils.SortTreeMapByValues(TagExpanse);
-
-            for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
-                if (entry.getValue() >= 1) {
-                    SliceValue sliceValue = new SliceValue(
-                            (float)(double)entry.getValue(),
-                            mContext.getResources().
-                                    getColor(Utils.GetTagColor(entry.getKey())));
-                    sliceValue.setLabel(String.valueOf(entry.getKey()));
-                    sliceValues.add(sliceValue);
-                }
-            }
         }
-
-        pieChartData = new PieChartData(sliceValues);
-        pieChartData.setHasLabels(false);
-        pieChartData.setHasLabelsOnlyForSelected(false);
-        pieChartData.setHasLabelsOutside(false);
-        pieChartData.setHasCenterCircle(false);
-
     }
 
     @Override
@@ -132,12 +134,12 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
 
     @Override
     public int getItemCount() {
-        return list.size() + 1;
+        return 1;
     }
 
     @Override
     public TodayViewRecyclerViewAdapter.viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = null;
+        View view;
 
         switch (viewType) {
             case TYPE_HEADER: {
@@ -158,7 +160,7 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
     }
 
     @Override
-    public void onBindViewHolder(final viewHolder holder, int position) {
+    public void onBindViewHolder(final viewHolder holder, final int position) {
 
         switch (getItemViewType(position)) {
             case TYPE_HEADER:
@@ -169,33 +171,41 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
                 holder.date.setTypeface(Utils.typefaceLatoLight);
                 holder.expanseSum.setTypeface(Utils.typefaceLatoLight);
 
-                if (ISEMPTY) {
+                if (IS_EMPTY) {
                     holder.emptyTip.setVisibility(View.VISIBLE);
                     holder.emptyTip.setTypeface(Utils.typefaceLatoLight);
+
+                    holder.pie.setVisibility(View.GONE);
+                    holder.iconLeft.setVisibility(View.GONE);
+                    holder.iconRight.setVisibility(View.GONE);
                 } else {
                     holder.emptyTip.setVisibility(View.INVISIBLE);
-                }
 
-                holder.pie.setPieChartData(pieChartData);
-                holder.pie.setOnValueTouchListener(new PieValueTouchListener());
-                holder.pie.setChartRotationEnabled(false);
+                    final ArrayList<SliceValue> sliceValues = new ArrayList<>();
 
-                if (!ISEMPTY) {
+                    for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
+                        if (entry.getValue() >= 1) {
+                            SliceValue sliceValue = new SliceValue(
+                                    (float)(double)entry.getValue(),
+                                    mContext.getApplicationContext().getResources().
+                                            getColor(Utils.GetTagColor(entry.getKey())));
+                            sliceValue.setLabel(String.valueOf(entry.getKey()));
+                            sliceValues.add(sliceValue);
+                        }
+                    }
+
+                    PieChartData pieChartData = new PieChartData(sliceValues);
+
+                    pieChartData.setHasLabels(false);
+                    pieChartData.setHasLabelsOnlyForSelected(false);
+                    pieChartData.setHasLabelsOutside(false);
+                    pieChartData.setHasCenterCircle(false);
+
+                    holder.pie.setPieChartData(pieChartData);
+                    holder.pie.setChartRotationEnabled(false);
+
                     holder.iconRight.setVisibility(View.VISIBLE);
                     holder.iconRight.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            selectedPosition = (selectedPosition + 1) % sliceValues.size();
-                            SelectedValue selectedValue =
-                                    new SelectedValue(
-                                            selectedPosition,
-                                            0,
-                                            SelectedValue.SelectedValueType.NONE);
-                            holder.pie.selectValue(selectedValue);
-                        }
-                    });
-                    holder.iconLeft.setVisibility(View.VISIBLE);
-                    holder.iconLeft.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             selectedPosition
@@ -208,29 +218,119 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
                             holder.pie.selectValue(selectedValue);
                         }
                     });
-                } else {
-                    holder.iconLeft.setVisibility(View.GONE);
-                    holder.iconRight.setVisibility(View.GONE);
+                    holder.iconLeft.setVisibility(View.VISIBLE);
+                    holder.iconLeft.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            selectedPosition = (selectedPosition + 1) % sliceValues.size();
+                            SelectedValue selectedValue =
+                                    new SelectedValue(
+                                            selectedPosition,
+                                            0,
+                                            SelectedValue.SelectedValueType.NONE);
+                            holder.pie.selectValue(selectedValue);
+                        }
+                    });
+
+                    holder.pie.setOnValueTouchListener(new PieChartOnValueSelectListener() {
+                        @Override
+                        public void onValueSelected(int p, SliceValue sliceValue) {
+                            // snack bar
+                            RecordManager recordManager
+                                    = RecordManager.getInstance(mContext.getApplicationContext());
+                            String text = "";
+                            tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
+                            Double percent = sliceValue.getValue() / Sum * 100;
+                            text += "Spend " + (int)sliceValue.getValue()
+                                    + " (takes " + String.format("%.2f", percent) + "%)\n"
+                                    + " in " + recordManager.TAG_NAMES.get(tagId) + ".\n";
+                            dialogTitle = "Spend " + (int)sliceValue.getValue() + dateShownString + "\n" +
+                                    " in " + recordManager.TAG_NAMES.get(tagId);
+                            Snackbar snackbar =
+                                    Snackbar
+                                            .with(mContext)
+                                            .type(SnackbarType.MULTI_LINE)
+                                            .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                                            .position(Snackbar.SnackbarPosition.BOTTOM)
+                                            .margin(15, 15)
+                                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentPosition))
+                                            .text(text)
+                                            .textTypeface(Utils.typefaceLatoLight)
+                                            .textColor(Color.WHITE)
+                                            .actionLabelTypeface(Utils.typefaceLatoLight)
+                                            .actionLabel("Check")
+                                            .actionColor(Color.WHITE)
+                                            .actionListener(new mActionClickListener());
+                            SnackbarManager.show(snackbar);
+
+                            if (p == lastSelectedPosition) {
+                                return;
+                            } else {
+                                lastSelectedPosition = p;
+                            }
+
+                            // histogram data
+                            List<Record> shownRecords = Expanse.get(tagId);
+                            ColumnChartData columnChartData;
+                            List<SubcolumnValue> subcolumnValues;
+                            final List<Column> columns = new ArrayList<>();
+                            int numColumns = 0;
+                            if (fragmentPosition == TODAY || fragmentPosition == YESTERDAY) {
+                                numColumns = 24;
+                                for (int i = 0; i < numColumns; i++) {
+                                    subcolumnValues = new ArrayList<>();
+                                    Column column = new Column(subcolumnValues);
+                                    column.setHasLabels(false);
+                                    column.setHasLabelsOnlyForSelected(false);
+                                    columns.add(column);
+                                }
+                                for (int i = shownRecords.size() - 1; i >= 0; i--) {
+                                    Record record = shownRecords.get(i);
+                                    SubcolumnValue value = new SubcolumnValue((float)record.getMoney(),
+                                            Utils.GetRandomColor());
+                                    value.setLabel(record.getCalendar().get(Calendar.HOUR_OF_DAY) + ":" +
+                                            record.getCalendar().get(Calendar.MINUTE));
+                                    subcolumnValues = new ArrayList<>();
+                                    subcolumnValues.add(value);
+                                    Column column = new Column(subcolumnValues);
+                                    columns.set(record.getCalendar().get(Calendar.HOUR_OF_DAY), column);
+                                }
+
+                            }
+
+                            Axis axisX = new Axis();
+                            List<AxisValue> axisValueList = new ArrayList<>();
+
+                            if (fragmentPosition == TODAY || fragmentPosition == YESTERDAY) {
+                                for (int i = 0; i < numColumns; i++) {
+                                    axisValueList.add(new AxisValue(i).setLabel(i + ""));
+                                }
+                            }
+
+                            axisX.setValues(axisValueList);
+                            Axis axisY = new Axis().setHasLines(true);
+
+                            columnChartData = new ColumnChartData(columns);
+
+                            columnChartData.setAxisXBottom(axisX);
+                            columnChartData.setAxisYLeft(axisY);
+                            columnChartData.setStacked(true);
+
+                            holder.histogram.setColumnChartData(columnChartData);
+                            holder.histogram.setZoomEnabled(false);
+                        }
+
+                        @Override
+                        public void onValueDeselected() {
+
+                        }
+                    });
+
                 }
 
                 break;
 
             case TYPE_CELL:
-
-                holder.imageView.setImageResource(
-                        Utils.GetTagIcon(list.get(position - 1).getTag()));
-
-                holder.money.setText((int) list.get(position - 1).getMoney() + "");
-                holder.money.setTextColor(
-                        Utils.GetTagColor(list.get(position - 1).getTag()));
-                holder.money.setTypeface(Utils.typefaceLatoLight);
-
-                holder.cellDate.setText(list.get(position - 1).getCalendarString());
-                holder.cellDate.setTypeface(Utils.typefaceLatoLight);
-
-                holder.index.setText(position + "");
-                holder.index.setTypeface(Utils.typefaceLatoLight);
-
                 break;
         }
     }
@@ -249,23 +349,14 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
         @InjectView(R.id.chart_pie)
         PieChartView pie;
         @Optional
+        @InjectView(R.id.histogram)
+        ColumnChartView histogram;
+        @Optional
         @InjectView(R.id.icon_left)
         MaterialIconView iconLeft;
         @Optional
         @InjectView(R.id.icon_right)
         MaterialIconView iconRight;
-        @Optional
-        @InjectView(R.id.image_view)
-        ImageView imageView;
-        @Optional
-        @InjectView(R.id.cell_date)
-        TextView cellDate;
-        @Optional
-        @InjectView(R.id.money)
-        TextView money;
-        @Optional
-        @InjectView(R.id.index)
-        TextView index;
 
         viewHolder(View view) {
             super(view);
@@ -273,49 +364,15 @@ public class TodayViewRecyclerViewAdapter extends RecyclerView.Adapter<TodayView
         }
     }
 
-    private class PieValueTouchListener implements PieChartOnValueSelectListener {
-
+    private class mActionClickListener implements ActionClickListener {
         @Override
-        public void onValueSelected(int i, SliceValue sliceValue) {
-            String text = "";
-            final int tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
-            Double percent = sliceValue.getValue() / Sum * 100;
-            text += "Spend " + (int)sliceValue.getValue()
-                    + " (takes " + String.format("%.2f", percent) + "%)\n"
-                    + " in " + RecordManager.TAG_NAMES.get(tagId) + ".\n";
-            dialogTitle = "Spend " + (int)sliceValue.getValue() + dateShownString + "\n" +
-                    " in " + RecordManager.TAG_NAMES.get(tagId);
-            Snackbar snackbar =
-                    Snackbar
-                            .with(mContext)
-                            .type(SnackbarType.MULTI_LINE)
-                            .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
-                            .position(Snackbar.SnackbarPosition.BOTTOM)
-                            .margin(15, 15)
-                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentPosition))
-                            .text(text)
-                            .textTypeface(Utils.typefaceLatoLight)
-                            .textColor(Color.WHITE)
-                            .actionLabelTypeface(Utils.typefaceLatoLight)
-                            .actionLabel("Check")
-                            .actionColor(Color.WHITE)
-                            .actionListener(new ActionClickListener() {
-                                @Override
-                                public void onActionClicked(Snackbar snackbar) {
-                                    List<Record> shownRecords = Expanse.get(tagId);
-                                    ((FragmentActivity)mContext).getSupportFragmentManager()
-                                            .beginTransaction()
-                                            .add(new RecordCheckDialog(
-                                                    mContext, shownRecords, dialogTitle), "MyDialog")
-                                            .commit();
-                                }
-                            });
-            SnackbarManager.show(snackbar);
-        }
-
-        @Override
-        public void onValueDeselected() {
-
+        public void onActionClicked(Snackbar snackbar) {
+            List<Record> shownRecords = Expanse.get(tagId);
+            ((FragmentActivity)mContext).getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(new RecordCheckDialog(
+                            mContext, shownRecords, dialogTitle), "MyDialog")
+                    .commit();
         }
     }
 

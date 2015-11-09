@@ -10,9 +10,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapter;
+import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -63,15 +66,15 @@ public class MonthViewFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Log.d("Saver", position + "fragment");
-
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        int startYear = RecordManager.RECORDS.get(0).getCalendar().get(Calendar.YEAR);
-        int startMonth = RecordManager.RECORDS.get(0).getCalendar().get(Calendar.MONTH);
+        RecordManager recordManager = RecordManager.getInstance(mContext.getApplicationContext());
+
+        int startYear = recordManager.RECORDS.get(0).getCalendar().get(Calendar.YEAR);
+        int startMonth = recordManager.RECORDS.get(0).getCalendar().get(Calendar.MONTH);
         int nowYear = startYear + (startMonth + (monthNumber - position - 1)) / 12;
         int nowMonth = (startMonth + (monthNumber - position - 1)) % 12;
 
@@ -88,19 +91,34 @@ public class MonthViewFragment extends Fragment {
         Calendar leftRange = Utils.GetThisWeekLeftRange(monthStart);
         Calendar rightRange = Utils.GetThisWeekRightRange(monthEnd);
 
-        for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-            if (RecordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+        int start = -1;
+        int end = 0;
+
+        for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+            if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                end = i + 1;
                 break;
-            } else if (RecordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
-                list.add(RecordManager.RECORDS.get(i));
+            } else if (recordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
+                if (start == -1) {
+                    start = i;
+                }
             }
         }
 
         mAdapter = new RecyclerViewMaterialAdapter(
-                new MonthViewRecyclerViewAdapter(list, mContext, position, monthNumber));
+                new MonthViewRecyclerViewAdapter(start, end, mContext, position, monthNumber));
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
+    }
+
+    @Override
+    public void onDestroy() {
+
+        super.onDestroy();
+
+        RefWatcher refWatcher = myApplication.getRefWatcher(getActivity());
+        refWatcher.watch(this);
     }
 
 }
