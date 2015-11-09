@@ -41,6 +41,8 @@ import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
 
+// Todo add a dialog of histogram columns
+
 /**
  * Created by 伟平 on 2015/10/20.
  */
@@ -68,6 +70,7 @@ public class TodayViewRecyclerViewAdapter
 
     private Map<Integer, Double> TagExpanse;
     private Map<Integer, List<Record>> Expanse;
+    private float[] originalTargets;
 
     private boolean IS_EMPTY;
 
@@ -78,11 +81,15 @@ public class TodayViewRecyclerViewAdapter
     private String dialogTitle;
 
     private int tagId;
-    private int lastSelectedPosition = 0;
+    private int lastSelectedPosition = -1;
+    private int columnNumber;
+    private int axis_date;
 
     public TodayViewRecyclerViewAdapter(int start, int end, Context context, int position) {
 
         mContext = context;
+        fragmentPosition = position;
+        Sum = 0;
 
         RecordManager recordManager = RecordManager.getInstance(mContext.getApplicationContext());
 
@@ -94,28 +101,50 @@ public class TodayViewRecyclerViewAdapter
             }
         }
 
-        fragmentPosition = position;
-
         IS_EMPTY = list.isEmpty();
 
         setDateString();
 
-        TagExpanse = new TreeMap<>();
-        Expanse = new HashMap<>();
-
         if (!IS_EMPTY) {
+            if (fragmentPosition == TODAY || fragmentPosition == YESTERDAY) {
+                columnNumber = 24;
+                axis_date = Calendar.HOUR_OF_DAY;
+            }
+            if (fragmentPosition == THIS_WEEK || fragmentPosition == LAST_WEEK) {
+                columnNumber = 7;
+                axis_date = Calendar.DAY_OF_WEEK;
+            }
+            if (fragmentPosition == THIS_MONTH || fragmentPosition == LAST_MONTH) {
+                columnNumber = list.get(0).getCalendar().getActualMaximum(Calendar.DAY_OF_MONTH);
+                axis_date = Calendar.DAY_OF_MONTH;
+            }
+            if (fragmentPosition == THIS_YEAR || fragmentPosition == LAST_YEAR) {
+                columnNumber = 12;
+                axis_date = Calendar.MONTH;
+            }
+
+            TagExpanse = new TreeMap<>();
+            Expanse = new HashMap<>();
+            originalTargets = new float[columnNumber];
+            for (int i = 0; i < columnNumber; i++) originalTargets[i] = 0;
+
             for (int j = 2; j < recordManager.TAGS.size(); j++) {
                 TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
                 Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
             }
-
-            Sum = 0;
 
             for (Record record : list) {
                 TagExpanse.put(record.getTag(),
                         TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
                 Expanse.get(record.getTag()).add(record);
                 Sum += record.getMoney();
+                if (axis_date == Calendar.DAY_OF_WEEK) {
+                    originalTargets[record.getCalendar().get(axis_date) - 1]
+                            += record.getMoney();
+                } else {
+                    originalTargets[record.getCalendar().get(axis_date)]
+                            += record.getMoney();
+                }
             }
 
             TagExpanse = Utils.SortTreeMapByValues(TagExpanse);
@@ -178,6 +207,10 @@ public class TodayViewRecyclerViewAdapter
                     holder.pie.setVisibility(View.GONE);
                     holder.iconLeft.setVisibility(View.GONE);
                     holder.iconRight.setVisibility(View.GONE);
+
+                    holder.histogram.setVisibility(View.GONE);
+                    holder.histogram_icon_left.setVisibility(View.GONE);
+                    holder.histogram_icon_right.setVisibility(View.GONE);
                 } else {
                     holder.emptyTip.setVisibility(View.INVISIBLE);
 
@@ -208,8 +241,12 @@ public class TodayViewRecyclerViewAdapter
                     holder.iconRight.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            if (lastSelectedPosition != -1) {
+                                selectedPosition = lastSelectedPosition;
+                            }
                             selectedPosition
-                                    = (selectedPosition - 1 + sliceValues.size()) % sliceValues.size();
+                                    = (selectedPosition - 1 + sliceValues.size())
+                                    % sliceValues.size();
                             SelectedValue selectedValue =
                                     new SelectedValue(
                                             selectedPosition,
@@ -222,7 +259,12 @@ public class TodayViewRecyclerViewAdapter
                     holder.iconLeft.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            selectedPosition = (selectedPosition + 1) % sliceValues.size();
+                            if (lastSelectedPosition != -1) {
+                                selectedPosition = lastSelectedPosition;
+                            }
+                            selectedPosition
+                                    = (selectedPosition + 1)
+                                    % sliceValues.size();
                             SelectedValue selectedValue =
                                     new SelectedValue(
                                             selectedPosition,
@@ -232,6 +274,40 @@ public class TodayViewRecyclerViewAdapter
                         }
                     });
 
+                    // numColumns of zeros of the histogram
+                    final List<Column> columns = new ArrayList<>();
+                    for (int i = 0; i < columnNumber; i++) {
+                        SubcolumnValue value = new SubcolumnValue(
+                                originalTargets[i], Utils.GetRandomColor());
+                        List<SubcolumnValue> subcolumnValues = new ArrayList<>();
+                        subcolumnValues.add(value);
+                        Column column = new Column(subcolumnValues);
+                        column.setHasLabels(false);
+                        column.setHasLabelsOnlyForSelected(false);
+                        columns.add(column);
+                    }
+
+                    Axis axisX = new Axis();
+                    List<AxisValue> axisValueList = new ArrayList<>();
+
+                    for (int i = 0; i < columnNumber; i++) {
+                        axisValueList.add(
+                                new AxisValue(i).setLabel(Utils.GetAxisDateName(axis_date, i)));
+                    }
+
+                    axisX.setValues(axisValueList);
+                    Axis axisY = new Axis().setHasLines(true);
+
+                    final ColumnChartData columnChartData = new ColumnChartData(columns);
+
+                    columnChartData.setAxisXBottom(axisX);
+                    columnChartData.setAxisYLeft(axisY);
+                    columnChartData.setStacked(true);
+
+                    holder.histogram.setColumnChartData(columnChartData);
+                    holder.histogram.setZoomEnabled(false);
+
+                    // on click listener
                     holder.pie.setOnValueTouchListener(new PieChartOnValueSelectListener() {
                         @Override
                         public void onValueSelected(int p, SliceValue sliceValue) {
@@ -243,9 +319,9 @@ public class TodayViewRecyclerViewAdapter
                             Double percent = sliceValue.getValue() / Sum * 100;
                             text += "Spend " + (int)sliceValue.getValue()
                                     + " (takes " + String.format("%.2f", percent) + "%)\n"
-                                    + " in " + recordManager.TAG_NAMES.get(tagId) + ".\n";
+                                    + "in " + recordManager.TAG_NAMES.get(tagId) + ".\n";
                             dialogTitle = "Spend " + (int)sliceValue.getValue() + dateShownString + "\n" +
-                                    " in " + recordManager.TAG_NAMES.get(tagId);
+                                    "in " + recordManager.TAG_NAMES.get(tagId);
                             Snackbar snackbar =
                                     Snackbar
                                             .with(mContext)
@@ -271,58 +347,34 @@ public class TodayViewRecyclerViewAdapter
 
                             // histogram data
                             List<Record> shownRecords = Expanse.get(tagId);
-                            ColumnChartData columnChartData;
-                            List<SubcolumnValue> subcolumnValues;
-                            final List<Column> columns = new ArrayList<>();
-                            int numColumns = 0;
-                            if (fragmentPosition == TODAY || fragmentPosition == YESTERDAY) {
-                                numColumns = 24;
-                                for (int i = 0; i < numColumns; i++) {
-                                    subcolumnValues = new ArrayList<>();
-                                    Column column = new Column(subcolumnValues);
-                                    column.setHasLabels(false);
-                                    column.setHasLabelsOnlyForSelected(false);
-                                    columns.add(column);
-                                }
-                                for (int i = shownRecords.size() - 1; i >= 0; i--) {
-                                    Record record = shownRecords.get(i);
-                                    SubcolumnValue value = new SubcolumnValue((float)record.getMoney(),
-                                            Utils.GetRandomColor());
-                                    value.setLabel(record.getCalendar().get(Calendar.HOUR_OF_DAY) + ":" +
-                                            record.getCalendar().get(Calendar.MINUTE));
-                                    subcolumnValues = new ArrayList<>();
-                                    subcolumnValues.add(value);
-                                    Column column = new Column(subcolumnValues);
-                                    columns.set(record.getCalendar().get(Calendar.HOUR_OF_DAY), column);
-                                }
+                            float[] targets = new float[columnNumber];
+                            for (int i = 0; i < columnNumber; i++) targets[i] = 0;
 
-                            }
-
-                            Axis axisX = new Axis();
-                            List<AxisValue> axisValueList = new ArrayList<>();
-
-                            if (fragmentPosition == TODAY || fragmentPosition == YESTERDAY) {
-                                for (int i = 0; i < numColumns; i++) {
-                                    axisValueList.add(new AxisValue(i).setLabel(i + ""));
+                            for (int i = shownRecords.size() - 1; i >= 0; i--) {
+                                Record record = shownRecords.get(i);
+                                if (axis_date == Calendar.DAY_OF_WEEK) {
+                                    targets[record.getCalendar().get(axis_date) - 1]
+                                            += record.getMoney();
+                                } else {
+                                    targets[record.getCalendar().get(axis_date)]
+                                            += record.getMoney();
                                 }
                             }
 
-                            axisX.setValues(axisValueList);
-                            Axis axisY = new Axis().setHasLines(true);
-
-                            columnChartData = new ColumnChartData(columns);
-
-                            columnChartData.setAxisXBottom(axisX);
-                            columnChartData.setAxisYLeft(axisY);
-                            columnChartData.setStacked(true);
-
-                            holder.histogram.setColumnChartData(columnChartData);
-                            holder.histogram.setZoomEnabled(false);
+                            for (int i = 0; i < columnNumber; i++) {
+                                columnChartData.getColumns().
+                                        get(i).getValues().get(0).setTarget(targets[i]);
+                            }
+                            holder.histogram.startDataAnimation();
                         }
 
                         @Override
                         public void onValueDeselected() {
-
+                            for (int i = 0; i < columnNumber; i++) {
+                                columnChartData.getColumns().
+                                        get(i).getValues().get(0).setTarget(originalTargets[i]);
+                            }
+                            holder.histogram.startDataAnimation();
                         }
                     });
 
@@ -357,6 +409,12 @@ public class TodayViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.icon_right)
         MaterialIconView iconRight;
+        @Optional
+        @InjectView(R.id.histogram_icon_left)
+        MaterialIconView histogram_icon_left;
+        @Optional
+        @InjectView(R.id.histogram_icon_right)
+        MaterialIconView histogram_icon_right;
 
         viewHolder(View view) {
             super(view);
@@ -395,7 +453,7 @@ public class TodayViewRecyclerViewAdapter
                 dateShownString = " today";
                 break;
             case YESTERDAY:
-                dateString = basicYesterdayDateString.substring(6, basicTodayDateString.length());
+                dateString = basicYesterdayDateString.substring(6, basicYesterdayDateString.length());
                 dateShownString = " yesterday";
                 break;
             case THIS_WEEK:

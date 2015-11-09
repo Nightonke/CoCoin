@@ -28,6 +28,10 @@ public class Utils {
 
     public static String[] MONTHS_SHORT = {"", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
+    public static String[] WEEKDAY_SHORT_START_ON_MONDAY = {"", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
+
+    public static String[] WEEKDAY_SHORT_START_ON_SUNDAY = {"", "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
+
     public static String[] FLOATINGLABELS = {"", "", "十", "百", "千", "万", "十万", "百万", "千万", "亿", "十亿"};
 
     public static String[] BUTTONS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "D", "0", "Y"};
@@ -35,6 +39,10 @@ public class Utils {
     public static Typeface typefaceLatoHairline;
     public static Typeface typefaceLatoLight;
     public static Typeface typefaceCodeLight;
+
+    private Utils() {
+
+    }
 
     public static void init(Context context) {
 
@@ -54,6 +62,22 @@ public class Utils {
     }
 
     public static boolean WEEK_START_WITH_SUNDAY = false;
+
+    public static String GetAxisDateName(int type, int position) {
+        switch (type) {
+            case Calendar.HOUR_OF_DAY:
+                return position + "";
+            case Calendar.DAY_OF_WEEK:
+                if (WEEK_START_WITH_SUNDAY) return WEEKDAY_SHORT_START_ON_SUNDAY[position + 1];
+                else return WEEKDAY_SHORT_START_ON_MONDAY[position + 1];
+            case Calendar.DAY_OF_MONTH:
+                return position + "";
+            case Calendar.MONTH:
+                return MONTHS_SHORT[position + 1];
+            default:
+                return "";
+        }
+    }
 
     public static Calendar GetTodayLeftRange(Calendar today) {
         Calendar calendar = (Calendar)today.clone();
