@@ -7,7 +7,16 @@
     <string name="profile">PROFILE</string>
     <string name="feed">FEED</string>
     <string name="activity">ACTIVITY</string>
-    <string name="settings">SETTINGS</string>
     <string name="title_activity_account_book">AccountBook</string>
     <string name="title_activity_tag_setting">TagSetting</string>
+
+    <string name="custom_view">Custom view</string>
+    <string name="tags_view">Tags view</string>
+    <string name="months_view">Months view</string>
+    <string name="list_view">List view</string>
+    <string name="expense_report">Expense report</string>
+    <string name="sync">Sync to server</string>
+    <string name="settings">Settings</string>
+    <string name="help">Help &amp; feedback</string>
+
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">CoCoin</string>
+
+    <string name="custom_view">可选范围视图</string>
+    <string name="tags_view">标签视图</string>
+    <string name="months_view">月视图</string>
+    <string name="list_view">列表视图</string>
+    <string name="expense_report">支出报表</string>
+    <string name="sync">同步</string>
+    <string name="settings">设置</string>
+    <string name="help">帮助与反馈</string>
+
+</resources>

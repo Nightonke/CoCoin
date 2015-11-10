@@ -18,6 +18,8 @@
     <color name="status_bar">#2196F3</color>
 
     <color name="my_blue">#2196F3</color>
+    <color name="my_gray">#616161</color>
+    <color name="drawer_text">#212121</color>
 
     <color name="snack_bar">#03A9F4</color>
 

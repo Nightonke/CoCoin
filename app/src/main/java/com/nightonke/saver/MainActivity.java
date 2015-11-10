@@ -38,7 +38,6 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
-import java.io.IOException;
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
@@ -295,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                     dummyOperation.cancel(true);
                     SuperToast.cancelAllSuperToasts();
                     SuperActivityToast.cancelAllSuperActivityToasts();
-                    Intent intent = new Intent(mContext, AccountBookActivity.class);
+                    Intent intent = new Intent(mContext, AccountBookTodayViewActivity.class);
                     startActivityForResult(intent, SETTING_TAG);
                     isLoading = false;
                 }
@@ -472,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
         SuperToast.cancelAllSuperToasts();
         SuperActivityToast.cancelAllSuperActivityToasts();
 
-        superToast.setAnimations(SuperToast.Animations.FLYIN);
+        superToast.setAnimations(SuperToast.Animations.POPUP);
         superToast.setDuration(SuperToast.Duration.SHORT);
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);
@@ -503,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
             case PASSWORD_CORRECT_TOAST:
 
                 superActivityToast.setText("That's it!");
-                superActivityToast.setAnimations(SuperToast.Animations.FLYIN);
+                superActivityToast.setAnimations(SuperToast.Animations.POPUP);
                 superActivityToast.setDuration(SuperToast.Duration.SHORT);
                 superActivityToast.setTextColor(Color.parseColor("#ffffff"));
                 superActivityToast.setBackground(SuperToast.Background.GREEN);

@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.Optional;
+import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
@@ -80,10 +81,13 @@ public class TodayViewRecyclerViewAdapter
     private String dateShownString;
     private String dialogTitle;
 
-    private int tagId;
+    private int tagId = -1;
     private int lastSelectedPosition = -1;
     private int columnNumber;
     private int axis_date;
+
+    private int timeIndex;
+    private int lastHistogramSelectedPosition = -1;
 
     public TodayViewRecyclerViewAdapter(int start, int end, Context context, int position) {
 
@@ -195,9 +199,11 @@ public class TodayViewRecyclerViewAdapter
             case TYPE_HEADER:
 
                 holder.date.setText(dateString);
+                holder.dateBottom.setText(dateString);
                 holder.expanseSum.setText(String.valueOf((int) Sum));
 
                 holder.date.setTypeface(Utils.typefaceLatoLight);
+                holder.dateBottom.setTypeface(Utils.GetTypeface());
                 holder.expanseSum.setTypeface(Utils.typefaceLatoLight);
 
                 if (IS_EMPTY) {
@@ -277,6 +283,9 @@ public class TodayViewRecyclerViewAdapter
                     // numColumns of zeros of the histogram
                     final List<Column> columns = new ArrayList<>();
                     for (int i = 0; i < columnNumber; i++) {
+                        if (lastHistogramSelectedPosition == -1 && originalTargets[i] == 0) {
+                            lastHistogramSelectedPosition = i;
+                        }
                         SubcolumnValue value = new SubcolumnValue(
                                 originalTargets[i], Utils.GetRandomColor());
                         List<SubcolumnValue> subcolumnValues = new ArrayList<>();
@@ -306,6 +315,45 @@ public class TodayViewRecyclerViewAdapter
 
                     holder.histogram.setColumnChartData(columnChartData);
                     holder.histogram.setZoomEnabled(false);
+
+                    holder.histogram_icon_left.setVisibility(View.VISIBLE);
+                    holder.histogram_icon_left.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            do {
+                                lastHistogramSelectedPosition
+                                        = (lastHistogramSelectedPosition - 1 + columnNumber)
+                                        % columnNumber;
+                            } while (columnChartData.getColumns()
+                                    .get(lastHistogramSelectedPosition)
+                                    .getValues().get(0).getValue() == 0);
+                            SelectedValue selectedValue =
+                                    new SelectedValue(
+                                            lastHistogramSelectedPosition,
+                                            0,
+                                            SelectedValue.SelectedValueType.NONE);
+                            holder.histogram.selectValue(selectedValue);
+                        }
+                    });
+                    holder.histogram_icon_right.setVisibility(View.VISIBLE);
+                    holder.histogram_icon_right.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            do {
+                                lastHistogramSelectedPosition
+                                        = (lastHistogramSelectedPosition + 1)
+                                        % columnNumber;
+                            } while (columnChartData.getColumns()
+                                    .get(lastHistogramSelectedPosition)
+                                    .getValues().get(0).getValue() == 0);
+                            SelectedValue selectedValue =
+                                    new SelectedValue(
+                                            lastHistogramSelectedPosition,
+                                            0,
+                                            SelectedValue.SelectedValueType.NONE);
+                            holder.histogram.selectValue(selectedValue);
+                        }
+                    });
 
                     // on click listener
                     holder.pie.setOnValueTouchListener(new PieChartOnValueSelectListener() {
@@ -346,12 +394,11 @@ public class TodayViewRecyclerViewAdapter
                             }
 
                             // histogram data
-                            List<Record> shownRecords = Expanse.get(tagId);
                             float[] targets = new float[columnNumber];
                             for (int i = 0; i < columnNumber; i++) targets[i] = 0;
 
-                            for (int i = shownRecords.size() - 1; i >= 0; i--) {
-                                Record record = shownRecords.get(i);
+                            for (int i = Expanse.get(tagId).size() - 1; i >= 0; i--) {
+                                Record record = Expanse.get(tagId).get(i);
                                 if (axis_date == Calendar.DAY_OF_WEEK) {
                                     targets[record.getCalendar().get(axis_date) - 1]
                                             += record.getMoney();
@@ -361,7 +408,11 @@ public class TodayViewRecyclerViewAdapter
                                 }
                             }
 
+                            lastHistogramSelectedPosition = -1;
                             for (int i = 0; i < columnNumber; i++) {
+                                if (lastHistogramSelectedPosition == -1 && targets[i] != 0) {
+                                    lastHistogramSelectedPosition = i;
+                                }
                                 columnChartData.getColumns().
                                         get(i).getValues().get(0).setTarget(targets[i]);
                             }
@@ -370,7 +421,63 @@ public class TodayViewRecyclerViewAdapter
 
                         @Override
                         public void onValueDeselected() {
+
+                        }
+                    });
+
+                    holder.histogram.setOnValueTouchListener(new ColumnChartOnValueSelectListener() {
+                        @Override
+                        public void onValueSelected(int columnIndex,
+                                                    int subcolumnIndex, SubcolumnValue value) {
+                            lastHistogramSelectedPosition = columnIndex;
+                            timeIndex = columnIndex;
+                            // snack bar
+                            RecordManager recordManager
+                                    = RecordManager.getInstance(mContext.getApplicationContext());
+                            String text = "Spend " + (int)value.getValue() + " ";
+                            if (tagId != -1) {
+                                // belongs a tag
+                                text += getSnackBarDateString() + "\n"
+                                        + "in " + recordManager.TAG_NAMES.get(tagId) + ".\n";
+                            } else {
+                                text += "\n" + getSnackBarDateString();
+                            }
+
+                            dialogTitle = text;
+                            Snackbar snackbar =
+                                    Snackbar
+                                            .with(mContext)
+                                            .type(SnackbarType.MULTI_LINE)
+                                            .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                                            .position(Snackbar.SnackbarPosition.BOTTOM)
+                                            .margin(15, 15)
+                                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentPosition))
+                                            .text(text)
+                                            .textTypeface(Utils.typefaceLatoLight)
+                                            .textColor(Color.WHITE)
+                                            .actionLabelTypeface(Utils.typefaceLatoLight)
+                                            .actionLabel("Check")
+                                            .actionColor(Color.WHITE)
+                                            .actionListener(new mActionClickListenerForHistogram());
+                            SnackbarManager.show(snackbar);
+                        }
+
+                        @Override
+                        public void onValueDeselected() {
+
+                        }
+                    });
+
+                    holder.reset.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            tagId = -1;
+                            lastHistogramSelectedPosition = -1;
                             for (int i = 0; i < columnNumber; i++) {
+                                if (lastHistogramSelectedPosition == -1
+                                        && originalTargets[i] != 0) {
+                                    lastHistogramSelectedPosition = i;
+                                }
                                 columnChartData.getColumns().
                                         get(i).getValues().get(0).setTarget(originalTargets[i]);
                             }
@@ -391,6 +498,9 @@ public class TodayViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.date)
         TextView date;
+        @Optional
+        @InjectView(R.id.date_bottom)
+        TextView dateBottom;
         @Optional
         @InjectView(R.id.expanse)
         TextView expanseSum;
@@ -415,6 +525,9 @@ public class TodayViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.histogram_icon_right)
         MaterialIconView histogram_icon_right;
+        @Optional
+        @InjectView(R.id.icon_reset)
+        MaterialIconView reset;
 
         viewHolder(View view) {
             super(view);
@@ -431,6 +544,41 @@ public class TodayViewRecyclerViewAdapter
                     .add(new RecordCheckDialog(
                             mContext, shownRecords, dialogTitle), "MyDialog")
                     .commit();
+        }
+    }
+
+    private class mActionClickListenerForHistogram implements ActionClickListener {
+        @Override
+        public void onActionClicked(Snackbar snackbar) {
+            List<Record> shownRecords = Expanse.get(tagId);
+            ((FragmentActivity)mContext).getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(new RecordCheckDialog(
+                            mContext, shownRecords, dialogTitle), "MyDialog")
+                    .commit();
+        }
+    }
+
+    private String getSnackBarDateString() {
+        switch (fragmentPosition) {
+            case TODAY:
+                return "at " + timeIndex + " o'clock today";
+            case YESTERDAY:
+                return "at " + timeIndex + " o'clock yesterday";
+            case THIS_WEEK:
+                return "on " + Utils.GetWeekDay(timeIndex);
+            case LAST_WEEK:
+                return "last " + Utils.GetWeekDay(timeIndex);
+            case THIS_MONTH:
+                return "on " + (timeIndex + 1) + " " + dateString.substring(0, 3);
+            case LAST_MONTH:
+                return "on " + (timeIndex + 1) + " " + dateString.substring(0, 3);
+            case THIS_YEAR:
+                return "in " + Utils.MONTHS_SHORT[timeIndex + 1] + " this year";
+            case LAST_YEAR:
+                return "in " + Utils.MONTHS_SHORT[timeIndex + 1] + " last year";
+            default:
+                return "";
         }
     }
 

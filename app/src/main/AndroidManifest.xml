@@ -19,10 +19,18 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AccountBookActivity"
+            android:name=".AccountBookTodayViewActivity"
             android:label="@string/title_activity_account_book"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" >
+        </activity>
+        <activity
+            android:name=".AccountBookTagViewActivity"
+            android:label="@string/title_activity_tag_setting" >
+        </activity>
+        <activity
+            android:name=".AccountBookMonthViewActivity"
+            android:label="@string/title_activity_tag_setting" >
         </activity>
         <activity
             android:name=".TagSettingActivity"

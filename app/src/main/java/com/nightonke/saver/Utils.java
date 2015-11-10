@@ -6,9 +6,11 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -32,23 +34,34 @@ public class Utils {
 
     public static String[] WEEKDAY_SHORT_START_ON_SUNDAY = {"", "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
 
+    public static String[] WEEKDAY_START_ON_MONDAY = {"", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+
+    public static String[] WEEKDAY_START_ON_SUNDAY = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+
     public static String[] FLOATINGLABELS = {"", "", "十", "百", "千", "万", "十万", "百万", "千万", "亿", "十亿"};
 
     public static String[] BUTTONS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "D", "0", "Y"};
 
+    public static Typeface typefaceLatoRegular;
     public static Typeface typefaceLatoHairline;
     public static Typeface typefaceLatoLight;
-    public static Typeface typefaceCodeLight;
+    public static Typeface typefaceSourceHanSansExtraLight;
 
     private Utils() {
-
+        Log.d("Saver", "Utils create");
     }
 
     public static void init(Context context) {
 
-        typefaceLatoHairline = Typeface.createFromAsset(context.getAssets(), "fonts/Lato-Hairline.ttf");
-        typefaceLatoLight = Typeface.createFromAsset(context.getAssets(), "fonts/LatoLatin-Light.ttf");
-        typefaceCodeLight = Typeface.createFromAsset(context.getAssets(), "fonts/CODE_Light.otf");
+        typefaceLatoRegular = Typeface.createFromAsset(
+                context.getAssets(), "fonts/Lato-Regular.ttf");
+        typefaceLatoHairline = Typeface.createFromAsset(
+                context.getAssets(), "fonts/Lato-Hairline.ttf");
+        typefaceLatoLight = Typeface.createFromAsset(
+                context.getAssets(), "fonts/LatoLatin-Light.ttf");
+        typefaceSourceHanSansExtraLight
+                = Typeface.createFromAsset(
+                context.getAssets(), "fonts/SourceHanSansCN-ExtraLight.otf");
         relativeSizeSpan = new RelativeSizeSpan(2f);
         redForegroundSpan = new ForegroundColorSpan(Color.parseColor("#ff5252"));
         greenForegroundSpan = new ForegroundColorSpan(Color.parseColor("#4ca550"));
@@ -61,6 +74,14 @@ public class Utils {
         random = new Random();
     }
 
+    public static Typeface GetTypeface() {
+        if ("en".equals(Locale.getDefault().getLanguage()))
+            return typefaceLatoLight;
+        if ("zh".equals(Locale.getDefault().getLanguage()))
+            return typefaceSourceHanSansExtraLight;
+        return typefaceLatoLight;
+    }
+
     public static boolean WEEK_START_WITH_SUNDAY = false;
 
     public static String GetAxisDateName(int type, int position) {
@@ -71,12 +92,17 @@ public class Utils {
                 if (WEEK_START_WITH_SUNDAY) return WEEKDAY_SHORT_START_ON_SUNDAY[position + 1];
                 else return WEEKDAY_SHORT_START_ON_MONDAY[position + 1];
             case Calendar.DAY_OF_MONTH:
-                return position + "";
+                return (position + 1) + "";
             case Calendar.MONTH:
                 return MONTHS_SHORT[position + 1];
             default:
                 return "";
         }
+    }
+
+    public static String GetWeekDay(int position) {
+        if (WEEK_START_WITH_SUNDAY) return WEEKDAY_START_ON_SUNDAY[position + 1];
+        else return WEEKDAY_START_ON_MONDAY[position + 1];
     }
 
     public static Calendar GetTodayLeftRange(Calendar today) {
@@ -599,6 +625,10 @@ public class Utils {
 
     static int GetTagIcon(String tag) {
         switch (tag) {
+            case "Sum Pie":
+                return R.drawable.sum_pie_icon;
+            case "Sum Histogram":
+                return R.drawable.sum_histogram_icon;
             case "Book":
                 return R.drawable.book_icon;
             case "Clothing & Footwear":

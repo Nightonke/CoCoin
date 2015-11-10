@@ -17,7 +17,6 @@
         android:background="#060000ff"
         >
 
-
         <TextView
             android:id="@+id/textview"
             android:layout_width="wrap_content"

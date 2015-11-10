@@ -12,19 +12,12 @@ import java.util.List;
  */
 public class TagViewFragmentAdapter extends FragmentStatePagerAdapter {
 
-    List<TagViewFragment> list;
-
     public TagViewFragmentAdapter(android.support.v4.app.FragmentManager fm) {
         super(fm);
-//        list = new ArrayList<>();
-//        for (int i = 0; i < RecordManager.TAGS.size(); i++) {
-//            list.add(TagViewFragment.newInstance(i));
-//        }
     }
 
     @Override
     public Fragment getItem(int i) {
-//        return list.get(i);
         return TagViewFragment.newInstance(i);
     }
 
