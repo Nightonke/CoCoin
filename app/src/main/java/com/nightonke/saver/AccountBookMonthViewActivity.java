@@ -3,18 +3,27 @@ package com.nightonke.saver;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
+import com.nightonke.saver.DrawerMonthViewRecyclerViewAdapter.OnItemClickListener;
 
 public class AccountBookMonthViewActivity extends AppCompatActivity {
 
@@ -28,6 +37,12 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
 
     private Context mContext;
 
+    private RecyclerView recyclerView;
+    private DrawerMonthViewRecyclerViewAdapter drawerMonthViewRecyclerViewAdapter;
+
+    private TextView userName;
+    private TextView userEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +50,19 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
         mContext = this;
         setContentView(R.layout.activity_account_book_month_view);
 
+        userName = (TextView)findViewById(R.id.user_name);
+        userEmail = (TextView)findViewById(R.id.user_email);
+        userName.setTypeface(Utils.typefaceLatoRegular);
+        userEmail.setTypeface(Utils.typefaceLatoLight);
+
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
 
         View view = mViewPager.getRootView();
         TextView title = (TextView)view.findViewById(R.id.logo_white);
         title.setTypeface(Utils.typefaceLatoLight);
-        title.setText("CoCoin Months");
+        title.setText("CoCoin");
 
-        mViewPager.getPagerTitleStrip().setTypeface(Utils.typefaceLatoLight, Typeface.NORMAL);
+        mViewPager.getPagerTitleStrip().setTypeface(Utils.GetTypeface(), Typeface.NORMAL);
 
         setTitle("");
 
@@ -89,6 +109,27 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
                                 Utils.GetTagDrawable("Transparent")));
             }
         });
+
+        recyclerView = (RecyclerView)mDrawer.findViewById(R.id.recycler_view);
+        drawerMonthViewRecyclerViewAdapter = new DrawerMonthViewRecyclerViewAdapter(mContext);
+        recyclerView.setAdapter(drawerMonthViewRecyclerViewAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        drawerMonthViewRecyclerViewAdapter.SetOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                mViewPager.getViewPager().setCurrentItem(position);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mDrawer.closeDrawers();
+                    }
+                }, 700);
+            }
+        });
+
     }
 
     @Override

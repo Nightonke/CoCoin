@@ -102,7 +102,7 @@ public class MonthViewRecyclerViewAdapter
         sliceValues = new ArrayList<>();
 
         // for this month
-        dateStringList.add(Utils.MONTHS_SHORT[nowMonth + 1] + " " + nowYear);
+        dateStringList.add(Utils.GetMonthShort(nowMonth + 1) + " " + nowYear);
         dateShownStringList.add(" in " + Utils.MONTHS_SHORT[nowMonth + 1] + " " + nowYear);
         selectedPositionList.add(0);
         for (int j = 2; j < recordManager.TAGS.size(); j++) {
@@ -158,17 +158,17 @@ public class MonthViewRecyclerViewAdapter
             Calendar leftWeekRange = Utils.GetThisWeekLeftRange(now);
             Calendar rightWeekRange = Utils.GetThisWeekRightRange(now);
             Calendar rightShownWeekRange = Utils.GetThisWeekRightShownRange(now);
-            String dateString = Utils.MONTHS_SHORT[leftWeekRange.get(Calendar.MONTH) + 1] + " " +
+            String dateString = Utils.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
                     leftWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                     leftWeekRange.get(Calendar.YEAR) + " - " +
-                    Utils.MONTHS_SHORT[rightShownWeekRange.get(Calendar.MONTH) + 1] + " " +
+                    Utils.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
                     rightShownWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                     rightShownWeekRange.get(Calendar.YEAR);
             dateStringList.add(dateString);
             dateShownStringList.add(" from " +
-                    Utils.MONTHS_SHORT[leftWeekRange.get(Calendar.MONTH) + 1] + " " +
+                    Utils.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
                     leftWeekRange.get(Calendar.DAY_OF_MONTH) + " to " +
-                    Utils.MONTHS_SHORT[rightShownWeekRange.get(Calendar.MONTH) + 1] + " " +
+                    Utils.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
                     rightShownWeekRange.get(Calendar.DAY_OF_MONTH));
             selectedPositionList.add(0);
 
@@ -263,7 +263,7 @@ public class MonthViewRecyclerViewAdapter
         holder.date.setText(dateStringList.get(position));
         holder.expanseSum.setText(String.valueOf((int)(double)SumList.get(position)));
 
-        holder.date.setTypeface(Utils.typefaceLatoLight);
+        holder.date.setTypeface(Utils.GetTypeface());
         holder.expanseSum.setTypeface(Utils.typefaceLatoLight);
 
         if (SumList.get(position).equals(Double.valueOf(0))) {
@@ -355,12 +355,24 @@ public class MonthViewRecyclerViewAdapter
             String text = "";
             final int tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
             Double percent = sliceValue.getValue() / SumList.get(position) * 100;
-            text += "Spend " + (int)sliceValue.getValue()
-                    + " (takes " + String.format("%.2f", percent) + "%)\n"
-                    + " in " + RecordManager.TAG_NAMES.get(tagId) + ".\n";
-            dialogTitle = "Spend " + (int)sliceValue.getValue()
-                    + dateShownStringList.get(position) + "\n" +
-                    " in " + RecordManager.TAG_NAMES.get(tagId);
+            if ("zh".equals(Utils.GetLanguage())) {
+                text = Utils.GetSpendString((int)sliceValue.getValue()) +
+                        Utils.GetPercentString(percent) + "\n" +
+                        "于" + Utils.GetTagName(tagId);
+                dialogTitle = mContext.getResources().getString(R.string.in)
+                        + dateStringList.get(position) +
+                        " " + Utils.GetSpendString((int)sliceValue.getValue()) + "\n" +
+                        "于" + Utils.GetTagName(tagId);
+
+            } else {
+                text = Utils.GetSpendString((int)sliceValue.getValue()) +
+                        Utils.GetPercentString(percent) + "\n" +
+                        "in " + Utils.GetTagName(RecordManager.TAGS.get(tagId).getId());
+                dialogTitle = Utils.GetSpendString((int) sliceValue.getValue()) +
+                        mContext.getResources().getString(R.string.in) + " "
+                        + dateStringList.get(position) + "\n" +
+                        "in " + Utils.GetTagName(RecordManager.TAGS.get(tagId).getId());
+            }
             Snackbar snackbar =
                     Snackbar
                             .with(mContext)
@@ -370,20 +382,20 @@ public class MonthViewRecyclerViewAdapter
                             .margin(15, 15)
                             .backgroundDrawable(Utils.GetSnackBarBackground(fragmentPosition))
                             .text(text)
-                            .textTypeface(Utils.typefaceLatoLight)
+                            .textTypeface(Utils.GetTypeface())
                             .textColor(Color.WHITE)
-                            .actionLabelTypeface(Utils.typefaceLatoLight)
-                            .actionLabel("Check")
+                            .actionLabelTypeface(Utils.GetTypeface())
+                            .actionLabel(mContext.getResources().getString(R.string.check))
                             .actionColor(Color.WHITE)
                             .actionListener(new ActionClickListener() {
                                 @Override
                                 public void onActionClicked(Snackbar snackbar) {
                                     List<Record> shownRecords
                                             = ExpanseList.get(position).get(tagId);
-                                    ((FragmentActivity)mContext).getSupportFragmentManager()
+                                    ((FragmentActivity) mContext).getSupportFragmentManager()
                                             .beginTransaction()
                                             .add(new RecordCheckDialog(
-                                                    mContext, shownRecords, dialogTitle),
+                                                            mContext, shownRecords, dialogTitle),
                                                     "MyDialog")
                                             .commit();
                                 }
