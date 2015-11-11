@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuView;
@@ -103,6 +104,9 @@ public class MainActivity extends AppCompatActivity {
     private final int PASSWORD_CORRECT_TOAST = 3;
     private final int SAVE_SUCCESSFULLY_TOAST = 4;
     private final int SAVE_FAILED_TOAST = 5;
+    private final int PRESS_AGAIN_TO_EXIT = 6;
+
+    boolean doubleBackToExitPressedOnce = false;
 
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
@@ -149,14 +153,14 @@ public class MainActivity extends AppCompatActivity {
         smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
 
         FragmentPagerItems pages = new FragmentPagerItems(this);
-        for (int i = 0; i < (RecordManager.TAGS.size() - 2) / 8 + 1; i++) {
+        for (int i = 0; i < 4; i++) {
             pages.add(FragmentPagerItem.of("1", TagChooseFragment.class));
         }
 
         tagChoicePagerAdapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), pages);
 
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(4);
 
         viewPager.setAdapter(tagChoicePagerAdapter);
 
@@ -221,6 +225,7 @@ public class MainActivity extends AppCompatActivity {
         radioButton3.setTint(R.color.white);
 
         passwordTip = (TextView)guillotineMenu.findViewById(R.id.password_tip);
+        passwordTip.setText(mContext.getResources().getString(R.string.password_tip));
         passwordTip.setTypeface(Utils.typefaceLatoLight);
 
         radioButtonLy = (LinearLayout)guillotineMenu.findViewById(R.id.radio_button_ly);
@@ -479,7 +484,7 @@ public class MainActivity extends AppCompatActivity {
         switch (toastType) {
             case NO_TAG_TOAST:
 
-                superToast.setText("Just...give me a tag~");
+                superToast.setText(mContext.getResources().getString(R.string.toast_no_tag));
                 superToast.setBackground(SuperToast.Background.BLUE);
                 superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
                 tagAnimation();
@@ -487,21 +492,23 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case NO_MONEY_TOAST:
 
-                superToast.setText("How much U spend?");
+                superToast.setText(mContext.getResources().getString(R.string.toast_no_money));
                 superToast.setBackground(SuperToast.Background.BLUE);
                 superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
 
                 break;
             case PASSWORD_WRONG_TOAST:
 
-                superToast.setText("Ooops...That's wrong!");
+                superToast.setText(
+                        mContext.getResources().getString(R.string.toast_password_wrong));
                 superToast.setBackground(SuperToast.Background.RED);
                 superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
 
                 break;
             case PASSWORD_CORRECT_TOAST:
 
-                superActivityToast.setText("That's it!");
+                superActivityToast.setText(
+                        mContext.getResources().getString(R.string.toast_password_correct));
                 superActivityToast.setAnimations(SuperToast.Animations.POPUP);
                 superActivityToast.setDuration(SuperToast.Duration.SHORT);
                 superActivityToast.setTextColor(Color.parseColor("#ffffff"));
@@ -514,15 +521,24 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case SAVE_SUCCESSFULLY_TOAST:
 
-                superToast.setText("Save successfully!");
+                superToast.setText(
+                        mContext.getResources().getString(R.string.toast_save_successfully));
                 superToast.setBackground(SuperToast.Background.GREEN);
                 superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
 
                 break;
             case SAVE_FAILED_TOAST:
 
-                superToast.setText("Ooops...Save fail!");
+                superToast.setText(mContext.getResources().getString(R.string.toast_save_failed));
                 superToast.setBackground(SuperToast.Background.RED);
+                superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
+
+                break;
+            case PRESS_AGAIN_TO_EXIT:
+
+                superToast.setText(
+                        mContext.getResources().getString(R.string.toast_press_again_to_exit));
+                superToast.setBackground(SuperToast.Background.BLUE);
                 superToast.getTextView().setTypeface(Utils.typefaceLatoLight);
 
                 break;
@@ -559,14 +575,16 @@ public class MainActivity extends AppCompatActivity {
             case MotionEvent.ACTION_UP:
                 x2 = ev.getX();
                 y2 = ev.getY();
-                if (y2 - y1 > 300) {
-                    if (!isPassword) {
-                        animation.open();
+                if (Math.abs(y2 - y1) > Math.abs(x2 - x1)) {
+                    if (y2 - y1 > 300) {
+                        if (!isPassword) {
+                            animation.open();
+                        }
                     }
-                }
-                if (y1 - y2 > 300) {
-                    if (isPassword) {
-                        animation.close();
+                    if (y1 - y2 > 300) {
+                        if (isPassword) {
+                            animation.close();
+                        }
                     }
                 }
                 break;
@@ -578,16 +596,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        buttonClickOperation(false, 9);
-//        if (isPassword) {
-//            animation.close();
-//            return;
-//        }
-//        editView.setText(editView.getText().toString()
-//                .substring(0, editView.getText().toString().length() - 1));
-//        if (editView.getText().toString().equals("")) {
-//            editView.setText("0");
-//        }
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        showToast(PRESS_AGAIN_TO_EXIT);
+
+        doubleBackToExitPressedOnce = true;
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce = false;
+            }
+        }, 2000);
     }
 
     @Override

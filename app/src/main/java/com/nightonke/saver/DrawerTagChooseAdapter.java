@@ -53,7 +53,7 @@ public class DrawerTagChooseAdapter extends BaseAdapter {
 
         holder.tagImage.setImageResource(
                 Utils.GetTagIcon(RecordManager.TAGS.get(position).getId()));
-        holder.tagName.setText(RecordManager.TAGS.get(position).getName());
+        holder.tagName.setText(Utils.GetTagName(RecordManager.TAGS.get(position).getId()));
         holder.tagName.setTypeface(Utils.GetTypeface());
 
         return convertView;

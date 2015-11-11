@@ -59,8 +59,9 @@ public class TagChooseFragment extends Fragment {
                 MainActivity.tagId = RecordManager.TAGS.
                         get(fragmentPosition * 8 + position + 2).getId();
                 MainActivity.tagName.setText(
-                        RecordManager.TAGS.
-                                get(fragmentPosition * 8 + position + 2).getName());
+                        Utils.GetTagName(
+                                RecordManager.TAGS.get(
+                                        fragmentPosition * 8 + position + 2).getId()));
                 MainActivity.tagImage.setImageResource(
                         Utils.GetTagIcon(
                                 RecordManager.TAGS.

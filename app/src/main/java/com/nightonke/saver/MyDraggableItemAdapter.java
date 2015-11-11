@@ -104,7 +104,7 @@ class MyDraggableItemAdapter
         final int dragState = holder.getDragStateFlags();
 
         holder.tagImage.setImageResource(Utils.GetTagIcon(tags.get(position).getId()));
-        holder.tagName.setText(tags.get(position).getName());
+        holder.tagName.setText(Utils.GetTagName(tags.get(position).getId()));
         holder.tagName.setTypeface(Utils.typefaceLatoLight);
 
         if (((dragState & Draggable.STATE_FLAG_IS_UPDATED) != 0)) {

@@ -379,20 +379,20 @@ public class TodayViewRecyclerViewAdapter
                             if ("zh".equals(Utils.GetLanguage())) {
                                 text = Utils.GetSpendString((int)sliceValue.getValue()) +
                                         Utils.GetPercentString(percent) + "\n" +
-                                        "于" + recordManager.TAG_NAMES.get(tagId);
+                                        "于" + Utils.GetTagName(tagId);
                             } else {
                                 text = "Spend " + (int)sliceValue.getValue()
                                         + " (takes " + String.format("%.2f", percent) + "%)\n"
-                                        + "in " + recordManager.TAG_NAMES.get(tagId);
+                                        + "in " + Utils.GetTagName(tagId);
                             }
                             if ("zh".equals(Utils.GetLanguage())) {
                                 dialogTitle = dateShownString +
                                         Utils.GetSpendString((int)sliceValue.getValue()) + "\n" +
-                                        "于" + recordManager.TAG_NAMES.get(tagId);
+                                        "于" + Utils.GetTagName(tagId);
                             } else {
                                 dialogTitle = "Spend " + (int)sliceValue.getValue()
                                         + dateShownString + "\n" +
-                                        "in " + recordManager.TAG_NAMES.get(tagId);
+                                        "in " + Utils.GetTagName(tagId);
                             }
                             Snackbar snackbar =
                                     Snackbar
@@ -476,10 +476,10 @@ public class TodayViewRecyclerViewAdapter
                                 // belongs a tag
                                 if ("zh".equals(Utils.GetLanguage()))
                                     text = getSnackBarDateString() + text + "\n" +
-                                            "于" + recordManager.TAG_NAMES.get(tagId);
+                                            "于" + Utils.GetTagName(tagId);
                                 else
                                     text += getSnackBarDateString() + "\n"
-                                            + "in " + recordManager.TAG_NAMES.get(tagId);
+                                            + "in " + Utils.GetTagName(tagId);
                             else
                                 // don't belong to any tag
                                 if ("zh".equals(Utils.GetLanguage()))

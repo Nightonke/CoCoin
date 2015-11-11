@@ -55,7 +55,7 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
         View view = mViewPager.getRootView();
         TextView title = (TextView)view.findViewById(R.id.logo_white);
         title.setTypeface(Utils.typefaceLatoLight);
-        title.setText("CoCoin Tags");
+        title.setText("CoCoin");
 
         mViewPager.getPagerTitleStrip().setTypeface(Utils.typefaceLatoLight, Typeface.NORMAL);
 

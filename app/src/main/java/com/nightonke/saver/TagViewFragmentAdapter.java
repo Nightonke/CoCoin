@@ -28,6 +28,7 @@ public class TagViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return RecordManager.TAGS.get(position % RecordManager.TAGS.size()).getName();
+        return Utils.GetTagName(
+                RecordManager.TAGS.get(position % RecordManager.TAGS.size()).getId());
     }
 }

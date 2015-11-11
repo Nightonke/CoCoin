@@ -170,7 +170,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         Log.d("Saver", "SETTINGS");
 
         Intent intent = new Intent(mContext, TagSettingActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, SETTING_TAG);
 
     }
 

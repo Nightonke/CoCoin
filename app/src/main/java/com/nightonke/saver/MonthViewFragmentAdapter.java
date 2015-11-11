@@ -11,6 +11,8 @@ import java.util.List;
  * Created by 伟平 on 2015/10/20.
  */
 
+// Todo optimize this
+
 public class MonthViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     public List<MonthViewFragment> list;
@@ -53,6 +55,6 @@ public class MonthViewFragmentAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         int nowMonth = (startMonth + (monthNumber - position - 1)) % 12;
         int nowYear = startYear + (startMonth + (monthNumber - position - 1)) / 12;
-        return Utils.MONTHS_SHORT[nowMonth + 1] + " " + nowYear;
+        return Utils.GetMonthShort(nowMonth + 1) + " " + nowYear;
     }
 }

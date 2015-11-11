@@ -16,6 +16,7 @@ import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
+import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -48,6 +49,8 @@ import lecho.lib.hellocharts.view.PieChartView;
 /**
  * Created by 伟平 on 2015/10/20.
  */
+
+// Todo optimize this
 
 public class TagViewRecyclerViewAdapter
         extends RecyclerView.Adapter<TagViewRecyclerViewAdapter.viewHolder> {
@@ -234,7 +237,7 @@ public class TagViewRecyclerViewAdapter
     @Override
     public TagViewRecyclerViewAdapter.viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View view = null;
+        View view;
 
         switch (viewType) {
             case TYPE_HEADER: {
@@ -272,23 +275,27 @@ public class TagViewRecyclerViewAdapter
 
         switch (getItemViewType(position)) {
             case TYPE_HEADER:
-                holder.from.setText("From " + startYear + " " + Utils.MONTHS_SHORT[startMonth]);
+                holder.from.setText(
+                        mContext.getResources().getString(R.string.from) + " " +
+                        startYear + " " + Utils.GetMonthShort(startMonth));
                 holder.sum.setText((int)Sum + "");
-                holder.to.setText("To " + endYear + " " + Utils.MONTHS_SHORT[endMonth]);
-                holder.from.setTypeface(Utils.typefaceLatoLight);
+                holder.to.setText(
+                        mContext.getResources().getString(R.string.to) + " " +
+                        endYear + " " + Utils.GetMonthShort(endMonth));
+                holder.from.setTypeface(Utils.GetTypeface());
                 holder.sum.setTypeface(Utils.typefaceLatoLight);
-                holder.to.setTypeface(Utils.typefaceLatoLight);
+                holder.to.setTypeface(Utils.GetTypeface());
                 break;
             case TYPE_CELL:
                 int year = contents.get(position - 1).get(0).getCalendar().get(Calendar.YEAR);
                 int month = contents.get(position - 1).get(0).getCalendar().get(Calendar.MONTH) + 1;
-                ColumnChartData columnChartData;
                 PieChartData pieChartData;
                 List<SubcolumnValue> subcolumnValues;
                 final List<Column> columns;
+                ColumnChartData columnChartData;
                 final List<SliceValue> sliceValues;
-                holder.date.setTypeface(Utils.typefaceLatoLight);
-                holder.expanse.setTypeface(Utils.typefaceLatoLight);
+                holder.date.setTypeface(Utils.GetTypeface());
+                holder.expanse.setTypeface(Utils.GetTypeface());
                 switch (chartType) {
                     case PIE:
                         sliceValues = new ArrayList<>();
@@ -315,7 +322,7 @@ public class TagViewRecyclerViewAdapter
                         holder.pie.setChartRotationEnabled(false);
 
                         if (type.get(position - 1).equals(SHOW_IN_MONTH)) {
-                            holder.date.setText(year + " " + Utils.MONTHS_SHORT[month]);
+                            holder.date.setText(year + " " + Utils.GetMonthShort(month));
                         } else {
                             holder.date.setText(year + " ");
                         }
@@ -427,15 +434,22 @@ public class TagViewRecyclerViewAdapter
                             holder.chart.setZoomEnabled(false);
                             holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
 
-                            holder.date.setText(year + " " + Utils.MONTHS_SHORT[month]);
+                            holder.date.setText(year + " " + Utils.GetMonthShort(month));
                             holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
                         }
 
                         holder.iconRight.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                SelectedPosition[position]
-                                        = (SelectedPosition[position] + 1) % columns.size();
+                                do {
+                                    SelectedPosition[position]
+                                            = (SelectedPosition[position] + 1) % columns.size();
+                                } while (holder.chart.getChartData().getColumns()
+                                         .get(SelectedPosition[position])
+                                         .getValues().size() == 0 ||
+                                         holder.chart.getChartData().getColumns()
+                                         .get(SelectedPosition[position])
+                                         .getValues().get(0).getValue() == 0);
                                 SelectedValue selectedValue =
                                         new SelectedValue(
                                                 SelectedPosition[position],
@@ -448,8 +462,16 @@ public class TagViewRecyclerViewAdapter
                         holder.iconLeft.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                SelectedPosition[position]
-                                        = (SelectedPosition[position] - 1 + columns.size()) % columns.size();
+                                do {
+                                    SelectedPosition[position]
+                                            = (SelectedPosition[position] - 1 + columns.size())
+                                            % columns.size();
+                                } while (holder.chart.getChartData().getColumns()
+                                         .get(SelectedPosition[position])
+                                         .getValues().size() == 0 ||
+                                         holder.chart.getChartData().getColumns()
+                                                 .get(SelectedPosition[position])
+                                         .getValues().get(0).getValue() == 0);
                                 SelectedValue selectedValue =
                                         new SelectedValue(
                                                 SelectedPosition[position],
@@ -542,15 +564,22 @@ public class TagViewRecyclerViewAdapter
                             holder.chart.setZoomEnabled(false);
                             holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
 
-                            holder.date.setText(year + " " + Utils.MONTHS_SHORT[month]);
+                            holder.date.setText(year + " " + Utils.GetMonthShort(month));
                             holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
                         }
 
                         holder.iconRight.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                SelectedPosition[position]
-                                        = (SelectedPosition[position] + 1) % columns.size();
+                                do {
+                                    SelectedPosition[position]
+                                            = (SelectedPosition[position] + 1) % columns.size();
+                                } while (holder.chart.getChartData().getColumns()
+                                         .get(SelectedPosition[position])
+                                         .getValues().size() == 0 ||
+                                         holder.chart.getChartData().getColumns()
+                                                 .get(SelectedPosition[position])
+                                         .getValues().get(0).getValue() == 0);
                                 SelectedValue selectedValue =
                                         new SelectedValue(
                                                 SelectedPosition[position],
@@ -563,8 +592,16 @@ public class TagViewRecyclerViewAdapter
                         holder.iconLeft.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                SelectedPosition[position]
-                                        = (SelectedPosition[position] - 1 + columns.size()) % columns.size();
+                                do {
+                                    SelectedPosition[position]
+                                            = (SelectedPosition[position] - 1 + columns.size())
+                                            % columns.size();
+                                } while (holder.chart.getChartData().getColumns()
+                                        .get(SelectedPosition[position])
+                                         .getValues().size() == 0 ||
+                                        holder.chart.getChartData().getColumns()
+                                         .get(SelectedPosition[position])
+                                         .getValues().get(0).getValue() == 0);
                                 SelectedValue selectedValue =
                                         new SelectedValue(
                                                 SelectedPosition[position],
@@ -632,21 +669,30 @@ public class TagViewRecyclerViewAdapter
                             .margin(15, 15)
                             .backgroundDrawable(Utils.GetSnackBarBackground(fragmentTagId))
                             .textColor(Color.WHITE)
-                            .textTypeface(Utils.typefaceLatoLight)
-                            .actionLabel("Check")
+                            .textTypeface(Utils.GetTypeface())
+                            .actionLabel(mContext.getResources().getString(R.string.check))
                             .actionLabelTypeface(Utils.typefaceLatoLight)
                             .actionColor(Color.WHITE);
             if (fragmentPosition == SUM_HISTOGRAM) {
                 if (type.get(position).equals(SHOW_IN_MONTH)) {
                     String text = "";
                     String timeString = contents.get(position).get(0).getCalendarString();
-                    timeString = timeString.substring(6, 9)
+                    int month = contents.get(position).get(0).getCalendar().get(Calendar.MONTH) + 1;
+                    timeString = " " + Utils.GetMonthShort(month)
                             + " " + (columnIndex + 1) + " "
                             + timeString.substring(timeString.length() - 4, timeString.length());
-                    text += "Spend " + (int)value.getValue() + "\n" +
-                            "on " + timeString + ".\n";
+                    if ("zh".equals(Utils.GetLanguage())) {
+                        text = mContext.getResources().getString(R.string.on) + timeString + "\n" +
+                                Utils.GetSpendString((int)value.getValue());
+                        dialogTitle = mContext.getResources().getString(R.string.on) + timeString +
+                                Utils.GetSpendString((int)value.getValue());
+                    } else {
+                        text = Utils.GetSpendString((int)value.getValue()) + "\n" +
+                                mContext.getResources().getString(R.string.on) + timeString;
+                        dialogTitle = Utils.GetSpendString((int) value.getValue()) +
+                                mContext.getResources().getString(R.string.on) + timeString;
+                    }
                     snackbar.text(text);
-                    dialogTitle = "Spend " + (int)value.getValue() + " on " + timeString;
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
@@ -672,13 +718,23 @@ public class TagViewRecyclerViewAdapter
                     SnackbarManager.show(snackbar);
                 }
                 if (type.get(position).equals(SHOW_IN_YEAR)) {
-                    String text = "";
-                    String timeString = Utils.MONTHS_SHORT[columnIndex + 1] + " " +
+                    String text;
+                    String timeString = " " +
                             contents.get(position).get(0).getCalendar().get(Calendar.YEAR);
-                    text += "Spend " + (int)value.getValue() + "\n" +
-                            "in " + timeString + ".\n";
+                    timeString = " " + Utils.GetMonthShort(columnIndex + 1) + " "
+                            + timeString.substring(timeString.length() - 4, timeString.length());
+                    if ("zh".equals(Utils.GetLanguage())) {
+                        text = mContext.getResources().getString(R.string.in) + timeString + "\n" +
+                                Utils.GetSpendString((int)value.getValue());
+                        dialogTitle = mContext.getResources().getString(R.string.in) + timeString +
+                                Utils.GetSpendString((int)value.getValue());
+                    } else {
+                        text = Utils.GetSpendString((int)value.getValue()) + "\n" +
+                                mContext.getResources().getString(R.string.in) + timeString;
+                        dialogTitle = Utils.GetSpendString((int) value.getValue()) +
+                                mContext.getResources().getString(R.string.in) + timeString;
+                    }
                     snackbar.text(text);
-                    dialogTitle = "Spend " + (int)value.getValue() + " in " + timeString;
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
@@ -708,12 +764,26 @@ public class TagViewRecyclerViewAdapter
                     String text = "";
                     String timeString = contents.get(position).get(0).getCalendarString();
                     timeString = timeString.substring(6, timeString.length());
-                    text += "Spend " + (int)value.getValue() +
-                            " on " + timeString + "\n" +
-                            "in " + contents.get(position).get(0).getTag() + ".\n";
+                    int month = contents.get(position).get(0).getCalendar().get(Calendar.MONTH) + 1;
+                    timeString = " " + Utils.GetMonthShort(month)
+                            + " " + (columnIndex + 1) + " "
+                            + timeString.substring(timeString.length() - 4, timeString.length());
+                    if ("zh".equals(Utils.GetLanguage())) {
+                        text = mContext.getResources().getString(R.string.on) + timeString +
+                                Utils.GetSpendString((int)value.getValue()) + "\n" +
+                                "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                        dialogTitle = mContext.getResources().getString(R.string.on) + timeString +
+                                Utils.GetSpendString((int)value.getValue()) + "\n" +
+                                "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                    } else {
+                        text = Utils.GetSpendString((int)value.getValue()) +
+                                mContext.getResources().getString(R.string.on) + timeString + "\n"
+                                + "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                        dialogTitle = Utils.GetSpendString((int)value.getValue()) +
+                                mContext.getResources().getString(R.string.on) + timeString + "\n"
+                                + "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                    }
                     snackbar.text(text);
-                    dialogTitle = "Spend " + (int)value.getValue() + " on " + timeString + "\n" +
-                            "in " + contents.get(position).get(0).getTag();
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
@@ -740,14 +810,27 @@ public class TagViewRecyclerViewAdapter
                     SnackbarManager.show(snackbar);
                 }
                 if (type.get(position).equals(SHOW_IN_YEAR)) {
-                    String text = "";
-                    String timeString = Utils.MONTHS_SHORT[columnIndex + 1] + " " +
+                    String text;
+                    String timeString = "" +
                             contents.get(position).get(0).getCalendar().get(Calendar.YEAR);
-                    text += "Spend " + (int)value.getValue() + "\n" +
-                            " in " + timeString + ".\n";
+                    timeString = " " + Utils.GetMonthShort(columnIndex + 1) + " "
+                            + timeString.substring(timeString.length() - 4, timeString.length());
+                    if ("zh".equals(Utils.GetLanguage())) {
+                        text = mContext.getResources().getString(R.string.in) + timeString +
+                                Utils.GetSpendString((int)value.getValue()) + "\n" +
+                                "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                        dialogTitle = mContext.getResources().getString(R.string.in) + timeString +
+                                Utils.GetSpendString((int)value.getValue()) + "\n" +
+                                "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                    } else {
+                        text = Utils.GetSpendString((int)value.getValue()) +
+                                mContext.getResources().getString(R.string.in) + timeString + "\n"
+                                + "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                        dialogTitle = Utils.GetSpendString((int)value.getValue()) +
+                                mContext.getResources().getString(R.string.in) + timeString + "\n"
+                                + "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                    }
                     snackbar.text(text);
-                    dialogTitle = "Spend " + (int)value.getValue() + " in " + timeString + "\n" +
-                            "in " + contents.get(position).get(0).getTag();
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
@@ -794,22 +877,32 @@ public class TagViewRecyclerViewAdapter
         public void onValueSelected(int i, SliceValue sliceValue) {
             String text = "";
             String timeString = contents.get(position).get(0).getCalendarString();
+            int month = contents.get(position).get(0).getCalendar().get(Calendar.MONTH) + 1;
             timeString = timeString.substring(6, timeString.length());
             if (type.get(position).equals(SHOW_IN_YEAR)) {
-                timeString = " in " + timeString.substring(timeString.length() - 4, timeString.length());
+                timeString = timeString.substring(timeString.length() - 4, timeString.length());
             } else {
-                timeString = timeString.substring(0, 3)
-                        + " "
-                        + timeString.substring(timeString.length() - 4, timeString.length());
-                timeString = " on " + timeString;
+                timeString = Utils.GetMonthShort(month) + " " +
+                        timeString.substring(timeString.length() - 4, timeString.length());
             }
             final int tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
             Double percent = sliceValue.getValue() / SumList.get(position) * 100;
-            text += "Spend " + (int)sliceValue.getValue()
-                    + " (takes " + String.format("%.2f", percent) + "%)\n"
-                    + " in " + RecordManager.TAG_NAMES.get(tagId) + ".\n";
-            dialogTitle = "Spend " + (int)sliceValue.getValue() + timeString + "\n" +
-                    " in " + RecordManager.TAG_NAMES.get(tagId);
+            if ("zh".equals(Utils.GetLanguage())) {
+                text = Utils.GetSpendString((int)sliceValue.getValue()) +
+                        Utils.GetPercentString(percent) + "\n" +
+                        "于" + Utils.GetTagName(tagId);
+                    dialogTitle = mContext.getResources().getString(R.string.in) + timeString +
+                            Utils.GetSpendString((int)sliceValue.getValue()) + "\n" +
+                            "于" + Utils.GetTagName(tagId);
+
+            } else {
+                text = Utils.GetSpendString((int)sliceValue.getValue()) +
+                        Utils.GetPercentString(percent) + "\n" +
+                        "in " + Utils.GetTagName(RecordManager.TAGS.get(tagId).getId());
+                dialogTitle = Utils.GetSpendString((int) sliceValue.getValue()) +
+                        mContext.getResources().getString(R.string.in) + timeString + "\n" +
+                        "in " + Utils.GetTagName(RecordManager.TAGS.get(tagId).getId());
+            }
             Snackbar snackbar =
                     Snackbar
                             .with(mContext)
@@ -819,10 +912,10 @@ public class TagViewRecyclerViewAdapter
                             .margin(15, 15)
                             .backgroundDrawable(Utils.GetSnackBarBackground(fragmentTagId))
                             .text(text)
-                            .textTypeface(Utils.typefaceLatoLight)
+                            .textTypeface(Utils.GetTypeface())
                             .textColor(Color.WHITE)
                             .actionLabelTypeface(Utils.typefaceLatoLight)
-                            .actionLabel("Check")
+                            .actionLabel(mContext.getResources().getString(R.string.check))
                             .actionColor(Color.WHITE)
                             .actionListener(new ActionClickListener() {
                                 @Override
@@ -833,7 +926,7 @@ public class TagViewRecyclerViewAdapter
                                             shownRecords.add(record);
                                         }
                                     }
-                                    ((FragmentActivity)mContext).getSupportFragmentManager()
+                                    ((FragmentActivity) mContext).getSupportFragmentManager()
                                             .beginTransaction()
                                             .add(new RecordCheckDialog(
                                                     mContext, shownRecords, dialogTitle), "MyDialog")

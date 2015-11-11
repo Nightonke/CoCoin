@@ -95,6 +95,7 @@ public class TagSettingActivity extends AppCompatActivity {
 
         title = (TextView)findViewById(R.id.title);
         title.setTypeface(Utils.typefaceLatoLight);
+        title.setText(mContext.getResources().getString(R.string.sort_tags));
 
         back = (MaterialIconView)findViewById(R.id.icon_left);
 

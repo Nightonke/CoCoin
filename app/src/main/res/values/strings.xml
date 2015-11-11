@@ -100,4 +100,49 @@
 
     <string name="get">Get!</string>
 
+    <string name="tag_sum_pie">Sum Pie</string>
+    <string name="tag_sum_histogram">Sum Histogram</string>
+    <string name="tag_meal">Meal</string>
+    <string name="tag_closet">Clothing &amp; Footwear</string>
+    <string name="tag_home">Home</string>
+    <string name="tag_traffic">Traffic</string>
+    <string name="tag_vehicle_maintenance">Vehicle Maintenance</string>
+    <string name="tag_book">Book</string>
+    <string name="tag_hobby">Hobby</string>
+    <string name="tag_internet">Internet</string>
+    <string name="tag_friend">Friend</string>
+    <string name="tag_education">Education</string>
+    <string name="tag_entertainment">Entertainment</string>
+    <string name="tag_medical">Medical</string>
+    <string name="tag_insurance">Insurance</string>
+    <string name="tag_donation">Donation</string>
+    <string name="tag_sport">Sport</string>
+    <string name="tag_snack">Snack</string>
+    <string name="tag_music">Music</string>
+    <string name="tag_fund">Fund</string>
+    <string name="tag_drink">Drink</string>
+    <string name="tag_fruit">Fruit</string>
+    <string name="tag_film">Film</string>
+    <string name="tag_baby">Baby</string>
+    <string name="tag_partner">Partner</string>
+    <string name="tag_housing_loan">Housing Loan</string>
+    <string name="tag_pet">Pet</string>
+    <string name="tag_telephone_bill">Telephone Bill</string>
+    <string name="tag_travel">Travel</string>
+
+    <string name="password_tip">Input password to account book</string>
+
+    <string name="toast_no_tag">Just...give me a tag~</string>
+    <string name="toast_no_money">How much U spend?</string>
+    <string name="toast_password_wrong">Ooops...That\'s wrong!</string>
+    <string name="toast_password_correct">That\'s it!</string>
+    <string name="toast_save_successfully">Save successfully!</string>
+    <string name="toast_save_failed">Ooops...Save fail!</string>
+    <string name="toast_press_again_to_exit">Press again to say goodbye</string>
+
+    <string name="sort_tags">Sort Tags</string>
+
+    <string name="from">From</string>
+    <string name="to">To</string>
+
 </resources>

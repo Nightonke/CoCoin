@@ -52,7 +52,7 @@ public class Utils {
             R.drawable.meal_icon,
             R.drawable.closet_icon,
             R.drawable.home_icon,
-            R.drawable.travel_icon,
+            R.drawable.traffic_icon,
             R.drawable.vehicle_maintenance_icon,
             R.drawable.book_icon,
             R.drawable.hobby_icon,
@@ -75,7 +75,40 @@ public class Utils {
             R.drawable.housing_loan_icon,
             R.drawable.pet_icon,
             R.drawable.telephone_bill_icon,
-            R.drawable.travel_icon};
+            R.drawable.travel_icon
+    };
+
+    public static int[] TAG_NAME = {
+            R.string.tag_sum_pie,
+            R.string.tag_sum_histogram,
+            R.string.tag_meal,
+            R.string.tag_closet,
+            R.string.tag_home,
+            R.string.tag_traffic,
+            R.string.tag_vehicle_maintenance,
+            R.string.tag_book,
+            R.string.tag_hobby,
+            R.string.tag_internet,
+            R.string.tag_friend,
+            R.string.tag_education,
+            R.string.tag_entertainment,
+            R.string.tag_medical,
+            R.string.tag_insurance,
+            R.string.tag_donation,
+            R.string.tag_sport,
+            R.string.tag_snack,
+            R.string.tag_music,
+            R.string.tag_fund,
+            R.string.tag_drink,
+            R.string.tag_fruit,
+            R.string.tag_film,
+            R.string.tag_baby,
+            R.string.tag_partner,
+            R.string.tag_housing_loan,
+            R.string.tag_pet,
+            R.string.tag_telephone_bill,
+            R.string.tag_travel
+    };
 
     public static Typeface typefaceLatoRegular;
     public static Typeface typefaceLatoHairline;
@@ -764,6 +797,10 @@ public class Utils {
 
     static int GetTagIcon(int tagId) {
         return TAG_ICON[tagId + 2];
+    }
+
+    static String GetTagName(int tagId) {
+        return myApplication.getAppContext().getResources().getString(TAG_NAME[tagId + 2]);
     }
 
     public static <K, V extends Comparable<V>> Map<K, V> SortTreeMapByValues(final Map<K, V> map) {

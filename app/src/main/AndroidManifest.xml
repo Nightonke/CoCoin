@@ -26,14 +26,17 @@
         </activity>
         <activity
             android:name=".AccountBookTagViewActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_tag_setting" >
         </activity>
         <activity
             android:name=".AccountBookMonthViewActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_tag_setting" >
         </activity>
         <activity
             android:name=".TagSettingActivity"
+            android:launchMode="singleTop"
             android:label="@string/title_activity_tag_setting" >
         </activity>
     </application>
