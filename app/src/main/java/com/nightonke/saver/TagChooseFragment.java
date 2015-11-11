@@ -64,7 +64,7 @@ public class TagChooseFragment extends Fragment {
                 MainActivity.tagImage.setImageResource(
                         Utils.GetTagIcon(
                                 RecordManager.TAGS.
-                                        get(fragmentPosition * 8 + position + 2).getName()));
+                                        get(fragmentPosition * 8 + position + 2).getId()));
             }
         });
 

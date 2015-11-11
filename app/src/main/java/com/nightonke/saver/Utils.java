@@ -26,21 +26,56 @@ public class Utils {
 
     public static String PASSWORD = "1234";
 
-    public static String[] MONTHS = {"", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+    public static int[] WEEKDAY_SHORT_START_ON_MONDAY = {0, R.string.monday_short, R.string.tuesday_short, R.string.wednesday_short, R.string.thursday_short, R.string.friday_short, R.string.saturday_short, R.string.sunday_short};
 
-    public static String[] MONTHS_SHORT = {"", "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
+    public static int[] WEEKDAY_SHORT_START_ON_SUNDAY = {0, R.string.sunday_short, R.string.monday_short, R.string.tuesday_short, R.string.wednesday_short, R.string.thursday_short, R.string.friday_short, R.string.saturday_short};
 
-    public static String[] WEEKDAY_SHORT_START_ON_MONDAY = {"", "MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
+    public static int[] WEEKDAY_START_ON_MONDAY = {0, R.string.monday, R.string.tuesday, R.string.wednesday, R.string.thursday, R.string.friday, R.string.saturday, R.string.sunday};
 
-    public static String[] WEEKDAY_SHORT_START_ON_SUNDAY = {"", "SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"};
-
-    public static String[] WEEKDAY_START_ON_MONDAY = {"", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-
-    public static String[] WEEKDAY_START_ON_SUNDAY = {"", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+    public static int[] WEEKDAY_START_ON_SUNDAY = {0, R.string.sunday, R.string.monday, R.string.tuesday, R.string.wednesday, R.string.thursday, R.string.friday, R.string.saturday};
 
     public static String[] FLOATINGLABELS = {"", "", "十", "百", "千", "万", "十万", "百万", "千万", "亿", "十亿"};
 
     public static String[] BUTTONS = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "D", "0", "Y"};
+
+    public static int[] TODAY_VIEW_EMPTY_TIP = {R.string.today_empty, R.string.yesterday_empty, R.string.this_week_empty, R.string.last_week_empty, R.string.this_month_empty, R.string.last_month_empty, R.string.this_year_empty, R.string.last_year_empty};
+
+    public static int[] MONTHS_SHORT = {0, R.string.january_short, R.string.february_short, R.string.march_short, R.string.april_short, R.string.may_short, R.string.june_short, R.string.july_short, R.string.august_short, R.string.september_short, R.string.october_short, R.string.november_short, R.string.december_short};
+
+    public static int[] MONTHS = {0, R.string.january, R.string.february, R.string.march, R.string.april, R.string.may, R.string.june, R.string.july, R.string.august, R.string.september, R.string.october, R.string.november, R.string.december};
+
+    public static int TODAY_VIEW_TITLE[] = {R.string.today_view_today, R.string.today_view_yesterday, R.string.today_view_this_week, R.string.today_view_last_week, R.string.today_view_this_month, R.string.today_view_last_month, R.string.today_view_this_year, R.string.today_view_last_year};
+
+    public static int[] TAG_ICON = {
+            R.drawable.sum_pie_icon,
+            R.drawable.sum_histogram_icon,
+            R.drawable.meal_icon,
+            R.drawable.closet_icon,
+            R.drawable.home_icon,
+            R.drawable.travel_icon,
+            R.drawable.vehicle_maintenance_icon,
+            R.drawable.book_icon,
+            R.drawable.hobby_icon,
+            R.drawable.internet_icon,
+            R.drawable.friend_icon,
+            R.drawable.education_icon,
+            R.drawable.entertainment_icon,
+            R.drawable.medical_icon,
+            R.drawable.insurance_icon,
+            R.drawable.donation_icon,
+            R.drawable.sport_icon,
+            R.drawable.snack_icon,
+            R.drawable.music_icon,
+            R.drawable.fund_icon,
+            R.drawable.drink_icon,
+            R.drawable.fruit_icon,
+            R.drawable.film_icon,
+            R.drawable.baby_icon,
+            R.drawable.partner_icon,
+            R.drawable.housing_loan_icon,
+            R.drawable.pet_icon,
+            R.drawable.telephone_bill_icon,
+            R.drawable.travel_icon};
 
     public static Typeface typefaceLatoRegular;
     public static Typeface typefaceLatoHairline;
@@ -78,8 +113,44 @@ public class Utils {
         if ("en".equals(Locale.getDefault().getLanguage()))
             return typefaceLatoLight;
         if ("zh".equals(Locale.getDefault().getLanguage()))
-            return typefaceSourceHanSansExtraLight;
+            return Typeface.DEFAULT;
         return typefaceLatoLight;
+    }
+
+    public static String GetLanguage() {
+        return Locale.getDefault().getLanguage();
+    }
+
+    public static String GetWhetherBlank() {
+        if ("zh".equals(Locale.getDefault().getLanguage()))
+            return "";
+        else
+            return " ";
+    }
+
+    public static String GetWhetherFuck() {
+        if ("zh".equals(Locale.getDefault().getLanguage()))
+            return "日";
+        else
+            return "";
+    }
+
+    public static String GetSpendString(int money) {
+        if ("zh".equals(Locale.getDefault().getLanguage()))
+            return "消费 ¥" + money;
+        else
+            return "Spend $" + money + " ";
+    }
+
+    public static String GetPercentString(double percent) {
+        if ("zh".equals(Locale.getDefault().getLanguage()))
+            return " (占" + String.format("%.2f", percent) + "%)";
+        else
+            return " (takes " + String.format("%.2f", percent) + "%)";
+    }
+
+    public static String GetTodayViewTitle(int fragmentPosition) {
+        return myApplication.getAppContext().getString(TODAY_VIEW_TITLE[fragmentPosition]);
     }
 
     public static boolean WEEK_START_WITH_SUNDAY = false;
@@ -89,20 +160,32 @@ public class Utils {
             case Calendar.HOUR_OF_DAY:
                 return position + "";
             case Calendar.DAY_OF_WEEK:
-                if (WEEK_START_WITH_SUNDAY) return WEEKDAY_SHORT_START_ON_SUNDAY[position + 1];
-                else return WEEKDAY_SHORT_START_ON_MONDAY[position + 1];
+                if (WEEK_START_WITH_SUNDAY) return myApplication.getAppContext().getResources().getString(WEEKDAY_SHORT_START_ON_SUNDAY[position + 1]);
+                else return myApplication.getAppContext().getResources().getString(WEEKDAY_SHORT_START_ON_MONDAY[position + 1]);
             case Calendar.DAY_OF_MONTH:
                 return (position + 1) + "";
             case Calendar.MONTH:
-                return MONTHS_SHORT[position + 1];
+                return myApplication.getAppContext().getResources().getString(MONTHS_SHORT[position + 1]);
             default:
                 return "";
         }
     }
 
+    public static int GetTodayViewEmptyTip(int fragmentPosition) {
+        return TODAY_VIEW_EMPTY_TIP[fragmentPosition];
+    }
+
+    public static String GetMonthShort(int i) {
+        return myApplication.getAppContext().getResources().getString(MONTHS_SHORT[i]);
+    }
+
+    public static String GetMonth(int i) {
+        return myApplication.getAppContext().getResources().getString(MONTHS[i]);
+    }
+
     public static String GetWeekDay(int position) {
-        if (WEEK_START_WITH_SUNDAY) return WEEKDAY_START_ON_SUNDAY[position + 1];
-        else return WEEKDAY_START_ON_MONDAY[position + 1];
+        if (WEEK_START_WITH_SUNDAY) return myApplication.getAppContext().getResources().getString(WEEKDAY_START_ON_SUNDAY[position + 1]);
+        else return myApplication.getAppContext().getResources().getString(WEEKDAY_START_ON_MONDAY[position + 1]);
     }
 
     public static Calendar GetTodayLeftRange(Calendar today) {
@@ -332,15 +415,6 @@ public class Utils {
         calendar.add(Calendar.MINUTE, 0);
         return calendar;
     }
-
-    public static String TODAY_VIEW_TITLE[] = {"Today",
-                                               "Yesterday",
-                                               "This Week",
-                                               "Last Week",
-                                               "This Month",
-                                               "Last Month",
-                                               "This Year",
-                                               "Last Year",};
 
     public static boolean ClickButtonDelete(int position) {
         return position == 9;
@@ -661,48 +735,35 @@ public class Utils {
                 return R.drawable.traffic_icon;
             case "Vehicle Maintenance":
                 return R.drawable.vehicle_maintenance_icon;
+            case "Music":
+                return R.drawable.music_icon;
+            case "Fund":
+                return R.drawable.fund_icon;
+            case "Drink":
+                return R.drawable.drink_icon;
+            case "Fruit":
+                return R.drawable.fruit_icon;
+            case "Film":
+                return R.drawable.film_icon;
+            case "Baby":
+                return R.drawable.baby_icon;
+            case "Partner":
+                return R.drawable.partner_icon;
+            case "Housing Loan":
+                return R.drawable.housing_loan_icon;
+            case "Pet":
+                return R.drawable.pet_icon;
+            case "Telephone Bill":
+                return R.drawable.telephone_bill_icon;
+            case "Travel":
+                return R.drawable.travel_icon;
             default:
                 return R.drawable.book_icon;
         }
     }
 
     static int GetTagIcon(int tagId) {
-        switch (tagId) {
-            case 5:
-                return R.drawable.book_icon;
-            case 1:
-                return R.drawable.closet_icon;
-            case 13:
-                return R.drawable.donation_icon;
-            case 9:
-                return R.drawable.education_icon;
-            case 10:
-                return R.drawable.entertainment_icon;
-            case 8:
-                return R.drawable.friend_icon;
-            case 6:
-                return R.drawable.hobby_icon;
-            case 2:
-                return R.drawable.home_icon;
-            case 12:
-                return R.drawable.insurance_icon;
-            case 7:
-                return R.drawable.internet_icon;
-            case 0:
-                return R.drawable.meal_icon;
-            case 11:
-                return R.drawable.medical_icon;
-            case 15:
-                return R.drawable.snack_icon;
-            case 14:
-                return R.drawable.sport_icon;
-            case 3:
-                return R.drawable.traffic_icon;
-            case 4:
-                return R.drawable.vehicle_maintenance_icon;
-            default:
-                return R.drawable.book_icon;
-        }
+        return TAG_ICON[tagId + 2];
     }
 
     public static <K, V extends Comparable<V>> Map<K, V> SortTreeMapByValues(final Map<K, V> map) {

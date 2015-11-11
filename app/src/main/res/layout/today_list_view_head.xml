@@ -63,22 +63,22 @@
                 android:text="123"
                 />
 
+            <TextView
+                android:id="@+id/empty_tip"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="No records!"
+                android:textSize="15sp"
+                android:textColor="@color/my_blue"
+                />
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 >
-
-                <TextView
-                    android:id="@+id/empty_tip"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="No records!"
-                    android:textSize="15sp"
-                    android:textColor="@color/my_blue"
-                    />
 
                 <lecho.lib.hellocharts.view.PieChartView
                     android:id="@+id/chart_pie"

@@ -373,7 +373,8 @@ public class TagViewRecyclerViewAdapter
                             Axis axisX = new Axis();
                             List<AxisValue> axisValueList = new ArrayList<>();
                             for (int i = 0; i < numColumns; i++) {
-                                axisValueList.add(new AxisValue(i).setLabel(Utils.MONTHS_SHORT[i + 1]));
+                                axisValueList.add(new AxisValue(i)
+                                        .setLabel(Utils.GetMonthShort(i + 1)));
                             }
                             axisX.setValues(axisValueList);
                             Axis axisY = new Axis().setHasLines(true);
@@ -383,7 +384,8 @@ public class TagViewRecyclerViewAdapter
 
                             holder.chart.setColumnChartData(columnChartData);
                             holder.chart.setZoomEnabled(false);
-                            holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
+                            holder.chart.setOnValueTouchListener(
+                                    new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + "");
                             holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
@@ -480,7 +482,8 @@ public class TagViewRecyclerViewAdapter
                             Axis axisX = new Axis();
                             List<AxisValue> axisValueList = new ArrayList<>();
                             for (int i = 0; i < numColumns; i++) {
-                                axisValueList.add(new AxisValue(i).setLabel(Utils.MONTHS_SHORT[i + 1]));
+                                axisValueList.add(new AxisValue(i)
+                                        .setLabel(Utils.GetMonthShort(i + 1)));
                             }
                             axisX.setValues(axisValueList);
                             Axis axisY = new Axis().setHasLines(true);
@@ -490,7 +493,8 @@ public class TagViewRecyclerViewAdapter
 
                             holder.chart.setColumnChartData(columnChartData);
                             holder.chart.setZoomEnabled(false);
-                            holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
+                            holder.chart.setOnValueTouchListener(
+                                    new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + "");
                             holder.expanse.setText("" + (int)(double)SumList.get(position - 1));

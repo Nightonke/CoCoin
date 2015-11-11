@@ -4,11 +4,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nispok.snackbar.Snackbar;
@@ -23,6 +21,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 
 import butterknife.ButterKnife;
@@ -38,11 +37,8 @@ import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SelectedValue;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.view.Chart;
 import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
-
-// Todo add a dialog of histogram columns
 
 /**
  * Created by 伟平 on 2015/10/20.
@@ -53,10 +49,7 @@ public class TodayViewRecyclerViewAdapter
 
     private Context mContext;
 
-    private List<Record> list;
-
     static final int TYPE_HEADER = 0;
-    static final int TYPE_CELL = 1;
 
     static final int TODAY = 0;
     static final int YESTERDAY = 1;
@@ -69,25 +62,45 @@ public class TodayViewRecyclerViewAdapter
 
     private int fragmentPosition;
 
+    // the data of this fragment
+    private ArrayList<Record> allData;
+
+    // store the sum of expenses of each tag
     private Map<Integer, Double> TagExpanse;
+    // store the records of each tag
     private Map<Integer, List<Record>> Expanse;
+    // the original target value of the whole pie
     private float[] originalTargets;
-
+    // whether the data of this fragment is empty
     private boolean IS_EMPTY;
-
+    // the sum of the whole pie
     private double Sum;
-    private int selectedPosition = 0;
+    // the number of columns in the histogram
+    private int columnNumber;
+    // the axis date value of the histogram(hour, day of week and month, month)
+    private int axis_date;
+    // the month number
+    private int month;
+
+    // the selected position of one part of the pie
+    private int pieSelectedPosition = 0;
+    // the last selected position of one part of the pie
+    private int lastPieSelectedPosition = -1;
+    // the last selected position of one part of the histogram
+    private int lastHistogramSelectedPosition = -1;
+
+    // the date string on the footer and header
     private String dateString;
+    // the date string shown in the dialog
     private String dateShownString;
+    // the string shown in the dialog
     private String dialogTitle;
 
+    // the selected tag in pie
     private int tagId = -1;
-    private int lastSelectedPosition = -1;
-    private int columnNumber;
-    private int axis_date;
-
+    // the selected column in histogram
     private int timeIndex;
-    private int lastHistogramSelectedPosition = -1;
+
 
     public TodayViewRecyclerViewAdapter(int start, int end, Context context, int position) {
 
@@ -97,15 +110,11 @@ public class TodayViewRecyclerViewAdapter
 
         RecordManager recordManager = RecordManager.getInstance(mContext.getApplicationContext());
 
-        list = new ArrayList<>();
-        if (start != -1) {
-            Log.d("Saver", start + " " + end);
-            for (int i = start; i >= end; i--) {
-                list.add(recordManager.RECORDS.get(i));
-            }
-        }
+        allData = new ArrayList<>();
+        if (start != -1)
+            for (int i = start; i >= end; i--) allData.add(recordManager.RECORDS.get(i));
 
-        IS_EMPTY = list.isEmpty();
+        IS_EMPTY = allData.isEmpty();
 
         setDateString();
 
@@ -119,7 +128,7 @@ public class TodayViewRecyclerViewAdapter
                 axis_date = Calendar.DAY_OF_WEEK;
             }
             if (fragmentPosition == THIS_MONTH || fragmentPosition == LAST_MONTH) {
-                columnNumber = list.get(0).getCalendar().getActualMaximum(Calendar.DAY_OF_MONTH);
+                columnNumber = allData.get(0).getCalendar().getActualMaximum(Calendar.DAY_OF_MONTH);
                 axis_date = Calendar.DAY_OF_MONTH;
             }
             if (fragmentPosition == THIS_YEAR || fragmentPosition == LAST_YEAR) {
@@ -132,17 +141,26 @@ public class TodayViewRecyclerViewAdapter
             originalTargets = new float[columnNumber];
             for (int i = 0; i < columnNumber; i++) originalTargets[i] = 0;
 
-            for (int j = 2; j < recordManager.TAGS.size(); j++) {
+            int size = recordManager.TAGS.size();
+            for (int j = 2; j < size; j++) {
                 TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
                 Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
             }
 
-            for (Record record : list) {
+            size = allData.size();
+            for (int i = 0; i < size; i++) {
+                Record record = allData.get(i);
                 TagExpanse.put(record.getTag(),
                         TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
                 Expanse.get(record.getTag()).add(record);
                 Sum += record.getMoney();
                 if (axis_date == Calendar.DAY_OF_WEEK) {
+                    if (Utils.WEEK_START_WITH_SUNDAY)
+                        originalTargets[record.getCalendar().get(axis_date) - 1]
+                                += record.getMoney();
+                    else originalTargets[(record.getCalendar().get(axis_date) + 5) % 7]
+                                += record.getMoney();
+                } else if (axis_date == Calendar.DAY_OF_MONTH) {
                     originalTargets[record.getCalendar().get(axis_date) - 1]
                             += record.getMoney();
                 } else {
@@ -157,12 +175,7 @@ public class TodayViewRecyclerViewAdapter
 
     @Override
     public int getItemViewType(int position) {
-        switch (position) {
-            case 0:
-                return TYPE_HEADER;
-            default:
-                return TYPE_CELL;
-        }
+        return TYPE_HEADER;
     }
 
     @Override
@@ -181,12 +194,6 @@ public class TodayViewRecyclerViewAdapter
                 return new viewHolder(view) {
                 };
             }
-            case TYPE_CELL: {
-                view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.today_list_view_body, parent, false);
-                return new viewHolder(view) {
-                };
-            }
         }
 
         return null;
@@ -202,13 +209,16 @@ public class TodayViewRecyclerViewAdapter
                 holder.dateBottom.setText(dateString);
                 holder.expanseSum.setText(String.valueOf((int) Sum));
 
-                holder.date.setTypeface(Utils.typefaceLatoLight);
+                holder.date.setTypeface(Utils.GetTypeface());
                 holder.dateBottom.setTypeface(Utils.GetTypeface());
                 holder.expanseSum.setTypeface(Utils.typefaceLatoLight);
 
                 if (IS_EMPTY) {
                     holder.emptyTip.setVisibility(View.VISIBLE);
-                    holder.emptyTip.setTypeface(Utils.typefaceLatoLight);
+                    holder.emptyTip.setText(Utils.GetTodayViewEmptyTip(fragmentPosition));
+                    holder.emptyTip.setTypeface(Utils.GetTypeface());
+
+                    holder.reset.setVisibility(View.GONE);
 
                     holder.pie.setVisibility(View.GONE);
                     holder.iconLeft.setVisibility(View.GONE);
@@ -218,7 +228,7 @@ public class TodayViewRecyclerViewAdapter
                     holder.histogram_icon_left.setVisibility(View.GONE);
                     holder.histogram_icon_right.setVisibility(View.GONE);
                 } else {
-                    holder.emptyTip.setVisibility(View.INVISIBLE);
+                    holder.emptyTip.setVisibility(View.GONE);
 
                     final ArrayList<SliceValue> sliceValues = new ArrayList<>();
 
@@ -233,7 +243,7 @@ public class TodayViewRecyclerViewAdapter
                         }
                     }
 
-                    PieChartData pieChartData = new PieChartData(sliceValues);
+                    final PieChartData pieChartData = new PieChartData(sliceValues);
 
                     pieChartData.setHasLabels(false);
                     pieChartData.setHasLabelsOnlyForSelected(false);
@@ -243,19 +253,20 @@ public class TodayViewRecyclerViewAdapter
                     holder.pie.setPieChartData(pieChartData);
                     holder.pie.setChartRotationEnabled(false);
 
+// two control button of pie////////////////////////////////////////////////////////////////////////
                     holder.iconRight.setVisibility(View.VISIBLE);
                     holder.iconRight.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (lastSelectedPosition != -1) {
-                                selectedPosition = lastSelectedPosition;
+                            if (lastPieSelectedPosition != -1) {
+                                pieSelectedPosition = lastPieSelectedPosition;
                             }
-                            selectedPosition
-                                    = (selectedPosition - 1 + sliceValues.size())
+                            pieSelectedPosition
+                                    = (pieSelectedPosition - 1 + sliceValues.size())
                                     % sliceValues.size();
                             SelectedValue selectedValue =
                                     new SelectedValue(
-                                            selectedPosition,
+                                            pieSelectedPosition,
                                             0,
                                             SelectedValue.SelectedValueType.NONE);
                             holder.pie.selectValue(selectedValue);
@@ -265,22 +276,21 @@ public class TodayViewRecyclerViewAdapter
                     holder.iconLeft.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (lastSelectedPosition != -1) {
-                                selectedPosition = lastSelectedPosition;
+                            if (lastPieSelectedPosition != -1) {
+                                pieSelectedPosition = lastPieSelectedPosition;
                             }
-                            selectedPosition
-                                    = (selectedPosition + 1)
+                            pieSelectedPosition
+                                    = (pieSelectedPosition + 1)
                                     % sliceValues.size();
                             SelectedValue selectedValue =
                                     new SelectedValue(
-                                            selectedPosition,
+                                            pieSelectedPosition,
                                             0,
                                             SelectedValue.SelectedValueType.NONE);
                             holder.pie.selectValue(selectedValue);
                         }
                     });
 
-                    // numColumns of zeros of the histogram
                     final List<Column> columns = new ArrayList<>();
                     for (int i = 0; i < columnNumber; i++) {
                         if (lastHistogramSelectedPosition == -1 && originalTargets[i] == 0) {
@@ -316,6 +326,7 @@ public class TodayViewRecyclerViewAdapter
                     holder.histogram.setColumnChartData(columnChartData);
                     holder.histogram.setZoomEnabled(false);
 
+// two control button of histogram//////////////////////////////////////////////////////////////////
                     holder.histogram_icon_left.setVisibility(View.VISIBLE);
                     holder.histogram_icon_left.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -355,21 +366,34 @@ public class TodayViewRecyclerViewAdapter
                         }
                     });
 
-                    // on click listener
+// set value touch listener of pie//////////////////////////////////////////////////////////////////
                     holder.pie.setOnValueTouchListener(new PieChartOnValueSelectListener() {
                         @Override
                         public void onValueSelected(int p, SliceValue sliceValue) {
                             // snack bar
                             RecordManager recordManager
                                     = RecordManager.getInstance(mContext.getApplicationContext());
-                            String text = "";
+                            String text;
                             tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
-                            Double percent = sliceValue.getValue() / Sum * 100;
-                            text += "Spend " + (int)sliceValue.getValue()
-                                    + " (takes " + String.format("%.2f", percent) + "%)\n"
-                                    + "in " + recordManager.TAG_NAMES.get(tagId) + ".\n";
-                            dialogTitle = "Spend " + (int)sliceValue.getValue() + dateShownString + "\n" +
-                                    "in " + recordManager.TAG_NAMES.get(tagId);
+                            double percent = sliceValue.getValue() / Sum * 100;
+                            if ("zh".equals(Utils.GetLanguage())) {
+                                text = Utils.GetSpendString((int)sliceValue.getValue()) +
+                                        Utils.GetPercentString(percent) + "\n" +
+                                        "于" + recordManager.TAG_NAMES.get(tagId);
+                            } else {
+                                text = "Spend " + (int)sliceValue.getValue()
+                                        + " (takes " + String.format("%.2f", percent) + "%)\n"
+                                        + "in " + recordManager.TAG_NAMES.get(tagId);
+                            }
+                            if ("zh".equals(Utils.GetLanguage())) {
+                                dialogTitle = dateShownString +
+                                        Utils.GetSpendString((int)sliceValue.getValue()) + "\n" +
+                                        "于" + recordManager.TAG_NAMES.get(tagId);
+                            } else {
+                                dialogTitle = "Spend " + (int)sliceValue.getValue()
+                                        + dateShownString + "\n" +
+                                        "in " + recordManager.TAG_NAMES.get(tagId);
+                            }
                             Snackbar snackbar =
                                     Snackbar
                                             .with(mContext)
@@ -377,29 +401,39 @@ public class TodayViewRecyclerViewAdapter
                                             .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                                             .position(Snackbar.SnackbarPosition.BOTTOM)
                                             .margin(15, 15)
-                                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentPosition))
+                                            .backgroundDrawable(Utils.GetSnackBarBackground(
+                                                    fragmentPosition))
                                             .text(text)
-                                            .textTypeface(Utils.typefaceLatoLight)
+                                            .textTypeface(Utils.GetTypeface())
                                             .textColor(Color.WHITE)
-                                            .actionLabelTypeface(Utils.typefaceLatoLight)
-                                            .actionLabel("Check")
+                                            .actionLabelTypeface(Utils.GetTypeface())
+                                            .actionLabel(mContext.getResources()
+                                                    .getString(R.string.check))
                                             .actionColor(Color.WHITE)
-                                            .actionListener(new mActionClickListener());
+                                            .actionListener(new mActionClickListenerForPie());
                             SnackbarManager.show(snackbar);
 
-                            if (p == lastSelectedPosition) {
+                            if (p == lastPieSelectedPosition) {
                                 return;
                             } else {
-                                lastSelectedPosition = p;
+                                lastPieSelectedPosition = p;
                             }
 
-                            // histogram data
+// histogram data///////////////////////////////////////////////////////////////////////////////////
                             float[] targets = new float[columnNumber];
                             for (int i = 0; i < columnNumber; i++) targets[i] = 0;
 
                             for (int i = Expanse.get(tagId).size() - 1; i >= 0; i--) {
                                 Record record = Expanse.get(tagId).get(i);
                                 if (axis_date == Calendar.DAY_OF_WEEK) {
+                                    if (Utils.WEEK_START_WITH_SUNDAY) {
+                                        targets[record.getCalendar().get(axis_date) - 1]
+                                                += record.getMoney();
+                                    } else {
+                                        targets[(record.getCalendar().get(axis_date) + 5) % 7]
+                                                += record.getMoney();
+                                    }
+                                } else if (axis_date == Calendar.DAY_OF_MONTH) {
                                     targets[record.getCalendar().get(axis_date) - 1]
                                             += record.getMoney();
                                 } else {
@@ -425,7 +459,9 @@ public class TodayViewRecyclerViewAdapter
                         }
                     });
 
-                    holder.histogram.setOnValueTouchListener(new ColumnChartOnValueSelectListener() {
+// set value touch listener of histogram////////////////////////////////////////////////////////////
+                    holder.histogram.setOnValueTouchListener(
+                            new ColumnChartOnValueSelectListener() {
                         @Override
                         public void onValueSelected(int columnIndex,
                                                     int subcolumnIndex, SubcolumnValue value) {
@@ -434,15 +470,24 @@ public class TodayViewRecyclerViewAdapter
                             // snack bar
                             RecordManager recordManager
                                     = RecordManager.getInstance(mContext.getApplicationContext());
-                            String text = "Spend " + (int)value.getValue() + " ";
-                            if (tagId != -1) {
-                                // belongs a tag
-                                text += getSnackBarDateString() + "\n"
-                                        + "in " + recordManager.TAG_NAMES.get(tagId) + ".\n";
-                            } else {
-                                text += "\n" + getSnackBarDateString();
-                            }
 
+                            String text = Utils.GetSpendString((int)value.getValue());
+                            if (tagId != -1)
+                                // belongs a tag
+                                if ("zh".equals(Utils.GetLanguage()))
+                                    text = getSnackBarDateString() + text + "\n" +
+                                            "于" + recordManager.TAG_NAMES.get(tagId);
+                                else
+                                    text += getSnackBarDateString() + "\n"
+                                            + "in " + recordManager.TAG_NAMES.get(tagId);
+                            else
+                                // don't belong to any tag
+                                if ("zh".equals(Utils.GetLanguage()))
+                                    text = getSnackBarDateString() + "\n" + text;
+                                else
+                                    text += "\n" + getSnackBarDateString();
+
+// setting the snack bar and dialog title of histogram//////////////////////////////////////////////
                             dialogTitle = text;
                             Snackbar snackbar =
                                     Snackbar
@@ -451,12 +496,14 @@ public class TodayViewRecyclerViewAdapter
                                             .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                                             .position(Snackbar.SnackbarPosition.BOTTOM)
                                             .margin(15, 15)
-                                            .backgroundDrawable(Utils.GetSnackBarBackground(fragmentPosition))
+                                            .backgroundDrawable(Utils.GetSnackBarBackground(
+                                                    fragmentPosition))
                                             .text(text)
-                                            .textTypeface(Utils.typefaceLatoLight)
+                                            .textTypeface(Utils.GetTypeface())
                                             .textColor(Color.WHITE)
-                                            .actionLabelTypeface(Utils.typefaceLatoLight)
-                                            .actionLabel("Check")
+                                            .actionLabelTypeface(Utils.GetTypeface())
+                                            .actionLabel(mContext.getResources()
+                                                    .getString(R.string.check))
                                             .actionColor(Color.WHITE)
                                             .actionListener(new mActionClickListenerForHistogram());
                             SnackbarManager.show(snackbar);
@@ -468,11 +515,13 @@ public class TodayViewRecyclerViewAdapter
                         }
                     });
 
+// set the listener of the reset button/////////////////////////////////////////////////////////////
                     holder.reset.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             tagId = -1;
                             lastHistogramSelectedPosition = -1;
+
                             for (int i = 0; i < columnNumber; i++) {
                                 if (lastHistogramSelectedPosition == -1
                                         && originalTargets[i] != 0) {
@@ -481,6 +530,7 @@ public class TodayViewRecyclerViewAdapter
                                 columnChartData.getColumns().
                                         get(i).getValues().get(0).setTarget(originalTargets[i]);
                             }
+
                             holder.histogram.startDataAnimation();
                         }
                     });
@@ -488,12 +538,10 @@ public class TodayViewRecyclerViewAdapter
                 }
 
                 break;
-
-            case TYPE_CELL:
-                break;
         }
     }
 
+// view holder class////////////////////////////////////////////////////////////////////////////////
     public static class viewHolder extends RecyclerView.ViewHolder {
         @Optional
         @InjectView(R.id.date)
@@ -535,7 +583,8 @@ public class TodayViewRecyclerViewAdapter
         }
     }
 
-    private class mActionClickListener implements ActionClickListener {
+// set the listener of the check button on the snack bar of pie/////////////////////////////////////
+    private class mActionClickListenerForPie implements ActionClickListener {
         @Override
         public void onActionClicked(Snackbar snackbar) {
             List<Record> shownRecords = Expanse.get(tagId);
@@ -547,10 +596,28 @@ public class TodayViewRecyclerViewAdapter
         }
     }
 
+// set the listener of the check button on the snack bar of histogram///////////////////////////////
     private class mActionClickListenerForHistogram implements ActionClickListener {
         @Override
         public void onActionClicked(Snackbar snackbar) {
-            List<Record> shownRecords = Expanse.get(tagId);
+            ArrayList<Record> shownRecords = new ArrayList<>();
+            int index = timeIndex;
+            if (axis_date == Calendar.DAY_OF_WEEK) {
+                if (Utils.WEEK_START_WITH_SUNDAY) index++;
+                else
+                    if (index == 6) index = 1;
+                    else index += 2;
+            }
+            if (fragmentPosition == THIS_MONTH || fragmentPosition == LAST_MONTH) index++;
+            if (tagId != -1) {
+                for (int i = 0; i < Expanse.get(tagId).size(); i++)
+                    if (Expanse.get(tagId).get(i).getCalendar().get(axis_date) == index)
+                        shownRecords.add(Expanse.get(tagId).get(i));
+            } else {
+                for (int i = 0; i < allData.size(); i++)
+                    if (allData.get(i).getCalendar().get(axis_date) == index)
+                        shownRecords.add(allData.get(i));
+            }
             ((FragmentActivity)mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .add(new RecordCheckDialog(
@@ -559,92 +626,162 @@ public class TodayViewRecyclerViewAdapter
         }
     }
 
+// set the dateString shown in snack bar in this fragment///////////////////////////////////////////
     private String getSnackBarDateString() {
         switch (fragmentPosition) {
             case TODAY:
-                return "at " + timeIndex + " o'clock today";
+                if ("zh".equals(Utils.GetLanguage()))
+                    // 在今天9点
+                    return mContext.getResources().getString(R.string.at) +
+                            mContext.getResources().getString(R.string.today_date_string) +
+                            timeIndex +
+                            mContext.getResources().getString(R.string.o_clock);
+                else
+                    // at 9 o'clock today
+                    return mContext.getResources().getString(R.string.at) +
+                            timeIndex + " " +
+                            mContext.getResources().getString(R.string.o_clock) + " " +
+                            mContext.getResources().getString(R.string.today_date_string);
             case YESTERDAY:
-                return "at " + timeIndex + " o'clock yesterday";
+                if ("zh".equals(Utils.GetLanguage()))
+                    // 在昨天9点
+                    return mContext.getResources().getString(R.string.at) +
+                            mContext.getResources().getString(R.string.yesterday_date_string) +
+                            timeIndex +
+                            mContext.getResources().getString(R.string.o_clock);
+                else
+                    // at 9 o'clock yesterday
+                    return mContext.getResources().getString(R.string.at) +
+                            timeIndex + " " +
+                            mContext.getResources().getString(R.string.o_clock) + " " +
+                            mContext.getResources().getString(R.string.yesterday_date_string);
             case THIS_WEEK:
-                return "on " + Utils.GetWeekDay(timeIndex);
+                // 在周一
+                // on Monday
+                return mContext.getResources().getString(R.string.on)
+                        + Utils.GetWeekDay(timeIndex);
             case LAST_WEEK:
-                return "last " + Utils.GetWeekDay(timeIndex);
+                // 在上周一
+                // on last Monday
+                return mContext.getResources().getString(R.string.on)
+                        + mContext.getResources().getString(R.string.last)
+                        + Utils.GetWeekDay(timeIndex);
             case THIS_MONTH:
-                return "on " + (timeIndex + 1) + " " + dateString.substring(0, 3);
+                // 在1月1日
+                // on Jan. 1
+                return mContext.getResources().getString(R.string.on) +
+                        Utils.GetMonthShort(month) + Utils.GetWhetherBlank() +
+                        (timeIndex + 1) + Utils.GetWhetherFuck();
             case LAST_MONTH:
-                return "on " + (timeIndex + 1) + " " + dateString.substring(0, 3);
+                // 在1月1日
+                // on Jan. 1
+                return mContext.getResources().getString(R.string.on) +
+                        Utils.GetMonthShort(month) + Utils.GetWhetherBlank() +
+                        (timeIndex + 1) + Utils.GetWhetherFuck();
             case THIS_YEAR:
-                return "in " + Utils.MONTHS_SHORT[timeIndex + 1] + " this year";
+                if ("zh".equals(Utils.GetLanguage()))
+                    // 在今年1月
+                    return mContext.getResources().getString(R.string.in) +
+                            mContext.getResources().getString(R.string.this_year_date_string) +
+                            Utils.GetMonthShort(timeIndex + 1);
+                else
+                    // in Jan. 1
+                    return mContext.getResources().getString(R.string.in) +
+                            Utils.GetMonthShort(timeIndex + 1) + " " +
+                            mContext.getResources().getString(R.string.this_year_date_string);
             case LAST_YEAR:
-                return "in " + Utils.MONTHS_SHORT[timeIndex + 1] + " last year";
+                if ("zh".equals(Utils.GetLanguage()))
+                    // 在去年1月
+                    return mContext.getResources().getString(R.string.in) +
+                            mContext.getResources().getString(R.string.last_year_date_string) +
+                            Utils.GetMonthShort(timeIndex + 1);
+                else
+                    // in Jan. 1
+                    return mContext.getResources().getString(R.string.in) +
+                            Utils.GetMonthShort(timeIndex + 1) + " " +
+                            mContext.getResources().getString(R.string.last_year_date_string);
             default:
                 return "";
         }
     }
 
+// set the dateString of this fragment//////////////////////////////////////////////////////////////
     private void setDateString() {
         String basicTodayDateString;
         String basicYesterdayDateString;
         Calendar today = Calendar.getInstance();
         Calendar yesterday = Utils.GetYesterdayLeftRange(today);
         basicTodayDateString = "--:-- ";
-        basicTodayDateString += Utils.MONTHS_SHORT[today.get(Calendar.MONTH) + 1] + " " +
-                today.get(Calendar.DAY_OF_MONTH) + " " +
+        basicTodayDateString += Utils.GetMonthShort(today.get(Calendar.MONTH) + 1)
+                + " " + today.get(Calendar.DAY_OF_MONTH) + " " +
                 today.get(Calendar.YEAR);
         basicYesterdayDateString = "--:-- ";
-        basicYesterdayDateString += Utils.MONTHS_SHORT[yesterday.get(Calendar.MONTH) + 1] + " " +
-                yesterday.get(Calendar.DAY_OF_MONTH) + " " +
+        basicYesterdayDateString += Utils.GetMonthShort(today.get(Calendar.MONTH) + 1)
+                + " " + yesterday.get(Calendar.DAY_OF_MONTH) + " " +
                 yesterday.get(Calendar.YEAR);
         switch (fragmentPosition) {
             case TODAY:
                 dateString = basicTodayDateString.substring(6, basicTodayDateString.length());
-                dateShownString = " today";
+                dateShownString = mContext.getResources().getString(R.string.today_date_string);
+                month = today.get(Calendar.MONTH);
                 break;
             case YESTERDAY:
-                dateString = basicYesterdayDateString.substring(6, basicYesterdayDateString.length());
-                dateShownString = " yesterday";
+                dateString
+                        = basicYesterdayDateString.substring(6, basicYesterdayDateString.length());
+                dateShownString = mContext.getResources().getString(R.string.yesterday_date_string);
+                month = yesterday.get(Calendar.MONTH);
                 break;
             case THIS_WEEK:
                 Calendar leftWeekRange = Utils.GetThisWeekLeftRange(today);
                 Calendar rightWeekRange = Utils.GetThisWeekRightShownRange(today);
-                dateString = Utils.MONTHS_SHORT[leftWeekRange.get(Calendar.MONTH) + 1] + " " +
-                        leftWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
+                dateString = Utils.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1)
+                        + " " + leftWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                         leftWeekRange.get(Calendar.YEAR) + " - " +
-                        Utils.MONTHS_SHORT[rightWeekRange.get(Calendar.MONTH) + 1] + " " +
-                        rightWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
+                        Utils.GetMonthShort(rightWeekRange.get(Calendar.MONTH) + 1)
+                        + " " + rightWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                         rightWeekRange.get(Calendar.YEAR);
-                dateShownString = " this week";
+                dateShownString = mContext.getResources().getString(R.string.this_week_date_string);
+                month = -1;
                 break;
             case LAST_WEEK:
                 Calendar leftLastWeekRange = Utils.GetLastWeekLeftRange(today);
                 Calendar rightLastWeekRange = Utils.GetLastWeekRightShownRange(today);
-                dateString = Utils.MONTHS_SHORT[leftLastWeekRange.get(Calendar.MONTH) + 1] + " " +
-                        leftLastWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
+                dateString
+                        = Utils.GetMonthShort(leftLastWeekRange.get(Calendar.MONTH) + 1)
+                        + " " + leftLastWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                         leftLastWeekRange.get(Calendar.YEAR) + " - " +
-                        Utils.MONTHS_SHORT[rightLastWeekRange.get(Calendar.MONTH) + 1] + " " +
-                        rightLastWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
+                        Utils.GetMonthShort(rightLastWeekRange.get(Calendar.MONTH) + 1)
+                        + " " + rightLastWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                         rightLastWeekRange.get(Calendar.YEAR);
-                dateShownString = " last week";
+                dateShownString = mContext.getResources().getString(R.string.last_week_date_string);
+                month = -1;
                 break;
             case THIS_MONTH:
-                dateString = Utils.MONTHS_SHORT[today.get(Calendar.MONTH) + 1] + " " +
-                        today.get(Calendar.YEAR);
-                dateShownString = " this month";
+                dateString = Utils.GetMonthShort(today.get(Calendar.MONTH) + 1)
+                        + " " + today.get(Calendar.YEAR);
+                dateShownString
+                        = mContext.getResources().getString(R.string.this_month_date_string);
+                month = today.get(Calendar.MONTH);
                 break;
             case LAST_MONTH:
                 Calendar lastMonthCalendar = Utils.GetLastMonthLeftRange(today);
-                dateString = Utils.MONTHS_SHORT[lastMonthCalendar.get(Calendar.MONTH) + 1] + " " +
-                        lastMonthCalendar.get(Calendar.YEAR);
-                dateShownString = " last month";
+                dateString
+                        = Utils.GetMonthShort(lastMonthCalendar.get(Calendar.MONTH) + 1)
+                        + " " + lastMonthCalendar.get(Calendar.YEAR);
+                dateShownString
+                        = mContext.getResources().getString(R.string.last_month_date_string);
+                month = lastMonthCalendar.get(Calendar.MONTH);
                 break;
             case THIS_YEAR:
                 dateString = today.get(Calendar.YEAR) + "";
-                dateShownString = " this year";
+                dateShownString = mContext.getResources().getString(R.string.this_year_date_string);
+                month = -1;
                 break;
             case LAST_YEAR:
                 Calendar lastYearCalendar = Utils.GetLastYearLeftRange(today);
                 dateString = lastYearCalendar.get(Calendar.YEAR) + "";
-                dateShownString = " last year";
+                dateShownString = mContext.getResources().getString(R.string.last_year_date_string);
+                month = -1;
                 break;
         }
     }

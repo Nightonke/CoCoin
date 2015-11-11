@@ -65,7 +65,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         title.setTypeface(Utils.typefaceLatoLight);
         title.setText("CoCoin");
 
-        mViewPager.getPagerTitleStrip().setTypeface(Utils.typefaceLatoLight, Typeface.NORMAL);
+        mViewPager.getPagerTitleStrip().setTypeface(Utils.GetTypeface(), Typeface.NORMAL);
 
         setTitle("");
 

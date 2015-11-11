@@ -66,7 +66,8 @@ public class RecordCheckDialog extends DialogFragment {
         builder.setTitle("Title");
 
         builder.setView(view);
-        builder.setPositiveButton("GET!", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(mContext.getResources().getString(R.string.get),
+                new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
             }

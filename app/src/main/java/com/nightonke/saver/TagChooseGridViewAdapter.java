@@ -17,16 +17,19 @@ public class TagChooseGridViewAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private Context mContext;
     private int fragmentPosition;
+    private int count = 0;
 
     public TagChooseGridViewAdapter(Context context, int fragmentPosition) {
         this.inflater = LayoutInflater.from(context);
         this.mContext = context;
         this.fragmentPosition = fragmentPosition;
+        if (fragmentPosition < 3) count = 8;
+        else count = 3;
     }
 
     @Override
     public int getCount() {
-        return 8;
+        return count;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class TagChooseGridViewAdapter extends BaseAdapter {
         holder.tagName.setTypeface(Utils.typefaceLatoLight);
         holder.tagImage.setImageResource(
                 Utils.GetTagIcon(RecordManager.TAGS.
-                        get(fragmentPosition * 8 + position + 2).getName()));
+                        get(fragmentPosition * 8 + position + 2).getId()));
 
         return convertView;
     }

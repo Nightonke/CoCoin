@@ -103,7 +103,7 @@ class MyDraggableItemAdapter
         // set background resource (target view ID: container)
         final int dragState = holder.getDragStateFlags();
 
-        holder.tagImage.setImageResource(Utils.GetTagIcon(tags.get(position).getName()));
+        holder.tagImage.setImageResource(Utils.GetTagIcon(tags.get(position).getId()));
         holder.tagName.setText(tags.get(position).getName());
         holder.tagName.setTypeface(Utils.typefaceLatoLight);
 

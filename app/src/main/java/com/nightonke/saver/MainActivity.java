@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
 
         FragmentPagerItems pages = new FragmentPagerItems(this);
-        for (int i = 0; i < (RecordManager.TAGS.size() - 2) / 8; i++) {
+        for (int i = 0; i < (RecordManager.TAGS.size() - 2) / 8 + 1; i++) {
             pages.add(FragmentPagerItem.of("1", TagChooseFragment.class));
         }
 

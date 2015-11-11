@@ -53,7 +53,7 @@ public class RecordCheckAdapter extends RecyclerView.Adapter<RecordCheckAdapter.
 
     @Override
     public int getItemCount() {
-        if (records.equals(null)) {
+        if (records == null) {
             return 0;
         }
         return records.size();

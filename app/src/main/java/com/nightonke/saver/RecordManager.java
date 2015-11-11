@@ -313,6 +313,17 @@ public class RecordManager {
         saveTag(new Tag(-1, "Donation",           13));
         saveTag(new Tag(-1, "Sport",              14));
         saveTag(new Tag(-1, "Snack",              15));
+        saveTag(new Tag(-1, "Music",              16));
+        saveTag(new Tag(-1, "Fund",               17));
+        saveTag(new Tag(-1, "Drink",              18));
+        saveTag(new Tag(-1, "Fruit",              19));
+        saveTag(new Tag(-1, "Film",               20));
+        saveTag(new Tag(-1, "Baby",               21));
+        saveTag(new Tag(-1, "Partner",            22));
+        saveTag(new Tag(-1, "Housing Loan",       23));
+        saveTag(new Tag(-1, "Pet",                24));
+        saveTag(new Tag(-1, "Telephone Bill",     25));
+        saveTag(new Tag(-1, "Travel",             26));
         sortTAGS();
     }
 
@@ -331,11 +342,17 @@ public class RecordManager {
             record.setCurrency("RMB");
             Calendar calendar = Calendar.getInstance();
             Calendar now = Calendar.getInstance();
-            calendar.set(2015,
-                    random.nextInt(now.get(Calendar.MONTH)),
-                    random.nextInt(28) + 1,
-                    random.nextInt(24),
-                    random.nextInt(60));
+            int[] monthMax = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 11, 30};
+            int year = 2015;
+            int month = random.nextInt(11);
+            int day = random.nextInt(monthMax[month] + 1);
+            int hour = random.nextInt(24);
+            int minute = random.nextInt(60);
+            calendar.set(year,
+                    month,
+                    day,
+                    hour,
+                    minute);
             calendar.add(Calendar.MINUTE, 0);
             record.setCalendar(calendar);
 

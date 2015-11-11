@@ -11,6 +11,8 @@ import com.squareup.leakcanary.RefWatcher;
  */
 public class myApplication extends Application {
 
+    private static Context mContext;
+
     public static RefWatcher getRefWatcher(Context context) {
         myApplication application = (myApplication) context.getApplicationContext();
         return application.refWatcher;
@@ -21,6 +23,11 @@ public class myApplication extends Application {
     @Override public void onCreate() {
         super.onCreate();
         refWatcher = LeakCanary.install(this);
+        myApplication.mContext = getApplicationContext();
+    }
+
+    public static Context getAppContext() {
+        return myApplication.mContext;
     }
 
 }
