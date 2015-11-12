@@ -45,7 +45,7 @@ public class RecordCheckAdapter extends RecyclerView.Adapter<RecordCheckAdapter.
         holder.date.setTypeface(Utils.GetTypeface());
         holder.money.setTypeface(Utils.typefaceLatoLight);
         holder.money.setTextColor(
-                Utils.GetTagColor(RecordManager.TAGS.get(records.get(position).getTag()).getName()));
+                Utils.GetTagColor(RecordManager.TAGS.get(records.get(position).getTag()).getId()));
         holder.index.setText((position + 1) + "");
         holder.index.setTypeface(Utils.typefaceLatoLight);
 

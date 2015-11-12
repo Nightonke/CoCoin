@@ -78,6 +78,70 @@ public class Utils {
             R.drawable.travel_icon
     };
 
+    public static int[] TAG_COLOR = {
+            R.color.sum_header_pie,
+            R.color.sum_header_histogram,
+            R.color.meal_header,
+            R.color.closet_header,
+            R.color.home_header,
+            R.color.traffic_header,
+            R.color.vehicle_maintenance_header,
+            R.color.book_header,
+            R.color.hobby_header,
+            R.color.internet_header,
+            R.color.friend_header,
+            R.color.education_header,
+            R.color.entertainment_header,
+            R.color.medical_header,
+            R.color.insurance_header,
+            R.color.donation_header,
+            R.color.sport_header,
+            R.color.snack_header,
+            R.color.music_header,
+            R.color.fund_header,
+            R.color.drink_header,
+            R.color.fruit_header,
+            R.color.film_header,
+            R.color.baby_header,
+            R.color.partner_header,
+            R.color.housing_loan_header,
+            R.color.pet_header,
+            R.color.telephone_bill_header,
+            R.color.travel_header
+    };
+
+    public static int[] TAG_SNACK = {
+            R.drawable.snackbar_shape_sum_pie,
+            R.drawable.snackbar_shape_sum_histogram,
+            R.drawable.snackbar_shape_meal,
+            R.drawable.snackbar_shape_closet,
+            R.drawable.snackbar_shape_home,
+            R.drawable.snackbar_shape_traffic,
+            R.drawable.snackbar_shape_vehicle_maintenance,
+            R.drawable.snackbar_shape_book,
+            R.drawable.snackbar_shape_hobby,
+            R.drawable.snackbar_shape_internet,
+            R.drawable.snackbar_shape_friend,
+            R.drawable.snackbar_shape_education,
+            R.drawable.snackbar_shape_entertainment,
+            R.drawable.snackbar_shape_medical,
+            R.drawable.snackbar_shape_insurance,
+            R.drawable.snackbar_shape_donation,
+            R.drawable.snackbar_shape_sport,
+            R.drawable.snackbar_shape_snack,
+            R.drawable.snackbar_shape_music,
+            R.drawable.snackbar_shape_fund,
+            R.drawable.snackbar_shape_drink,
+            R.drawable.snackbar_shape_fruit,
+            R.drawable.snackbar_shape_film,
+            R.drawable.snackbar_shape_baby,
+            R.drawable.snackbar_shape_partner,
+            R.drawable.snackbar_shape_housing_loan,
+            R.drawable.snackbar_shape_pet,
+            R.drawable.snackbar_shape_telephone_bill,
+            R.drawable.snackbar_shape_travel
+    };
+
     public static int[] TAG_NAME = {
             R.string.tag_sum_pie,
             R.string.tag_sum_histogram,
@@ -513,90 +577,8 @@ public class Utils {
         return Color.parseColor(Colors[p]);
     }
 
-    public static int GetTagColor(String tag) {
-        switch (tag) {
-            case "Sum Pie":
-                return R.color.sum_header_pie;
-            case "Sum Histogram":
-                return R.color.sum_header_histogram;
-            case "Book":
-                return R.color.book_header;
-            case "Clothing & Footwear":
-                return R.color.closet_header;
-            case "Donation":
-                return R.color.donation_header;
-            case "Education":
-                return R.color.education_header;
-            case "Entertainment":
-                return R.color.entertainment_header;
-            case "Friend":
-                return R.color.friend_header;
-            case "Hobby":
-                return R.color.hobby_header;
-            case "Home":
-                return R.color.home_header;
-            case "Insurance":
-                return R.color.insurance_header;
-            case "Internet":
-                return R.color.internet_header;
-            case "Meal":
-                return R.color.meal_header;
-            case "Medical":
-                return R.color.medical_header;
-            case "Snack":
-                return R.color.snack_header;
-            case "Sport":
-                return R.color.sport_header;
-            case "Traffic":
-                return R.color.traffic_header;
-            case "Vehicle Maintenance":
-                return R.color.vehicle_maintenance_header;
-            default:
-                return R.color.green;
-        }
-    }
-
     public static int GetTagColor(int tag) {
-        switch (tag) {
-            case -2:
-                return R.color.sum_header_pie;
-            case -1:
-                return R.color.sum_header_histogram;
-            case 5:
-                return R.color.book_header;
-            case 1:
-                return R.color.closet_header;
-            case 13:
-                return R.color.donation_header;
-            case 9:
-                return R.color.education_header;
-            case 10:
-                return R.color.entertainment_header;
-            case 8:
-                return R.color.friend_header;
-            case 6:
-                return R.color.hobby_header;
-            case 2:
-                return R.color.home_header;
-            case 12:
-                return R.color.insurance_header;
-            case 7:
-                return R.color.internet_header;
-            case 0:
-                return R.color.meal_header;
-            case 11:
-                return R.color.medical_header;
-            case 15:
-                return R.color.snack_header;
-            case 14:
-                return R.color.sport_header;
-            case 3:
-                return R.color.traffic_header;
-            case 4:
-                return R.color.vehicle_maintenance_header;
-            default:
-                return R.color.green;
-        }
+        return TAG_COLOR[tag + 2];
     }
 
     public static int GetTagDrawable(String tag) {
@@ -645,154 +627,7 @@ public class Utils {
     }
 
     public static int GetSnackBarBackground(int tagId) {
-        switch (tagId) {
-            case -2:
-                return R.drawable.snackbar_shape_sum_pie;
-            case -1:
-                return R.drawable.snackbar_shape_sum_histogram;
-            case 5:
-                return R.drawable.snackbar_shape_book;
-            case 1:
-                return R.drawable.snackbar_shape_closet;
-            case 13:
-                return R.drawable.snackbar_shape_donation;
-            case 9:
-                return R.drawable.snackbar_shape_education;
-            case 10:
-                return R.drawable.snackbar_shape_entertainment;
-            case 8:
-                return R.drawable.snackbar_shape_friend;
-            case 6:
-                return R.drawable.snackbar_shape_hobby;
-            case 2:
-                return R.drawable.snackbar_shape_home;
-            case 12:
-                return R.drawable.snackbar_shape_insurance;
-            case 7:
-                return R.drawable.snackbar_shape_internet;
-            case 0:
-                return R.drawable.snackbar_shape_meal;
-            case 11:
-                return R.drawable.snackbar_shape_medical;
-            case 15:
-                return R.drawable.snackbar_shape_snack;
-            case 14:
-                return R.drawable.snackbar_shape_sport;
-            case 3:
-                return R.drawable.snackbar_shape_traffic;
-            case 4:
-                return R.drawable.snackbar_shape_vehicle_maintenance;
-            default:
-                return R.drawable.snackbar_shape;
-        }
-    }
-
-    public static int GetSnackBarBackground(String tag) {
-        switch (tag) {
-            case "Sum Pie":
-                return R.drawable.snackbar_shape_sum_pie;
-            case "Sum Histogram":
-                return R.drawable.snackbar_shape_sum_histogram;
-            case "Book":
-                return R.drawable.snackbar_shape_book;
-            case "Clothing & Footwear":
-                return R.drawable.snackbar_shape_closet;
-            case "Donation":
-                return R.drawable.snackbar_shape_donation;
-            case "Education":
-                return R.drawable.snackbar_shape_education;
-            case "Entertainment":
-                return R.drawable.snackbar_shape_entertainment;
-            case "Friend":
-                return R.drawable.snackbar_shape_friend;
-            case "Hobby":
-                return R.drawable.snackbar_shape_hobby;
-            case "Home":
-                return R.drawable.snackbar_shape_home;
-            case "Insurance":
-                return R.drawable.snackbar_shape_insurance;
-            case "Internet":
-                return R.drawable.snackbar_shape_internet;
-            case "Meal":
-                return R.drawable.snackbar_shape_meal;
-            case "Medical":
-                return R.drawable.snackbar_shape_medical;
-            case "Snack":
-                return R.drawable.snackbar_shape_snack;
-            case "Sport":
-                return R.drawable.snackbar_shape_sport;
-            case "Traffic":
-                return R.drawable.snackbar_shape_traffic;
-            case "Vehicle Maintenance":
-                return R.drawable.snackbar_shape_vehicle_maintenance;
-            default:
-                return R.drawable.snackbar_shape;
-        }
-    }
-
-    static int GetTagIcon(String tag) {
-        switch (tag) {
-            case "Sum Pie":
-                return R.drawable.sum_pie_icon;
-            case "Sum Histogram":
-                return R.drawable.sum_histogram_icon;
-            case "Book":
-                return R.drawable.book_icon;
-            case "Clothing & Footwear":
-                return R.drawable.closet_icon;
-            case "Donation":
-                return R.drawable.donation_icon;
-            case "Education":
-                return R.drawable.education_icon;
-            case "Entertainment":
-                return R.drawable.entertainment_icon;
-            case "Friend":
-                return R.drawable.friend_icon;
-            case "Hobby":
-                return R.drawable.hobby_icon;
-            case "Home":
-                return R.drawable.home_icon;
-            case "Insurance":
-                return R.drawable.insurance_icon;
-            case "Internet":
-                return R.drawable.internet_icon;
-            case "Meal":
-                return R.drawable.meal_icon;
-            case "Medical":
-                return R.drawable.medical_icon;
-            case "Snack":
-                return R.drawable.snack_icon;
-            case "Sport":
-                return R.drawable.sport_icon;
-            case "Traffic":
-                return R.drawable.traffic_icon;
-            case "Vehicle Maintenance":
-                return R.drawable.vehicle_maintenance_icon;
-            case "Music":
-                return R.drawable.music_icon;
-            case "Fund":
-                return R.drawable.fund_icon;
-            case "Drink":
-                return R.drawable.drink_icon;
-            case "Fruit":
-                return R.drawable.fruit_icon;
-            case "Film":
-                return R.drawable.film_icon;
-            case "Baby":
-                return R.drawable.baby_icon;
-            case "Partner":
-                return R.drawable.partner_icon;
-            case "Housing Loan":
-                return R.drawable.housing_loan_icon;
-            case "Pet":
-                return R.drawable.pet_icon;
-            case "Telephone Bill":
-                return R.drawable.telephone_bill_icon;
-            case "Travel":
-                return R.drawable.travel_icon;
-            default:
-                return R.drawable.book_icon;
-        }
+        return TAG_SNACK[tagId + 2];
     }
 
     static int GetTagIcon(int tagId) {

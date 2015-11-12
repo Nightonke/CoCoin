@@ -4,19 +4,15 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.jungly.gridpasswordview.Util;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
-import com.rengwuxian.materialedittext.MaterialAutoCompleteTextView;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -25,7 +21,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -523,22 +518,25 @@ public class TagViewRecyclerViewAdapter
 
                         }
                         if (type.get(position - 1).equals(SHOW_IN_MONTH)) {
-                            Calendar tempCal = new GregorianCalendar(year, month - 1, 1);
+                            Calendar tempCal = Calendar.getInstance();
+                            tempCal.set(year, month - 1, 1);
+                            tempCal.add(Calendar.SECOND, 0);
                             int daysInMonth = tempCal.getActualMaximum(Calendar.DAY_OF_MONTH);
-
                             int p = contents.get(position - 1).size() - 1;
                             int numColumns = daysInMonth;
 
                             for (int i = 0; i < numColumns; ++i) {
                                 subcolumnValues = new ArrayList<>();
+                                SubcolumnValue value = new SubcolumnValue(0,
+                                        Utils.GetRandomColor());
+                                subcolumnValues.add(value);
                                 while (p >= 0
                                         && contents.get(position - 1).get(p).getCalendar().
                                         get(Calendar.DAY_OF_MONTH) == i + 1) {
-                                    SubcolumnValue value = new SubcolumnValue((float)
-                                            contents.get(position - 1).get(p).getMoney(),
-                                            Utils.GetRandomColor());
-                                    value.setLabel(p + "");
-                                    subcolumnValues.add(value);
+                                    subcolumnValues.get(0).setValue(
+                                            subcolumnValues.get(0).getValue() +
+                                            (float)contents.get(position - 1).get(p).getMoney());
+                                    subcolumnValues.get(0).setLabel(p + "");
                                     p--;
                                 }
                                 Column column = new Column(subcolumnValues);
@@ -771,10 +769,10 @@ public class TagViewRecyclerViewAdapter
                     if ("zh".equals(Utils.GetLanguage())) {
                         text = mContext.getResources().getString(R.string.on) + timeString +
                                 Utils.GetSpendString((int)value.getValue()) + "\n" +
-                                "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                                "于" + Utils.GetTagName(contents.get(position).get(0).getTag());
                         dialogTitle = mContext.getResources().getString(R.string.on) + timeString +
                                 Utils.GetSpendString((int)value.getValue()) + "\n" +
-                                "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                                "于" + Utils.GetTagName(contents.get(position).get(0).getTag());
                     } else {
                         text = Utils.GetSpendString((int)value.getValue()) +
                                 mContext.getResources().getString(R.string.on) + timeString + "\n"
@@ -818,10 +816,10 @@ public class TagViewRecyclerViewAdapter
                     if ("zh".equals(Utils.GetLanguage())) {
                         text = mContext.getResources().getString(R.string.in) + timeString +
                                 Utils.GetSpendString((int)value.getValue()) + "\n" +
-                                "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                                "于" + Utils.GetTagName(contents.get(position).get(0).getTag());
                         dialogTitle = mContext.getResources().getString(R.string.in) + timeString +
                                 Utils.GetSpendString((int)value.getValue()) + "\n" +
-                                "in " + Utils.GetTagName(contents.get(position).get(0).getTag());
+                                "于" + Utils.GetTagName(contents.get(position).get(0).getTag());
                     } else {
                         text = Utils.GetSpendString((int)value.getValue()) +
                                 mContext.getResources().getString(R.string.in) + timeString + "\n"

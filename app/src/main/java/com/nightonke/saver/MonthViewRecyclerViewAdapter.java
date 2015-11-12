@@ -37,6 +37,8 @@ import lecho.lib.hellocharts.view.PieChartView;
  * Created by 伟平 on 2015/10/20.
  */
 
+// Todo optimise this
+
 public class MonthViewRecyclerViewAdapter
         extends RecyclerView.Adapter<MonthViewRecyclerViewAdapter.viewHolder> {
 

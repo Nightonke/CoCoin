@@ -37,8 +37,6 @@ public class TagSettingActivity extends AppCompatActivity {
 
     private Context mContext;
 
-    private TextView title;
-
     private MaterialIconView back;
 
     @Override
@@ -92,10 +90,6 @@ public class TagSettingActivity extends AppCompatActivity {
                         getDrawable(this, R.drawable.material_shadow_z1)));
 
         mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
-
-        title = (TextView)findViewById(R.id.title);
-        title.setTypeface(Utils.typefaceLatoLight);
-        title.setText(mContext.getResources().getString(R.string.sort_tags));
 
         back = (MaterialIconView)findViewById(R.id.icon_left);
 

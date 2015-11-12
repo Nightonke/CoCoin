@@ -116,7 +116,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
                 return HeaderDesign.fromColorResAndDrawable(
-                        Utils.GetTagColor(RecordManager.TAGS.get(page).getName()),
+                        Utils.GetTagColor(RecordManager.TAGS.get(page).getId()),
                         mContext.getResources().getDrawable(
                                 Utils.GetTagDrawable("Transparent")));
             }

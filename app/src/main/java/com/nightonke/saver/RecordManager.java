@@ -3,6 +3,7 @@ package com.nightonke.saver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +32,8 @@ public class RecordManager {
 
     public static boolean SHOW_LOG = false;
     public static boolean RANDOM_DATA = true;
-    private int RANDOM_DATA_NUMBER = 300;
+    private final int RANDOM_DATA_NUMBER_ON_EACH_DAY = 8;
+    private final int RANDOM_DATA_EXPENSE_ON_EACH_DAY = 20;
 
     private static boolean FIRST_TIME = true;
 
@@ -52,6 +54,8 @@ public class RecordManager {
             SharedPreferences preferences =
                     context.getSharedPreferences("Values", Context.MODE_PRIVATE);
             if (preferences.getBoolean("FIRST_TIME", true)) {
+                Toast.makeText(
+                        context, "Creating test data, please wait.", Toast.LENGTH_LONG).show();
                 createTags();
                 SharedPreferences.Editor editor =
                         context.getSharedPreferences("Values", Context.MODE_PRIVATE).edit();
@@ -68,6 +72,9 @@ public class RecordManager {
             }
 
             randomDataCreater();
+
+            Toast.makeText(
+                    context, "Finish, thanks for testing.", Toast.LENGTH_LONG).show();
 
             SharedPreferences.Editor editor =
                     context.getSharedPreferences("Values", Context.MODE_PRIVATE).edit();
@@ -333,30 +340,36 @@ public class RecordManager {
 
         List<Record> createdRecords = new ArrayList<>();
 
-        for (int i = 0; i < RANDOM_DATA_NUMBER; i++) {
-            Record record = new Record();
+        Calendar now = Calendar.getInstance();
+        Calendar c = Calendar.getInstance();
+        c.set(2015, 1, 1, 0, 0, 0);
+        c.add(Calendar.SECOND, 1);
 
-            record.setMoney((int)(random.nextFloat() * 50) + 1);
-            record.setRemark("Remark " + i);
-            record.setTag(random.nextInt(TAGS.size()));
-            record.setCurrency("RMB");
-            Calendar calendar = Calendar.getInstance();
-            Calendar now = Calendar.getInstance();
-            int[] monthMax = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 11, 30};
-            int year = 2015;
-            int month = random.nextInt(11);
-            int day = random.nextInt(monthMax[month] + 1);
-            int hour = random.nextInt(24);
-            int minute = random.nextInt(60);
-            calendar.set(year,
-                    month,
-                    day,
-                    hour,
-                    minute);
-            calendar.add(Calendar.MINUTE, 0);
-            record.setCalendar(calendar);
+        while (c.before(now)) {
+            for (int i = 0; i < RANDOM_DATA_NUMBER_ON_EACH_DAY; i++) {
+                Calendar r = (Calendar)c.clone();
+                int hour = random.nextInt(24);
+                int minute = random.nextInt(60);
+                int second = random.nextInt(60);
 
-            createdRecords.add(record);
+                r.set(Calendar.HOUR_OF_DAY, hour);
+                r.set(Calendar.MINUTE, minute);
+                r.set(Calendar.SECOND, second);
+                r.add(Calendar.SECOND, 0);
+
+                int tag = random.nextInt(TAGS.size());
+                int expense = random.nextInt(RANDOM_DATA_EXPENSE_ON_EACH_DAY) + 1;
+
+                Record record = new Record();
+                record.setCalendar(r);
+                record.setMoney(expense);
+                record.setTag(tag);
+                record.setCurrency("RMB");
+                record.setRemark("备注：" + record.toString());
+
+                createdRecords.add(record);
+            }
+            c.add(Calendar.DATE, 1);
         }
 
         Collections.sort(createdRecords, new Comparator<Record>() {

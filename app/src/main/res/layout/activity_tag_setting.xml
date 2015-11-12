@@ -29,17 +29,6 @@
                 app:contentInsetStart="0dp"
                 style="@style/Toolbar">
 
-                <TextView
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="Sort Tags"
-                    android:textColor="#ffffff"
-                    android:textSize="25sp"
-                    />
-
             </android.support.v7.widget.Toolbar>
 
             <net.steamcrafted.materialiconlib.MaterialIconView

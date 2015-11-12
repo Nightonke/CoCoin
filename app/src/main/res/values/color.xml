@@ -41,6 +41,17 @@
     <color name="sport_header">#536DFE</color>
     <color name="traffic_header">#9C27B0</color>
     <color name="vehicle_maintenance_header">#FF4081</color>
+    <color name="music_header">#F44336</color>
+    <color name="travel_header">#9E9E9E</color>
+    <color name="fund_header">#9C27B0</color>
+    <color name="drink_header">#3F51B5</color>
+    <color name="fruit_header">#8BC34A</color>
+    <color name="film_header">#FF5722</color>
+    <color name="baby_header">#03A9F4</color>
+    <color name="partner_header">#E91E63</color>
+    <color name="housing_loan_header">#4CAF50</color>
+    <color name="pet_header">#009688</color>
+    <color name="telephone_bill_header">#CDDC39</color>
 
     <color name="correct_password">#8bc34a</color>
     <color name="wrong_password">#E91E63</color>
