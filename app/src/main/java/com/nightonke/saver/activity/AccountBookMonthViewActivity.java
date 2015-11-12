@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -100,6 +101,9 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
         mViewPager.getViewPager().setOffscreenPageLimit(monthModeAdapter.getCount());
         mViewPager.getViewPager().setAdapter(monthModeAdapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+        if (monthModeAdapter.IS_EMPTY) {
+            mViewPager.getPagerTitleStrip().setVisibility(View.INVISIBLE);
+        }
 
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
@@ -155,6 +159,15 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return mDrawerToggle.onOptionsItemSelected(item) ||
                 super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawers();
+            return;
+        }
+        super.onBackPressed();
     }
 
 }

@@ -10,4 +10,8 @@
 
     <dimen name="guillotine_item_text_size">20sp</dimen>
     <dimen name="guillotine_actionbar_background_view_height">35dp</dimen>
+
+    <dimen name="list_group_item_height">96dp</dimen>
+    <dimen name="list_item_height">64dp</dimen>
+    <dimen name="list_item_translation_z">2dp</dimen>
 </resources>

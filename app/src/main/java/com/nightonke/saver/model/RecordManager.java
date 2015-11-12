@@ -34,7 +34,7 @@ public class RecordManager {
     public static Map<Integer, String> TAG_NAMES;
 
     public static boolean SHOW_LOG = false;
-    public static boolean RANDOM_DATA = true;
+    public static boolean RANDOM_DATA = false;
     private final int RANDOM_DATA_NUMBER_ON_EACH_DAY = 8;
     private final int RANDOM_DATA_EXPENSE_ON_EACH_DAY = 20;
 
@@ -57,8 +57,6 @@ public class RecordManager {
             SharedPreferences preferences =
                     context.getSharedPreferences("Values", Context.MODE_PRIVATE);
             if (preferences.getBoolean("FIRST_TIME", true)) {
-                Toast.makeText(
-                        context, "Creating test data, please wait.", Toast.LENGTH_LONG).show();
                 createTags();
                 SharedPreferences.Editor editor =
                         context.getSharedPreferences("Values", Context.MODE_PRIVATE).edit();
@@ -73,6 +71,9 @@ public class RecordManager {
             if (preferences.getBoolean("RANDOM", false)) {
                 return;
             }
+
+            Toast.makeText(
+                    context, "Creating test data, please wait.", Toast.LENGTH_LONG).show();
 
             randomDataCreater();
 

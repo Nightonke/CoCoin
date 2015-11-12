@@ -40,6 +40,8 @@ public class MonthViewFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
 
+    private boolean IS_EMPTY = false;
+
     public static MonthViewFragment newInstance(int position, int monthNumber) {
         MonthViewFragment fragment = new MonthViewFragment();
         Bundle args = new Bundle();
@@ -57,6 +59,7 @@ public class MonthViewFragment extends Fragment {
         mContext = getContext();
         position = getArguments() != null ? getArguments().getInt("POSITION") : 1;
         monthNumber = getArguments() != null ? getArguments().getInt("MONTH_NUMBER") : 1;
+        IS_EMPTY = (monthNumber == -1);
     }
 
     @Override
@@ -74,43 +77,50 @@ public class MonthViewFragment extends Fragment {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
 
-        RecordManager recordManager = RecordManager.getInstance(mContext.getApplicationContext());
+        if (!IS_EMPTY) {
 
-        int startYear = recordManager.RECORDS.get(0).getCalendar().get(Calendar.YEAR);
-        int startMonth = recordManager.RECORDS.get(0).getCalendar().get(Calendar.MONTH);
-        int nowYear = startYear + (startMonth + (monthNumber - position - 1)) / 12;
-        int nowMonth = (startMonth + (monthNumber - position - 1)) % 12;
+            RecordManager recordManager = RecordManager.getInstance(mContext.getApplicationContext());
 
-        Calendar monthStart = Calendar.getInstance();
-        Calendar monthEnd = Calendar.getInstance();
+            int startYear = recordManager.RECORDS.get(0).getCalendar().get(Calendar.YEAR);
+            int startMonth = recordManager.RECORDS.get(0).getCalendar().get(Calendar.MONTH);
+            int nowYear = startYear + (startMonth + (monthNumber - position - 1)) / 12;
+            int nowMonth = (startMonth + (monthNumber - position - 1)) % 12;
 
-        monthStart.set(nowYear, nowMonth, 1, 0, 0, 0);
-        monthStart.add(Calendar.MILLISECOND, 0);
+            Calendar monthStart = Calendar.getInstance();
+            Calendar monthEnd = Calendar.getInstance();
 
-        monthEnd.set(
-                nowYear, nowMonth, monthStart.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
-        monthEnd.add(Calendar.MILLISECOND, 0);
+            monthStart.set(nowYear, nowMonth, 1, 0, 0, 0);
+            monthStart.add(Calendar.MILLISECOND, 0);
 
-        Calendar leftRange = Util.GetThisWeekLeftRange(monthStart);
-        Calendar rightRange = Util.GetThisWeekRightRange(monthEnd);
+            monthEnd.set(
+                    nowYear, nowMonth, monthStart.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+            monthEnd.add(Calendar.MILLISECOND, 0);
 
-        int start = -1;
-        int end = 0;
+            Calendar leftRange = Util.GetThisWeekLeftRange(monthStart);
+            Calendar rightRange = Util.GetThisWeekRightRange(monthEnd);
 
-        for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
-            if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
-                end = i + 1;
-                break;
-            } else if (recordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
-                if (start == -1) {
-                    start = i;
+            int start = -1;
+            int end = 0;
+
+            for (int i = recordManager.RECORDS.size() - 1; i >= 0; i--) {
+                if (recordManager.RECORDS.get(i).getCalendar().before(leftRange)) {
+                    end = i + 1;
+                    break;
+                } else if (recordManager.RECORDS.get(i).getCalendar().before(rightRange)) {
+                    if (start == -1) {
+                        start = i;
+                    }
                 }
             }
-        }
 
-        mAdapter = new RecyclerViewMaterialAdapter(
-                new MonthViewRecyclerViewAdapter(start, end, mContext, position, monthNumber));
-        mRecyclerView.setAdapter(mAdapter);
+            mAdapter = new RecyclerViewMaterialAdapter(
+                    new MonthViewRecyclerViewAdapter(start, end, mContext, position, monthNumber));
+            mRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter = new RecyclerViewMaterialAdapter(
+                    new MonthViewRecyclerViewAdapter(-1, -1, mContext, 0, -1));
+            mRecyclerView.setAdapter(mAdapter);
+        }
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
     }

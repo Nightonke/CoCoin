@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.github.florent37.materialviewpager.Utils;
 import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
 import com.nightonke.saver.model.Record;
@@ -69,6 +70,8 @@ public class MonthViewRecyclerViewAdapter
     private int startYear;
     private int startMonth;
 
+    private boolean IS_EMPTY = false;
+
     public MonthViewRecyclerViewAdapter(
             int start, int end, Context context, int position, int monthNumber) {
         list = new ArrayList<>();
@@ -83,113 +86,44 @@ public class MonthViewRecyclerViewAdapter
             }
         }
 
-        startYear = recordManager.RECORDS.get(0).getCalendar().get(Calendar.YEAR);
-        startMonth = recordManager.RECORDS.get(0).getCalendar().get(Calendar.MONTH);
+        IS_EMPTY = list.isEmpty();
 
-        sliceValuesList = new ArrayList<>();
-        TagExpanseList = new ArrayList<>();
-        ExpanseList = new ArrayList<>();
-        pieChartDataList = new ArrayList<>();
-        SumList = new ArrayList<>();
-        selectedPositionList = new ArrayList<>();
-        dateStringList = new ArrayList<>();
-        dateShownStringList = new ArrayList<>();
+        if (!IS_EMPTY) {
 
-        int nowYear = startYear + (startMonth + (monthNumber - fragmentPosition - 1)) / 12;
-        int nowMonth = (startMonth + (monthNumber - fragmentPosition - 1)) % 12;
+            startYear = recordManager.RECORDS.get(0).getCalendar().get(Calendar.YEAR);
+            startMonth = recordManager.RECORDS.get(0).getCalendar().get(Calendar.MONTH);
 
-        Map<Integer, Double> TagExpanse;
-        Map<Integer, ArrayList<Record>> Expanse;
-        List<SliceValue> sliceValues;
-        PieChartData pieChartData;
-        double Sum = 0;
-        TagExpanse = new TreeMap<>();
-        Expanse = new HashMap<>();
-        sliceValues = new ArrayList<>();
+            sliceValuesList = new ArrayList<>();
+            TagExpanseList = new ArrayList<>();
+            ExpanseList = new ArrayList<>();
+            pieChartDataList = new ArrayList<>();
+            SumList = new ArrayList<>();
+            selectedPositionList = new ArrayList<>();
+            dateStringList = new ArrayList<>();
+            dateShownStringList = new ArrayList<>();
 
-        // for this month
-        dateStringList.add(Util.GetMonthShort(nowMonth + 1) + " " + nowYear);
-        dateShownStringList.add(" in " + Util.MONTHS_SHORT[nowMonth + 1] + " " + nowYear);
-        selectedPositionList.add(0);
-        for (int j = 2; j < recordManager.TAGS.size(); j++) {
-            TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
-            Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
-        }
-        for (Record record : list) {
-            if (record.getCalendar().get(Calendar.MONTH) == nowMonth) {
-                TagExpanse.put(record.getTag(),
-                        TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
-                Expanse.get(record.getTag()).add(record);
-                Sum += record.getMoney();
-            }
-        }
+            int nowYear = startYear + (startMonth + (monthNumber - fragmentPosition - 1)) / 12;
+            int nowMonth = (startMonth + (monthNumber - fragmentPosition - 1)) % 12;
 
-        TagExpanse = Util.SortTreeMapByValues(TagExpanse);
-
-        for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
-            if (entry.getValue() >= 1) {
-                // Todo optimize the GetTagColor
-                SliceValue sliceValue = new SliceValue(
-                        (float)(double)entry.getValue(),
-                        mContext.getResources().
-                                getColor(Util.GetTagColor(entry.getKey())));
-                sliceValue.setLabel(String.valueOf(entry.getKey()));
-                sliceValues.add(sliceValue);
-            }
-        }
-        sliceValuesList.add(sliceValues);
-
-        TagExpanseList.add(TagExpanse);
-        ExpanseList.add(Expanse);
-        SumList.add(Sum);
-        pieChartData = new PieChartData(sliceValues);
-        pieChartData.setHasLabels(false);
-        pieChartData.setHasLabelsOnlyForSelected(false);
-        pieChartData.setHasLabelsOutside(false);
-        pieChartData.setHasCenterCircle(false);
-        pieChartDataList.add(pieChartData);
-
-        // for each week
-        Calendar now = Calendar.getInstance();
-        now.set(nowYear, nowMonth, 1, 0, 0, 0);
-        now.add(Calendar.SECOND, 0);
-
-        Calendar monthEnd = Calendar.getInstance();
-        monthEnd.set(
-                nowYear, nowMonth, now.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
-        monthEnd.add(Calendar.SECOND, 0);
-
-
-        while (!now.after(monthEnd)) {
-            Calendar leftWeekRange = Util.GetThisWeekLeftRange(now);
-            Calendar rightWeekRange = Util.GetThisWeekRightRange(now);
-            Calendar rightShownWeekRange = Util.GetThisWeekRightShownRange(now);
-            String dateString = Util.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
-                    leftWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
-                    leftWeekRange.get(Calendar.YEAR) + " - " +
-                    Util.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
-                    rightShownWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
-                    rightShownWeekRange.get(Calendar.YEAR);
-            dateStringList.add(dateString);
-            dateShownStringList.add(" from " +
-                    Util.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
-                    leftWeekRange.get(Calendar.DAY_OF_MONTH) + " to " +
-                    Util.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
-                    rightShownWeekRange.get(Calendar.DAY_OF_MONTH));
-            selectedPositionList.add(0);
-
-            Sum = 0;
+            Map<Integer, Double> TagExpanse;
+            Map<Integer, ArrayList<Record>> Expanse;
+            List<SliceValue> sliceValues;
+            PieChartData pieChartData;
+            double Sum = 0;
             TagExpanse = new TreeMap<>();
             Expanse = new HashMap<>();
             sliceValues = new ArrayList<>();
 
+            // for this month
+            dateStringList.add(Util.GetMonthShort(nowMonth + 1) + " " + nowYear);
+            dateShownStringList.add(" in " + Util.MONTHS_SHORT[nowMonth + 1] + " " + nowYear);
+            selectedPositionList.add(0);
             for (int j = 2; j < recordManager.TAGS.size(); j++) {
                 TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
                 Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
             }
             for (Record record : list) {
-                if (!record.getCalendar().before(leftWeekRange) &&
-                        record.getCalendar().before(rightWeekRange)) {
+                if (record.getCalendar().get(Calendar.MONTH) == nowMonth) {
                     TagExpanse.put(record.getTag(),
                             TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
                     Expanse.get(record.getTag()).add(record);
@@ -203,7 +137,7 @@ public class MonthViewRecyclerViewAdapter
                 if (entry.getValue() >= 1) {
                     // Todo optimize the GetTagColor
                     SliceValue sliceValue = new SliceValue(
-                            (float)(double)entry.getValue(),
+                            (float) (double) entry.getValue(),
                             mContext.getResources().
                                     getColor(Util.GetTagColor(entry.getKey())));
                     sliceValue.setLabel(String.valueOf(entry.getKey()));
@@ -222,7 +156,81 @@ public class MonthViewRecyclerViewAdapter
             pieChartData.setHasCenterCircle(false);
             pieChartDataList.add(pieChartData);
 
-            now = Util.GetNextWeekLeftRange(now);
+            // for each week
+            Calendar now = Calendar.getInstance();
+            now.set(nowYear, nowMonth, 1, 0, 0, 0);
+            now.add(Calendar.SECOND, 0);
+
+            Calendar monthEnd = Calendar.getInstance();
+            monthEnd.set(
+                    nowYear, nowMonth, now.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+            monthEnd.add(Calendar.SECOND, 0);
+
+
+            while (!now.after(monthEnd)) {
+                Calendar leftWeekRange = Util.GetThisWeekLeftRange(now);
+                Calendar rightWeekRange = Util.GetThisWeekRightRange(now);
+                Calendar rightShownWeekRange = Util.GetThisWeekRightShownRange(now);
+                String dateString = Util.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
+                        leftWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
+                        leftWeekRange.get(Calendar.YEAR) + " - " +
+                        Util.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
+                        rightShownWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
+                        rightShownWeekRange.get(Calendar.YEAR);
+                dateStringList.add(dateString);
+                dateShownStringList.add(" from " +
+                        Util.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
+                        leftWeekRange.get(Calendar.DAY_OF_MONTH) + " to " +
+                        Util.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
+                        rightShownWeekRange.get(Calendar.DAY_OF_MONTH));
+                selectedPositionList.add(0);
+
+                Sum = 0;
+                TagExpanse = new TreeMap<>();
+                Expanse = new HashMap<>();
+                sliceValues = new ArrayList<>();
+
+                for (int j = 2; j < recordManager.TAGS.size(); j++) {
+                    TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
+                    Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
+                }
+                for (Record record : list) {
+                    if (!record.getCalendar().before(leftWeekRange) &&
+                            record.getCalendar().before(rightWeekRange)) {
+                        TagExpanse.put(record.getTag(),
+                                TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
+                        Expanse.get(record.getTag()).add(record);
+                        Sum += record.getMoney();
+                    }
+                }
+
+                TagExpanse = Util.SortTreeMapByValues(TagExpanse);
+
+                for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
+                    if (entry.getValue() >= 1) {
+                        // Todo optimize the GetTagColor
+                        SliceValue sliceValue = new SliceValue(
+                                (float) (double) entry.getValue(),
+                                mContext.getResources().
+                                        getColor(Util.GetTagColor(entry.getKey())));
+                        sliceValue.setLabel(String.valueOf(entry.getKey()));
+                        sliceValues.add(sliceValue);
+                    }
+                }
+                sliceValuesList.add(sliceValues);
+
+                TagExpanseList.add(TagExpanse);
+                ExpanseList.add(Expanse);
+                SumList.add(Sum);
+                pieChartData = new PieChartData(sliceValues);
+                pieChartData.setHasLabels(false);
+                pieChartData.setHasLabelsOnlyForSelected(false);
+                pieChartData.setHasLabelsOutside(false);
+                pieChartData.setHasCenterCircle(false);
+                pieChartDataList.add(pieChartData);
+
+                now = Util.GetNextWeekLeftRange(now);
+            }
         }
     }
 
@@ -266,58 +274,69 @@ public class MonthViewRecyclerViewAdapter
     @Override
     public void onBindViewHolder(final viewHolder holder, final int position) {
 
-        holder.date.setText(dateStringList.get(position));
-        holder.expanseSum.setText(String.valueOf((int)(double)SumList.get(position)));
-
-        holder.date.setTypeface(Util.GetTypeface());
-        holder.expanseSum.setTypeface(Util.typefaceLatoLight);
-
-        if (SumList.get(position).equals(Double.valueOf(0))) {
-            holder.emptyTip.setVisibility(View.VISIBLE);
-            holder.emptyTip.setTypeface(Util.typefaceLatoLight);
+        if (IS_EMPTY) {
+            holder.expanseSum.setText("0");
+            holder.expanseSum.setTypeface(Util.typefaceLatoLight);
+            holder.emptyTip.setText(mContext.getResources().getString(R.string.tag_empty));
+            holder.emptyTip.setTypeface(Util.GetTypeface());
+            holder.date.setVisibility(View.INVISIBLE);
+            holder.pie.setVisibility(View.INVISIBLE);
+            holder.iconLeft.setVisibility(View.INVISIBLE);
+            holder.iconRight.setVisibility(View.INVISIBLE);
         } else {
-            holder.emptyTip.setVisibility(View.INVISIBLE);
-        }
+            holder.date.setText(dateStringList.get(position));
+            holder.expanseSum.setText(String.valueOf((int)(double)SumList.get(position)));
 
-        holder.pie.setPieChartData(pieChartDataList.get(position));
-        holder.pie.setOnValueTouchListener(new PieValueTouchListener(position));
-        holder.pie.setChartRotationEnabled(false);
+            holder.date.setTypeface(Util.GetTypeface());
+            holder.expanseSum.setTypeface(Util.typefaceLatoLight);
 
-        if (!SumList.get(position).equals(Double.valueOf(0))) {
-            holder.iconRight.setVisibility(View.VISIBLE);
-            holder.iconRight.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectedPositionList.set(position,
-                            (selectedPositionList.get(position) + 1)
-                            % sliceValuesList.get(position).size());
-                    SelectedValue selectedValue =
-                            new SelectedValue(
-                                    selectedPositionList.get(position),
-                                    0,
-                                    SelectedValue.SelectedValueType.NONE);
-                    holder.pie.selectValue(selectedValue);
-                }
-            });
-            holder.iconLeft.setVisibility(View.VISIBLE);
-            holder.iconLeft.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    selectedPositionList.set(position,
-                            (selectedPositionList.get(position) - 1
-                                    + sliceValuesList.get(position).size())
-                            % sliceValuesList.get(position).size());
-                    SelectedValue selectedValue =
-                            new SelectedValue(
-                                    selectedPositionList.get(position),
-                                    0,
-                                    SelectedValue.SelectedValueType.NONE);
-                    holder.pie.selectValue(selectedValue);
-                }
-            });
-        } else {
-            holder.iconLeft.setVisibility(View.GONE);
-            holder.iconRight.setVisibility(View.GONE);
+            if (SumList.get(position).equals(Double.valueOf(0))) {
+                holder.emptyTip.setVisibility(View.VISIBLE);
+                holder.emptyTip.setTypeface(Util.typefaceLatoLight);
+            } else {
+                holder.emptyTip.setVisibility(View.INVISIBLE);
+            }
+
+            holder.pie.setPieChartData(pieChartDataList.get(position));
+            holder.pie.setOnValueTouchListener(new PieValueTouchListener(position));
+            holder.pie.setChartRotationEnabled(false);
+
+            if (!SumList.get(position).equals(Double.valueOf(0))) {
+                holder.iconRight.setVisibility(View.VISIBLE);
+                holder.iconRight.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectedPositionList.set(position,
+                                (selectedPositionList.get(position) + 1)
+                                        % sliceValuesList.get(position).size());
+                        SelectedValue selectedValue =
+                                new SelectedValue(
+                                        selectedPositionList.get(position),
+                                        0,
+                                        SelectedValue.SelectedValueType.NONE);
+                        holder.pie.selectValue(selectedValue);
+                    }
+                });
+                holder.iconLeft.setVisibility(View.VISIBLE);
+                holder.iconLeft.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectedPositionList.set(position,
+                                (selectedPositionList.get(position) - 1
+                                        + sliceValuesList.get(position).size())
+                                        % sliceValuesList.get(position).size());
+                        SelectedValue selectedValue =
+                                new SelectedValue(
+                                        selectedPositionList.get(position),
+                                        0,
+                                        SelectedValue.SelectedValueType.NONE);
+                        holder.pie.selectValue(selectedValue);
+                    }
+                });
+            } else {
+                holder.iconLeft.setVisibility(View.GONE);
+                holder.iconRight.setVisibility(View.GONE);
+            }
         }
 
     }

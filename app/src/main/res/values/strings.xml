@@ -145,4 +145,8 @@
     <string name="from">From</string>
     <string name="to">To</string>
 
+    <string name="search">Search</string>
+
+    <string name="tag_empty">No records!</string>
+
 </resources>

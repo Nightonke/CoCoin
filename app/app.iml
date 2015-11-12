@@ -89,12 +89,14 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.h6ah4i.android.widget.advrecyclerview/advrecyclerview/0.8.4/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jpardogo.materialtabstrip/library/1.1.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.jungly/GridPasswordView/0.2/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.miguelcatalan/materialsearchview/1.3.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.nispok/snackbar/2.11.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.ogaclejapan.smarttablayout/library/1.4.2/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.ogaclejapan.smarttablayout/utils-v4/1.4.2/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.rengwuxian.materialedittext/library/2.1.4/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.squareup.leakcanary/leakcanary-android/1.3.1/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.victor/lib/1.0.1/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.wnafee/vector-compat/1.0.5/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/de.hdodenhof/circleimageview/2.0.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/in.srain.cube/ultra-ptr/1.0.11/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/net.steamcrafted/materialiconlib/1.0.5/jars" />
@@ -141,8 +143,10 @@
     <orderEntry type="library" exported="" name="advrecyclerview-0.8.4" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.1.0" level="project" />
     <orderEntry type="library" exported="" name="snackbar-2.11.0" level="project" />
+    <orderEntry type="library" exported="" name="vector-compat-1.0.5" level="project" />
     <orderEntry type="library" exported="" name="library-2.4.0" level="project" />
     <orderEntry type="library" exported="" name="library-2.1.4" level="project" />
+    <orderEntry type="library" exported="" name="materialsearchview-1.3.0" level="project" />
     <orderEntry type="library" exported="" name="android-observablescrollview-1.5.2" level="project" />
     <orderEntry type="library" exported="" name="materialiconlib-1.0.5" level="project" />
     <orderEntry type="library" exported="" name="GridPasswordView-0.2" level="project" />

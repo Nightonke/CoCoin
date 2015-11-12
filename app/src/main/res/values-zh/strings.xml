@@ -137,4 +137,8 @@
     <string name="from">从</string>
     <string name="to">到</string>
 
+    <string name="search">查找</string>
+
+    <string name="tag_empty">无记录</string>
+
 </resources>

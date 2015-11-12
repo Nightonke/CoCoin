@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -169,6 +171,15 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
 
     }
 
+    private void loadListMode() {
+
+        Log.d("Saver", "LIST_MODE");
+
+        Intent intent = new Intent(mContext, AccountBookListViewActivity.class);
+        startActivity(intent);
+
+    }
+
     private void loadSettings() {
 
         Log.d("Saver", "SETTINGS");
@@ -206,6 +217,15 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
                 super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mDrawer.isDrawerOpen(GravityCompat.START)) {
+            mDrawer.closeDrawers();
+            return;
+        }
+        super.onBackPressed();
+    }
+
     private void setFonts() {
         userName.setTypeface(Util.typefaceLatoRegular);
         userEmail.setTypeface(Util.typefaceLatoLight);
@@ -236,6 +256,12 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadSettings();
+            }
+        });
+        list.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadListMode();
             }
         });
     }

@@ -70,4 +70,10 @@ dependencies {
         transitive=true
     }
     compile 'de.hdodenhof:circleimageview:2.0.0'
+
+    dependencies {
+        compile 'com.miguelcatalan:materialsearchview:1.3.0'
+    }
+
+    compile 'com.wnafee:vector-compat:1.0.5'
 }

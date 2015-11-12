@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,7 +91,10 @@ public class TagViewRecyclerViewAdapter
     private int fragmentPosition;
     private int fragmentTagId;
 
+    private boolean IS_EMPTY = false;
+
     public TagViewRecyclerViewAdapter(List<Record> records, Context context, int position) {
+
         mContext = context;
         fragmentPosition = position;
         if (position == 0) {
@@ -101,33 +105,48 @@ public class TagViewRecyclerViewAdapter
             chartType = HISTOGRAM;
         }
 
+        IS_EMPTY = records.isEmpty();
+
         Sum = 0;
-        Collections.sort(records, new Comparator<Record>() {
-            @Override
-            public int compare(Record lhs, Record rhs) {
-                return rhs.getCalendar().compareTo(lhs.getCalendar());
-            }
-        });
-        contents = new ArrayList<>();
-        SumList = new ArrayList<>();
-        type = new ArrayList<>();
-        year = records.get(0).getCalendar().get(Calendar.YEAR);
-        month = records.get(0).getCalendar().get(Calendar.MONTH) + 1;
-        endYear = year;
-        endMonth = month;
-        int yearPosition = 0;
-        double monthSum = 0;
-        double yearSum = 0;
-        List<Record> yearSet = new ArrayList<>();
-        List<Record> monthSet = new ArrayList<>();
-        for (Record record : records) {
-            Sum += record.getMoney();
-            if (record.getCalendar().get(Calendar.YEAR) == year) {
-                yearSet.add(record);
-                yearSum += record.getMoney();
-                if (record.getCalendar().get(Calendar.MONTH) == month - 1) {
-                    monthSet.add(record);
-                    monthSum += record.getMoney();
+
+        if (!IS_EMPTY) {
+
+            Collections.sort(records, new Comparator<Record>() {
+                @Override
+                public int compare(Record lhs, Record rhs) {
+                    return rhs.getCalendar().compareTo(lhs.getCalendar());
+                }
+            });
+            contents = new ArrayList<>();
+            SumList = new ArrayList<>();
+            type = new ArrayList<>();
+            year = records.get(0).getCalendar().get(Calendar.YEAR);
+            month = records.get(0).getCalendar().get(Calendar.MONTH) + 1;
+            endYear = year;
+            endMonth = month;
+            int yearPosition = 0;
+            double monthSum = 0;
+            double yearSum = 0;
+            List<Record> yearSet = new ArrayList<>();
+            List<Record> monthSet = new ArrayList<>();
+
+            for (Record record : records) {
+                Sum += record.getMoney();
+                if (record.getCalendar().get(Calendar.YEAR) == year) {
+                    yearSet.add(record);
+                    yearSum += record.getMoney();
+                    if (record.getCalendar().get(Calendar.MONTH) == month - 1) {
+                        monthSet.add(record);
+                        monthSum += record.getMoney();
+                    } else {
+                        contents.add(monthSet);
+                        SumList.add(monthSum);
+                        monthSum = record.getMoney();
+                        type.add(SHOW_IN_MONTH);
+                        monthSet = new ArrayList<>();
+                        monthSet.add(record);
+                        month = record.getCalendar().get(Calendar.MONTH) + 1;
+                    }
                 } else {
                     contents.add(monthSet);
                     SumList.add(monthSum);
@@ -136,87 +155,79 @@ public class TagViewRecyclerViewAdapter
                     monthSet = new ArrayList<>();
                     monthSet.add(record);
                     month = record.getCalendar().get(Calendar.MONTH) + 1;
-                }
-            } else {
-                contents.add(monthSet);
-                SumList.add(monthSum);
-                monthSum = record.getMoney();
-                type.add(SHOW_IN_MONTH);
-                monthSet = new ArrayList<>();
-                monthSet.add(record);
-                month = record.getCalendar().get(Calendar.MONTH) + 1;
 
-                contents.add(yearPosition, yearSet);
-                SumList.add(yearPosition, yearSum);
-                yearSum = record.getMoney();
-                type.add(yearPosition, SHOW_IN_YEAR);
-                yearPosition = contents.size();
-                yearSet = new ArrayList<>();
-                yearSet.add(record);
-                year = record.getCalendar().get(Calendar.YEAR);
-                monthSet = new ArrayList<>();
-                monthSet.add(record);
-                month = record.getCalendar().get(Calendar.MONTH) + 1;
+                    contents.add(yearPosition, yearSet);
+                    SumList.add(yearPosition, yearSum);
+                    yearSum = record.getMoney();
+                    type.add(yearPosition, SHOW_IN_YEAR);
+                    yearPosition = contents.size();
+                    yearSet = new ArrayList<>();
+                    yearSet.add(record);
+                    year = record.getCalendar().get(Calendar.YEAR);
+                    monthSet = new ArrayList<>();
+                    monthSet.add(record);
+                    month = record.getCalendar().get(Calendar.MONTH) + 1;
+                }
             }
-        }
-        contents.add(monthSet);
-        SumList.add(monthSum);
-        type.add(SHOW_IN_MONTH);
-        contents.add(yearPosition, yearSet);
-        SumList.add(yearPosition, yearSum);
-        type.add(yearPosition, SHOW_IN_YEAR);
+            contents.add(monthSet);
+            SumList.add(monthSum);
+            type.add(SHOW_IN_MONTH);
+            contents.add(yearPosition, yearSet);
+            SumList.add(yearPosition, yearSum);
+            type.add(yearPosition, SHOW_IN_YEAR);
 
-        startYear = year;
-        startMonth = month;
+            startYear = year;
+            startMonth = month;
 
-        if (chartType == PIE) {
-            AllTagExpanse = new ArrayList<>();
-            for (int i = 0; i < contents.size(); i++) {
+            if (chartType == PIE) {
+                AllTagExpanse = new ArrayList<>();
+                for (int i = 0; i < contents.size(); i++) {
 
-                Map<Integer, Double> tagExpanse = new TreeMap<>();
+                    Map<Integer, Double> tagExpanse = new TreeMap<>();
 
-                for (Tag tag : RecordManager.TAGS) {
-                    tagExpanse.put(tag.getId(), Double.valueOf(0));
+                    for (Tag tag : RecordManager.TAGS) {
+                        tagExpanse.put(tag.getId(), Double.valueOf(0));
+                    }
+
+                    for (Record record : contents.get(i)) {
+                        double d = tagExpanse.get(record.getTag());
+                        d += record.getMoney();
+                        tagExpanse.put(record.getTag(), d);
+                    }
+
+                    tagExpanse = Util.SortTreeMapByValues(tagExpanse);
+
+                    AllTagExpanse.add(tagExpanse);
                 }
-
-                for (Record record : contents.get(i)) {
-                    double d = tagExpanse.get(record.getTag());
-                    d += record.getMoney();
-                    tagExpanse.put(record.getTag(), d);
-                }
-
-                tagExpanse = Util.SortTreeMapByValues(tagExpanse);
-
-                AllTagExpanse.add(tagExpanse);
             }
-        }
 
-        if (chartType == SUM_HISTOGRAM) {
-            DayExpanseSum = new int[(endYear - startYear + 1) * 372];
+            if (chartType == SUM_HISTOGRAM) {
+                DayExpanseSum = new int[(endYear - startYear + 1) * 372];
+                for (Record record : records) {
+                    DayExpanseSum[(record.getCalendar().get(Calendar.YEAR) - startYear) * 372 +
+                            record.getCalendar().get(Calendar.MONTH) * 31 +
+                            record.getCalendar().get(Calendar.DAY_OF_MONTH) - 1] += (int) record.getMoney();
+                }
+            }
+
+            MonthExpanseSum = new int[(endYear - startYear + 1) * 12];
             for (Record record : records) {
-                DayExpanseSum[(record.getCalendar().get(Calendar.YEAR) - startYear) * 372 +
-                        record.getCalendar().get(Calendar.MONTH) * 31 +
-                        record.getCalendar().get(Calendar.DAY_OF_MONTH) - 1] += (int)record.getMoney();
+                MonthExpanseSum[(record.getCalendar().get(Calendar.YEAR) - startYear) * 12 +
+                        record.getCalendar().get(Calendar.MONTH)] += (int) record.getMoney();
             }
-        }
 
-        MonthExpanseSum = new int[(endYear - startYear + 1) * 12];
-        for (Record record : records) {
-            MonthExpanseSum[(record.getCalendar().get(Calendar.YEAR) - startYear) * 12 +
-                    record.getCalendar().get(Calendar.MONTH)] += (int)record.getMoney();
-        }
+            SelectedPosition = new int[contents.size() + 1];
+            for (int i = 0; i < SelectedPosition.length; i++) {
+                SelectedPosition[i] = 0;
+            }
 
-        SelectedPosition = new int[contents.size() + 1];
-        for (int i = 0; i < SelectedPosition.length; i++) {
-            SelectedPosition[i] = 0;
-        }
-
-        fragmentTagId = contents.get(0).get(0).getTag();
-        if (fragmentPosition == 0) {
-            fragmentTagId = -2;
-        }
-        if (fragmentPosition == 1) {
-            fragmentTagId = -1;
+            fragmentTagId = contents.get(0).get(0).getTag();
+            if (fragmentPosition == 0) {
+                fragmentTagId = -2;
+            }
+            if (fragmentPosition == 1) {
+                fragmentTagId = -1;
+            }
         }
     }
 
@@ -232,11 +243,13 @@ public class TagViewRecyclerViewAdapter
 
     @Override
     public int getItemCount() {
+        if (IS_EMPTY) return 1;
         return contents.size() + 1;
     }
 
     @Override
-    public TagViewRecyclerViewAdapter.viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public TagViewRecyclerViewAdapter.viewHolder onCreateViewHolder(
+            ViewGroup parent, int viewType) {
 
         View view;
 
@@ -276,16 +289,23 @@ public class TagViewRecyclerViewAdapter
 
         switch (getItemViewType(position)) {
             case TYPE_HEADER:
-                holder.from.setText(
-                        mContext.getResources().getString(R.string.from) + " " +
-                        startYear + " " + Util.GetMonthShort(startMonth));
-                holder.sum.setText((int)Sum + "");
-                holder.to.setText(
-                        mContext.getResources().getString(R.string.to) + " " +
-                        endYear + " " + Util.GetMonthShort(endMonth));
-                holder.from.setTypeface(Util.GetTypeface());
+                if (IS_EMPTY) {
+                    holder.sum.setText(mContext.getResources().getString(R.string.tag_empty));
+                    holder.sum.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
+                    holder.from.setVisibility(View.INVISIBLE);
+                    holder.to.setVisibility(View.INVISIBLE);
+                } else {
+                    holder.from.setText(
+                            mContext.getResources().getString(R.string.from) + " " +
+                                    startYear + " " + Util.GetMonthShort(startMonth));
+                    holder.sum.setText((int) Sum + "");
+                    holder.to.setText(
+                            mContext.getResources().getString(R.string.to) + " " +
+                                    endYear + " " + Util.GetMonthShort(endMonth));
+                    holder.to.setTypeface(Util.GetTypeface());
+                    holder.from.setTypeface(Util.GetTypeface());
+                }
                 holder.sum.setTypeface(Util.typefaceLatoLight);
-                holder.to.setTypeface(Util.GetTypeface());
                 break;
             case TYPE_CELL:
                 int year = contents.get(position - 1).get(0).getCalendar().get(Calendar.YEAR);
