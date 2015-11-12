@@ -3,13 +3,13 @@
     package="com.nightonke.saver" >
 
     <application
-        android:name=".myApplication"
+        android:name=".activity.CoCoinApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppThemeMain" >
             <intent-filter>
@@ -19,23 +19,23 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AccountBookTodayViewActivity"
+            android:name=".activity.AccountBookTodayViewActivity"
             android:label="@string/title_activity_account_book"
             android:launchMode="singleTop"
             android:theme="@style/AppTheme" >
         </activity>
         <activity
-            android:name=".AccountBookTagViewActivity"
+            android:name=".activity.AccountBookTagViewActivity"
             android:launchMode="singleTop"
             android:label="@string/title_activity_tag_setting" >
         </activity>
         <activity
-            android:name=".AccountBookMonthViewActivity"
+            android:name=".activity.AccountBookMonthViewActivity"
             android:launchMode="singleTop"
             android:label="@string/title_activity_tag_setting" >
         </activity>
         <activity
-            android:name=".TagSettingActivity"
+            android:name=".activity.TagSettingActivity"
             android:launchMode="singleTop"
             android:label="@string/title_activity_tag_setting" >
         </activity>
