@@ -141,4 +141,8 @@
 
     <string name="tag_empty">无记录</string>
 
+    <string name="undo">撤销</string>
+
+    <string name="deleting">删除这条记录</string>
+
 </resources>

@@ -34,9 +34,9 @@ public class RecordManager {
     public static Map<Integer, String> TAG_NAMES;
 
     public static boolean SHOW_LOG = false;
-    public static boolean RANDOM_DATA = false;
-    private final int RANDOM_DATA_NUMBER_ON_EACH_DAY = 8;
-    private final int RANDOM_DATA_EXPENSE_ON_EACH_DAY = 20;
+    public static boolean RANDOM_DATA = true;
+    private final int RANDOM_DATA_NUMBER_ON_EACH_DAY = 3;
+    private final int RANDOM_DATA_EXPENSE_ON_EACH_DAY = 30;
 
     private static boolean FIRST_TIME = true;
 
@@ -167,7 +167,7 @@ public class RecordManager {
         return insertId;
     }
 
-    public static long deleteRecord(long id) {
+    public static long deleteRecord(long id, boolean deleteInList) {
         long deletedId = -1;
         Log.d("Saver",
                 "Manager: Delete record: " + "Record(id = " + id + ", deletedId = " + deletedId + ")");
@@ -176,10 +176,12 @@ public class RecordManager {
             Log.d("Saver", "Delete the above record FAIL!");
         } else {
             Log.d("Saver", "Delete the above record SUCCESSFULLY!");
-            for (Record record : RECORDS) {
-                if (record.getId() == deletedId) {
-                    RECORDS.remove(record);
-                    break;
+            if (deleteInList) {
+                for (Record record : RECORDS) {
+                    if (record.getId() == deletedId) {
+                        RECORDS.remove(record);
+                        break;
+                    }
                 }
             }
         }

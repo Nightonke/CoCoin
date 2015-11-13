@@ -12,7 +12,7 @@
         android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#2196F3"
+        android:background="@color/bg_swipe_item_neutral"
         >
 
         <View
@@ -55,11 +55,27 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:background="#ffffff"
-                    >
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/empty_tip"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="No records!"
+                        android:textSize="15sp"
+                        android:textColor="@color/my_blue"
+                        />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        style="@style/myRecyclerViewStyle"
+                        android:scrollbars="none"
+                        />
 
                 </LinearLayout>
 

@@ -37,7 +37,8 @@ public class TodayViewFragment extends Fragment {
     private Context mContext;
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private RecyclerViewMaterialAdapter mAdapter;
+    private RecyclerView.Adapter adapter;
 
     private RecyclerView.LayoutManager layoutManager;
 
@@ -195,8 +196,9 @@ public class TodayViewFragment extends Fragment {
                 break;
         }
 
-        mAdapter = new RecyclerViewMaterialAdapter(
-                new TodayViewRecyclerViewAdapter(start, end, mContext, position));
+        adapter = new TodayViewRecyclerViewAdapter(start, end, mContext, position);
+
+        mAdapter = new RecyclerViewMaterialAdapter(adapter);
         mRecyclerView.setAdapter(mAdapter);
 
         MaterialViewPagerHelper.registerRecyclerView(getActivity(), mRecyclerView, null);
@@ -209,34 +211,6 @@ public class TodayViewFragment extends Fragment {
         RefWatcher refWatcher = CoCoinApplication.getRefWatcher(getActivity());
         refWatcher.watch(this);
 
-//        if (mContext != null) {
-//            MaterialViewPagerHelper.unregister(mContext);
-//        }
-
-//        if (mRecyclerView != null) {
-//            layoutManager.removeAllViews();
-//            mRecyclerView.removeAllViews();
-//            mRecyclerView.removeAllViewsInLayout();
-//        }
-//        mRecyclerView = null;
-//        mAdapter = null;
-//
-//        System.gc();
     }
-
-//    @Override
-//    public void onDestroyView() {
-//        super.onDestroyView();
-//
-//        if (mRecyclerView != null) {
-//            layoutManager.removeAllViews();
-//            mRecyclerView.removeAllViews();
-//            mRecyclerView.removeAllViewsInLayout();
-//        }
-//        mRecyclerView = null;
-//        mAdapter = null;
-//
-//        System.gc();
-//    }
 
 }

@@ -21,6 +21,7 @@ import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.R;
+import com.nightonke.saver.fragment.TodayViewFragment;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.adapter.TodayViewFragmentAdapter;
 import com.nightonke.saver.util.Util;
@@ -29,6 +30,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
 
     private final int SETTING_TAG = 0;
     private boolean TAG_CHANGED = false;
+    private final int CHANGING_RECORD = 1;
+    private boolean RECORD_CHANGED = false;
 
     private MaterialViewPager mViewPager;
 
@@ -176,7 +179,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         Log.d("Saver", "LIST_MODE");
 
         Intent intent = new Intent(mContext, AccountBookListViewActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, CHANGING_RECORD);
 
     }
 
@@ -199,7 +202,13 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
                     }
                 }
                 break;
-
+            case CHANGING_RECORD:
+                if (resultCode == RESULT_OK) {
+                    if (data.getBooleanExtra("IS_CHANGED", false)) {
+                        todayModeAdapter.notifyDataSetChanged();
+                    }
+                }
+                break;
             default:
                 break;
         }

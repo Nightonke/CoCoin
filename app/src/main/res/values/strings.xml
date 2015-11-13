@@ -149,4 +149,8 @@
 
     <string name="tag_empty">No records!</string>
 
+    <string name="undo">Undo</string>
+
+    <string name="deleting">Delete this record</string>
+
 </resources>

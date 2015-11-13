@@ -101,7 +101,7 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
         mViewPager.getViewPager().setOffscreenPageLimit(monthModeAdapter.getCount());
         mViewPager.getViewPager().setAdapter(monthModeAdapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
-        if (monthModeAdapter.IS_EMPTY) {
+        if (monthModeAdapter.getCount() == 1) {
             mViewPager.getPagerTitleStrip().setVisibility(View.INVISIBLE);
         }
 
