@@ -2,6 +2,7 @@
 <android.support.v4.widget.DrawerLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:recyclerviewfastscroller="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -53,31 +54,48 @@
                 android:layout_height="match_parent"
                 >
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <RelativeLayout
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/empty_tip"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:text="No records!"
-                        android:textSize="15sp"
-                        android:textColor="@color/my_blue"
-                        />
+                    android:layout_width="match_parent"
+                    android:paddingRight="-10dp">
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
                         style="@style/myRecyclerViewStyle"
                         android:scrollbars="none"
                         />
 
-                </LinearLayout>
+                    <xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller
+                        android:id="@+id/fast_scroller"
+                        android:layout_width="24dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="right"
+                        android:paddingRight="@dimen/margin_small"
+                        android:paddingEnd="@dimen/margin_small"
+
+                        recyclerviewfastscroller:rfs_barColor="@color/fastScrollBarColor"
+                        recyclerviewfastscroller:rfs_handleBackground="@drawable/my_fast_scroller_rounded"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="false"
+                        android:layout_alignParentEnd="true" />
+
+                    <TextView
+                        android:id="@+id/empty_tip"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/yesterday_empty"
+                        android:textSize="15sp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/my_blue"
+                        />
+
+                </RelativeLayout>
 
                 <View
                     android:layout_width="match_parent"

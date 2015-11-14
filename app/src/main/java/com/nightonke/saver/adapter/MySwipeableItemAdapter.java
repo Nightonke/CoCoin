@@ -6,14 +6,15 @@ package com.nightonke.saver.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.YoYo;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction;
@@ -23,6 +24,7 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.utils.RecyclerViewAdapterUtils;
 import com.nightonke.saver.R;
+import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.util.Util;
 
@@ -154,6 +156,7 @@ public class MySwipeableItemAdapter
 
             if ((swipeState & Swipeable.STATE_FLAG_IS_ACTIVE) != 0) {
                 bgResId = R.drawable.bg_item_swiping_active_state;
+                YoYo.with(new Util.MyShakeAnimator(10)).delay(0).duration(1000).playOn(holder.tagImage);
             } else if ((swipeState & Swipeable.STATE_FLAG_SWIPING) != 0) {
                 bgResId = R.drawable.bg_item_swiping_state;
             } else {
@@ -274,6 +277,10 @@ public class MySwipeableItemAdapter
         @Override
         protected void onPerformAction() {
             super.onPerformAction();
+            if (Util.backupRecord != null) {
+                RecordManager.deleteRecord(Util.backupRecord.getId(), false);
+            }
+            Util.backupRecord = null;
             Util.backupRecord
                     = RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - mPosition);
             RecordManager.RECORDS.remove(RecordManager.RECORDS.size() - 1 - mPosition);

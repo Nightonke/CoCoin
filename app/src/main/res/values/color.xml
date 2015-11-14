@@ -79,4 +79,7 @@
 
     <color name="snackbar_action_color_done">#ffccccff</color>
 
+    <color name="fastScrollHandleColor">#FFF</color>
+    <color name="fastScrollBarColor">#ffcecece</color>
+
 </resources>

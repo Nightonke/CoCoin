@@ -76,4 +76,6 @@ dependencies {
     }
 
     compile 'com.wnafee:vector-compat:1.0.5'
+
+    compile 'xyz.danoz:recyclerviewfastscroller:0.1.3'
 }

@@ -1,6 +1,5 @@
 package com.nightonke.saver.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -43,6 +42,8 @@ import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
+import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
+
 public class AccountBookListViewActivity extends AppCompatActivity {
 
     private MaterialSearchView searchView;
@@ -67,6 +68,8 @@ public class AccountBookListViewActivity extends AppCompatActivity {
     private Record lastRecord;
     private int lastPosition;
     private boolean undid = false;
+
+    private VerticalRecyclerViewFastScroller verticalRecyclerViewFastScroller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +119,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //Do some magic
+
                 Log.d("Saver", "onQueryTextSubmit");
                 return false;
             }
@@ -145,77 +149,95 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         emptyTip = (TextView)findViewById(R.id.empty_tip);
         emptyTip.setTypeface(Util.GetTypeface());
 
-        if (RecordManager.RECORDS.size() == 0) {
-            recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        } else {
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
 
-            emptyTip.setVisibility(View.GONE);
+        recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
+        recyclerViewTouchActionGuardManager.
+                setInterceptVerticalScrollingWhileAnimationRunning(true);
+        recyclerViewTouchActionGuardManager.setEnabled(true);
 
-            recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-            layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
+        recyclerViewSwipeManager = new RecyclerViewSwipeManager();
 
-            recyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
-            recyclerViewTouchActionGuardManager.
-                    setInterceptVerticalScrollingWhileAnimationRunning(true);
-            recyclerViewTouchActionGuardManager.setEnabled(true);
+        mAdapter = new MySwipeableItemAdapter(mContext);
+        mAdapter.setEventListener(new MySwipeableItemAdapter.EventListener() {
 
-            recyclerViewSwipeManager = new RecyclerViewSwipeManager();
-
-            mAdapter = new MySwipeableItemAdapter(mContext);
-            mAdapter.setEventListener(new MySwipeableItemAdapter.EventListener() {
-
-                @Override
-                public void onItemRemoved(int position) {
-                    activityOnItemRemoved(position);
-                }
-
-                @Override
-                public void onItemPinned(int position) {
-                    activityOnItemPinned(position);
-                }
-
-                @Override
-                public void onItemViewClicked(View v, boolean pinned) {
-                    int position = recyclerView.getChildAdapterPosition(v);
-                    if (position != RecyclerView.NO_POSITION) {
-                        activityOnItemClicked(position);
-                    }
-                }
-            });
-
-            adapter = mAdapter;
-            wrappedAdapter = recyclerViewSwipeManager.createWrappedAdapter(mAdapter);
-            final GeneralItemAnimator animator = new SwipeDismissItemAnimator();
-
-            animator.setSupportsChangeAnimations(false);
-
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(wrappedAdapter);
-            recyclerView.setItemAnimator(animator);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                // Lollipop or later has native drop shadow feature. ItemShadowDecorator is not required.
-            } else {
-                recyclerView.addItemDecoration(
-                        new ItemShadowDecorator(
-                                (NinePatchDrawable) ContextCompat.getDrawable(
-                                        mContext, R.drawable.material_shadow_z1)));
+            @Override
+            public void onItemRemoved(int position) {
+                activityOnItemRemoved(position);
             }
-            recyclerView.addItemDecoration(new SimpleListDividerDecorator(
-                    ContextCompat.getDrawable(mContext, R.drawable.list_divider_h), true));
 
-            // NOTE:
-            // The initialization order is very important! This order determines the priority of touch event handling.
-            //
-            // priority: TouchActionGuard > Swipe > DragAndDrop
-            recyclerViewTouchActionGuardManager.attachRecyclerView(recyclerView);
-            recyclerViewSwipeManager.attachRecyclerView(recyclerView);
+            @Override
+            public void onItemPinned(int position) {
+                activityOnItemPinned(position);
+            }
 
+            @Override
+            public void onItemViewClicked(View v, boolean pinned) {
+                int position = recyclerView.getChildAdapterPosition(v);
+                if (position != RecyclerView.NO_POSITION) {
+                    activityOnItemClicked(position);
+                }
+            }
+        });
+
+        adapter = mAdapter;
+        wrappedAdapter = recyclerViewSwipeManager.createWrappedAdapter(mAdapter);
+        final GeneralItemAnimator animator = new SwipeDismissItemAnimator();
+
+        animator.setSupportsChangeAnimations(false);
+
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(wrappedAdapter);
+        recyclerView.setItemAnimator(animator);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            // Lollipop or later has native drop shadow feature. ItemShadowDecorator is not required.
+        } else {
+            recyclerView.addItemDecoration(
+                    new ItemShadowDecorator(
+                            (NinePatchDrawable) ContextCompat.getDrawable(
+                                    mContext, R.drawable.material_shadow_z1)));
+        }
+        recyclerView.addItemDecoration(new SimpleListDividerDecorator(
+                ContextCompat.getDrawable(mContext, R.drawable.list_divider_h), true));
+
+        // NOTE:
+        // The initialization order is very important! This order determines the priority of touch event handling.
+        //
+        // priority: TouchActionGuard > Swipe > DragAndDrop
+        recyclerViewTouchActionGuardManager.attachRecyclerView(recyclerView);
+        recyclerViewSwipeManager.attachRecyclerView(recyclerView);
+
+        verticalRecyclerViewFastScroller
+                = (VerticalRecyclerViewFastScroller)findViewById(R.id.fast_scroller);
+
+        // Connect the recycler to the scroller (to let the scroller scroll the list)
+        verticalRecyclerViewFastScroller.setRecyclerView(recyclerView);
+
+        // Connect the scroller to the recycler (to let the recycler scroll the scroller's handle)
+        recyclerView.setOnScrollListener(
+                verticalRecyclerViewFastScroller.getOnScrollListener());
+
+        Util.backupRecord = null;
+
+        if (RecordManager.RECORDS.size() == 0) {
+            emptyTip.setVisibility(View.VISIBLE);
+            verticalRecyclerViewFastScroller.setVisibility(View.INVISIBLE);
+        } else {
+            emptyTip.setVisibility(View.GONE);
+            verticalRecyclerViewFastScroller.setVisibility(View.VISIBLE);
         }
 
     }
 
     private void activityOnItemRemoved(int position) {
+
+        if (RecordManager.RECORDS.size() == 0) {
+            emptyTip.setVisibility(View.VISIBLE);
+            verticalRecyclerViewFastScroller.setVisibility(View.INVISIBLE);
+        }
+
         Log.d("Saver", "recording");
         lastPosition = RecordManager.RECORDS.size() - position;
         undid = false;
@@ -238,10 +260,28 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                             @Override
                             public void onActionClicked(Snackbar snackbar) {
                                 RecordManager.RECORDS.add(lastPosition, Util.backupRecord);
-                                mAdapter.notifyItemInserted(
-                                        RecordManager.RECORDS.size() - 1 - lastPosition);
-                                recyclerView.scrollToPosition(
-                                        RecordManager.RECORDS.size() - 1 - lastPosition);
+                                Util.backupRecord = null;
+                                LinearLayoutManager linearLayoutManager
+                                        = (LinearLayoutManager) recyclerView.getLayoutManager();
+                                int firstVisiblePosition = linearLayoutManager
+                                        .findFirstCompletelyVisibleItemPosition();
+                                int lastVisiblePosition = linearLayoutManager
+                                        .findLastCompletelyVisibleItemPosition();
+                                final int insertPosition
+                                        = RecordManager.RECORDS.size() - 1 - lastPosition;
+                                if (firstVisiblePosition < insertPosition
+                                        && insertPosition <= lastVisiblePosition) {
+
+                                } else {
+                                    recyclerView.scrollToPosition(insertPosition);
+                                }
+                                mAdapter.notifyItemInserted(insertPosition);
+                                mAdapter.notifyDataSetChanged();
+
+                                if (RecordManager.RECORDS.size() != 0) {
+                                    emptyTip.setVisibility(View.GONE);
+                                    verticalRecyclerViewFastScroller.setVisibility(View.VISIBLE);
+                                }
                             }
                         })
                         .eventListener(new EventListener() {
@@ -272,7 +312,10 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
                             @Override
                             public void onDismissed(Snackbar snackbar) {
-                                RecordManager.deleteRecord(Util.backupRecord.getId(), false);
+                                if (Util.backupRecord != null) {
+                                    RecordManager.deleteRecord(Util.backupRecord.getId(), false);
+                                }
+                                Util.backupRecord = null;
                             }
                         });
         SnackbarManager.show(snackbar);
@@ -328,6 +371,11 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.putExtra("IS_CHANGED", true);
         setResult(RESULT_OK, intent);
+
+        if (Util.backupRecord != null) {
+            RecordManager.deleteRecord(Util.backupRecord.getId(), false);
+        }
+        Util.backupRecord = null;
 
         super.finish();
     }
