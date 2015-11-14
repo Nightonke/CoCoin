@@ -33,7 +33,6 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.MySwipeableItemAdapter;
-import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.util.Util;
 import com.nispok.snackbar.Snackbar;
@@ -65,9 +64,10 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
     private TextView emptyTip;
 
-    private Record lastRecord;
     private int lastPosition;
     private boolean undid = false;
+
+    private final int EDITTING_RECORD = 0;
 
     private VerticalRecyclerViewFastScroller verticalRecyclerViewFastScroller;
 
@@ -322,12 +322,29 @@ public class AccountBookListViewActivity extends AppCompatActivity {
     }
 
     private void activityOnItemPinned(int position) {
-        Log.d("Saver", "Edittttt " + position);
         mAdapter.notifyItemChanged(position);
+        Intent intent = new Intent(mContext, EditRecordActivity.class);
+        intent.putExtra("POSITION", position);
+        startActivityForResult(intent, EDITTING_RECORD);
     }
 
     private void activityOnItemClicked(int position) {
-        mAdapter.notifyItemChanged(position);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case EDITTING_RECORD:
+                if (resultCode == RESULT_OK) {
+                    int position = data.getIntExtra("POSITION", -1);
+                    mAdapter.setPinned(false, position);
+                    mAdapter.notifyItemChanged(position);
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

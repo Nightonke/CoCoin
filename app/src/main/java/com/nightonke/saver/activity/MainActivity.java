@@ -52,7 +52,8 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import carbon.widget.RadioButton;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+        implements TagChooseFragment.OnTagItemSelectedListener {
 
     private final int SETTING_TAG = 0;
 
@@ -99,9 +100,9 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isLoading;
 
-    public static int tagId;
-    public static TextView tagName;
-    public static ImageView tagImage;
+    public int tagId;
+    public TextView tagName;
+    public ImageView tagImage;
 
     private DummyOperation dummyOperation;
 
@@ -640,5 +641,19 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         tagImage = null;
         tagName = null;
+    }
+
+    @Override
+    public void onTagItemPicked(int position) {
+        tagId = RecordManager.TAGS.
+                get(viewPager.getCurrentItem() * 8 + position + 2).getId();
+        tagName.setText(
+                Util.GetTagName(
+                        RecordManager.TAGS.get(
+                                viewPager.getCurrentItem() * 8 + position + 2).getId()));
+        tagImage.setImageResource(
+                Util.GetTagIcon(
+                        RecordManager.TAGS.
+                                get(viewPager.getCurrentItem() * 8 + position + 2).getId()));
     }
 }

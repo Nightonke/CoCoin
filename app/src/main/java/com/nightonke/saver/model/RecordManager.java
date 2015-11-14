@@ -34,7 +34,7 @@ public class RecordManager {
     public static Map<Integer, String> TAG_NAMES;
 
     public static boolean SHOW_LOG = false;
-    public static boolean RANDOM_DATA = false;
+    public static boolean RANDOM_DATA = true;
     private final int RANDOM_DATA_NUMBER_ON_EACH_DAY = 3;
     private final int RANDOM_DATA_EXPENSE_ON_EACH_DAY = 30;
 

@@ -6,6 +6,7 @@ package com.nightonke.saver.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,7 +157,6 @@ public class MySwipeableItemAdapter
 
             if ((swipeState & Swipeable.STATE_FLAG_IS_ACTIVE) != 0) {
                 bgResId = R.drawable.bg_item_swiping_active_state;
-                YoYo.with(new Util.MyShakeAnimator(10)).delay(0).duration(1000).playOn(holder.tagImage);
             } else if ((swipeState & Swipeable.STATE_FLAG_SWIPING) != 0) {
                 bgResId = R.drawable.bg_item_swiping_state;
             } else {
@@ -166,6 +166,10 @@ public class MySwipeableItemAdapter
             holder.mContainer.setBackgroundResource(bgResId);
         }
 
+        holder.setSwipeItemHorizontalSlideAmount(
+                pinned.get((int) RecordManager.RECORDS.get(
+                        RecordManager.RECORDS.size() - 1 - position).getId()) ?
+                        Swipeable.OUTSIDE_OF_THE_WINDOW_LEFT : 0);
     }
 
     @Override
@@ -335,5 +339,6 @@ public class MySwipeableItemAdapter
     public void setPinned(boolean inPinned, int position) {
         pinned.put((int)RecordManager.RECORDS.get(
                 RecordManager.RECORDS.size() - 1 - position).getId(), inPinned);
+
     }
 }

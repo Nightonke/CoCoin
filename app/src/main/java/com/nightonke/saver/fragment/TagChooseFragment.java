@@ -1,5 +1,7 @@
 package com.nightonke.saver.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,17 @@ public class TagChooseFragment extends Fragment {
     private int fragmentPosition;
     public MyGridView myGridView;
 
+    Activity activity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            activity = (Activity)context;
+        }
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,19 +75,28 @@ public class TagChooseFragment extends Fragment {
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainActivity.tagId = RecordManager.TAGS.
-                        get(fragmentPosition * 8 + position + 2).getId();
-                MainActivity.tagName.setText(
-                        Util.GetTagName(
-                                RecordManager.TAGS.get(
-                                        fragmentPosition * 8 + position + 2).getId()));
-                MainActivity.tagImage.setImageResource(
-                        Util.GetTagIcon(
-                                RecordManager.TAGS.
-                                        get(fragmentPosition * 8 + position + 2).getId()));
+//                MainActivity.tagId = RecordManager.TAGS.
+//                        get(fragmentPosition * 8 + position + 2).getId();
+//                MainActivity.tagName.setText(
+//                        Util.GetTagName(
+//                                RecordManager.TAGS.get(
+//                                        fragmentPosition * 8 + position + 2).getId()));
+//                MainActivity.tagImage.setImageResource(
+//                        Util.GetTagIcon(
+//                                RecordManager.TAGS.
+//                                        get(fragmentPosition * 8 + position + 2).getId()));
+                try {
+                    ((OnTagItemSelectedListener)activity).onTagItemPicked(position);
+                } catch (ClassCastException cce){
+                    cce.printStackTrace();
+                }
             }
         });
 
+    }
+
+    public interface OnTagItemSelectedListener {
+        void onTagItemPicked(int position);
     }
 
     public void updateTags() {

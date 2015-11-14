@@ -152,5 +152,6 @@
     <string name="undo">Undo</string>
 
     <string name="deleting">Delete this record</string>
+    <string name="title_activity_edit_record">EditRecordActivity</string>
 
 </resources>

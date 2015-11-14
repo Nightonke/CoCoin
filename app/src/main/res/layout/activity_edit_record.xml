@@ -1,0 +1,166 @@
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#2196F3"
+    >
+
+    <View
+        android:layout_gravity="top"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/guillotine_actionbar_background_view_height"
+        android:background="#2196F3"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            app:contentInsetStart="0dp"
+            style="@style/Toolbar">
+
+        </android.support.v7.widget.Toolbar>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="#ffffff"
+                >
+
+                <LinearLayout
+                    android:id="@+id/edit_view_ly"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    >
+
+                    <FrameLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        >
+
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:layout_width="60dp"
+                            android:orientation="vertical"
+                            android:layout_gravity="center|left"
+                            >
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="10dp"
+                                />
+
+                            <ImageView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:layout_gravity="center_horizontal|bottom"
+                                android:id="@+id/tag_image"
+                                />
+
+                            <TextView
+                                android:id="@+id/tag_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="sans-serif"
+                                android:textSize="10sp"
+                                android:textColor="#666666"
+                                android:maxLines="2"
+                                android:minLines="2"
+                                android:layout_gravity="center_horizontal|center_vertical"
+                                android:gravity="center_horizontal|center_vertical"
+                                />
+
+                        </LinearLayout>
+
+                        <com.rengwuxian.materialedittext.MaterialEditText
+                            android:id="@+id/edit_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="#0000ff"
+                            android:textSize="60sp"
+                            android:maxLength="7"
+                            android:editable="false"
+                            android:gravity="right"
+                            app:met_floatingLabel="normal"
+                            app:met_baseColor="#007688"
+                            app:met_primaryColor="#2196F3"
+                            app:met_textColor="@color/my_blue"
+                            app:met_textColorHint="#33ff0000"
+                            app:met_errorColor="#ddaa00"
+                            app:met_helperTextColor="@color/my_blue"
+                            app:met_underlineColor="#003587"
+                            app:met_floatingLabelTextColor="#0000ff"
+                            />
+
+                        <com.ogaclejapan.smarttablayout.SmartTabLayout
+                            xmlns:android="http://schemas.android.com/apk/res/android"
+                            xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/viewpagertab"
+                            android:layout_width="wrap_content"
+                            android:layout_height="16dp"
+                            android:layout_gravity="bottom|center_horizontal"
+                            app:stl_clickable="false"
+                            app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
+                            app:stl_dividerColor="@color/transparent"
+                            app:stl_dividerThickness="0dp"
+                            app:stl_indicatorColor="@color/my_blue"
+                            app:stl_indicatorCornerRadius="4dp"
+                            app:stl_indicatorGravity="center"
+                            app:stl_indicatorInterpolation="linear"
+                            app:stl_indicatorThickness="8dp"
+                            app:stl_underlineColor="@color/transparent"
+                            app:stl_underlineThickness="0dp"
+                            />
+
+                    </FrameLayout>
+
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+                </LinearLayout>
+
+                <com.nightonke.saver.ui.MyGridView
+                    android:id="@+id/gridview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:numColumns="3"
+                    android:verticalSpacing="1sp"
+                    android:horizontalSpacing="1sp"
+                    android:stretchMode="columnWidth"
+                    android:background="#ffffff"
+                    android:isScrollContainer="false"
+                    />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/toolbar_dropshadow" />
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+</FrameLayout>
