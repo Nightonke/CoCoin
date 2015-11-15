@@ -34,6 +34,7 @@ import net.steamcrafted.materialiconlib.MaterialIconView;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -98,6 +99,7 @@ public class CustomViewFragment extends Fragment {
 
     private MaterialIconView iconRight;
     private MaterialIconView iconLeft;
+    private MaterialIconView all;
 
     private Calendar startDayCalendar;
 
@@ -173,6 +175,9 @@ public class CustomViewFragment extends Fragment {
         iconLeft = (MaterialIconView)view.findViewById(R.id.icon_left);
         iconRight.setVisibility(View.INVISIBLE);
         iconLeft.setVisibility(View.INVISIBLE);
+
+        all = (MaterialIconView)view.findViewById(R.id.all);
+        all.setVisibility(View.INVISIBLE);
 
         MaterialIconView setFromDate = (MaterialIconView)view.findViewById(R.id.set_from_date);
         setFromDate.setOnClickListener(new View.OnClickListener() {
@@ -266,7 +271,8 @@ public class CustomViewFragment extends Fragment {
                     from.add(Calendar.SECOND, 0);
                 }
                 fromDate.setText(mContext.getResources().getString(R.string.from) + " " +
-                        Util.GetMonthShort(fromMonth) + " " + fromDay + " " + fromYear);
+                        Util.GetMonthShort(from.get(Calendar.MONTH) + 1)
+                        + " " + from.get(Calendar.DAY_OF_MONTH) + " " + from.get(Calendar.YEAR));
             } else {
                 toYear = year;
                 toMonth = monthOfYear + 1;
@@ -291,7 +297,8 @@ public class CustomViewFragment extends Fragment {
                     to.add(Calendar.SECOND, 0);
                 }
                 toDate.setText(mContext.getResources().getString(R.string.to) + " " +
-                        Util.GetMonthShort(toMonth) + " " + toDay + " " + toYear);
+                        Util.GetMonthShort(to.get(Calendar.MONTH) + 1)
+                        + " " + to.get(Calendar.DAY_OF_MONTH) + " " + to.get(Calendar.YEAR));
             }
             if (fromSet && toSet) {
                 if (!from.before(to)) {
@@ -457,7 +464,7 @@ public class CustomViewFragment extends Fragment {
                             Util.GetPercentString(percent) + "\n" +
                             "于" + Util.GetTagName(tagId);
                 } else {
-                    text = "Spend " + (int) sliceValue.getValue()
+                    text = Util.GetSpendString((int) sliceValue.getValue())
                             + " (takes " + String.format("%.2f", percent) + "%)\n"
                             + "in " + Util.GetTagName(tagId);
                 }
@@ -466,8 +473,15 @@ public class CustomViewFragment extends Fragment {
                             Util.GetSpendString((int) sliceValue.getValue()) +
                             "于" + Util.GetTagName(tagId);
                 } else {
-                    dialogTitle = "Spend " + (int) sliceValue.getValue() + "\n"
-                            + dateShownString + " " +
+                    dialogTitle = Util.GetSpendString((int) sliceValue.getValue()) + " " +
+                            mContext.getResources().getString(R.string.from) + " " +
+                            Util.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
+                            from.get(Calendar.DAY_OF_MONTH) + " " +
+                            from.get(Calendar.YEAR) + "\n" +
+                            mContext.getResources().getString(R.string.to) + " " +
+                            Util.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
+                            to.get(Calendar.DAY_OF_MONTH) + " " +
+                            to.get(Calendar.YEAR) + " " +
                             "in " + Util.GetTagName(tagId);
                 }
                 Snackbar snackbar =
@@ -498,6 +512,36 @@ public class CustomViewFragment extends Fragment {
             @Override
             public void onValueDeselected() {
 
+            }
+        });
+
+        all.setVisibility(View.VISIBLE);
+        all.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                List<Record> data = new LinkedList<Record>();
+                for (int i = start; i >= end; i--) data.add(RecordManager.RECORDS.get(i));
+                if ("zh".equals(Util.GetLanguage())) {
+                    dialogTitle = dateShownString + "\n" +
+                            Util.GetSpendString(Sum) +
+                            "于" + Util.GetTagName(tagId);
+                } else {
+                    dialogTitle = Util.GetSpendString(Sum) + " "
+                            + mContext.getResources().getString(R.string.from) + " " +
+                            Util.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
+                            from.get(Calendar.DAY_OF_MONTH) + " " +
+                            from.get(Calendar.YEAR) + "\n" +
+                            mContext.getResources().getString(R.string.to) + " " +
+                            Util.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
+                            to.get(Calendar.DAY_OF_MONTH) + " " +
+                            to.get(Calendar.YEAR) + " " +
+                            "in " + Util.GetTagName(tagId);
+                }
+                ((FragmentActivity)mContext).getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(new RecordCheckDialogFragment(
+                                mContext, data, dialogTitle), "MyDialog")
+                        .commit();
             }
         });
     }

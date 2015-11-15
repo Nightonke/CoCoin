@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nightonke.saver.R;
@@ -54,6 +55,7 @@ public class TodayViewRecyclerViewAdapter
     private Context mContext;
 
     static final int TYPE_HEADER = 0;
+    static final int TYPE_BODY = 1;
 
     static final int TODAY = 0;
     static final int YESTERDAY = 1;
@@ -179,11 +181,17 @@ public class TodayViewRecyclerViewAdapter
 
     @Override
     public int getItemViewType(int position) {
+        if (fragmentPosition == TODAY || fragmentPosition == YESTERDAY) {
+            return position == 0 ? TYPE_HEADER : TYPE_BODY;
+        }
         return TYPE_HEADER;
     }
 
     @Override
     public int getItemCount() {
+        if (fragmentPosition == TODAY || fragmentPosition == YESTERDAY) {
+            return allData.size() + 1;
+        }
         return 1;
     }
 
@@ -195,6 +203,12 @@ public class TodayViewRecyclerViewAdapter
             case TYPE_HEADER: {
                 view = LayoutInflater.from(parent.getContext())
                         .inflate(R.layout.today_list_view_head, parent, false);
+                return new viewHolder(view) {
+                };
+            }
+            case TYPE_BODY: {
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.today_list_view_body, parent, false);
                 return new viewHolder(view) {
                 };
             }
@@ -231,6 +245,7 @@ public class TodayViewRecyclerViewAdapter
                     holder.histogram.setVisibility(View.GONE);
                     holder.histogram_icon_left.setVisibility(View.GONE);
                     holder.histogram_icon_right.setVisibility(View.GONE);
+                    holder.all.setVisibility(View.GONE);
                 } else {
                     holder.emptyTip.setVisibility(View.GONE);
 
@@ -296,79 +311,91 @@ public class TodayViewRecyclerViewAdapter
                     });
 
                     final List<Column> columns = new ArrayList<>();
-                    for (int i = 0; i < columnNumber; i++) {
-                        if (lastHistogramSelectedPosition == -1 && originalTargets[i] == 0) {
-                            lastHistogramSelectedPosition = i;
-                        }
-                        SubcolumnValue value = new SubcolumnValue(
-                                originalTargets[i], Util.GetRandomColor());
-                        List<SubcolumnValue> subcolumnValues = new ArrayList<>();
-                        subcolumnValues.add(value);
-                        Column column = new Column(subcolumnValues);
-                        column.setHasLabels(false);
-                        column.setHasLabelsOnlyForSelected(false);
-                        columns.add(column);
-                    }
-
-                    Axis axisX = new Axis();
-                    List<AxisValue> axisValueList = new ArrayList<>();
-
-                    for (int i = 0; i < columnNumber; i++) {
-                        axisValueList.add(
-                                new AxisValue(i).setLabel(Util.GetAxisDateName(axis_date, i)));
-                    }
-
-                    axisX.setValues(axisValueList);
-                    Axis axisY = new Axis().setHasLines(true);
-
                     final ColumnChartData columnChartData = new ColumnChartData(columns);
 
-                    columnChartData.setAxisXBottom(axisX);
-                    columnChartData.setAxisYLeft(axisY);
-                    columnChartData.setStacked(true);
+                    if (!(fragmentPosition == TODAY || fragmentPosition == YESTERDAY)) {
 
-                    holder.histogram.setColumnChartData(columnChartData);
-                    holder.histogram.setZoomEnabled(false);
 
-// two control button of histogram//////////////////////////////////////////////////////////////////
-                    holder.histogram_icon_left.setVisibility(View.VISIBLE);
-                    holder.histogram_icon_left.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            do {
-                                lastHistogramSelectedPosition
-                                        = (lastHistogramSelectedPosition - 1 + columnNumber)
-                                        % columnNumber;
-                            } while (columnChartData.getColumns()
-                                    .get(lastHistogramSelectedPosition)
-                                    .getValues().get(0).getValue() == 0);
-                            SelectedValue selectedValue =
-                                    new SelectedValue(
-                                            lastHistogramSelectedPosition,
-                                            0,
-                                            SelectedValue.SelectedValueType.NONE);
-                            holder.histogram.selectValue(selectedValue);
+                        for (int i = 0; i < columnNumber; i++) {
+                            if (lastHistogramSelectedPosition == -1 && originalTargets[i] == 0) {
+                                lastHistogramSelectedPosition = i;
+                            }
+                            SubcolumnValue value = new SubcolumnValue(
+                                    originalTargets[i], Util.GetRandomColor());
+                            List<SubcolumnValue> subcolumnValues = new ArrayList<>();
+                            subcolumnValues.add(value);
+                            Column column = new Column(subcolumnValues);
+                            column.setHasLabels(false);
+                            column.setHasLabelsOnlyForSelected(false);
+                            columns.add(column);
                         }
-                    });
-                    holder.histogram_icon_right.setVisibility(View.VISIBLE);
-                    holder.histogram_icon_right.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            do {
-                                lastHistogramSelectedPosition
-                                        = (lastHistogramSelectedPosition + 1)
-                                        % columnNumber;
-                            } while (columnChartData.getColumns()
-                                    .get(lastHistogramSelectedPosition)
-                                    .getValues().get(0).getValue() == 0);
-                            SelectedValue selectedValue =
-                                    new SelectedValue(
-                                            lastHistogramSelectedPosition,
-                                            0,
-                                            SelectedValue.SelectedValueType.NONE);
-                            holder.histogram.selectValue(selectedValue);
+
+                        Axis axisX = new Axis();
+                        List<AxisValue> axisValueList = new ArrayList<>();
+
+                        for (int i = 0; i < columnNumber; i++) {
+                            axisValueList.add(
+                                    new AxisValue(i).setLabel(Util.GetAxisDateName(axis_date, i)));
                         }
-                    });
+
+                        axisX.setValues(axisValueList);
+                        Axis axisY = new Axis().setHasLines(true);
+
+                        columnChartData.setAxisXBottom(axisX);
+                        columnChartData.setAxisYLeft(axisY);
+                        columnChartData.setStacked(true);
+
+                        holder.histogram.setColumnChartData(columnChartData);
+                        holder.histogram.setZoomEnabled(false);
+
+                        // two control button of histogram//////////////////////////////////////////////////////////////////
+                        holder.histogram_icon_left.setVisibility(View.VISIBLE);
+                        holder.histogram_icon_left.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                do {
+                                    lastHistogramSelectedPosition
+                                            = (lastHistogramSelectedPosition - 1 + columnNumber)
+                                            % columnNumber;
+                                } while (columnChartData.getColumns()
+                                        .get(lastHistogramSelectedPosition)
+                                        .getValues().get(0).getValue() == 0);
+                                SelectedValue selectedValue =
+                                        new SelectedValue(
+                                                lastHistogramSelectedPosition,
+                                                0,
+                                                SelectedValue.SelectedValueType.NONE);
+                                holder.histogram.selectValue(selectedValue);
+                            }
+                        });
+                        holder.histogram_icon_right.setVisibility(View.VISIBLE);
+                        holder.histogram_icon_right.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                do {
+                                    lastHistogramSelectedPosition
+                                            = (lastHistogramSelectedPosition + 1)
+                                            % columnNumber;
+                                } while (columnChartData.getColumns()
+                                        .get(lastHistogramSelectedPosition)
+                                        .getValues().get(0).getValue() == 0);
+                                SelectedValue selectedValue =
+                                        new SelectedValue(
+                                                lastHistogramSelectedPosition,
+                                                0,
+                                                SelectedValue.SelectedValueType.NONE);
+                                holder.histogram.selectValue(selectedValue);
+                            }
+                        });
+                    }
+
+                    if (fragmentPosition == TODAY || fragmentPosition == YESTERDAY) {
+                        holder.histogram_icon_left.setVisibility(View.INVISIBLE);
+                        holder.histogram_icon_right.setVisibility(View.INVISIBLE);
+                        holder.histogram.setVisibility(View.GONE);
+                        holder.dateBottom.setVisibility(View.GONE);
+                        holder.reset.setVisibility(View.GONE);
+                    }
 
 // set value touch listener of pie//////////////////////////////////////////////////////////////////
                     holder.pie.setOnValueTouchListener(new PieChartOnValueSelectListener() {
@@ -406,7 +433,7 @@ public class TodayViewRecyclerViewAdapter
                                             .position(Snackbar.SnackbarPosition.BOTTOM)
                                             .margin(15, 15)
                                             .backgroundDrawable(Util.GetSnackBarBackground(
-                                                    fragmentPosition))
+                                                    fragmentPosition - 2))
                                             .text(text)
                                             .textTypeface(Util.GetTypeface())
                                             .textColor(Color.WHITE)
@@ -423,38 +450,41 @@ public class TodayViewRecyclerViewAdapter
                                 lastPieSelectedPosition = p;
                             }
 
-// histogram data///////////////////////////////////////////////////////////////////////////////////
-                            float[] targets = new float[columnNumber];
-                            for (int i = 0; i < columnNumber; i++) targets[i] = 0;
+                            if (!(fragmentPosition == TODAY || fragmentPosition == YESTERDAY)) {
 
-                            for (int i = Expanse.get(tagId).size() - 1; i >= 0; i--) {
-                                Record record = Expanse.get(tagId).get(i);
-                                if (axis_date == Calendar.DAY_OF_WEEK) {
-                                    if (Util.WEEK_START_WITH_SUNDAY) {
+// histogram data///////////////////////////////////////////////////////////////////////////////////
+                                float[] targets = new float[columnNumber];
+                                for (int i = 0; i < columnNumber; i++) targets[i] = 0;
+
+                                for (int i = Expanse.get(tagId).size() - 1; i >= 0; i--) {
+                                    Record record = Expanse.get(tagId).get(i);
+                                    if (axis_date == Calendar.DAY_OF_WEEK) {
+                                        if (Util.WEEK_START_WITH_SUNDAY) {
+                                            targets[record.getCalendar().get(axis_date) - 1]
+                                                    += record.getMoney();
+                                        } else {
+                                            targets[(record.getCalendar().get(axis_date) + 5) % 7]
+                                                    += record.getMoney();
+                                        }
+                                    } else if (axis_date == Calendar.DAY_OF_MONTH) {
                                         targets[record.getCalendar().get(axis_date) - 1]
                                                 += record.getMoney();
                                     } else {
-                                        targets[(record.getCalendar().get(axis_date) + 5) % 7]
+                                        targets[record.getCalendar().get(axis_date)]
                                                 += record.getMoney();
                                     }
-                                } else if (axis_date == Calendar.DAY_OF_MONTH) {
-                                    targets[record.getCalendar().get(axis_date) - 1]
-                                            += record.getMoney();
-                                } else {
-                                    targets[record.getCalendar().get(axis_date)]
-                                            += record.getMoney();
                                 }
-                            }
 
-                            lastHistogramSelectedPosition = -1;
-                            for (int i = 0; i < columnNumber; i++) {
-                                if (lastHistogramSelectedPosition == -1 && targets[i] != 0) {
-                                    lastHistogramSelectedPosition = i;
+                                lastHistogramSelectedPosition = -1;
+                                for (int i = 0; i < columnNumber; i++) {
+                                    if (lastHistogramSelectedPosition == -1 && targets[i] != 0) {
+                                        lastHistogramSelectedPosition = i;
+                                    }
+                                    columnChartData.getColumns().
+                                            get(i).getValues().get(0).setTarget(targets[i]);
                                 }
-                                columnChartData.getColumns().
-                                        get(i).getValues().get(0).setTarget(targets[i]);
+                                holder.histogram.startDataAnimation();
                             }
-                            holder.histogram.startDataAnimation();
                         }
 
                         @Override
@@ -462,84 +492,114 @@ public class TodayViewRecyclerViewAdapter
 
                         }
                     });
+
+                    if (!(fragmentPosition == TODAY || fragmentPosition == YESTERDAY)) {
 
 // set value touch listener of histogram////////////////////////////////////////////////////////////
-                    holder.histogram.setOnValueTouchListener(
-                            new ColumnChartOnValueSelectListener() {
-                        @Override
-                        public void onValueSelected(int columnIndex,
-                                                    int subcolumnIndex, SubcolumnValue value) {
-                            lastHistogramSelectedPosition = columnIndex;
-                            timeIndex = columnIndex;
-                            // snack bar
-                            RecordManager recordManager
-                                    = RecordManager.getInstance(mContext.getApplicationContext());
+                        holder.histogram.setOnValueTouchListener(
+                                new ColumnChartOnValueSelectListener() {
+                            @Override
+                            public void onValueSelected(int columnIndex,
+                                                        int subcolumnIndex, SubcolumnValue value) {
+                                lastHistogramSelectedPosition = columnIndex;
+                                timeIndex = columnIndex;
+                                // snack bar
+                                RecordManager recordManager
+                                        = RecordManager.getInstance(mContext.getApplicationContext());
 
-                            String text = Util.GetSpendString((int) value.getValue());
-                            if (tagId != -1)
-                                // belongs a tag
-                                if ("zh".equals(Util.GetLanguage()))
-                                    text = getSnackBarDateString() + text + "\n" +
-                                            "于" + Util.GetTagName(tagId);
+                                String text = Util.GetSpendString((int) value.getValue());
+                                if (tagId != -1)
+                                    // belongs a tag
+                                    if ("zh".equals(Util.GetLanguage()))
+                                        text = getSnackBarDateString() + text + "\n" +
+                                                "于" + Util.GetTagName(tagId);
+                                    else
+                                        text += getSnackBarDateString() + "\n"
+                                                + "in " + Util.GetTagName(tagId);
                                 else
-                                    text += getSnackBarDateString() + "\n"
-                                            + "in " + Util.GetTagName(tagId);
-                            else
-                                // don't belong to any tag
-                                if ("zh".equals(Util.GetLanguage()))
-                                    text = getSnackBarDateString() + "\n" + text;
-                                else
-                                    text += "\n" + getSnackBarDateString();
+                                    // don't belong to any tag
+                                    if ("zh".equals(Util.GetLanguage()))
+                                        text = getSnackBarDateString() + "\n" + text;
+                                    else
+                                        text += "\n" + getSnackBarDateString();
 
 // setting the snack bar and dialog title of histogram//////////////////////////////////////////////
-                            dialogTitle = text;
-                            Snackbar snackbar =
-                                    Snackbar
-                                            .with(mContext)
-                                            .type(SnackbarType.MULTI_LINE)
-                                            .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
-                                            .position(Snackbar.SnackbarPosition.BOTTOM)
-                                            .margin(15, 15)
-                                            .backgroundDrawable(Util.GetSnackBarBackground(
-                                                    fragmentPosition))
-                                            .text(text)
-                                            .textTypeface(Util.GetTypeface())
-                                            .textColor(Color.WHITE)
-                                            .actionLabelTypeface(Util.GetTypeface())
-                                            .actionLabel(mContext.getResources()
-                                                    .getString(R.string.check))
-                                            .actionColor(Color.WHITE)
-                                            .actionListener(new mActionClickListenerForHistogram());
-                            SnackbarManager.show(snackbar);
-                        }
-
-                        @Override
-                        public void onValueDeselected() {
-
-                        }
-                    });
-
-// set the listener of the reset button/////////////////////////////////////////////////////////////
-                    holder.reset.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            tagId = -1;
-                            lastHistogramSelectedPosition = -1;
-
-                            for (int i = 0; i < columnNumber; i++) {
-                                if (lastHistogramSelectedPosition == -1
-                                        && originalTargets[i] != 0) {
-                                    lastHistogramSelectedPosition = i;
-                                }
-                                columnChartData.getColumns().
-                                        get(i).getValues().get(0).setTarget(originalTargets[i]);
+                                dialogTitle = text;
+                                Snackbar snackbar =
+                                        Snackbar
+                                                .with(mContext)
+                                                .type(SnackbarType.MULTI_LINE)
+                                                .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                                                .position(Snackbar.SnackbarPosition.BOTTOM)
+                                                .margin(15, 15)
+                                                .backgroundDrawable(Util.GetSnackBarBackground(
+                                                        fragmentPosition - 2))
+                                                .text(text)
+                                                .textTypeface(Util.GetTypeface())
+                                                .textColor(Color.WHITE)
+                                                .actionLabelTypeface(Util.GetTypeface())
+                                                .actionLabel(mContext.getResources()
+                                                        .getString(R.string.check))
+                                                .actionColor(Color.WHITE)
+                                                .actionListener(new mActionClickListenerForHistogram());
+                                SnackbarManager.show(snackbar);
                             }
 
-                            holder.histogram.startDataAnimation();
+                            @Override
+                            public void onValueDeselected() {
+
+                            }
+                        });
+                    }
+
+// set the listener of the reset button/////////////////////////////////////////////////////////////
+                    if (!(fragmentPosition == TODAY || fragmentPosition == YESTERDAY)) {
+                        holder.reset.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                tagId = -1;
+                                lastHistogramSelectedPosition = -1;
+
+                                for (int i = 0; i < columnNumber; i++) {
+                                    if (lastHistogramSelectedPosition == -1
+                                            && originalTargets[i] != 0) {
+                                        lastHistogramSelectedPosition = i;
+                                    }
+                                    columnChartData.getColumns().
+                                            get(i).getValues().get(0).setTarget(originalTargets[i]);
+                                }
+
+                                holder.histogram.startDataAnimation();
+                            }
+                        });
+                    }
+
+// set the listener of the show all button//////////////////////////////////////////////////////////
+                    holder.all.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            ((FragmentActivity)mContext).getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .add(new RecordCheckDialogFragment(
+                                            mContext, allData, getAllDataDialogTitle()), "MyDialog")
+                                    .commit();
                         }
                     });
 
                 }
+
+                break;
+
+            case TYPE_BODY:
+
+                holder.tagImage.setImageResource(
+                        Util.GetTagIcon(allData.get(position - 1).getTag()));
+                holder.money.setText((int) allData.get(position - 1).getMoney() + "");
+                holder.money.setTypeface(Util.typefaceLatoLight);
+                holder.cell_date.setText(allData.get(position - 1).getCalendarString());
+                holder.cell_date.setTypeface(Util.typefaceLatoLight);
+                holder.index.setText(position + "");
+                holder.index.setTypeface(Util.typefaceLatoLight);
 
                 break;
         }
@@ -580,6 +640,21 @@ public class TodayViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.icon_reset)
         MaterialIconView reset;
+        @Optional
+        @InjectView(R.id.all)
+        MaterialIconView all;
+        @Optional
+        @InjectView(R.id.tag_image)
+        ImageView tagImage;
+        @Optional
+        @InjectView(R.id.money)
+        TextView money;
+        @Optional
+        @InjectView(R.id.cell_date)
+        TextView cell_date;
+        @Optional
+        @InjectView(R.id.index)
+        TextView index;
 
         viewHolder(View view) {
             super(view);
@@ -787,6 +862,46 @@ public class TodayViewRecyclerViewAdapter
                 dateShownString = mContext.getResources().getString(R.string.last_year_date_string);
                 month = -1;
                 break;
+        }
+    }
+
+    private String getAllDataDialogTitle() {
+        String prefix;
+        String postfix;
+        if ("zh".equals(Util.GetLanguage())) {
+            prefix = mContext.getResources().getString(R.string.on);
+            postfix = Util.GetSpendString((int)Sum);
+        } else {
+            prefix = Util.GetSpendString((int)Sum);
+            postfix = "";
+        }
+        switch (fragmentPosition) {
+            case TODAY:
+                return prefix + mContext.getResources().
+                        getString(R.string.today_date_string) + postfix;
+            case YESTERDAY:
+                return prefix + mContext.getResources().
+                        getString(R.string.yesterday_date_string) + postfix;
+            case THIS_WEEK:
+                return prefix + mContext.getResources().
+                        getString(R.string.this_week_date_string) + postfix;
+            case LAST_WEEK:
+                return prefix + mContext.getResources().
+                        getString(R.string.last_week_date_string) + postfix;
+            case THIS_MONTH:
+                return prefix + mContext.getResources().
+                        getString(R.string.this_month_date_string) + postfix;
+            case LAST_MONTH:
+                return prefix + mContext.getResources().
+                        getString(R.string.last_month_date_string) + postfix;
+            case THIS_YEAR:
+                return prefix + mContext.getResources().
+                        getString(R.string.this_year_date_string) + postfix;
+            case LAST_YEAR:
+                return prefix + mContext.getResources().
+                        getString(R.string.last_year_date_string) + postfix;
+            default:
+                return "";
         }
     }
 

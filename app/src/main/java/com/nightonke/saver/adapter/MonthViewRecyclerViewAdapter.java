@@ -282,9 +282,10 @@ public class MonthViewRecyclerViewAdapter
             holder.pie.setVisibility(View.INVISIBLE);
             holder.iconLeft.setVisibility(View.INVISIBLE);
             holder.iconRight.setVisibility(View.INVISIBLE);
+            holder.all.setVisibility(View.GONE);
         } else {
             holder.date.setText(dateStringList.get(position));
-            holder.expanseSum.setText(String.valueOf((int)(double)SumList.get(position)));
+            holder.expanseSum.setText(String.valueOf((int) (double) SumList.get(position)));
 
             holder.date.setTypeface(Util.GetTypeface());
             holder.expanseSum.setTypeface(Util.typefaceLatoLight);
@@ -293,7 +294,7 @@ public class MonthViewRecyclerViewAdapter
                 holder.emptyTip.setVisibility(View.VISIBLE);
                 holder.emptyTip.setTypeface(Util.typefaceLatoLight);
             } else {
-                holder.emptyTip.setVisibility(View.INVISIBLE);
+                holder.emptyTip.setVisibility(View.GONE);
             }
 
             holder.pie.setPieChartData(pieChartDataList.get(position));
@@ -336,6 +337,27 @@ public class MonthViewRecyclerViewAdapter
                 holder.iconLeft.setVisibility(View.GONE);
                 holder.iconRight.setVisibility(View.GONE);
             }
+
+            holder.all.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if ("zh".equals(Util.GetLanguage())) {
+                        dialogTitle = mContext.getResources().getString(R.string.in)
+                                + dateStringList.get(position) +
+                                " " + Util.GetSpendString((int) (double) SumList.get(position));
+                    } else {
+                        dialogTitle = Util.GetSpendString((int) (double) SumList.get(position)) +
+                                mContext.getResources().getString(R.string.in) + " "
+                                + dateStringList.get(position);
+                    }
+                    ((FragmentActivity) mContext).getSupportFragmentManager()
+                            .beginTransaction()
+                            .add(new RecordCheckDialogFragment(
+                                            mContext, list, dialogTitle),
+                                    "MyDialog")
+                            .commit();
+                }
+            });
         }
 
     }
@@ -359,6 +381,9 @@ public class MonthViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.icon_right)
         MaterialIconView iconRight;
+        @Optional
+        @InjectView(R.id.all)
+        MaterialIconView all;
 
         viewHolder(View view) {
             super(view);
@@ -404,7 +429,7 @@ public class MonthViewRecyclerViewAdapter
                             .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                             .position(Snackbar.SnackbarPosition.BOTTOM)
                             .margin(15, 15)
-                            .backgroundDrawable(Util.GetSnackBarBackground(fragmentPosition))
+                            .backgroundDrawable(Util.GetSnackBarBackground(fragmentPosition - 2))
                             .text(text)
                             .textTypeface(Util.GetTypeface())
                             .textColor(Color.WHITE)
@@ -432,7 +457,5 @@ public class MonthViewRecyclerViewAdapter
 
         }
     }
-
-
 
 }

@@ -108,7 +108,7 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
                 return HeaderDesign.fromColorResAndDrawable(
                         Util.GetTagColorResource(RecordManager.TAGS.get(page).getId()),
                         mContext.getResources().getDrawable(
-                                Util.GetTagDrawable(RecordManager.TAGS.get(page).getName())));
+                                Util.GetTagDrawable(RecordManager.TAGS.get(page).getId())));
             }
         });
 

@@ -87,7 +87,7 @@ public class AccountBookCustomViewActivity extends AppCompatActivity {
                 return HeaderDesign.fromColorResAndDrawable(
                         Util.GetTagColorResource(-2),
                         mContext.getResources().getDrawable(
-                                Util.GetTagDrawable("")));
+                                Util.GetTagDrawable(-2)));
             }
         });
 
