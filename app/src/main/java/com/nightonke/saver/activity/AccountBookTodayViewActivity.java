@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -21,7 +20,6 @@ import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.R;
-import com.nightonke.saver.fragment.TodayViewFragment;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.adapter.TodayViewFragmentAdapter;
 import com.nightonke.saver.util.Util;
@@ -125,7 +123,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
                 return HeaderDesign.fromColorResAndDrawable(
-                        Util.GetTagColor(RecordManager.TAGS.get(page).getId()),
+                        Util.GetTagColorResource(RecordManager.TAGS.get(page).getId()),
                         mContext.getResources().getDrawable(
                                 Util.GetTagDrawable("Transparent")));
             }
@@ -154,6 +152,15 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         super.onDestroy();
 
         MaterialViewPagerHelper.unregister(this);
+    }
+
+    private void loadRangeMode() {
+
+        Log.d("Saver", "RANGE_MODE");
+
+        Intent intent = new Intent(mContext, AccountBookCustomViewActivity.class);
+        startActivity(intent);
+
     }
 
     private void loadTagMode() {
@@ -249,6 +256,12 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
     }
 
     private void setListeners() {
+        custom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadRangeMode();
+            }
+        });
         tags.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

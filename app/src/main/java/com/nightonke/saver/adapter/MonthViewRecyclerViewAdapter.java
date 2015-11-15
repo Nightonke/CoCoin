@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.florent37.materialviewpager.Utils;
 import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
 import com.nightonke.saver.model.Record;
@@ -135,11 +134,11 @@ public class MonthViewRecyclerViewAdapter
 
             for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
                 if (entry.getValue() >= 1) {
-                    // Todo optimize the GetTagColor
+                    // Todo optimize the GetTagColorResource
                     SliceValue sliceValue = new SliceValue(
                             (float) (double) entry.getValue(),
                             mContext.getResources().
-                                    getColor(Util.GetTagColor(entry.getKey())));
+                                    getColor(Util.GetTagColorResource(entry.getKey())));
                     sliceValue.setLabel(String.valueOf(entry.getKey()));
                     sliceValues.add(sliceValue);
                 }
@@ -208,11 +207,11 @@ public class MonthViewRecyclerViewAdapter
 
                 for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
                     if (entry.getValue() >= 1) {
-                        // Todo optimize the GetTagColor
+                        // Todo optimize the GetTagColorResource
                         SliceValue sliceValue = new SliceValue(
                                 (float) (double) entry.getValue(),
                                 mContext.getResources().
-                                        getColor(Util.GetTagColor(entry.getKey())));
+                                        getColor(Util.GetTagColorResource(entry.getKey())));
                         sliceValue.setLabel(String.valueOf(entry.getKey()));
                         sliceValues.add(sliceValue);
                     }

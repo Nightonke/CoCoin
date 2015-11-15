@@ -26,26 +26,28 @@
             android:theme="@style/AppTheme" >
         </activity>
         <activity
+            android:name=".activity.AccountBookCustomViewActivity"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
             android:name=".activity.AccountBookTagViewActivity"
-            android:label="@string/title_activity_tag_setting"
             android:launchMode="singleTop" >
         </activity>
         <activity
             android:name=".activity.AccountBookMonthViewActivity"
-            android:label="@string/title_activity_tag_setting"
             android:launchMode="singleTop" >
         </activity>
         <activity
             android:name=".activity.TagSettingActivity"
-            android:label="@string/title_activity_tag_setting"
             android:launchMode="singleTop" >
         </activity>
-        <activity android:name=".activity.AccountBookListViewActivity" >
+        <activity
+            android:name=".activity.AccountBookListViewActivity"
+            android:launchMode="singleTop">
         </activity>
         <activity
             android:name=".activity.EditRecordActivity"
-            android:label="@string/title_activity_edit_record"
-            android:theme="@style/draggerActivityStyle">
+            android:launchMode="singleTop">
         </activity>
     </application>
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -242,7 +241,7 @@ public class TodayViewRecyclerViewAdapter
                             SliceValue sliceValue = new SliceValue(
                                     (float)(double)entry.getValue(),
                                     mContext.getApplicationContext().getResources().
-                                            getColor(Util.GetTagColor(entry.getKey())));
+                                            getColor(Util.GetTagColorResource(entry.getKey())));
                             sliceValue.setLabel(String.valueOf(entry.getKey()));
                             sliceValues.add(sliceValue);
                         }

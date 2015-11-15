@@ -326,7 +326,7 @@ public class TagViewRecyclerViewAdapter
                                 SliceValue sliceValue = new SliceValue(
                                         (float)(double)entry.getValue(),
                                         mContext.getResources().
-                                                getColor(Util.GetTagColor(entry.getKey())));
+                                                getColor(Util.GetTagColorResource(entry.getKey())));
                                 sliceValue.setLabel(String.valueOf(entry.getKey()));
                                 sliceValues.add(sliceValue);
                             }

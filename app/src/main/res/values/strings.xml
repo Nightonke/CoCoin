@@ -154,4 +154,7 @@
     <string name="deleting">Delete this record</string>
     <string name="title_activity_edit_record">EditRecordActivity</string>
 
+    <string name="from_invalid">The starting time is invalid!</string>
+    <string name="to_invalid">The ending time is invalid!</string>
+
 </resources>

@@ -137,7 +137,8 @@ public class DB {
         values.put("MONEY", record.getMoney());
         values.put("CURRENCY", record.getCurrency());
         values.put("TAG", record.getTag());
-        values.put("TIME", record.getCalendar().toString());
+        values.put("TIME", new SimpleDateFormat("yyyy-MM-dd HH:mm")
+                .format(record.getCalendar().getTime()));
         values.put("REMARK", record.getRemark());
         sqliteDatabase.update(RECORD_DB_NAME_STRING, values,
                 "ID = ?",

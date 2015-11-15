@@ -75,16 +75,6 @@ public class TagChooseFragment extends Fragment {
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                MainActivity.tagId = RecordManager.TAGS.
-//                        get(fragmentPosition * 8 + position + 2).getId();
-//                MainActivity.tagName.setText(
-//                        Util.GetTagName(
-//                                RecordManager.TAGS.get(
-//                                        fragmentPosition * 8 + position + 2).getId()));
-//                MainActivity.tagImage.setImageResource(
-//                        Util.GetTagIcon(
-//                                RecordManager.TAGS.
-//                                        get(fragmentPosition * 8 + position + 2).getId()));
                 try {
                     ((OnTagItemSelectedListener)activity).onTagItemPicked(position);
                 } catch (ClassCastException cce){

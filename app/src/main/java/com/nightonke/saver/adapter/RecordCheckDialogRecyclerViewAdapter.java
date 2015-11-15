@@ -49,7 +49,7 @@ public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<R
         holder.date.setTypeface(Util.GetTypeface());
         holder.money.setTypeface(Util.typefaceLatoLight);
         holder.money.setTextColor(
-                Util.GetTagColor(RecordManager.TAGS.get(records.get(position).getTag()).getId()));
+                Util.GetTagColorResource(RecordManager.TAGS.get(records.get(position).getTag()).getId()));
         holder.index.setText((position + 1) + "");
         holder.index.setTypeface(Util.typefaceLatoLight);
 

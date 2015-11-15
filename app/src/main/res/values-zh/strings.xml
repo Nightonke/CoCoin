@@ -145,4 +145,7 @@
 
     <string name="deleting">删除这条记录</string>
 
+    <string name="from_invalid">起始时间有误</string>
+    <string name="to_invalid">结束时间有误</string>
+
 </resources>

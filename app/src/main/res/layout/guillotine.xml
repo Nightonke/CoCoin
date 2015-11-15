@@ -113,6 +113,14 @@
                     android:layout_height="15dp"
                     />
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="1234"
+                    android:textColor="#ffffff"
+                    />
+
             </LinearLayout>
 
             <com.balysv.materialmenu.MaterialMenuView

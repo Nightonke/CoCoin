@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -127,6 +128,15 @@ public class AccountBookListViewActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextChange(String newText) {
                 //Do some magic
+                // Todo
+                if (newText.length() == 1) {
+                    if (Util.isNumber(newText.charAt(0))) {
+
+                    }
+                } else if (newText.length() == 2) {
+
+                }
+
                 Log.d("Saver", "onQueryTextChange");
                 return false;
             }
@@ -337,9 +347,15 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         switch (requestCode) {
             case EDITTING_RECORD:
                 if (resultCode == RESULT_OK) {
-                    int position = data.getIntExtra("POSITION", -1);
-                    mAdapter.setPinned(false, position);
-                    mAdapter.notifyItemChanged(position);
+                    final int position = data.getIntExtra("POSITION", -1);
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.setPinned(false, position);
+                            mAdapter.notifyItemChanged(position);
+                        }
+                    }, 500);
                 }
                 break;
             default:
@@ -424,4 +440,5 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
         super.onDestroy();
     }
+
 }

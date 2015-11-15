@@ -6,16 +6,13 @@ package com.nightonke.saver.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.SectionIndexer;
 import android.widget.TextView;
 
-import com.daimajia.androidanimations.library.YoYo;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.SwipeableItemConstants;
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAction;
@@ -25,7 +22,6 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.utils.RecyclerViewAdapterUtils;
 import com.nightonke.saver.R;
-import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.util.Util;
 
@@ -145,7 +141,7 @@ public class MySwipeableItemAdapter
         holder.date.setTypeface(Util.GetTypeface());
         holder.money.setTypeface(Util.typefaceLatoLight);
         holder.money.setTextColor(
-                Util.GetTagColor(RecordManager.RECORDS.get(tPosition).getTag()));
+                Util.GetTagColorResource(RecordManager.RECORDS.get(tPosition).getTag()));
         holder.index.setText((position + 1) + "");
         holder.index.setTypeface(Util.typefaceLatoLight);
 

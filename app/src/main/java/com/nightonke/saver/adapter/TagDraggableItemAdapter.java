@@ -116,7 +116,7 @@ public class TagDraggableItemAdapter
                 // need to clear drawable state here to get correct appearance of the dragging item.
                 Util.clearState(holder.mContainer.getForeground());
             } else if ((dragState & Draggable.STATE_FLAG_DRAGGING) != 0) {
-                bgResId = R.drawable.bg_item_dragging_state;
+                bgResId = R.drawable.bg_item_normal_state;
             } else {
                 bgResId = R.drawable.bg_item_normal_state;
             }
