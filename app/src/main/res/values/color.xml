@@ -82,4 +82,6 @@
     <color name="fastScrollHandleColor">#FFF</color>
     <color name="fastScrollBarColor">#ffcecece</color>
 
+    <color name="setting_ripple">#2196F3</color>
+
 </resources>

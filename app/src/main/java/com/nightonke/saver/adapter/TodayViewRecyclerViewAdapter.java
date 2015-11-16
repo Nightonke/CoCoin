@@ -246,6 +246,7 @@ public class TodayViewRecyclerViewAdapter
                     holder.histogram_icon_left.setVisibility(View.GONE);
                     holder.histogram_icon_right.setVisibility(View.GONE);
                     holder.all.setVisibility(View.GONE);
+                    holder.dateBottom.setVisibility(View.GONE);
                 } else {
                     holder.emptyTip.setVisibility(View.GONE);
 

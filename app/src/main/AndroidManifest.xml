@@ -49,6 +49,10 @@
             android:name=".activity.EditRecordActivity"
             android:launchMode="singleTop">
         </activity>
+        <activity
+            android:name=".activity.AccountBookSettingActivity"
+            android:launchMode="singleTop">
+        </activity>
     </application>
 
 </manifest>

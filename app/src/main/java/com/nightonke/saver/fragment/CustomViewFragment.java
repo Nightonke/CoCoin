@@ -81,7 +81,7 @@ public class CustomViewFragment extends Fragment {
     private TextView fromDate;
     private TextView toDate;
     private TextView expense;
-    private TextView bottomDate;
+    private TextView emptyTip;
 
     private boolean fromSet = false;
     private boolean toSet = false;
@@ -102,6 +102,8 @@ public class CustomViewFragment extends Fragment {
     private MaterialIconView all;
 
     private Calendar startDayCalendar;
+
+    private boolean IS_EMPTY = false;
 
     // store the sum of expenses of each tag
     private Map<Integer, Double> TagExpanse;
@@ -153,6 +155,8 @@ public class CustomViewFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        IS_EMPTY = RecordManager.RECORDS.isEmpty();
+
         mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
@@ -178,6 +182,13 @@ public class CustomViewFragment extends Fragment {
 
         all = (MaterialIconView)view.findViewById(R.id.all);
         all.setVisibility(View.INVISIBLE);
+
+        emptyTip = (TextView)view.findViewById(R.id.empty_tip);
+        emptyTip.setTypeface(Util.GetTypeface());
+
+        if (IS_EMPTY) {
+            emptyTip.setVisibility(View.GONE);
+        }
 
         MaterialIconView setFromDate = (MaterialIconView)view.findViewById(R.id.set_from_date);
         setFromDate.setOnClickListener(new View.OnClickListener() {
@@ -325,8 +336,12 @@ public class CustomViewFragment extends Fragment {
 
     private void select() {
 
+        if (IS_EMPTY) {
+            return;
+        }
+
         start = -1;
-        end = -1;
+        end = 0;
         Sum = 0;
         lastPieSelectedPosition = -1;
 
@@ -346,7 +361,6 @@ public class CustomViewFragment extends Fragment {
                     start = i;
                 }
             }
-            if (start != -1) Sum += RecordManager.RECORDS.get(i).getMoney();
         }
 
         expense.setText(Sum + "");
@@ -470,7 +484,7 @@ public class CustomViewFragment extends Fragment {
                 }
                 if ("zh".equals(Util.GetLanguage())) {
                     dialogTitle = dateShownString + "\n" +
-                            Util.GetSpendString((int) sliceValue.getValue()) +
+                            Util.GetSpendString((int) sliceValue.getValue()) + " " +
                             "于" + Util.GetTagName(tagId);
                 } else {
                     dialogTitle = Util.GetSpendString((int) sliceValue.getValue()) + " " +

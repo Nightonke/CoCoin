@@ -79,4 +79,6 @@ dependencies {
     compile 'xyz.danoz:recyclerviewfastscroller:0.1.3'
 
     compile 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:1.0.0'
+
+    compile 'com.kyleduo.switchbutton:library:1.3.1'
 }

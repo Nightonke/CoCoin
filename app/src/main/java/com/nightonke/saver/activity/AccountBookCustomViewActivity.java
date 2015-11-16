@@ -29,9 +29,6 @@ public class AccountBookCustomViewActivity extends AppCompatActivity {
 
     private Context mContext;
 
-    private RecyclerView recyclerView;
-    private DrawerMonthViewRecyclerViewAdapter drawerMonthViewRecyclerViewAdapter;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

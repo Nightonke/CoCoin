@@ -194,7 +194,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
 
         Log.d("Saver", "SETTINGS");
 
-        Intent intent = new Intent(mContext, TagSettingActivity.class);
+        Intent intent = new Intent(mContext, AccountBookSettingActivity.class);
         startActivityForResult(intent, SETTING_TAG);
 
     }
