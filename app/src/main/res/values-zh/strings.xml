@@ -175,4 +175,7 @@
 
     <string name="whether_show_circle">空心饼状图</string>
 
+    <string name="default_user_name">您尚未登录！</string>
+    <string name="default_user_email">登录后可备份数据到云端，点我登录吧！</string>
+
 </resources>

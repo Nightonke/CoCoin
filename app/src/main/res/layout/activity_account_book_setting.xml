@@ -169,6 +169,7 @@
                                     />
 
                                 <TextView
+                                    android:id="@+id/expense_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
@@ -200,6 +201,7 @@
                                     />
 
                                 <TextView
+                                    android:id="@+id/records_text"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:gravity="center"
@@ -257,6 +259,7 @@
                         >
 
                         <net.steamcrafted.materialiconlib.MaterialIconView
+                            android:id="@+id/month_limit_icon"
                             xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
@@ -269,6 +272,7 @@
                             />
 
                         <TextView
+                            android:id="@+id/month_limit_text"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -299,6 +303,7 @@
                         >
 
                         <net.steamcrafted.materialiconlib.MaterialIconView
+                            android:id="@+id/month_expense_icon"
                             xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
@@ -311,6 +316,7 @@
                             />
 
                         <TextView
+                            android:id="@+id/month_expense_text"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:textColor="@color/drawer_text"
@@ -346,6 +352,7 @@
                         >
 
                         <net.steamcrafted.materialiconlib.MaterialIconView
+                            android:id="@+id/month_color_icon"
                             xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
@@ -358,6 +365,7 @@
                             />
 
                         <TextView
+                            android:id="@+id/month_color_remind_text"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -388,6 +396,7 @@
                         >
 
                         <net.steamcrafted.materialiconlib.MaterialIconView
+                            android:id="@+id/month_forbidden_icon"
                             xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:layout_width="48dp"
                             android:layout_height="48dp"
@@ -400,6 +409,7 @@
                             />
 
                         <TextView
+                            android:id="@+id/month_forbidden_text"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1"
@@ -468,6 +478,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/account_book_name_text"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:textColor="@color/drawer_text"
@@ -539,6 +550,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/change_password_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -596,6 +608,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/sort_tags_text"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -641,6 +654,7 @@
                     >
 
                     <net.steamcrafted.materialiconlib.MaterialIconView
+                        android:id="@+id/whether_show_picture_icon"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
@@ -708,6 +722,7 @@
                     >
 
                     <net.steamcrafted.materialiconlib.MaterialIconView
+                        android:id="@+id/whether_show_circle_icon"
                         xmlns:app="http://schemas.android.com/apk/res-auto"
                         android:layout_width="48dp"
                         android:layout_height="48dp"

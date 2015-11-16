@@ -74,6 +74,7 @@ public class DB {
                 record.setCalendar(cursor.getString(cursor.getColumnIndex("TIME")));
                 record.setRemark(cursor.getString(cursor.getColumnIndex("REMARK")));
                 RecordManager.RECORDS.add(record);
+                RecordManager.SUM += (int)record.getMoney();
             } while (cursor.moveToNext());
             if (cursor != null) {
                 cursor.close();

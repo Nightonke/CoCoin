@@ -184,4 +184,7 @@
 
     <string name="whether_show_circle">Show circle in pie chart</string>
 
+    <string name="default_user_name">You haven\'t logged on! After logging on, </string>
+    <string name="default_user_email">you can save your records to cloud. Click me to do so!</string>
+
 </resources>

@@ -29,6 +29,7 @@ public class RecordManager {
 
     private static DB db;
 
+    public static Integer SUM;
     public static List<Record> RECORDS;
     public static List<Tag> TAGS;
     public static Map<Integer, String> TAG_NAMES;
@@ -90,6 +91,7 @@ public class RecordManager {
 
     public synchronized static RecordManager getInstance(Context context) {
         if (recordManager == null) {
+            SUM = 0;
             RECORDS = new LinkedList<>();
             TAGS = new LinkedList<>();
             TAG_NAMES = new HashMap<>();
@@ -131,6 +133,7 @@ public class RecordManager {
                 Log.d("Saver", "Save the above record SUCCESSFULLY!");
             }
             RECORDS.add(record);
+            SUM += (int)record.getMoney();
         }
         return insertId;
     }
@@ -180,6 +183,7 @@ public class RecordManager {
                 for (Record record : RECORDS) {
                     if (record.getId() == deletedId) {
                         RECORDS.remove(record);
+                        SUM -= (int)record.getMoney();
                         break;
                     }
                 }
@@ -231,6 +235,8 @@ public class RecordManager {
             Log.d("Saver", "Update the above record SUCCESSFULLY!");
             for (Record r : RECORDS) {
                 if (r.getId() == updateId) {
+                    SUM -= (int)r.getMoney();
+                    SUM += (int)record.getMoney();
                     r.set(record);
                     break;
                 }
