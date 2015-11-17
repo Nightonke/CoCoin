@@ -13,6 +13,7 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.Util;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -26,6 +27,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import butterknife.ButterKnife;
@@ -152,7 +154,7 @@ public class MonthViewRecyclerViewAdapter
             pieChartData.setHasLabels(false);
             pieChartData.setHasLabelsOnlyForSelected(false);
             pieChartData.setHasLabelsOutside(false);
-            pieChartData.setHasCenterCircle(false);
+            pieChartData.setHasCenterCircle(SettingManager.getInstance().getIsHollow());
             pieChartDataList.add(pieChartData);
 
             // for each week
@@ -225,7 +227,7 @@ public class MonthViewRecyclerViewAdapter
                 pieChartData.setHasLabels(false);
                 pieChartData.setHasLabelsOnlyForSelected(false);
                 pieChartData.setHasLabelsOutside(false);
-                pieChartData.setHasCenterCircle(false);
+                pieChartData.setHasCenterCircle(SettingManager.getInstance().getIsHollow());
                 pieChartDataList.add(pieChartData);
 
                 now = Util.GetNextWeekLeftRange(now);

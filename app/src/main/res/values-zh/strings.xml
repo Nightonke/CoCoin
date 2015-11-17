@@ -171,11 +171,15 @@
 
     <string name="sort_tag">标签排序</string>
 
-    <string name="whether_show_picture">在账本中显示图片</string>
+    <string name="whether_show_picture">在标签视图中显示图片</string>
 
-    <string name="whether_show_circle">空心饼状图</string>
+    <string name="whether_show_circle">甜甜圈饼图</string>
 
     <string name="default_user_name">您尚未登录！</string>
     <string name="default_user_email">登录后可备份数据到云端，点我登录吧！</string>
+
+    <string name="set_account_book_dialog_title">给账本来个名字！</string>
+
+    <string name="submit">好！</string>
 
 </resources>

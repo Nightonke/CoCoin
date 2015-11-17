@@ -35,6 +35,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.MySwipeableItemAdapter;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.Util;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -401,9 +402,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
     @Override
     public void finish() {
 
-        Intent intent = new Intent();
-        intent.putExtra("IS_CHANGED", true);
-        setResult(RESULT_OK, intent);
+        SettingManager.getInstance().setRecordIsUpdated(true);
 
         if (Util.backupRecord != null) {
             RecordManager.deleteRecord(Util.backupRecord.getId(), false);

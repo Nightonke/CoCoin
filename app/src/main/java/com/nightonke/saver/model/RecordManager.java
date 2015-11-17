@@ -23,6 +23,8 @@ import java.util.Random;
  * Created by 伟平 on 2015/10/20.
  */
 
+// Todo the update is wrong!
+
 public class RecordManager {
 
     private static RecordManager recordManager = null;
@@ -234,7 +236,7 @@ public class RecordManager {
         } else {
             Log.d("Saver", "Update the above record SUCCESSFULLY!");
             for (Record r : RECORDS) {
-                if (r.getId() == updateId) {
+                if (r.getId() == record.getId()) {
                     SUM -= (int)r.getMoney();
                     SUM += (int)record.getMoney();
                     r.set(record);
@@ -255,7 +257,7 @@ public class RecordManager {
         } else {
             Log.d("Saver", "Update the above tag SUCCESSFULLY!" + " - " + updateId);
             for (Tag t : TAGS) {
-                if (t.getId() == updateId) {
+                if (t.getId() == tag.getId()) {
                     t.set(tag);
                     break;
                 }

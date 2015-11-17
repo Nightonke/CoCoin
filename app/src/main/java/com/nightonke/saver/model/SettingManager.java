@@ -38,6 +38,21 @@ public class SettingManager {
     // whether draw a hollow pie chart
     private Boolean IS_HOLLOW;
 
+    // tell the mainActivity whether the tags' order should be changed
+    private Boolean MAIN_ACTIVITY_TAG_SHOULD_CHANGE = false;
+
+    // tell the today view to change the pie
+    private Boolean TODAY_VIEW_PIE_SHOULD_CHANGE = false;
+
+    // tell the today view to change the title
+    private Boolean TODAY_VIEW_TITLE_SHOULD_CHANGE = false;
+
+    // tell the main view to change the title
+    private Boolean MAIN_VIEW_TITLE_SHOULD_CHANGE = false;
+
+    // tell the today view to change the data
+    private Boolean RECORD_IS_UPDATED = false;
+
 // default value////////////////////////////////////////////////////////////////////////////////////
 
     // whether is logged on defaultly
@@ -266,4 +281,43 @@ public class SettingManager {
         return DEFAULT_PROFILE_IMAGE_DIR;
     }
 
+    public Boolean getMainActivityTagShouldChange() {
+        return MAIN_ACTIVITY_TAG_SHOULD_CHANGE;
+    }
+
+    public void setMainActivityTagShouldChange(Boolean MAIN_ACTIVITY_TAG_SHOULD_CHANGE) {
+        this.MAIN_ACTIVITY_TAG_SHOULD_CHANGE = MAIN_ACTIVITY_TAG_SHOULD_CHANGE;
+    }
+
+    public Boolean getTodayViewPieShouldChange() {
+        return TODAY_VIEW_PIE_SHOULD_CHANGE;
+    }
+
+    public void setTodayViewPieShouldChange(Boolean TODAY_VIEW_PIE_SHOULD_CHANGE) {
+        this.TODAY_VIEW_PIE_SHOULD_CHANGE = TODAY_VIEW_PIE_SHOULD_CHANGE;
+    }
+
+    public Boolean getTodayViewTitleShouldChange() {
+        return TODAY_VIEW_TITLE_SHOULD_CHANGE;
+    }
+
+    public void setTodayViewTitleShouldChange(Boolean TODAY_VIEW_TITLE_SHOULD_CHANGE) {
+        this.TODAY_VIEW_TITLE_SHOULD_CHANGE = TODAY_VIEW_TITLE_SHOULD_CHANGE;
+    }
+
+    public Boolean getRecordIsUpdated() {
+        return RECORD_IS_UPDATED;
+    }
+
+    public void setRecordIsUpdated(Boolean RECORD_IS_UPDATED) {
+        this.RECORD_IS_UPDATED = RECORD_IS_UPDATED;
+    }
+
+    public Boolean getMainViewTitleShouldChange() {
+        return MAIN_VIEW_TITLE_SHOULD_CHANGE;
+    }
+
+    public void setMainViewTitleShouldChange(Boolean MAIN_VIEW_TITLE_SHOULD_CHANGE) {
+        this.MAIN_VIEW_TITLE_SHOULD_CHANGE = MAIN_VIEW_TITLE_SHOULD_CHANGE;
+    }
 }

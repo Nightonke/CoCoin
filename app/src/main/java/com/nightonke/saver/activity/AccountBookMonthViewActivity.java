@@ -25,6 +25,7 @@ import com.nightonke.saver.adapter.DrawerMonthViewRecyclerViewAdapter.OnItemClic
 import com.nightonke.saver.adapter.MonthViewFragmentAdapter;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.Util;
 
 public class AccountBookMonthViewActivity extends AppCompatActivity {
@@ -62,7 +63,7 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
         View view = mViewPager.getRootView();
         TextView title = (TextView)view.findViewById(R.id.logo_white);
         title.setTypeface(Util.typefaceLatoLight);
-        title.setText("CoCoin");
+        title.setText(SettingManager.getInstance().getAccountBookName());
 
         mViewPager.getPagerTitleStrip().setTypeface(Util.GetTypeface(), Typeface.NORMAL);
 
@@ -108,10 +109,10 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
-                return HeaderDesign.fromColorResAndDrawable(
-                        Util.GetTagColorResource(RecordManager.TAGS.get(page).getId()),
-                        mContext.getResources().getDrawable(
-                                Util.GetTagDrawable(-3)));
+                return HeaderDesign.fromColorAndDrawable(
+                        Util.GetTagColor(RecordManager.TAGS.get(page).getId()),
+                        Util.GetTagDrawable(-3)
+                );
             }
         });
 

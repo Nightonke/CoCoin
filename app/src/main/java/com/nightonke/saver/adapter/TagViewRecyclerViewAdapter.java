@@ -14,6 +14,7 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.Tag;
 import com.nightonke.saver.util.Util;
 import com.nispok.snackbar.Snackbar;
@@ -336,7 +337,7 @@ public class TagViewRecyclerViewAdapter
                         pieChartData.setHasLabels(false);
                         pieChartData.setHasLabelsOnlyForSelected(false);
                         pieChartData.setHasLabelsOutside(false);
-                        pieChartData.setHasCenterCircle(false);
+                        pieChartData.setHasCenterCircle(SettingManager.getInstance().getIsHollow());
 
                         holder.pie.setPieChartData(pieChartData);
                         holder.pie.setOnValueTouchListener(new PieValueTouchListener(position - 1));

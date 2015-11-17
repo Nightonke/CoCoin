@@ -21,6 +21,7 @@ import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.adapter.DrawerTagChooseGridViewAdapter;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
@@ -57,7 +58,7 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
         View view = mViewPager.getRootView();
         TextView title = (TextView)view.findViewById(R.id.logo_white);
         title.setTypeface(Util.typefaceLatoLight);
-        title.setText("CoCoin");
+        title.setText(SettingManager.getInstance().getAccountBookName());
 
         mViewPager.getPagerTitleStrip().setTypeface(Util.typefaceLatoLight, Typeface.NORMAL);
 
@@ -102,15 +103,26 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
         mViewPager.getViewPager().setAdapter(tagModeAdapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
-        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
-            @Override
-            public HeaderDesign getHeaderDesign(int page) {
-                return HeaderDesign.fromColorResAndDrawable(
-                        Util.GetTagColorResource(RecordManager.TAGS.get(page).getId()),
-                        mContext.getResources().getDrawable(
-                                Util.GetTagDrawable(RecordManager.TAGS.get(page).getId())));
-            }
-        });
+        mViewPager.clearAnimation();
+        if (SettingManager.getInstance().getShowPicture()) {
+            mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+                @Override
+                public HeaderDesign getHeaderDesign(int page) {
+                    return HeaderDesign.fromColorAndDrawable(
+                            Util.GetTagColor(RecordManager.TAGS.get(page).getId()),
+                            Util.GetTagDrawable(RecordManager.TAGS.get(page).getId()));
+                }
+            });
+        } else {
+            mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+                @Override
+                public HeaderDesign getHeaderDesign(int page) {
+                    return HeaderDesign.fromColorAndDrawable(
+                            Util.GetTagColor(RecordManager.TAGS.get(page).getId()),
+                            Util.GetTagDrawable(-3));
+                }
+            });
+        }
 
         myGridView = (MyGridView)mDrawer.findViewById(R.id.grid_view);
         drawerTagChooseAdapter = new DrawerTagChooseGridViewAdapter(mContext);

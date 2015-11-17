@@ -19,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
@@ -37,7 +36,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
-public class EditRecordActivity extends AppCompatActivity
+public class EditPasswordActivity extends AppCompatActivity
         implements TagChooseFragment.OnTagItemSelectedListener {
 
     private Context mContext;
@@ -82,7 +81,7 @@ public class EditRecordActivity extends AppCompatActivity
             position = extras.getInt("POSITION");
         }
 
-        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+        int currentapiVersion = Build.VERSION.SDK_INT;
 
         Log.d("Saver", "Version number: " + currentapiVersion);
 

@@ -21,6 +21,7 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 import com.nightonke.saver.adapter.TagDraggableItemAdapter;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.model.SettingManager;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -135,9 +136,10 @@ public class TagSettingActivity extends AppCompatActivity {
         mAdapter = null;
         mLayoutManager = null;
 
-        Intent intent = new Intent();
-        intent.putExtra("IS_CHANGED", myItemAdapter.isChanged());
-        setResult(RESULT_OK, intent);
+        // tell others that the tags' order should be changed
+        if (myItemAdapter.isChanged()) {
+            SettingManager.getInstance().setMainActivityTagShouldChange(true);
+        }
 
         super.finish();
     }

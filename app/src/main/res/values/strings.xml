@@ -180,11 +180,15 @@
 
     <string name="sort_tag">Sort tags</string>
 
-    <string name="whether_show_picture">Show pictures in account book</string>
+    <string name="whether_show_picture">Show pictures in tags view account book</string>
 
-    <string name="whether_show_circle">Show circle in pie chart</string>
+    <string name="whether_show_circle">Doughnut-shape pie chart</string>
 
     <string name="default_user_name">You haven\'t logged on! After logging on, </string>
     <string name="default_user_email">you can save your records to cloud. Click me to do so!</string>
+
+    <string name="set_account_book_dialog_title">Name your account book!</string>
+
+    <string name="submit">Submit!</string>
 
 </resources>

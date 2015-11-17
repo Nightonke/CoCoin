@@ -31,6 +31,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.ui.DummyOperation;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.R;
@@ -156,6 +157,7 @@ public class MainActivity extends AppCompatActivity
 
         toolBarTitle = (TextView)findViewById(R.id.guillotine_title);
         toolBarTitle.setTypeface(Util.typefaceLatoLight);
+        toolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
@@ -222,6 +224,7 @@ public class MainActivity extends AppCompatActivity
 
         menuToolBarTitle = (TextView)guillotineMenu.findViewById(R.id.guillotine_title);
         menuToolBarTitle.setTypeface(Util.typefaceLatoLight);
+        menuToolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
         radioButton0 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_0);
         radioButton1 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_1);
@@ -624,6 +627,24 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
+
+        // if the tags' order has been changed
+        if (SettingManager.getInstance().getMainActivityTagShouldChange()) {
+            // change the tag fragment
+            for (int i = 0; i < tagChoicePagerAdapter.getCount(); i++) {
+                ((TagChooseFragment)tagChoicePagerAdapter.
+                        getPage(i)).updateTags();
+            }
+            // and tell others that main activity has changed
+            SettingManager.getInstance().setMainActivityTagShouldChange(false);
+        }
+
+        // if the title should be changed
+        if (SettingManager.getInstance().getMainViewTitleShouldChange()) {
+            menuToolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
+            toolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
+            SettingManager.getInstance().setMainViewTitleShouldChange(false);
+        }
 
         radioButton0.setChecked(false);
         radioButton1.setChecked(false);

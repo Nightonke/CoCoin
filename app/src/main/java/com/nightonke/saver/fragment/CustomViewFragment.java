@@ -22,6 +22,7 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.Util;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -363,8 +364,6 @@ public class CustomViewFragment extends Fragment {
             }
         }
 
-        expense.setText(Sum + "");
-
         startDayCalendar = (Calendar)from.clone();
         startDayCalendar.set(Calendar.HOUR_OF_DAY, 0);
         startDayCalendar.set(Calendar.MINUTE, 0);
@@ -392,6 +391,9 @@ public class CustomViewFragment extends Fragment {
                     record.getCalendar().getTimeInMillis()) - startDay)] += record.getMoney();
         }
 
+        expense.setText(Sum + "");
+        emptyTip.setVisibility(View.GONE);
+
         TagExpanse = Util.SortTreeMapByValues(TagExpanse);
 
         final ArrayList<SliceValue> sliceValues = new ArrayList<>();
@@ -411,7 +413,7 @@ public class CustomViewFragment extends Fragment {
         pieChartData.setHasLabels(false);
         pieChartData.setHasLabelsOnlyForSelected(false);
         pieChartData.setHasLabelsOutside(false);
-        pieChartData.setHasCenterCircle(false);
+        pieChartData.setHasCenterCircle(SettingManager.getInstance().getIsHollow());
 
         pie.setPieChartData(pieChartData);
         pie.setChartRotationEnabled(false);
@@ -505,7 +507,7 @@ public class CustomViewFragment extends Fragment {
                                 .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                                 .position(Snackbar.SnackbarPosition.BOTTOM)
                                 .margin(15, 15)
-                                .backgroundDrawable(Util.GetSnackBarBackground(0))
+                                .backgroundDrawable(Util.GetSnackBarBackground(-3))
                                 .text(text)
                                 .textTypeface(Util.GetTypeface())
                                 .textColor(Color.WHITE)

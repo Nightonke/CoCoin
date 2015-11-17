@@ -50,6 +50,10 @@
             android:launchMode="singleTop">
         </activity>
         <activity
+            android:name=".activity.EditPasswordActivity"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
             android:name=".activity.AccountBookSettingActivity"
             android:launchMode="singleTop">
         </activity>

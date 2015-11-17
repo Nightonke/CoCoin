@@ -22,6 +22,7 @@ import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.adapter.TodayViewFragmentAdapter;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.Util;
 
 public class AccountBookTodayViewActivity extends AppCompatActivity {
@@ -53,6 +54,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
     private TextView userName;
     private TextView userEmail;
 
+    private TextView title;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +71,9 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         setFonts();
 
         View view = mViewPager.getRootView();
-        TextView title = (TextView)view.findViewById(R.id.logo_white);
+        title = (TextView)view.findViewById(R.id.logo_white);
         title.setTypeface(Util.typefaceLatoLight);
-        title.setText("CoCoin");
+        title.setText(SettingManager.getInstance().getAccountBookName());
 
         mViewPager.getPagerTitleStrip().setTypeface(Util.GetTypeface(), Typeface.NORMAL);
 
@@ -122,10 +125,10 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
-                return HeaderDesign.fromColorResAndDrawable(
-                        Util.GetTagColorResource(RecordManager.TAGS.get(page).getId()),
-                        mContext.getResources().getDrawable(
-                                Util.GetTagDrawable(-3)));
+                return HeaderDesign.fromColorAndDrawable(
+                        Util.GetTagColor(page - 2),
+                        Util.GetTagDrawable(-3)
+                );
             }
         });
 
@@ -186,7 +189,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         Log.d("Saver", "LIST_MODE");
 
         Intent intent = new Intent(mContext, AccountBookListViewActivity.class);
-        startActivityForResult(intent, CHANGING_RECORD);
+        startActivity(intent);
 
     }
 
@@ -195,29 +198,27 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         Log.d("Saver", "SETTINGS");
 
         Intent intent = new Intent(mContext, AccountBookSettingActivity.class);
-        startActivityForResult(intent, SETTING_TAG);
+        startActivity(intent);
 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (requestCode) {
-            case SETTING_TAG:
-                if (resultCode == RESULT_OK) {
-                    if (data.getBooleanExtra("IS_CHANGED", false)) {
-                        TAG_CHANGED = true;
-                    }
-                }
-                break;
-            case CHANGING_RECORD:
-                if (resultCode == RESULT_OK) {
-                    if (data.getBooleanExtra("IS_CHANGED", false)) {
-                        todayModeAdapter.notifyDataSetChanged();
-                    }
-                }
-                break;
-            default:
-                break;
+    public void onResume() {
+        super.onResume();
+
+        if (SettingManager.getInstance().getTodayViewPieShouldChange()) {
+            todayModeAdapter.notifyDataSetChanged();
+            SettingManager.getInstance().setTodayViewPieShouldChange(Boolean.FALSE);
+        }
+
+        if (SettingManager.getInstance().getTodayViewTitleShouldChange()) {
+            title.setText(SettingManager.getInstance().getAccountBookName());
+            SettingManager.getInstance().setTodayViewTitleShouldChange(false);
+        }
+
+        if (SettingManager.getInstance().getRecordIsUpdated()) {
+            todayModeAdapter.notifyDataSetChanged();
+            SettingManager.getInstance().setRecordIsUpdated(false);
         }
     }
 

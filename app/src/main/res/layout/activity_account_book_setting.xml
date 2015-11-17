@@ -4,7 +4,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/view_pager_background"
     android:scrollbars="none"
     >
 
@@ -78,12 +78,14 @@
                         android:layout_height="match_parent"
                         android:layout_width="match_parent"
                         android:orientation="vertical"
+                        android:clickable="false"
                         >
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="50dp"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:clickable="false">
 
                             <net.steamcrafted.materialiconlib.MaterialIconView
                                 android:id="@+id/user_name_icon"
@@ -96,6 +98,7 @@
                                 app:materialIconSize="24dp"
                                 android:scaleType="center"
                                 android:background="@color/transparent"
+                                android:clickable="false"
                                 />
 
                             <TextView
@@ -108,6 +111,7 @@
                                 android:text="@string/test_user_name"
                                 android:layout_gravity="center_vertical|left"
                                 android:gravity="center_vertical|left"
+                                android:clickable="false"
                                 />
 
                         </LinearLayout>

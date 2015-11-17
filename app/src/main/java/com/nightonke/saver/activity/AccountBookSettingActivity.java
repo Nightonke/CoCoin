@@ -1,12 +1,14 @@
 package com.nightonke.saver.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -15,6 +17,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.nightonke.saver.R;
@@ -104,6 +108,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
         }
 
         init();
+
+
     }
 
     @Override
@@ -138,11 +144,6 @@ public class AccountBookSettingActivity extends AppCompatActivity
             case R.id.profile_image:
                 changeLogo();
                 break;
-            case R.id.profile_layout:
-                userOperator();
-                break;
-
-
         }
     }
 
@@ -150,46 +151,27 @@ public class AccountBookSettingActivity extends AppCompatActivity
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.month_limit_enable_button:
-                if (isChecked) {
-                    SettingManager.getInstance().setIsMonthLimit(Boolean.TRUE);
-                } else {
-                    SettingManager.getInstance().setIsMonthLimit(Boolean.FALSE);
-                }
+                SettingManager.getInstance().setIsMonthLimit(isChecked);
                 setMonthState();
                 break;
             case R.id.month_color_remind_button:
-                if (!monthSB.isChecked()) return;
-                if (isChecked) {
-                    SettingManager.getInstance().setIsColorRemind(Boolean.TRUE);
-                } else {
-                    SettingManager.getInstance().setIsColorRemind(Boolean.FALSE);
-                }
-                setMonthState();
+                SettingManager.getInstance().setIsColorRemind(isChecked);
+                setIconEnable(monthColorRemindIcon, isChecked
+                        && SettingManager.getInstance().getIsMonthLimit());
                 break;
             case R.id.month_forbidden_button:
-                if (!monthSB.isChecked()) return;
-                if (isChecked) {
-                    SettingManager.getInstance().setIsForbidden(Boolean.TRUE);
-                } else {
-                    SettingManager.getInstance().setIsForbidden(Boolean.FALSE);
-                }
-                setMonthState();
+                SettingManager.getInstance().setIsForbidden(isChecked);
+                setIconEnable(monthForbiddenIcon, isChecked
+                        && SettingManager.getInstance().getIsMonthLimit());
                 break;
             case R.id.whether_show_picture_button:
-                if (isChecked) {
-                    SettingManager.getInstance().setShowPicture(Boolean.TRUE);
-                } else {
-                    SettingManager.getInstance().setShowPicture(Boolean.FALSE);
-                }
-                setShowPictureState();
+                SettingManager.getInstance().setShowPicture(isChecked);
+                setShowPictureState(isChecked);
                 break;
             case R.id.whether_show_circle_button:
-                if (isChecked) {
-                    SettingManager.getInstance().setIsHollow(Boolean.TRUE);
-                } else {
-                    SettingManager.getInstance().setIsHollow(Boolean.FALSE);
-                }
-                setHollowState();
+                SettingManager.getInstance().setIsHollow(isChecked);
+                setHollowState(isChecked);
+                SettingManager.getInstance().setTodayViewPieShouldChange(Boolean.TRUE);
                 break;
             default:
                 break;
@@ -204,6 +186,34 @@ public class AccountBookSettingActivity extends AppCompatActivity
         Toast.makeText(mContext, "User operator", Toast.LENGTH_SHORT).show();
     }
 
+    private void changeAccountBookName() {
+        new MaterialDialog.Builder(this)
+                .theme(Theme.LIGHT)
+                .title(R.string.set_account_book_dialog_title)
+                .inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
+                .inputRange(1, 16)
+                .positiveText(R.string.submit)
+                .input(SettingManager.getInstance().getAccountBookName()
+                        , null, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        SettingManager.getInstance().setAccountBookName(input.toString());
+                        SettingManager.getInstance().setTodayViewTitleShouldChange(true);
+                        SettingManager.getInstance().setMainViewTitleShouldChange(true);
+                        accountBookName.setText(input.toString());
+                    }
+                }).show();
+    }
+
+    private void changePassword() {
+
+    }
+
+    private void sortTags() {
+        Intent intent = new Intent(mContext, TagSettingActivity.class);
+        startActivity(intent);
+    }
+
     private void init() {
         back = (MaterialIconView)findViewById(R.id.icon_left);
         back.setOnClickListener(new View.OnClickListener() {
@@ -214,7 +224,14 @@ public class AccountBookSettingActivity extends AppCompatActivity
         });
 
         logo = (CircleImageView)findViewById(R.id.profile_image);
+        logo.setOnClickListener(this);
         profileLayout = (MaterialRippleLayout)findViewById(R.id.profile_layout);
+        profileLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userOperator();
+            }
+        });
         userNameIcon = (MaterialIconView)findViewById(R.id.user_name_icon);
         userEmailIcon = (MaterialIconView)findViewById(R.id.user_email_icon);
         userName = (TextView)findViewById(R.id.user_name);
@@ -239,8 +256,11 @@ public class AccountBookSettingActivity extends AppCompatActivity
         monthColorRemindIcon = (MaterialIconView)findViewById(R.id.month_color_icon);
         monthForbiddenIcon = (MaterialIconView)findViewById(R.id.month_forbidden_icon);
         monthSB = (SwitchButton)findViewById(R.id.month_limit_enable_button);
+        monthSB.setOnCheckedChangeListener(this);
         monthColorRemindSB = (SwitchButton)findViewById(R.id.month_color_remind_button);
+        monthColorRemindSB.setOnCheckedChangeListener(this);
         monthForbiddenSB = (SwitchButton)findViewById(R.id.month_forbidden_button);
+        monthForbiddenSB.setOnCheckedChangeListener(this);
         monthMaxExpense = (TextView)findViewById(R.id.month_expense);
         monthMaxExpense.setTypeface(Util.typefaceLatoLight);
         monthLimitTV = (TextView)findViewById(R.id.month_limit_text);
@@ -253,43 +273,63 @@ public class AccountBookSettingActivity extends AppCompatActivity
         monthForbiddenTV.setTypeface(Util.GetTypeface());
 
         accountBookNameLayout = (MaterialRippleLayout)findViewById(R.id.account_book_name_layout);
+        accountBookNameLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changeAccountBookName();
+            }
+        });
         accountBookName = (TextView)findViewById(R.id.account_book_name);
         accountBookName.setTypeface(Util.GetTypeface());
+        accountBookName.setText(SettingManager.getInstance().getAccountBookName());
         accountBookNameTV = (TextView)findViewById(R.id.account_book_name_text);
         accountBookNameTV.setTypeface(Util.GetTypeface());
 
         changePasswordLayout = (MaterialRippleLayout)findViewById(R.id.change_password_layout);
+        changePasswordLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                changePassword();
+            }
+        });
         changePasswordTV = (TextView)findViewById(R.id.change_password_text);
         changePasswordTV.setTypeface(Util.GetTypeface());
 
         sortTagsLayout = (MaterialRippleLayout)findViewById(R.id.sort_tags_layout);
+        sortTagsLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sortTags();
+            }
+        });
         sortTagsTV = (TextView)findViewById(R.id.sort_tags_text);
         sortTagsTV.setTypeface(Util.GetTypeface());
 
         showPictureLayout = (MaterialRippleLayout)findViewById(R.id.whether_show_picture_layout);
         showPictureIcon = (MaterialIconView)findViewById(R.id.whether_show_picture_icon);
         showPictureSB = (SwitchButton)findViewById(R.id.whether_show_picture_button);
+        showPictureSB.setOnCheckedChangeListener(this);
         showPictureTV = (TextView)findViewById(R.id.whether_show_picture_text);
         showPictureTV.setTypeface(Util.GetTypeface());
 
         hollowLayout = (MaterialRippleLayout)findViewById(R.id.whether_show_circle_layout);
         hollowIcon = (MaterialIconView)findViewById(R.id.whether_show_circle_icon);
         hollowSB = (SwitchButton)findViewById(R.id.whether_show_circle_button);
+        hollowSB.setOnCheckedChangeListener(this);
         hollowTV = (TextView)findViewById(R.id.whether_show_circle_text);
         hollowTV.setTypeface(Util.GetTypeface());
 
-        if (SettingManager.getInstance().getLoggenOn()) {
+        boolean loggenOn = SettingManager.getInstance().getLoggenOn();
+        if (loggenOn) {
             // is logged on, set the user name and email
             userName.setText(SettingManager.getInstance().getUserName());
-            userNameIcon.setEnabled(true);
             userEmail.setText(SettingManager.getInstance().getUserEmail());
-            userEmailIcon.setEnabled(true);
         } else {
             userName.setText(mContext.getResources().getString(R.string.default_user_name));
-            userNameIcon.setEnabled(false);
             userEmail.setText(mContext.getResources().getString(R.string.default_user_email));
-            userEmailIcon.setEnabled(false);
         }
+        setIconEnable(userNameIcon, loggenOn);
+        setIconEnable(userEmailIcon, loggenOn);
 
         if (SettingManager.getInstance().getHasLogo()) {
             // is has a logo, just set the logo
@@ -299,12 +339,14 @@ public class AccountBookSettingActivity extends AppCompatActivity
             // Todo
         }
 
+        monthSB.setCheckedImmediately(SettingManager.getInstance().getIsMonthLimit());
         setMonthState();
 
-        setShowPictureState();
+        showPictureSB.setCheckedImmediately(SettingManager.getInstance().getShowPicture());
+        setShowPictureState(SettingManager.getInstance().getShowPicture());
 
-        setHollowState();
-
+        hollowSB.setCheckedImmediately(SettingManager.getInstance().getIsHollow());
+        setHollowState(SettingManager.getInstance().getIsHollow());
     }
 
     private void loadLogo() {
@@ -321,71 +363,44 @@ public class AccountBookSettingActivity extends AppCompatActivity
     }
 
     private void setMonthState() {
-        if (SettingManager.getInstance().getIsMonthLimit()) {
-            // is month limit
-            monthIcon.setEnabled(true);
-            monthSB.setCheckedImmediately(true);
-            monthMaxExpenseIcon.setEnabled(true);
-            monthMaxExpenseTV.setEnabled(true);
-            monthMaxExpense.setEnabled(true);
-            monthMaxExpense.setText(SettingManager.getInstance().getMonthLimit() + "");
-            monthColorRemindTV.setEnabled(true);
-            monthColorRemindSB.setEnabled(true);
-            monthForbiddenTV.setEnabled(true);
-            monthForbiddenSB.setEnabled(true);
-            if (SettingManager.getInstance().getIsColorRemind()) {
-                monthColorRemindIcon.setEnabled(true);
-            } else {
-                monthColorRemindIcon.setEnabled(false);
-            }
-            if (SettingManager.getInstance().getIsForbidden()) {
-                monthForbiddenIcon.setEnabled(true);
-            } else {
-                monthForbiddenIcon.setEnabled(false);
-            }
-        } else {
-            monthIcon.setEnabled(false);
-            monthSB.setCheckedImmediately(false);
-            monthMaxExpenseIcon.setEnabled(false);
-            monthMaxExpenseTV.setEnabled(false);
-            monthMaxExpense.setEnabled(false);
-            monthMaxExpense.setText(SettingManager.getInstance().getMonthLimit() + "");
-            monthColorRemindIcon.setEnabled(false);
-            monthColorRemindTV.setEnabled(false);
-            monthColorRemindSB.setEnabled(false);
-            monthForbiddenIcon.setEnabled(false);
-            monthForbiddenTV.setEnabled(false);
-            monthForbiddenSB.setEnabled(false);
-            if (SettingManager.getInstance().getIsColorRemind()) {
-                monthColorRemindSB.setCheckedImmediately(true);
-            } else {
-                monthColorRemindSB.setCheckedImmediately(true);
-            }
-            if (SettingManager.getInstance().getIsForbidden()) {
-                monthForbiddenSB.setCheckedImmediately(true);
-            } else {
-                monthForbiddenSB.setCheckedImmediately(false);
-            }
-        }
+        boolean isMonthLimit = SettingManager.getInstance().getIsMonthLimit();
+        boolean isMonthColorRemind = SettingManager.getInstance().getIsColorRemind();
+        boolean isForbidden = SettingManager.getInstance().getIsForbidden();
+
+        setIconEnable(monthIcon, isMonthLimit);
+        setIconEnable(monthMaxExpenseIcon, isMonthLimit);
+        setTVEnable(monthMaxExpenseTV, isMonthLimit);
+        setTVEnable(monthMaxExpense, isMonthLimit);
+        setTVEnable(monthColorRemindTV, isMonthLimit);
+        setTVEnable(monthForbiddenTV, isMonthLimit);
+        monthMaxExpense.setText(SettingManager.getInstance().getMonthLimit() + "");
+
+        setIconEnable(monthColorRemindIcon, isMonthLimit && isMonthColorRemind);
+        setIconEnable(monthForbiddenIcon, isMonthLimit && isForbidden);
+
+        monthColorRemindSB.setEnabled(isMonthLimit);
+        monthColorRemindSB.setCheckedImmediately(
+                SettingManager.getInstance().getIsColorRemind());
+        monthForbiddenSB.setEnabled(isMonthLimit);
+        monthForbiddenSB.setCheckedImmediately(
+                SettingManager.getInstance().getIsForbidden());
     }
 
-    private void setShowPictureState() {
-        if (SettingManager.getInstance().getShowPicture()) {
-            showPictureIcon.setEnabled(true);
-            showPictureSB.setCheckedImmediately(true);
-        } else {
-            showPictureIcon.setEnabled(false);
-            showPictureSB.setCheckedImmediately(false);
-        }
+    private void setShowPictureState(boolean isChecked) {
+        setIconEnable(showPictureIcon, isChecked);
     }
 
-    private void setHollowState() {
-        if (SettingManager.getInstance().getIsHollow()) {
-            hollowIcon.setEnabled(true);
-            hollowSB.setCheckedImmediately(true);
-        } else {
-            hollowIcon.setEnabled(false);
-            hollowSB.setCheckedImmediately(false);
-        }
+    private void setHollowState(boolean isChecked) {
+        setIconEnable(hollowIcon, isChecked);
+    }
+
+    private void setIconEnable(MaterialIconView icon, boolean enable) {
+        if (enable) icon.setColor(mContext.getResources().getColor(R.color.my_blue));
+        else icon.setColor(mContext.getResources().getColor(R.color.my_gray));
+    }
+
+    private void setTVEnable(TextView tv, boolean enable) {
+        if (enable) tv.setTextColor(mContext.getResources().getColor(R.color.drawer_text));
+        else tv.setTextColor(mContext.getResources().getColor(R.color.my_gray));
     }
 }
