@@ -175,6 +175,7 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(tagChoicePagerAdapter);
 
         smartTabLayout.setViewPager(viewPager);
+        smartTabLayout.setVisibility(View.INVISIBLE);
 
         myGridView = (MyGridView)findViewById(R.id.gridview);
         myGridViewAdapter = new ButtonGridViewAdapter(this);
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity
         if (inputPassword.length() != 4) {
             return;
         }
-        if (Util.PASSWORD.equals(inputPassword)) {
+        if (SettingManager.getInstance().getPassword().equals(inputPassword)) {
             isLoading = true;
             YoYo.with(Techniques.Bounce).delay(0).duration(1000).playOn(radioButton3);
             statusButton.animateState(MaterialMenuDrawable.IconState.CHECK);

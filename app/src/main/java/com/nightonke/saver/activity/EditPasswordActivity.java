@@ -5,15 +5,19 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,9 +27,12 @@ import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
+import com.nightonke.saver.fragment.PasswordStateFragment;
 import com.nightonke.saver.fragment.TagChooseFragment;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.ui.FixedSpeedScroller;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.Util;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
@@ -36,54 +43,43 @@ import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
-public class EditPasswordActivity extends AppCompatActivity
-        implements TagChooseFragment.OnTagItemSelectedListener {
+import java.lang.reflect.Field;
+
+public class EditPasswordActivity extends AppCompatActivity {
 
     private Context mContext;
-    private boolean IS_CHANGED = false;
-    private boolean FIRST_EDIT = true;
-    private int position = -1;
-
-    private ViewPager viewPager;
-    private SmartTabLayout smartTabLayout;
-    private FragmentPagerItemAdapter tagChoicePagerAdapter;
 
     private MyGridView myGridView;
     private ButtonGridViewAdapter myGridViewAdapter;
 
-    private MaterialEditText editView;
+    private MaterialIconView back;
 
-    private final int NO_TAG_TOAST = 0;
-    private final int NO_MONEY_TOAST = 1;
-    private final int SAVE_SUCCESSFULLY_TOAST = 4;
-    private final int SAVE_FAILED_TOAST = 5;
+    private static final int VERIFY_STATE = 0;
+    private static final int NEW_PASSWORD = 1;
+    private static final int PASSWORD_AGAIN = 2;
 
-    public int tagId;
-    public TextView tagName;
-    public ImageView tagImage;
+    private int CURRENT_STATE = VERIFY_STATE;
+
+    private String oldPassword = "";
+    private String newPassword = "";
+    private String againPassword = "";
+
+    private ViewPager viewPager;
+    private FragmentPagerItemAdapter passwordAdapter;
 
     private SuperToast superToast;
 
-    private MaterialIconView back;
+    private float x1, y1, x2, y2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_record);
+        setContentView(R.layout.activity_edit_password);
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
 
         mContext = this;
 
-        superToast = new SuperToast(this);
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null) {
-            position = extras.getInt("POSITION");
-        }
-
         int currentapiVersion = Build.VERSION.SDK_INT;
-
-        Log.d("Saver", "Version number: " + currentapiVersion);
 
         if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
             // Do something for lollipop and above versions
@@ -96,21 +92,33 @@ public class EditPasswordActivity extends AppCompatActivity
         }
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
 
-        FragmentPagerItems pages = new FragmentPagerItems(this);
-        for (int i = 0; i < 4; i++) {
-            pages.add(FragmentPagerItem.of("1", TagChooseFragment.class));
+        try {
+            Interpolator sInterpolator = new AccelerateInterpolator();
+            Field mScroller;
+            mScroller = ViewPager.class.getDeclaredField("mScroller");
+            mScroller.setAccessible(true);
+            FixedSpeedScroller scroller
+                    = new FixedSpeedScroller(viewPager.getContext(), sInterpolator);
+            scroller.setmDuration(1000);
+            mScroller.set(viewPager, scroller);
+        } catch (NoSuchFieldException e) {
+        } catch (IllegalArgumentException e) {
+        } catch (IllegalAccessException e) {
         }
 
-        tagChoicePagerAdapter = new FragmentPagerItemAdapter(
+        FragmentPagerItems pages = new FragmentPagerItems(this);
+        for (int i = 0; i < 3; i++) {
+            pages.add(FragmentPagerItem.of("1", PasswordStateFragment.class));
+        }
+
+        passwordAdapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), pages);
 
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(3);
+        viewPager.setScrollBarFadeDuration(1000);
 
-        viewPager.setAdapter(tagChoicePagerAdapter);
-
-        smartTabLayout.setViewPager(viewPager);
+        viewPager.setAdapter(passwordAdapter);
 
         myGridView = (MyGridView)findViewById(R.id.gridview);
         myGridViewAdapter = new ButtonGridViewAdapter(this);
@@ -131,22 +139,6 @@ public class EditPasswordActivity extends AppCompatActivity
                     }
                 });
 
-        editView = (MaterialEditText)findViewById(R.id.edit_view);
-        editView.setTypeface(Util.typefaceLatoHairline);
-        editView.setText("" + (int) RecordManager.RECORDS.get(
-                RecordManager.RECORDS.size() - 1 - position).getMoney());
-        editView.requestFocus();
-        editView.setHelperText(" ");
-
-        tagName = (TextView)findViewById(R.id.tag_name);
-        tagName.setTypeface(Util.typefaceLatoLight);
-        tagImage = (ImageView)findViewById(R.id.tag_image);
-
-        tagId = RecordManager.RECORDS.get(
-                RecordManager.RECORDS.size() - 1 - position).getTag();
-        tagName.setText(Util.GetTagName(tagId));
-        tagImage.setImageResource(Util.GetTagIcon(tagId));
-
         back = (MaterialIconView)findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,6 +146,8 @@ public class EditPasswordActivity extends AppCompatActivity
                 onBackPressed();
             }
         });
+
+        superToast = new SuperToast(this);
 
     }
 
@@ -165,10 +159,6 @@ public class EditPasswordActivity extends AppCompatActivity
 
     @Override
     public void finish() {
-        Intent intent = new Intent();
-        intent.putExtra("IS_CHANGED", IS_CHANGED);
-        intent.putExtra("POSITION", position);
-        setResult(RESULT_OK, intent);
 
         super.finish();
     }
@@ -191,74 +181,113 @@ public class EditPasswordActivity extends AppCompatActivity
     };
 
     private void buttonClickOperation(boolean longClick, int position) {
-        if (IS_CHANGED) {
-            return;
-        }
-        if (editView.getText().toString().equals("0")
-                && !Util.ClickButtonCommit(position)) {
-            if (Util.ClickButtonDelete(position)
-                    || Util.ClickButtonIsZero(position)) {
+        switch (CURRENT_STATE) {
+            case VERIFY_STATE:
+                if (Util.ClickButtonDelete(position)) {
+                    if (longClick) {
+                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
+                        oldPassword = "";
+                    } else {
+                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                                .clear(oldPassword.length() - 1);
+                        if (oldPassword.length() != 0)
+                            oldPassword = oldPassword.substring(0, oldPassword.length() - 1);
+                    }
+                } else if (Util.ClickButtonCommit(position)) {
 
-            } else {
-                editView.setText(Util.BUTTONS[position]);
-            }
-        } else {
-            if (Util.ClickButtonDelete(position)) {
-                if (longClick) {
-                    editView.setText("0");
-                    editView.setHelperText(" ");
-                    editView.setHelperText(
-                            Util.FLOATINGLABELS[editView.getText().toString().length()]);
                 } else {
-                    editView.setText(editView.getText().toString()
-                            .substring(0, editView.getText().toString().length() - 1));
-                    if (editView.getText().toString().length() == 0) {
-                        editView.setText("0");
-                        editView.setHelperText(" ");
+                    ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                            .set(oldPassword.length());
+                    oldPassword += Util.BUTTONS[position];
+                    if (oldPassword.length() == 4) {
+                        if (oldPassword.equals(SettingManager.getInstance().getPassword())) {
+                            // old password correct
+                            // notice that if the old password is correct,
+                            // we won't go back to VERIFY_STATE any more
+                            CURRENT_STATE = NEW_PASSWORD;
+                            viewPager.setCurrentItem(NEW_PASSWORD, true);
+                        } else {
+                            // old password wrong
+                            ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                                    .clear(4);
+                            showToast(0);
+                            oldPassword = "";
+                        }
                     }
                 }
-            } else if (Util.ClickButtonCommit(position)) {
-                commit();
-            } else {
-                if (FIRST_EDIT) {
-                    editView.setText(Util.BUTTONS[position]);
-                    FIRST_EDIT = false;
-                } else {
-                    editView.setText(editView.getText().toString() + Util.BUTTONS[position]);
-                }
-            }
-        }
-        editView.setHelperText(Util.FLOATINGLABELS[editView.getText().toString().length()]);
-    }
+                break;
+            case NEW_PASSWORD:
+                if (Util.ClickButtonDelete(position)) {
+                    if (longClick) {
+                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
+                        newPassword = "";
+                    } else {
+                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                                .clear(newPassword.length() - 1);
+                        if (newPassword.length() != 0)
+                            newPassword = newPassword.substring(0, newPassword.length() - 1);
+                    }
+                } else if (Util.ClickButtonCommit(position)) {
 
-    private void commit() {
-        if (tagName.getText().equals("")) {
-            showToast(NO_TAG_TOAST);
-        } else if (editView.getText().toString().equals("0")) {
-            showToast(NO_MONEY_TOAST);
-        } else  {
-            Record record = new Record();
-            record.set(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - position));
-            record.setMoney(Float.valueOf(editView.getText().toString()));
-            record.setTag(tagId);
-            long updateId = RecordManager.updateRecord(record);
-            if (updateId == -1) {
-                if (!superToast.isShowing()) {
-                    showToast(SAVE_FAILED_TOAST);
+                } else {
+                    ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                            .set(newPassword.length());
+                    newPassword += Util.BUTTONS[position];
+                    if (newPassword.length() == 4) {
+                        // finish the new password input
+                        CURRENT_STATE = PASSWORD_AGAIN;
+                        viewPager.setCurrentItem(PASSWORD_AGAIN, true);
+                    }
                 }
-            } else {
-                IS_CHANGED = true;
-                if (!superToast.isShowing()) {
-                    showToast(SAVE_SUCCESSFULLY_TOAST);
+                break;
+            case PASSWORD_AGAIN:
+                if (Util.ClickButtonDelete(position)) {
+                    if (longClick) {
+                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
+                        againPassword = "";
+                    } else {
+                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                                .clear(againPassword.length() - 1);
+                        if (againPassword.length() != 0)
+                            againPassword = againPassword.substring(0, againPassword.length() - 1);
+                    }
+                } else if (Util.ClickButtonCommit(position)) {
+
+                } else {
+                    ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                            .set(againPassword.length());
+                    againPassword += Util.BUTTONS[position];
+                    if (againPassword.length() == 4) {
+                        // if the password again is equal to the new password
+                        if (againPassword.equals(newPassword)) {
+                            CURRENT_STATE = -1;
+                            showToast(2);
+                            SettingManager.getInstance().setPassword(newPassword);
+                            final Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            }, 1000);
+                        } else {
+                            CURRENT_STATE = NEW_PASSWORD;
+                            viewPager.setCurrentItem(NEW_PASSWORD, true);
+                            newPassword = "";
+                            againPassword = "";
+                            ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
+                            showToast(1);
+                        }
+                    }
                 }
-                onBackPressed();
-            }
+                break;
+            default:
+                break;
         }
     }
 
     private void showToast(int toastType) {
         SuperToast.cancelAllSuperToasts();
-        SuperActivityToast.cancelAllSuperActivityToasts();
 
         superToast.setAnimations(SuperToast.Animations.POPUP);
         superToast.setDuration(SuperToast.Duration.SHORT);
@@ -266,30 +295,34 @@ public class EditPasswordActivity extends AppCompatActivity
         superToast.setTextSize(SuperToast.TextSize.SMALL);
 
         switch (toastType) {
-            case NO_MONEY_TOAST:
-
-                superToast.setText(mContext.getResources().getString(R.string.toast_no_money));
-                superToast.setBackground(SuperToast.Background.BLUE);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
-
-                break;
-            case SAVE_SUCCESSFULLY_TOAST:
+            // old password wrong
+            case 0:
 
                 superToast.setText(
-                        mContext.getResources().getString(R.string.toast_save_successfully));
-                superToast.setBackground(SuperToast.Background.GREEN);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
-
-                break;
-            case SAVE_FAILED_TOAST:
-
-                superToast.setText(mContext.getResources().getString(R.string.toast_save_failed));
+                        mContext.getResources().getString(R.string.toast_password_wrong));
                 superToast.setBackground(SuperToast.Background.RED);
                 superToast.getTextView().setTypeface(Util.typefaceLatoLight);
 
                 break;
-            default:
+            // password is different
+            case 1:
 
+                superToast.setText(
+                        mContext.getResources().getString(R.string.different_password));
+                superToast.setBackground(SuperToast.Background.RED);
+                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+
+                break;
+            // success
+            case 2:
+
+                superToast.setText(
+                        mContext.getResources().getString(R.string.set_password_successfully));
+                superToast.setBackground(SuperToast.Background.GREEN);
+                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+
+                break;
+            default:
                 break;
         }
 
@@ -297,16 +330,31 @@ public class EditPasswordActivity extends AppCompatActivity
     }
 
     @Override
-    public void onTagItemPicked(int position) {
-        tagId = RecordManager.TAGS.
-                get(viewPager.getCurrentItem() * 8 + position + 2).getId();
-        tagName.setText(
-                Util.GetTagName(
-                        RecordManager.TAGS.get(
-                                viewPager.getCurrentItem() * 8 + position + 2).getId()));
-        tagImage.setImageResource(
-                Util.GetTagIcon(
-                        RecordManager.TAGS.
-                                get(viewPager.getCurrentItem() * 8 + position + 2).getId()));
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = ev.getX();
+                y1 = ev.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                x2 = ev.getX();
+                y2 = ev.getY();
+                if (Math.abs(x1 - x2) > Math.abs(y1 - y2)) {
+                    return true;
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = ev.getX();
+                y2 = ev.getY();
+                if (Math.abs(x1 - x2) > Math.abs(y1 - y2)) {
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
     }
+
 }

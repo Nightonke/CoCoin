@@ -182,4 +182,11 @@
 
     <string name="submit">好！</string>
 
+    <string name="different_password">两次密码不一致！</string>
+    <string name="set_password_successfully">这密码还不错</string>
+
+    <string name="password_tip_0">请输入旧密码</string>
+    <string name="password_tip_1">请输入新密码</string>
+    <string name="password_tip_2">请再次输入新密码</string>
+
 </resources>

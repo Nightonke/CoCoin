@@ -74,7 +74,7 @@ public class SettingManager {
     // account bool name defaultly
     private final String DEFAULT_ACCOUNT_BOOK_NAME = "CoCoin Account Book";
     // the password
-    private final String DEFAULT_PASSWORD = null;
+    private final String DEFAULT_PASSWORD = "1234";
     // whether show picture in account book
     private final Boolean DEFAULT_SHOW_PICTURE = false;
     // whether draw a hollow pie chart

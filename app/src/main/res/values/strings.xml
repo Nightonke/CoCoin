@@ -191,4 +191,11 @@
 
     <string name="submit">Submit!</string>
 
+    <string name="different_password">Password different!</string>
+    <string name="set_password_successfully">You did it!</string>
+
+    <string name="password_tip_0">Verify your old password</string>
+    <string name="password_tip_1">Input your new password</string>
+    <string name="password_tip_2">Input again to verify</string>
+
 </resources>

@@ -189,6 +189,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private void changeAccountBookName() {
         new MaterialDialog.Builder(this)
                 .theme(Theme.LIGHT)
+                .typeface(Util.GetTypeface(), Util.GetTypeface())
                 .title(R.string.set_account_book_dialog_title)
                 .inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .inputRange(1, 16)
@@ -206,7 +207,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
     }
 
     private void changePassword() {
-
+        Intent intent = new Intent(mContext, EditPasswordActivity.class);
+        startActivity(intent);
     }
 
     private void sortTags() {
