@@ -1,1 +1,1 @@
-include ':app', ':GuillotineMenu-Android', ':AndroidRubberIndicator'
+include ':app', ':GuillotineMenu-Android'

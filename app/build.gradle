@@ -13,7 +13,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.1"
+        versionName "1.0.2"
 
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
@@ -28,19 +28,18 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+
     compile 'com.android.support:appcompat-v7:23.0.1'
+
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.easing:library:1.0.1@aar'
     compile 'com.daimajia.androidanimations:library:1.1.3@aar'
+
     compile 'com.balysv:material-ripple:1.0.2'
-    compile 'com.github.rey5137:material:1.2.1'
+
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
-    compile 'in.srain.cube:ultra-ptr:1.0.11'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile project(':GuillotineMenu-Android')
-    compile 'com.jungly:GridPasswordView:0.2'
-    compile 'com.victor:lib:1.0.1'
-    compile project(':AndroidRubberIndicator')
 
     compile ('com.github.florent37:materialviewpager:1.1.2@aar'){
         transitive = true
@@ -50,8 +49,6 @@ dependencies {
 
     compile 'com.balysv.materialmenu:material-menu:1.5.4'
 
-    compile 'com.daimajia.numberprogressbar:library:1.2@aar'
-
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
 
     compile 'com.nispok:snackbar:2.11.+'
@@ -59,16 +56,12 @@ dependencies {
     compile 'net.steamcrafted:materialiconlib:1.0.5'
 
     compile 'com.ogaclejapan.smarttablayout:library:1.4.2@aar'
-
-    //Optional: see how to use the utility
     compile 'com.ogaclejapan.smarttablayout:utils-v4:1.4.2@aar'
 
     compile 'com.github.johnpersano:supertoasts:1.3.4@aar'
 
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
-
-    compile 'cn.bmob.android:bmob-sdk:3.4.3'
 
     compile ('com.h6ah4i.android.widget.advrecyclerview:advrecyclerview:0.8.4@aar'){
         transitive=true

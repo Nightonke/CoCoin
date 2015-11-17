@@ -72,7 +72,7 @@ public class SettingManager {
     // whether is able to be recorded when over the limit defaultly
     private final Boolean DEFAULT_IS_FORBIDDEN = false;
     // account bool name defaultly
-    private final String DEFAULT_ACCOUNT_BOOK_NAME = "CoCoin Account Book";
+    private final String DEFAULT_ACCOUNT_BOOK_NAME = "CoCoin";
     // the password
     private final String DEFAULT_PASSWORD = "1234";
     // whether show picture in account book

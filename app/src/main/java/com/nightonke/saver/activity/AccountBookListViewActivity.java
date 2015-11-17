@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -97,6 +98,8 @@ public class AccountBookListViewActivity extends AppCompatActivity {
             window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
         } else{
             // do something for phones running an SDK before lollipop
+            View statusBarView = (View)findViewById(R.id.status_bar_view);
+            statusBarView.getLayoutParams().height = Util.getStatusBarHeight();
         }
 
         if (toolbar != null) {

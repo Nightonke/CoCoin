@@ -105,6 +105,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
             window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
         } else{
             // do something for phones running an SDK before lollipop
+            View statusBarView = (View)findViewById(R.id.status_bar_view);
+            statusBarView.getLayoutParams().height = Util.getStatusBarHeight();
         }
 
         init();
