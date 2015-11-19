@@ -44,6 +44,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.rey.material.widget.RadioButton;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
@@ -51,7 +52,6 @@ import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import carbon.widget.RadioButton;
 
 public class MainActivity extends AppCompatActivity
         implements TagChooseFragment.OnTagItemSelectedListener {
@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity
     private final int SETTING_TAG = 0;
 
     private Context mContext;
+
+    private View guillotineBackground;
 
     private TextView toolBarTitle;
     private TextView menuToolBarTitle;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity
     private MaterialEditText editView;
 
     private LinearLayout transparentLy;
+    private LinearLayout guillotineColorLy;
 
     private boolean isPassword = false;
 
@@ -117,6 +120,8 @@ public class MainActivity extends AppCompatActivity
 
     boolean doubleBackToExitPressedOnce = false;
 
+    private Toolbar guillotineToolBar;
+
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
     @InjectView(R.id.root)
@@ -154,6 +159,8 @@ public class MainActivity extends AppCompatActivity
         Util.init(this.getApplicationContext());
 
         RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
+
+        guillotineBackground = (View)findViewById(R.id.guillotine_background);
 
         toolBarTitle = (TextView)findViewById(R.id.guillotine_title);
         toolBarTitle.setTypeface(Util.typefaceLatoLight);
@@ -222,6 +229,8 @@ public class MainActivity extends AppCompatActivity
         root.addView(guillotineMenu);
 
         transparentLy = (LinearLayout)guillotineMenu.findViewById(R.id.transparent_ly);
+        guillotineColorLy = (LinearLayout)guillotineMenu.findViewById(R.id.guillotine_color_ly);
+        guillotineToolBar = (Toolbar)guillotineMenu.findViewById(R.id.toolbar);
 
         menuToolBarTitle = (TextView)guillotineMenu.findViewById(R.id.guillotine_title);
         menuToolBarTitle.setTypeface(Util.typefaceLatoLight);
@@ -231,10 +240,6 @@ public class MainActivity extends AppCompatActivity
         radioButton1 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_1);
         radioButton2 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_2);
         radioButton3 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_3);
-        radioButton0.setTint(R.color.white);
-        radioButton1.setTint(R.color.white);
-        radioButton2.setTint(R.color.white);
-        radioButton3.setTint(R.color.white);
 
         passwordTip = (TextView)guillotineMenu.findViewById(R.id.password_tip);
         passwordTip.setText(mContext.getResources().getString(R.string.password_tip));
@@ -279,6 +284,8 @@ public class MainActivity extends AppCompatActivity
                 animation.open();
             }
         });
+
+        changeColor();
     }
 
     private AdapterView.OnItemLongClickListener gridViewLongClickListener
@@ -471,6 +478,7 @@ public class MainActivity extends AppCompatActivity
             } else {
                 if (!superToast.isShowing()) {
                     showToast(SAVE_SUCCESSFULLY_TOAST);
+                    changeColor();
                 }
                 tagImage.setImageResource(R.color.transparent);
                 tagName.setText("");
@@ -574,6 +582,54 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void changeColor() {
+        boolean shouldChange
+                = SettingManager.getInstance().getIsMonthLimit()
+                && SettingManager.getInstance().getIsColorRemind()
+                && RecordManager.getCurrentMonthExpense()
+                >= SettingManager.getInstance().getMonthWarning();
+
+        int currentapiVersion = android.os.Build.VERSION.SDK_INT;
+
+        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
+            // Do something for lollipop and above versions
+            Window window = this.getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            if (shouldChange) {
+                window.setStatusBarColor(
+                        Util.getDeeperColor(SettingManager.getInstance().getRemindColor()));
+            } else {
+                window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
+            }
+
+        } else{
+            // do something for phones running an SDK before lollipop
+        }
+
+        if (shouldChange) {
+            root.setBackgroundColor(SettingManager.getInstance().getRemindColor());
+            toolbar.setBackgroundColor(SettingManager.getInstance().getRemindColor());
+            guillotineBackground.setBackgroundColor(SettingManager.getInstance().getRemindColor());
+            guillotineColorLy.setBackgroundColor(SettingManager.getInstance().getRemindColor());
+            guillotineToolBar.setBackgroundColor(SettingManager.getInstance().getRemindColor());
+            editView.setTextColor(SettingManager.getInstance().getRemindColor());
+            editView.setPrimaryColor(SettingManager.getInstance().getRemindColor());
+            editView.setHelperTextColor(SettingManager.getInstance().getRemindColor());
+        } else {
+            root.setBackgroundColor(Util.MY_BLUE);
+            toolbar.setBackgroundColor(Util.MY_BLUE);
+            guillotineBackground.setBackgroundColor(Util.MY_BLUE);
+            guillotineColorLy.setBackgroundColor(Util.MY_BLUE);
+            guillotineToolBar.setBackgroundColor(Util.MY_BLUE);
+            editView.setTextColor(Util.MY_BLUE);
+            editView.setPrimaryColor(Util.MY_BLUE);
+            editView.setHelperTextColor(Util.MY_BLUE);
+        }
+        myGridViewAdapter.notifyDataSetInvalidated();
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
 
@@ -646,6 +702,8 @@ public class MainActivity extends AppCompatActivity
             toolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
             SettingManager.getInstance().setMainViewTitleShouldChange(false);
         }
+
+        changeColor();
 
         radioButton0.setChecked(false);
         radioButton1.setChecked(false);

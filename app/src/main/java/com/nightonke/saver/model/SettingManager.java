@@ -1,6 +1,7 @@
 package com.nightonke.saver.model;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 
 import com.nightonke.saver.activity.CoCoinApplication;
@@ -25,8 +26,12 @@ public class SettingManager {
     private Boolean IS_MONTH_LIMIT;
     // month-limit
     private Integer MONTH_LIMIT;
+    // month warning
+    private Integer MONTH_WARNING;
     // color reminder
     private Boolean IS_COLOR_REMIND;
+    // the color of the reminder
+    private Integer REMIND_COLOR;
     // whether is able to be recorded when over the limit
     private Boolean IS_FORBIDDEN;
     // account bool name
@@ -53,25 +58,38 @@ public class SettingManager {
     // tell the today view to change the data
     private Boolean RECORD_IS_UPDATED = false;
 
+    // tell the today view to update the month expense
+    private Boolean TODAY_VIEW_MONTH_EXPENSE_SHOULD_CHANGE = false;
+
+    // tell the main view to update the month expense
+    private Boolean MAIN_VIEW_MONTH_EXPENSE_SHOULD_CHANGE = false;
+
+    // tell the main view to update the remind color
+    private Boolean MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE = false;
+
 // default value////////////////////////////////////////////////////////////////////////////////////
 
-    // whether is logged on defaultly
+    // whether is logged on by default
     private final Boolean DEFAULT_LOGGED_ON = false;
-    // user name defaultly
+    // user name by default
     private final String DEFAULT_USER_NAME = null;
-    // user email defaultly
+    // user email by default
     private final String DEFAULT_USER_EMAIL = null;
-    // has profile logo defaultly
+    // has profile logo by default
     private final Boolean DEFAULT_HAS_LOGO = false;
-    // whether is month-limit defaultly
+    // whether is month-limit by default
     private final Boolean DEFAULT_IS_MONTH_LIMIT = false;
-    // month-limit defaultly
+    // month-limit by default
     private final Integer DEFAULT_MONTH_LIMIT = 1000;
-    // color reminder defaultly
+    // month warning by default
+    private final Integer DEFAULT_MONTH_WARNING = 800;
+    // color reminder by default
     private final Boolean DEFAULT_IS_COLOR_REMIND = false;
-    // whether is able to be recorded when over the limit defaultly
+    // the color of the reminder defaulty
+    private final Integer DEFAULT_REMIND_COLOR = (int)Long.parseLong("FFE91E63", 16);
+    // whether is able to be recorded when over the limit by default
     private final Boolean DEFAULT_IS_FORBIDDEN = false;
-    // account bool name defaultly
+    // account bool name by default
     private final String DEFAULT_ACCOUNT_BOOK_NAME = "CoCoin";
     // the password
     private final String DEFAULT_PASSWORD = "1234";
@@ -183,6 +201,21 @@ public class SettingManager {
         this.MONTH_LIMIT = MONTH_LIMIT;
     }
 
+    public Integer getMonthWarning() {
+        MONTH_WARNING = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getInt("MONTH_WARNING", DEFAULT_MONTH_WARNING);
+        return MONTH_WARNING;
+    }
+
+    public void setMonthWarning(Integer MONTH_WARNING) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putInt("MONTH_WARNING", MONTH_WARNING);
+        editor.commit();
+        this.MONTH_WARNING = MONTH_WARNING;
+    }
+
     public Boolean getIsColorRemind() {
         IS_COLOR_REMIND = PreferenceManager.
                 getDefaultSharedPreferences(CoCoinApplication.getAppContext())
@@ -196,6 +229,21 @@ public class SettingManager {
         editor.putBoolean("IS_COLOR_REMIND", IS_COLOR_REMIND);
         editor.commit();
         this.IS_COLOR_REMIND = IS_COLOR_REMIND;
+    }
+
+    public int getRemindColor() {
+        REMIND_COLOR = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getInt("REMIND_COLOR", DEFAULT_REMIND_COLOR);
+        return REMIND_COLOR;
+    }
+
+    public void setRemindColor(int REMIND_COLOR) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putInt("REMIND_COLOR", REMIND_COLOR);
+        editor.commit();
+        this.REMIND_COLOR = REMIND_COLOR;
     }
 
     public Boolean getIsForbidden() {
@@ -319,5 +367,29 @@ public class SettingManager {
 
     public void setMainViewTitleShouldChange(Boolean MAIN_VIEW_TITLE_SHOULD_CHANGE) {
         this.MAIN_VIEW_TITLE_SHOULD_CHANGE = MAIN_VIEW_TITLE_SHOULD_CHANGE;
+    }
+
+    public Boolean getTodayViewMonthExpenseShouldChange() {
+        return TODAY_VIEW_MONTH_EXPENSE_SHOULD_CHANGE;
+    }
+
+    public void setTodayViewMonthExpenseShouldChange(Boolean TODAY_VIEW_MONTH_EXPENSE_SHOULD_CHANGE) {
+        this.TODAY_VIEW_MONTH_EXPENSE_SHOULD_CHANGE = TODAY_VIEW_MONTH_EXPENSE_SHOULD_CHANGE;
+    }
+
+    public Boolean getMainViewMonthExpenseShouldChange() {
+        return MAIN_VIEW_MONTH_EXPENSE_SHOULD_CHANGE;
+    }
+
+    public void setMainViewMonthExpenseShouldChange(Boolean MAIN_VIEW_MONTH_EXPENSE_SHOULD_CHANGE) {
+        this.MAIN_VIEW_MONTH_EXPENSE_SHOULD_CHANGE = MAIN_VIEW_MONTH_EXPENSE_SHOULD_CHANGE;
+    }
+
+    public Boolean getMainViewRemindColorShouldChange() {
+        return MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE;
+    }
+
+    public void setMainViewRemindColorShouldChange(Boolean MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE) {
+        this.MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE = MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE;
     }
 }

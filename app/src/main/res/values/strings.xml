@@ -170,6 +170,8 @@
     <string name="month_limit_enable">Max expense limit monthly</string>
     <string name="month_limit">Max expense monthly</string>
     <string name="month_color_remind">Color remind</string>
+    <string name="month_warning">Color remind when expense over</string>
+    <string name="month_color_remind_type">Remind color</string>
     <string name="month_forbidden">Forbidden record money when out of limit</string>
 
     <string name="auto_back_up">Auto backup records</string>
@@ -190,6 +192,9 @@
     <string name="set_account_book_dialog_title">Name your account book!</string>
 
     <string name="submit">Submit!</string>
+    <string name="cancel">Cancel</string>
+    <string name="custom">Custom</string>
+    <string name="back">Back</string>
 
     <string name="different_password">Password different!</string>
     <string name="set_password_successfully">You did it!</string>
@@ -197,5 +202,10 @@
     <string name="password_tip_0">Verify your old password</string>
     <string name="password_tip_1">Input your new password</string>
     <string name="password_tip_2">Input again to verify</string>
+
+    <string name="set_month_expense_dialog_title">Be thrifty!</string>
+    <string name="set_warning_expense_dialog_title">Set your target</string>
+    <string name="set_remind_color_dialog_title">Colors!</string>
+    <string name="set_remind_color_dialog_sub_title">Shades of Colors!</string>
 
 </resources>

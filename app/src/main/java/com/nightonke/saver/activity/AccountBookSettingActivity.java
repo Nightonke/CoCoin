@@ -2,8 +2,10 @@ package com.nightonke.saver.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -13,19 +15,21 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
+import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.balysv.materialripple.MaterialRippleLayout;
-import com.kyleduo.switchbutton.SwitchButton;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.ui.RiseNumberTextView;
 import com.nightonke.saver.util.Util;
+import com.rey.material.widget.Switch;
+import com.rey.material.widget.Switch.OnCheckedChangeListener;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -36,7 +40,10 @@ import java.io.FileNotFoundException;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountBookSettingActivity extends AppCompatActivity
-    implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+    implements
+        View.OnClickListener,
+        ColorChooserDialog.ColorCallback,
+        OnCheckedChangeListener {
 
     private Context mContext;
 
@@ -58,14 +65,20 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private MaterialIconView monthIcon;
     private MaterialIconView monthMaxExpenseIcon;
     private MaterialIconView monthColorRemindIcon;
+    private MaterialIconView monthWarningIcon;
+    private MaterialIconView monthColorRemindTypeIcon;
     private MaterialIconView monthForbiddenIcon;
-    private SwitchButton monthSB;
-    private SwitchButton monthColorRemindSB;
-    private SwitchButton monthForbiddenSB;
-    private TextView monthMaxExpense;
+    private Switch monthSB;
+    private Switch monthColorRemindSB;
+    private Switch monthForbiddenSB;
+    private RiseNumberTextView monthMaxExpense;
+    private RiseNumberTextView monthWarning;
+    private MaterialIconView monthColorRemindSelect;
     private TextView monthLimitTV;
     private TextView monthMaxExpenseTV;
     private TextView monthColorRemindTV;
+    private TextView monthWarningTV;
+    private TextView monthColorRemindTypeTV;
     private TextView monthForbiddenTV;
 
     private MaterialRippleLayout accountBookNameLayout;
@@ -80,13 +93,15 @@ public class AccountBookSettingActivity extends AppCompatActivity
 
     private MaterialRippleLayout showPictureLayout;
     private MaterialIconView showPictureIcon;
-    private SwitchButton showPictureSB;
+    private Switch showPictureSB;
     private TextView showPictureTV;
 
     private MaterialRippleLayout hollowLayout;
     private MaterialIconView hollowIcon;
-    private SwitchButton hollowSB;
+    private Switch hollowSB;
     private TextView hollowTV;
+
+    private ColorStateList myList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +120,27 @@ public class AccountBookSettingActivity extends AppCompatActivity
             window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
         } else{
             // do something for phones running an SDK before lollipop
-            View statusBarView = (View)findViewById(R.id.status_bar_view);
+            View statusBarView = findViewById(R.id.status_bar_view);
             statusBarView.getLayoutParams().height = Util.getStatusBarHeight();
         }
 
+        int[][] states = new int[][] {
+                new int[] { android.R.attr.state_enabled}, // enabled
+                new int[] {-android.R.attr.state_enabled}, // disabled
+                new int[] {-android.R.attr.state_checked}, // unchecked
+                new int[] { android.R.attr.state_pressed}  // pressed
+        };
+
+        int[] colors = new int[] {
+                Color.BLACK,
+                Color.RED,
+                Color.GREEN,
+                Color.BLUE
+        };
+
+        myList = new ColorStateList(states, colors);
+
         init();
-
-
     }
 
     @Override
@@ -150,15 +179,42 @@ public class AccountBookSettingActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        switch (buttonView.getId()) {
+    public void onCheckedChanged(Switch view, boolean isChecked) {
+        switch (view.getId()) {
             case R.id.month_limit_enable_button:
                 SettingManager.getInstance().setIsMonthLimit(isChecked);
+                SettingManager.getInstance().setMainViewMonthExpenseShouldChange(true);
+                SettingManager.getInstance().setMainViewRemindColorShouldChange(true);
+                SettingManager.getInstance().setTodayViewMonthExpenseShouldChange(true);
                 setMonthState();
                 break;
             case R.id.month_color_remind_button:
                 SettingManager.getInstance().setIsColorRemind(isChecked);
+                SettingManager.getInstance().setMainViewRemindColorShouldChange(true);
                 setIconEnable(monthColorRemindIcon, isChecked
+                        && SettingManager.getInstance().getIsMonthLimit());
+                setIconEnable(monthColorRemindTypeIcon, isChecked
+                        && SettingManager.getInstance().getIsMonthLimit());
+                setIconEnable(monthWarningIcon, isChecked
+                        && SettingManager.getInstance().getIsMonthLimit());
+                if (isChecked && SettingManager.getInstance().getIsMonthLimit()) {
+                    monthColorRemindSelect.setEnabled(true);
+                    monthColorRemindSelect
+                            .setColor(SettingManager.getInstance().getRemindColor());
+                    monthWarning.setEnabled(true);
+                    monthWarning.setTextColor(
+                            ContextCompat.getColor(mContext, R.color.drawer_text));
+                } else {
+                    monthColorRemindSelect.setEnabled(false);
+                    monthColorRemindSelect
+                            .setColor(mContext.getResources().getColor(R.color.my_gray));
+                    monthWarning.setEnabled(false);
+                    monthWarning.setTextColor(
+                            ContextCompat.getColor(mContext, R.color.my_gray));
+                }
+                setTVEnable(monthColorRemindTypeTV, isChecked
+                        && SettingManager.getInstance().getIsMonthLimit());
+                setTVEnable(monthWarningTV, isChecked
                         && SettingManager.getInstance().getIsMonthLimit());
                 break;
             case R.id.month_forbidden_button:
@@ -258,21 +314,143 @@ public class AccountBookSettingActivity extends AppCompatActivity
         monthIcon = (MaterialIconView)findViewById(R.id.month_limit_icon);
         monthMaxExpenseIcon = (MaterialIconView)findViewById(R.id.month_expense_icon);
         monthColorRemindIcon = (MaterialIconView)findViewById(R.id.month_color_icon);
+        monthWarningIcon = (MaterialIconView)findViewById(R.id.warning_expense_icon);
+        monthColorRemindTypeIcon = (MaterialIconView)findViewById(R.id.month_color_type_icon);
+        monthColorRemindSelect = (MaterialIconView)findViewById(R.id.month_color_type);
+        monthColorRemindSelect.setColor(SettingManager.getInstance().getRemindColor());
         monthForbiddenIcon = (MaterialIconView)findViewById(R.id.month_forbidden_icon);
-        monthSB = (SwitchButton)findViewById(R.id.month_limit_enable_button);
+        monthSB = (Switch)findViewById(R.id.month_limit_enable_button);
         monthSB.setOnCheckedChangeListener(this);
-        monthColorRemindSB = (SwitchButton)findViewById(R.id.month_color_remind_button);
+        monthColorRemindSB = (Switch)findViewById(R.id.month_color_remind_button);
         monthColorRemindSB.setOnCheckedChangeListener(this);
-        monthForbiddenSB = (SwitchButton)findViewById(R.id.month_forbidden_button);
+        monthForbiddenSB = (Switch)findViewById(R.id.month_forbidden_button);
         monthForbiddenSB.setOnCheckedChangeListener(this);
-        monthMaxExpense = (TextView)findViewById(R.id.month_expense);
+        monthMaxExpense = (RiseNumberTextView)findViewById(R.id.month_expense);
+        if (SettingManager.getInstance().getIsMonthLimit())
+            monthMaxExpense.withNumber(SettingManager.getInstance()
+                    .getMonthLimit()).setDuration(1000).start();
+        monthMaxExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (SettingManager.getInstance().getIsMonthLimit()) {
+                    new MaterialDialog.Builder(mContext)
+                            .theme(Theme.LIGHT)
+                            .typeface(Util.GetTypeface(), Util.GetTypeface())
+                            .title(R.string.set_month_expense_dialog_title)
+                            .inputType(InputType.TYPE_CLASS_NUMBER)
+                            .positiveText(R.string.submit)
+                            .inputRange(3, 5)
+                            .input(SettingManager.getInstance().getMonthLimit().toString()
+                                    , null, new MaterialDialog.InputCallback() {
+                                @Override
+                                public void onInput(MaterialDialog dialog, CharSequence input) {
+                                    int newExpense = SettingManager.getInstance().getMonthLimit();
+                                    if (input.length() != 0) {
+                                        newExpense = Integer.parseInt(input.toString());
+                                    }
+                                    if (newExpense < SettingManager.getInstance().getMonthWarning()) {
+                                        SettingManager.getInstance().setMonthWarning(
+                                                ((int)(newExpense * 0.8) / 100 * 100));
+                                        if (SettingManager.getInstance().getMonthWarning() < 100) {
+                                            SettingManager.getInstance().setMonthWarning(100);
+                                        }
+                                        SettingManager.getInstance()
+                                                .setMainViewRemindColorShouldChange(true);
+                                        monthWarning.setText(SettingManager
+                                                .getInstance().getMonthWarning().toString());
+                                    }
+                                    SettingManager.getInstance().setMonthLimit(newExpense);
+                                    SettingManager.getInstance()
+                                            .setTodayViewMonthExpenseShouldChange(true);
+                                    SettingManager.getInstance()
+                                            .setMainViewMonthExpenseShouldChange(true);
+                                    monthMaxExpense.withNumber(SettingManager.getInstance()
+                                            .getMonthLimit()).setDuration(1000).start();
+                                }
+                            }).show();
+                }
+            }
+        });
+        monthWarning = (RiseNumberTextView)findViewById(R.id.warning_expense);
+        monthWarning.setText(SettingManager.getInstance().getMonthWarning().toString());
+        if (SettingManager.getInstance().getIsMonthLimit()
+                && SettingManager.getInstance().getIsColorRemind())
+            monthWarning.withNumber(SettingManager.getInstance()
+                    .getMonthWarning()).setDuration(1000).start();
+        monthWarning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (SettingManager.getInstance().getIsMonthLimit()
+                        && SettingManager.getInstance().getIsColorRemind()) {
+                    new MaterialDialog.Builder(mContext)
+                            .theme(Theme.LIGHT)
+                            .typeface(Util.GetTypeface(), Util.GetTypeface())
+                            .title(R.string.set_month_expense_dialog_title)
+                            .inputType(InputType.TYPE_CLASS_NUMBER)
+                            .positiveText(R.string.submit)
+                            .alwaysCallInputCallback()
+                            .input(null, null, new MaterialDialog.InputCallback() {
+                                @Override
+                                public void onInput(final MaterialDialog dialog, final CharSequence input) {
+                                    if (input.length() == 0) {
+                                        dialog.setContent(mContext.getResources().getString(
+                                                R.string.set_warning_expense_dialog_title));
+                                        dialog.getActionButton(DialogAction.POSITIVE)
+                                                .setEnabled(false);
+                                    } else if (Integer.parseInt(input.toString()) < 100) {
+                                        dialog.setContent("≥ 100");
+                                        dialog.getActionButton(DialogAction.POSITIVE)
+                                                .setEnabled(false);
+                                    } else if (Integer.parseInt(input.toString())
+                                            > SettingManager.getInstance().getMonthLimit()) {
+                                        dialog.setContent("≤ " + SettingManager.getInstance()
+                                                .getMonthLimit().toString());
+                                        dialog.getActionButton(DialogAction.POSITIVE)
+                                                .setEnabled(false);
+                                    } else {
+                                        dialog.setContent(mContext.getResources().getString(
+                                                R.string.set_warning_expense_dialog_title));
+                                        dialog.getActionButton(DialogAction.POSITIVE)
+                                                .setEnabled(true);
+                                    }
+                                    dialog.getActionButton(DialogAction.POSITIVE)
+                                            .setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            SettingManager.getInstance()
+                                                    .setMonthWarning(Integer.parseInt(input.toString()));
+                                            SettingManager.getInstance()
+                                                    .setMainViewRemindColorShouldChange(true);
+                                            monthWarning.withNumber(SettingManager.getInstance()
+                                                    .getMonthWarning()).setDuration(1000).start();
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                }
+                            }).show();
+                }
+            }
+        });
+        monthColorRemindSelect.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SettingManager.getInstance()
+                        .setMainViewRemindColorShouldChange(true);
+                remindColorSelectDialog.show((AppCompatActivity) mContext);
+            }
+        });
         monthMaxExpense.setTypeface(Util.typefaceLatoLight);
+        monthWarning.setTypeface(Util.typefaceLatoLight);
         monthLimitTV = (TextView)findViewById(R.id.month_limit_text);
         monthLimitTV.setTypeface(Util.GetTypeface());
+        monthWarningTV = (TextView)findViewById(R.id.warning_expense_text);
+        monthWarningTV.setTypeface(Util.GetTypeface());
         monthMaxExpenseTV = (TextView)findViewById(R.id.month_expense_text);
         monthMaxExpenseTV.setTypeface(Util.GetTypeface());
         monthColorRemindTV = (TextView)findViewById(R.id.month_color_remind_text);
         monthColorRemindTV.setTypeface(Util.GetTypeface());
+        monthColorRemindTypeTV = (TextView)findViewById(R.id.month_color_type_text);
+        monthColorRemindTypeTV.setTypeface(Util.GetTypeface());
         monthForbiddenTV = (TextView)findViewById(R.id.month_forbidden_text);
         monthForbiddenTV.setTypeface(Util.GetTypeface());
 
@@ -311,14 +489,14 @@ public class AccountBookSettingActivity extends AppCompatActivity
 
         showPictureLayout = (MaterialRippleLayout)findViewById(R.id.whether_show_picture_layout);
         showPictureIcon = (MaterialIconView)findViewById(R.id.whether_show_picture_icon);
-        showPictureSB = (SwitchButton)findViewById(R.id.whether_show_picture_button);
+        showPictureSB = (Switch)findViewById(R.id.whether_show_picture_button);
         showPictureSB.setOnCheckedChangeListener(this);
         showPictureTV = (TextView)findViewById(R.id.whether_show_picture_text);
         showPictureTV.setTypeface(Util.GetTypeface());
 
         hollowLayout = (MaterialRippleLayout)findViewById(R.id.whether_show_circle_layout);
         hollowIcon = (MaterialIconView)findViewById(R.id.whether_show_circle_icon);
-        hollowSB = (SwitchButton)findViewById(R.id.whether_show_circle_button);
+        hollowSB = (Switch)findViewById(R.id.whether_show_circle_button);
         hollowSB.setOnCheckedChangeListener(this);
         hollowTV = (TextView)findViewById(R.id.whether_show_circle_text);
         hollowTV.setTypeface(Util.GetTypeface());
@@ -376,10 +554,30 @@ public class AccountBookSettingActivity extends AppCompatActivity
         setTVEnable(monthMaxExpenseTV, isMonthLimit);
         setTVEnable(monthMaxExpense, isMonthLimit);
         setTVEnable(monthColorRemindTV, isMonthLimit);
+        setTVEnable(monthColorRemindTypeTV, isMonthLimit && isMonthColorRemind);
+        setTVEnable(monthWarningTV, isMonthLimit && isMonthColorRemind);
         setTVEnable(monthForbiddenTV, isMonthLimit);
         monthMaxExpense.setText(SettingManager.getInstance().getMonthLimit() + "");
 
         setIconEnable(monthColorRemindIcon, isMonthLimit && isMonthColorRemind);
+        setIconEnable(monthWarningIcon, isMonthLimit && isMonthColorRemind);
+        setIconEnable(monthColorRemindTypeIcon, isMonthLimit && isMonthColorRemind);
+        setIconEnable(monthColorRemindSelect, isMonthLimit && isMonthColorRemind);
+        if (isMonthLimit && isMonthColorRemind) {
+            monthColorRemindSelect.setEnabled(true);
+            monthColorRemindSelect
+                    .setColor(SettingManager.getInstance().getRemindColor());
+            monthWarning.setEnabled(true);
+            monthWarning.setTextColor(
+                    ContextCompat.getColor(mContext, R.color.drawer_text));
+        } else {
+            monthColorRemindSelect.setEnabled(false);
+            monthColorRemindSelect
+                    .setColor(mContext.getResources().getColor(R.color.my_gray));
+            monthWarning.setEnabled(false);
+            monthWarning.setTextColor(
+                    ContextCompat.getColor(mContext, R.color.my_gray));
+        }
         setIconEnable(monthForbiddenIcon, isMonthLimit && isForbidden);
 
         monthColorRemindSB.setEnabled(isMonthLimit);
@@ -407,4 +605,23 @@ public class AccountBookSettingActivity extends AppCompatActivity
         if (enable) tv.setTextColor(mContext.getResources().getColor(R.color.drawer_text));
         else tv.setTextColor(mContext.getResources().getColor(R.color.my_gray));
     }
+
+    @Override
+    public void onColorSelection(ColorChooserDialog dialog, int selectedColor) {
+        monthColorRemindSelect.setColor(selectedColor);
+        SettingManager.getInstance().setRemindColor(selectedColor);
+        SettingManager.getInstance().setMainViewRemindColorShouldChange(true);
+    }
+
+    ColorChooserDialog remindColorSelectDialog =
+            new ColorChooserDialog.Builder(this, R.string.set_remind_color_dialog_title)
+                    .titleSub(R.string.set_remind_color_dialog_sub_title)
+                    .preselect(SettingManager.getInstance().getRemindColor())
+                    .doneButton(R.string.submit)
+                    .cancelButton(R.string.cancel)
+                    .backButton(R.string.back)
+                    .customButton(R.string.custom)
+                    .dynamicButtonColor(true)
+                    .build();
+
 }

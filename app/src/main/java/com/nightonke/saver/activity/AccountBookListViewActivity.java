@@ -20,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -327,7 +326,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                             @Override
                             public void onDismissed(Snackbar snackbar) {
                                 if (Util.backupRecord != null) {
-                                    RecordManager.deleteRecord(Util.backupRecord.getId(), false);
+                                    RecordManager.deleteRecord(Util.backupRecord, false);
                                 }
                                 Util.backupRecord = null;
                             }
@@ -408,7 +407,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         SettingManager.getInstance().setRecordIsUpdated(true);
 
         if (Util.backupRecord != null) {
-            RecordManager.deleteRecord(Util.backupRecord.getId(), false);
+            RecordManager.deleteRecord(Util.backupRecord, false);
         }
         Util.backupRecord = null;
 

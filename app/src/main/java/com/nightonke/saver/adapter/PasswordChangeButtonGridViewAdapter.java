@@ -1,7 +1,6 @@
 package com.nightonke.saver.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +21,12 @@ import net.steamcrafted.materialiconlib.MaterialIconView;
  * Created by 伟平 on 2015/10/16.
  */
 
-public class ButtonGridViewAdapter extends BaseAdapter {
+public class PasswordChangeButtonGridViewAdapter extends BaseAdapter {
 
     private LayoutInflater inflater;
     private Context mContext;
 
-    public ButtonGridViewAdapter(Context context) {
+    public PasswordChangeButtonGridViewAdapter(Context context) {
         this.inflater = LayoutInflater.from(context);
         this.mContext = context;
     }
@@ -80,23 +79,15 @@ public class ButtonGridViewAdapter extends BaseAdapter {
         }
 
         holder.ml.setRippleDuration(300);
-        boolean shouldChange
-                = SettingManager.getInstance().getIsMonthLimit()
-                && SettingManager.getInstance().getIsColorRemind()
-                && RecordManager.getCurrentMonthExpense()
-                >= SettingManager.getInstance().getMonthWarning();
-        if (shouldChange) {
-            holder.fl.setBackgroundColor(
-                    Util.getAlphaColor(SettingManager.getInstance().getRemindColor()));
-            holder.ml.setRippleColor(SettingManager.getInstance().getRemindColor());
-            holder.iv.setColor(SettingManager.getInstance().getRemindColor());
-            holder.tv.setTextColor(SettingManager.getInstance().getRemindColor());
-        } else {
-            holder.fl.setBackgroundColor(Util.getAlphaColor(Util.MY_BLUE));
-            holder.ml.setRippleColor(Util.MY_BLUE);
-            holder.iv.setColor(Util.MY_BLUE);
-            holder.tv.setTextColor(Util.MY_BLUE);
-        }
+        holder.fl.setBackgroundColor(
+                Util.getAlphaColor(SettingManager.getInstance().getRemindColor()));
+        holder.ml.setRippleColor(SettingManager.getInstance().getRemindColor());
+        holder.iv.setColor(SettingManager.getInstance().getRemindColor());
+        holder.tv.setTextColor(SettingManager.getInstance().getRemindColor());
+        holder.fl.setBackgroundColor(Util.getAlphaColor(Util.MY_BLUE));
+        holder.ml.setRippleColor(Util.MY_BLUE);
+        holder.iv.setColor(Util.MY_BLUE);
+        holder.tv.setTextColor(Util.MY_BLUE);
 
 
         return convertView;

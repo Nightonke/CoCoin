@@ -172,26 +172,27 @@ public class RecordManager {
         return insertId;
     }
 
-    public static long deleteRecord(long id, boolean deleteInList) {
+    public static long deleteRecord(Record record, boolean deleteInList) {
         long deletedId = -1;
         Log.d("Saver",
-                "Manager: Delete record: " + "Record(id = " + id + ", deletedId = " + deletedId + ")");
-        deletedId = db.deleteRecord(id);
+                "Manager: Delete record: " + "Record(id = "
+                        + record.getId() + ", deletedId = " + deletedId + ")");
+        deletedId = db.deleteRecord(record.getId());
         if (deletedId == -1) {
             Log.d("Saver", "Delete the above record FAIL!");
         } else {
             Log.d("Saver", "Delete the above record SUCCESSFULLY!");
+            SUM -= (int)record.getMoney();
             if (deleteInList) {
-                for (Record record : RECORDS) {
-                    if (record.getId() == deletedId) {
+                for (Record r : RECORDS) {
+                    if (r.getId() == record.getId()) {
                         RECORDS.remove(record);
-                        SUM -= (int)record.getMoney();
                         break;
                     }
                 }
             }
         }
-        return deletedId;
+        return record.getId();
     }
 
     public static int deleteTag(int id) {
@@ -265,6 +266,17 @@ public class RecordManager {
             sortTAGS();
         }
         return updateId;
+    }
+
+    public static int getCurrentMonthExpense() {
+        Calendar calendar = Calendar.getInstance();
+        Calendar left = Util.GetThisMonthLeftRange(calendar);
+        int monthSum = 0;
+        for (int i = RECORDS.size() - 1; i >= 0; i--) {
+            if (RECORDS.get(i).getCalendar().before(left)) break;
+            monthSum += RECORDS.get(i).getMoney();
+        }
+        return monthSum;
     }
 
     public static List<Record> queryRecordByTime(Calendar c1, Calendar c2) {

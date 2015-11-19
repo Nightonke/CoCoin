@@ -1,7 +1,6 @@
 package com.nightonke.saver.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,8 +17,8 @@ import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemA
 import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
-import com.nightonke.saver.adapter.TagDraggableItemAdapter;
 import com.nightonke.saver.R;
+import com.nightonke.saver.adapter.TagDraggableItemAdapter;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 
@@ -43,6 +42,7 @@ public class TagSettingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag_setting);
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
 
         mContext = this;
 
@@ -104,6 +104,7 @@ public class TagSettingActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
+        super.finish();
         if (!myItemAdapter.equals(null)) {
 
             if (myItemAdapter.isChanged()) {
@@ -140,8 +141,12 @@ public class TagSettingActivity extends AppCompatActivity {
         if (myItemAdapter.isChanged()) {
             SettingManager.getInstance().setMainActivityTagShouldChange(true);
         }
+    }
 
-        super.finish();
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
     }
 
 }

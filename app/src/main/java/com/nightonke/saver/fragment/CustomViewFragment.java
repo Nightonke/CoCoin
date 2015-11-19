@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
 import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -266,21 +268,25 @@ public class CustomViewFragment extends Fragment {
                 from.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
                 from.add(Calendar.SECOND, 0);
                 fromSet = true;
-                if (from.before(RecordManager.RECORDS.get(0).getCalendar())) {
-                    from = (Calendar)RecordManager.RECORDS.get(0).getCalendar().clone();
-                    from.set(Calendar.HOUR_OF_DAY, 0);
-                    from.set(Calendar.MINUTE, 0);
-                    from.set(Calendar.SECOND, 0);
-                    from.add(Calendar.SECOND, 0);
-                }
-                if (from.after(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
-                        .getCalendar())) {
-                    from = (Calendar)RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
-                            .getCalendar().clone();
-                    from.set(Calendar.HOUR_OF_DAY, 23);
-                    from.set(Calendar.MINUTE, 59);
-                    from.set(Calendar.SECOND, 59);
-                    from.add(Calendar.SECOND, 0);
+                if (!IS_EMPTY) {
+                    if (from.before(RecordManager.RECORDS.get(0).getCalendar())) {
+                        from = (Calendar)RecordManager.RECORDS.get(0).getCalendar().clone();
+                        from.set(Calendar.HOUR_OF_DAY, 0);
+                        from.set(Calendar.MINUTE, 0);
+                        from.set(Calendar.SECOND, 0);
+                        from.add(Calendar.SECOND, 0);
+                    }
+                    if (from.after(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
+                            .getCalendar())) {
+                        from = (Calendar)RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
+                                .getCalendar().clone();
+                        from.set(Calendar.HOUR_OF_DAY, 23);
+                        from.set(Calendar.MINUTE, 59);
+                        from.set(Calendar.SECOND, 59);
+                        from.add(Calendar.SECOND, 0);
+                    }
+                } else {
+                    YoYo.with(Techniques.Shake).duration(700).playOn(emptyTip);
                 }
                 fromDate.setText(mContext.getResources().getString(R.string.from) + " " +
                         Util.GetMonthShort(from.get(Calendar.MONTH) + 1)
@@ -292,21 +298,25 @@ public class CustomViewFragment extends Fragment {
                 to.set(year, monthOfYear, dayOfMonth, 23, 59, 59);
                 to.add(Calendar.SECOND, 0);
                 toSet = true;
-                if (to.before(RecordManager.RECORDS.get(0).getCalendar())) {
-                    to = (Calendar)RecordManager.RECORDS.get(0).getCalendar().clone();
-                    to.set(Calendar.HOUR_OF_DAY, 0);
-                    to.set(Calendar.MINUTE, 0);
-                    to.set(Calendar.SECOND, 0);
-                    to.add(Calendar.SECOND, 0);
-                }
-                if (to.after(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
-                        .getCalendar())) {
-                    to = (Calendar)RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
-                            .getCalendar().clone();
-                    to.set(Calendar.HOUR_OF_DAY, 23);
-                    to.set(Calendar.MINUTE, 59);
-                    to.set(Calendar.SECOND, 59);
-                    to.add(Calendar.SECOND, 0);
+                if (!IS_EMPTY) {
+                    if (to.before(RecordManager.RECORDS.get(0).getCalendar())) {
+                        to = (Calendar)RecordManager.RECORDS.get(0).getCalendar().clone();
+                        to.set(Calendar.HOUR_OF_DAY, 0);
+                        to.set(Calendar.MINUTE, 0);
+                        to.set(Calendar.SECOND, 0);
+                        to.add(Calendar.SECOND, 0);
+                    }
+                    if (to.after(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
+                            .getCalendar())) {
+                        to = (Calendar)RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
+                                .getCalendar().clone();
+                        to.set(Calendar.HOUR_OF_DAY, 23);
+                        to.set(Calendar.MINUTE, 59);
+                        to.set(Calendar.SECOND, 59);
+                        to.add(Calendar.SECOND, 0);
+                    }
+                } else {
+                    YoYo.with(Techniques.Shake).duration(700).playOn(emptyTip);
                 }
                 toDate.setText(mContext.getResources().getString(R.string.to) + " " +
                         Util.GetMonthShort(to.get(Calendar.MONTH) + 1)

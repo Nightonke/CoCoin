@@ -5,15 +5,14 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#2196F3"
     tools:context=".MainActivity"
     >
 
     <View
+        android:id="@+id/guillotine_background"
         android:layout_gravity="top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/guillotine_actionbar_background_view_height"
-        android:background="#2196F3"
         />
 
     <LinearLayout
@@ -79,6 +78,7 @@
                         <LinearLayout
                             android:layout_height="wrap_content"
                             android:layout_width="60dp"
+                            android:layout_marginLeft="10dp"
                             android:orientation="vertical"
                             android:layout_gravity="center|left"
                             >
@@ -114,20 +114,11 @@
                             android:id="@+id/edit_view"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="#0000ff"
+                            android:layout_gravity="top|center_horizontal"
                             android:textSize="60sp"
-                            android:maxLength="7"
+                            android:maxLength="5"
                             android:editable="false"
                             android:gravity="right"
-                            app:met_floatingLabel="normal"
-                            app:met_baseColor="#007688"
-                            app:met_primaryColor="#2196F3"
-                            app:met_textColor="@color/my_blue"
-                            app:met_textColorHint="#33ff0000"
-                            app:met_errorColor="#ddaa00"
-                            app:met_helperTextColor="@color/my_blue"
-                            app:met_underlineColor="#003587"
-                            app:met_floatingLabelTextColor="#0000ff"
                             />
 
                         <com.ogaclejapan.smarttablayout.SmartTabLayout
@@ -136,12 +127,12 @@
                             android:id="@+id/viewpagertab"
                             android:layout_width="wrap_content"
                             android:layout_height="16dp"
-                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_gravity="bottom|left"
+                            android:paddingLeft="20dp"
                             app:stl_clickable="false"
                             app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
                             app:stl_dividerColor="@color/transparent"
                             app:stl_dividerThickness="0dp"
-                            app:stl_indicatorColor="@color/my_blue"
                             app:stl_indicatorCornerRadius="4dp"
                             app:stl_indicatorGravity="center"
                             app:stl_indicatorInterpolation="linear"

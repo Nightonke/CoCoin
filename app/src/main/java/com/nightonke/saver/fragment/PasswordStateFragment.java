@@ -1,15 +1,11 @@
 package com.nightonke.saver.fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,12 +13,10 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.adapter.TagChooseGridViewAdapter;
-import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.Util;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
+import com.rey.material.widget.RadioButton;
 
-import carbon.widget.RadioButton;
 
 /**
  * Created by 伟平 on 2015/10/27.
@@ -60,10 +54,6 @@ public class PasswordStateFragment extends Fragment {
         button1 = (RadioButton)view.findViewById(R.id.button1);
         button2 = (RadioButton)view.findViewById(R.id.button2);
         button3 = (RadioButton)view.findViewById(R.id.button3);
-        button0.setTint(R.color.white);
-        button1.setTint(R.color.white);
-        button2.setTint(R.color.white);
-        button3.setTint(R.color.white);
         ly = (LinearLayout)view.findViewById(R.id.buttonLy);
         passwordTip = (TextView)view.findViewById(R.id.password_tip);
         passwordTip.setTypeface(Util.GetTypeface());

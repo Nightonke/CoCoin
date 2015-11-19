@@ -161,6 +161,8 @@
     <string name="month_limit_enable">每月最大支出限定</string>
     <string name="month_limit">每月最大支出额度</string>
     <string name="month_color_remind">颜色提醒</string>
+    <string name="month_warning">超过此数额时提醒</string>
+    <string name="month_color_remind_type">提醒的颜色</string>
     <string name="month_forbidden">超出每月额度时无法记录</string>
 
     <string name="auto_back_up">自动同步</string>
@@ -181,6 +183,9 @@
     <string name="set_account_book_dialog_title">给账本来个名字！</string>
 
     <string name="submit">好！</string>
+    <string name="cancel">算了</string>
+    <string name="custom">自定义</string>
+    <string name="back">返回</string>
 
     <string name="different_password">两次密码不一致！</string>
     <string name="set_password_successfully">这密码还不错</string>
@@ -188,5 +193,10 @@
     <string name="password_tip_0">请输入旧密码</string>
     <string name="password_tip_1">请输入新密码</string>
     <string name="password_tip_2">请再次输入新密码</string>
+
+    <string name="set_month_expense_dialog_title">省着点！</string>
+    <string name="set_warning_expense_dialog_title">制定你的省钱计划</string>
+    <string name="set_remind_color_dialog_title">选色！</string>
+    <string name="set_remind_color_dialog_sub_title">调色！</string>
 
 </resources>

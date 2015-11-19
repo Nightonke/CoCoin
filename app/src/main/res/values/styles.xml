@@ -11,6 +11,10 @@
 
     <style name="AppTheme" parent="AppBaseTheme">
 
+        <item name="md_medium_font">LatoLatin-Light.ttf</item>
+        <item name="md_regular_font">LatoLatin-Light.ttf</item>
+        <item name="md_dark_theme">false</item>
+
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
         <item name="android:windowTranslucentStatus" tools:targetApi="21">true</item>
@@ -31,6 +35,10 @@
         <item name="android:navigationBarColor" tools:targetApi="21">@color/navigationBarColor</item>
         <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="21">true</item>
 
+    </style>
+
+    <style name="CoCoinSettingActivityStyle" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/drawer_text</item>
     </style>
 
     <style name="AppTheme.ActionBarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
@@ -100,13 +108,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:layout_marginLeft">@dimen/guillotine_large_margin</item>
-    </style>
-
-    <style name="carbon_RadioButton" parent="android:Widget.CompoundButton.RadioButton">
-        <item name="carbon_rippleColor">@null</item>
-        <item name="android:button">@null</item>
-        <item name="carbon_tint">@null</item>
-        <item name="android:background">@null</item>
     </style>
 
     <style name="myRecyclerViewStyle">
@@ -192,6 +193,15 @@
         <item name="android:textColorPrimary">#212121</item>
         <item name="android:textColorSecondary">#727272</item>
         <item name="android:textColorPrimaryInverse">#FFFFFF</item>
+    </style>
+
+    <style name="settings_switch">
+        <item name="sw_trackSize">15dp</item>
+        <item name="sw_trackCap">round</item>
+        <item name="sw_thumbRadius">10dp</item>
+        <item name="sw_thumbElevation">1dp</item>
+        <item name="sw_trackColor">@drawable/switch_track</item>
+        <item name="sw_thumbColor">@drawable/switch_thumb</item>
     </style>
 
 </resources>

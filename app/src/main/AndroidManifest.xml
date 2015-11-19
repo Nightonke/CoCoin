@@ -55,6 +55,7 @@
         </activity>
         <activity
             android:name=".activity.AccountBookSettingActivity"
+            android:theme="@style/CoCoinSettingActivityStyle"
             android:launchMode="singleTop">
         </activity>
     </application>

@@ -78,6 +78,7 @@
                         <LinearLayout
                             android:layout_height="wrap_content"
                             android:layout_width="60dp"
+                            android:layout_marginLeft="10dp"
                             android:orientation="vertical"
                             android:layout_gravity="center|left"
                             >
@@ -115,7 +116,7 @@
                             android:layout_height="wrap_content"
                             android:textColor="#0000ff"
                             android:textSize="60sp"
-                            android:maxLength="7"
+                            android:maxLength="5"
                             android:editable="false"
                             android:gravity="right"
                             app:met_floatingLabel="normal"
@@ -135,7 +136,8 @@
                             android:id="@+id/viewpagertab"
                             android:layout_width="wrap_content"
                             android:layout_height="16dp"
-                            android:layout_gravity="bottom|center_horizontal"
+                            android:layout_gravity="bottom|left"
+                            android:paddingLeft="20dp"
                             app:stl_clickable="false"
                             app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
                             app:stl_dividerColor="@color/transparent"

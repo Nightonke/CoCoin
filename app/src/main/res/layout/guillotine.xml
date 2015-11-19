@@ -9,6 +9,7 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         style="@style/Toolbar"
         app:contentInsetStart="0dp">
 
@@ -40,10 +41,10 @@
         >
 
         <LinearLayout
+            android:id="@+id/guillotine_color_ly"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#2196F3"
             android:orientation="vertical"
             >
 
@@ -75,35 +76,47 @@
                     android:layout_height="48dp"
                     android:orientation="horizontal"
                     android:layout_gravity="center"
-                    android:paddingLeft="16sp"
+                    android:layout_marginLeft="14sp"
                     >
 
-                    <carbon.widget.RadioButton
+                    <com.rey.material.widget.RadioButton
                         android:id="@+id/radio_button_0"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:gravity="center_vertical"
+                        app:rbd_strokeColor="#ffffff"
+                        android:text=""
+                        android:enabled="false"
+                        android:gravity="center"
                         />
 
-                    <carbon.widget.RadioButton
+                    <com.rey.material.widget.RadioButton
                         android:id="@+id/radio_button_1"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:gravity="center_vertical"
+                        app:rbd_strokeColor="#ffffff"
+                        android:text=""
+                        android:enabled="false"
+                        android:gravity="center"
                         />
 
-                    <carbon.widget.RadioButton
+                    <com.rey.material.widget.RadioButton
                         android:id="@+id/radio_button_2"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:gravity="center_vertical"
+                        app:rbd_strokeColor="#ffffff"
+                        android:text=""
+                        android:enabled="false"
+                        android:gravity="center"
                         />
 
-                    <carbon.widget.RadioButton
+                    <com.rey.material.widget.RadioButton
                         android:id="@+id/radio_button_3"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:gravity="center_vertical"
+                        app:rbd_strokeColor="#ffffff"
+                        android:text=""
+                        android:enabled="false"
+                        android:gravity="center"
                         />
 
                 </LinearLayout>

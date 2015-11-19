@@ -1,7 +1,6 @@
 package com.nightonke.saver.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -9,7 +8,6 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,27 +17,19 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
-import com.nightonke.saver.adapter.ButtonGridViewAdapter;
+import com.nightonke.saver.adapter.PasswordChangeButtonGridViewAdapter;
 import com.nightonke.saver.fragment.PasswordStateFragment;
-import com.nightonke.saver.fragment.TagChooseFragment;
-import com.nightonke.saver.model.Record;
-import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.ui.FixedSpeedScroller;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.Util;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -50,7 +40,7 @@ public class EditPasswordActivity extends AppCompatActivity {
     private Context mContext;
 
     private MyGridView myGridView;
-    private ButtonGridViewAdapter myGridViewAdapter;
+    private PasswordChangeButtonGridViewAdapter myGridViewAdapter;
 
     private MaterialIconView back;
 
@@ -121,7 +111,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         viewPager.setAdapter(passwordAdapter);
 
         myGridView = (MyGridView)findViewById(R.id.gridview);
-        myGridViewAdapter = new ButtonGridViewAdapter(this);
+        myGridViewAdapter = new PasswordChangeButtonGridViewAdapter(this);
         myGridView.setAdapter(myGridViewAdapter);
 
         myGridView.setOnItemClickListener(gridViewClickListener);
@@ -154,12 +144,13 @@ public class EditPasswordActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        SuperToast.cancelAllSuperToasts();
         overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
     }
 
     @Override
     public void finish() {
-
+        SuperToast.cancelAllSuperToasts();
         super.finish();
     }
 

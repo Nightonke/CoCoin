@@ -278,7 +278,7 @@ public class MySwipeableItemAdapter
         protected void onPerformAction() {
             super.onPerformAction();
             if (Util.backupRecord != null) {
-                RecordManager.deleteRecord(Util.backupRecord.getId(), false);
+                RecordManager.deleteRecord(Util.backupRecord, false);
             }
             Util.backupRecord = null;
             Util.backupRecord

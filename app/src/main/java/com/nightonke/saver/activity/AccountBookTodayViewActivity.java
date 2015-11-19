@@ -143,10 +143,6 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        Intent intent = new Intent();
-        intent.putExtra("IS_CHANGED", TAG_CHANGED);
-        setResult(RESULT_OK, intent);
-
         super.finish();
     }
 
