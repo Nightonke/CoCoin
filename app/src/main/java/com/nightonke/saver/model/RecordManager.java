@@ -20,7 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 
@@ -301,7 +303,7 @@ public class RecordManager {
                     }
                 });
             } else {
-
+                db.updateRecord(record);
             }
         }
         return updateId;
@@ -315,47 +317,54 @@ public class RecordManager {
             // already login
             for (int i = 0; i < RECORDS.size(); i++) {
                 final Record record = RECORDS.get(i);
-                if (record.getObjectId() != null && !record.getIsUploaded()) {
-                    record.setUserId(user.getObjectId());
-                    record.update(CoCoinApplication.getAppContext(),
-                            record.getObjectId(), new UpdateListener() {
-                                @Override
-                                public void onSuccess() {
-                                    Log.d("Saver", "SSS Update record(" + record.toString() + ") to DB");
-                                    record.setIsUploaded(true);
-                                    record.setLocalObjectId(record.getObjectId());
-                                    db.updateRecord(record);
-                                }
+                if (!record.getIsUploaded()) {
+                    if (record.getLocalObjectId() != null) {
+                        record.setUserId(user.getObjectId());
+                        record.update(CoCoinApplication.getAppContext(),
+                                record.getLocalObjectId(), new UpdateListener() {
+                                    @Override
+                                    public void onSuccess() {
+                                        Log.d("Saver", "SSS Update record(" + record.toString() + ") to DB");
+                                        record.setIsUploaded(true);
+                                        record.setLocalObjectId(record.getObjectId());
+                                        db.updateRecord(record);
+                                    }
 
-                                @Override
-                                public void onFailure(int code, String msg) {
-                                    Log.d("Saver", "FFF Update record(" + record.toString() + ") to DB");
-                                    Log.d("Saver", msg);
-                                }
-                            });
-                } else if (record.getObjectId() == null) {
-                    counter++;
-                    record.setUserId(user.getObjectId());
-                    record.save(CoCoinApplication.getAppContext(), new SaveListener() {
-                                @Override
-                                public void onSuccess() {
-                                    Log.d("Saver", "SSS Save record(" + record.toString() + ") to DB");
-                                    record.setIsUploaded(true);
-                                    record.setLocalObjectId(record.getObjectId());
-                                    db.updateRecord(record);
-                                }
+                                    @Override
+                                    public void onFailure(int code, String msg) {
+                                        Log.d("Saver", "FFF Update record(" + record.toString() + ") to DB");
+                                        Log.d("Saver", msg);
+                                    }
+                                });
+                    } else {
+                        counter++;
+                        record.setUserId(user.getObjectId());
+                        record.save(CoCoinApplication.getAppContext(), new SaveListener() {
+                            @Override
+                            public void onSuccess() {
+                                Log.d("Saver", "SSS Save record(" + record.toString() + ") to DB");
+                                record.setIsUploaded(true);
+                                record.setLocalObjectId(record.getObjectId());
+                                db.updateRecord(record);
+                            }
 
-                                @Override
-                                public void onFailure(int code, String msg) {
-                                    Log.d("Saver", "FFF Save record(" + record.toString() + ") to DB");
-                                    Log.d("Saver", msg);
-                                }
-                            });
+                            @Override
+                            public void onFailure(int code, String msg) {
+                                Log.d("Saver", "FFF Save record(" + record.toString() + ") to DB");
+                                Log.d("Saver", msg);
+                            }
+                        });
+                    }
                 }
             }
         } else {
 
         }
+
+        Log.d("Saver", "Update " + counter + " records to server.");
+
+        getRecordsFromServer();
+
         return counter;
     }
 
@@ -377,6 +386,68 @@ public class RecordManager {
             sortTAGS();
         }
         return updateId;
+    }
+
+    private static long updateNum;
+    public static long getRecordsFromServer() {
+        updateNum = 0;
+        BmobQuery<Record> query = new BmobQuery<Record>();
+        query.addWhereEqualTo("userId",
+                BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class).getObjectId());
+        query.setLimit(Integer.MAX_VALUE);
+        query.findObjects(CoCoinApplication.getAppContext(), new FindListener<Record>() {
+            @Override
+            public void onSuccess(List<Record> object) {
+                // TODO Auto-generated method stub
+                Log.d("Saver", "Get " + object.size() + " records from server");
+                updateNum = object.size();
+                for (Record record : object) {
+                    boolean exist = false;
+                    for (int i = RECORDS.size() - 1; i >= 0; i--) {
+                        if (record.getObjectId().equals(RECORDS.get(i).getLocalObjectId())) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (!exist) {
+                        Record newRecord = new Record();
+                        newRecord.set(record);
+                        newRecord.setId(-1);
+                        RECORDS.add(newRecord);
+                    }
+                }
+
+                Collections.sort(RECORDS, new Comparator<Record>() {
+                    @Override
+                    public int compare(Record lhs, Record rhs) {
+                        if (lhs.getCalendar().before(rhs.getCalendar())) {
+                            return -1;
+                        } else if (lhs.getCalendar().after(rhs.getCalendar())) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    }
+                });
+
+                db.deleteAll();
+
+                SUM = 0;
+                for (int i = 0; i < RECORDS.size(); i++) {
+                    RECORDS.get(i).setLocalObjectId(RECORDS.get(i).getObjectId());
+                    db.saveRecord(RECORDS.get(i));
+                    SUM += (int)RECORDS.get(i).getMoney();
+                }
+
+                Log.d("Saver", "Save all " + RECORDS.size() + " records.");
+            }
+            @Override
+            public void onError(int code, String msg) {
+                Log.d("Saver", "Query fail: " + msg);
+            }
+        });
+
+        return updateNum;
     }
 
     public static int getCurrentMonthExpense() {

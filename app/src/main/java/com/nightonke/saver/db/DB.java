@@ -171,4 +171,10 @@ public class DB {
         }
         return tag.getId();
     }
+
+    public int deleteAll() {
+        int deleteNum = sqliteDatabase.delete(RECORD_DB_NAME_STRING, null, null);
+        Log.d("Saver", "Delete all " + deleteNum + " records.");
+        return deleteNum;
+    }
 }
