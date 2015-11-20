@@ -18,15 +18,56 @@
         android:background="@drawable/material_design_2"
         >
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:src="@drawable/logo"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="30dp"
-            app:civ_border_width="0dp"
-            app:civ_border_color="#ffffff"/>
+        <LinearLayout
+            android:layout_height="0dp"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            >
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/logo"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="30dp"
+                app:civ_border_width="0dp"
+                app:civ_border_color="#ffffff"/>
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/month_expense_tip"
+                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/this_month"
+                    android:gravity="left|center_vertical"
+                    />
+
+                <com.nightonke.saver.ui.RiseNumberTextView
+                    android:id="@+id/month_expense"
+                    android:layout_height="0dp"
+                    android:layout_width="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/white"
+                    android:text="1000"
+                    android:gravity="center_vertical|right"
+                    android:textSize="45sp"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/user_name"
@@ -47,6 +88,7 @@
             android:layout_width="match_parent"
             android:gravity="center_vertical|left"
             android:layout_marginLeft="20dp"
+            android:layout_marginBottom="10dp"
             android:text="Huang_Weiping@outlook.com"
             android:textSize="12sp"
             android:textColor="#ffffff"

@@ -23,14 +23,10 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.adapter.TodayViewFragmentAdapter;
 import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.ui.RiseNumberTextView;
 import com.nightonke.saver.util.Util;
 
 public class AccountBookTodayViewActivity extends AppCompatActivity {
-
-    private final int SETTING_TAG = 0;
-    private boolean TAG_CHANGED = false;
-    private final int CHANGING_RECORD = 1;
-    private boolean RECORD_CHANGED = false;
 
     private MaterialViewPager mViewPager;
 
@@ -56,13 +52,15 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
 
     private TextView title;
 
+    private TextView monthExpenseTip;
+    private RiseNumberTextView monthExpense;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_book_today_view);
 
         mContext = this;
-        TAG_CHANGED = false;
 
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
         userName = (TextView)findViewById(R.id.user_name);
@@ -90,6 +88,18 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         sync = (MaterialRippleLayout)mDrawer.findViewById(R.id.sync_layout);
         settings = (MaterialRippleLayout)mDrawer.findViewById(R.id.settings_layout);
         help = (MaterialRippleLayout)mDrawer.findViewById(R.id.help_layout);
+        monthExpenseTip = (TextView)mDrawer.findViewById(R.id.month_expense_tip);
+        monthExpenseTip.setTypeface(Util.GetTypeface());
+        monthExpense = (RiseNumberTextView)mDrawer.findViewById(R.id.month_expense);
+        monthExpense.setTypeface(Util.typefaceLatoLight);
+
+        if (SettingManager.getInstance().getIsMonthLimit()) {
+            monthExpenseTip.setVisibility(View.VISIBLE);
+            monthExpense.setText("0");
+        } else {
+            monthExpenseTip.setVisibility(View.INVISIBLE);
+            monthExpense.setVisibility(View.INVISIBLE);
+        }
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -104,8 +114,20 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             }
         }
 
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, 0, 0);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawer, 0, 0) {
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                monthExpense.setText("0");
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                monthExpense.withNumber(
+                        RecordManager.getCurrentMonthExpense()).setDuration(500).start();
+            }
+        };
         mDrawer.setDrawerListener(mDrawerToggle);
+
 
         View logo = findViewById(R.id.logo_white);
         if (logo != null) {
@@ -215,6 +237,17 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         if (SettingManager.getInstance().getRecordIsUpdated()) {
             todayModeAdapter.notifyDataSetChanged();
             SettingManager.getInstance().setRecordIsUpdated(false);
+        }
+
+        if (SettingManager.getInstance().getTodayViewMonthExpenseShouldChange()) {
+            if (SettingManager.getInstance().getIsMonthLimit()) {
+                monthExpenseTip.setVisibility(View.VISIBLE);
+                monthExpense.withNumber(
+                        RecordManager.getCurrentMonthExpense()).setDuration(500).start();
+            } else {
+                monthExpenseTip.setVisibility(View.INVISIBLE);
+                monthExpense.setVisibility(View.INVISIBLE);
+            }
         }
     }
 

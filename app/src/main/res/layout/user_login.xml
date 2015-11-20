@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/login_user_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_user_name"
+        android:textColor="@color/drawer_text"
+        android:textSize="12sp" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/login_user_name"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textColor="@color/drawer_text"
+        android:textSize="20sp"
+        android:hint=""
+        android:singleLine="true"
+        app:met_baseColor="@color/my_blue"
+        />
+
+    <TextView
+        android:id="@+id/login_password_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_password"
+        android:textColor="@color/drawer_text"
+        android:textSize="12sp" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/login_password"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textColor="@color/drawer_text"
+        android:textSize="20sp"
+        android:password="true"
+        android:hint=""
+        android:singleLine="true"
+        app:met_baseColor="@color/my_blue"
+        />
+
+</LinearLayout>

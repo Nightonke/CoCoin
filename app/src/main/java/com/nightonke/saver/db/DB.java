@@ -73,6 +73,9 @@ public class DB {
                 record.setTag(cursor.getInt(cursor.getColumnIndex("TAG")));
                 record.setCalendar(cursor.getString(cursor.getColumnIndex("TIME")));
                 record.setRemark(cursor.getString(cursor.getColumnIndex("REMARK")));
+                record.setUserId(cursor.getString(cursor.getColumnIndex("USER_ID")));
+                record.setLocalObjectId(cursor.getString(cursor.getColumnIndex("OBJECT_ID")));
+                record.setIsUploaded(cursor.getInt(cursor.getColumnIndex("IS_UPLOADED")) == 0 ? false : true);
                 RecordManager.RECORDS.add(record);
                 RecordManager.SUM += (int)record.getMoney();
             } while (cursor.moveToNext());
@@ -90,6 +93,9 @@ public class DB {
         values.put("TIME", new SimpleDateFormat("yyyy-MM-dd HH:mm")
                 .format(record.getCalendar().getTime()));
         values.put("REMARK", record.getRemark());
+        values.put("USER_ID", record.getUserId());
+        values.put("OBJECT_ID", record.getLocalObjectId());
+        values.put("IS_UPLOADED", record.getIsUploaded().equals(Boolean.FALSE) ? 0 : 1);
         long insertId = sqliteDatabase.insert(RECORD_DB_NAME_STRING, null, values);
         record.setId(insertId);
         if (RecordManager.SHOW_LOG) {
@@ -141,6 +147,9 @@ public class DB {
         values.put("TIME", new SimpleDateFormat("yyyy-MM-dd HH:mm")
                 .format(record.getCalendar().getTime()));
         values.put("REMARK", record.getRemark());
+        values.put("USER_ID", record.getUserId());
+        values.put("OBJECT_ID", record.getLocalObjectId());
+        values.put("IS_UPLOADED", record.getIsUploaded().equals(Boolean.FALSE) ? 0 : 1);
         sqliteDatabase.update(RECORD_DB_NAME_STRING, values,
                 "ID = ?",
                 new String[]{record.getId() + ""});

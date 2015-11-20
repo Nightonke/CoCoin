@@ -80,4 +80,8 @@ dependencies {
     }
 
     compile 'com.github.rey5137:material:1.2.1'
+
+    compile 'cn.bmob.android:bmob-sdk:3.4.5'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okio:okio:1.4.0'
 }

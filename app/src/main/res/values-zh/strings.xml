@@ -199,4 +199,26 @@
     <string name="set_remind_color_dialog_title">选色！</string>
     <string name="set_remind_color_dialog_sub_title">调色！</string>
 
+    <string name="this_month">本月:</string>
+
+    <string name="welcome">欢迎！</string>
+    <string name="login_or_register">请问你有CoCoin账号吗？</string>
+    <string name="login">有的</string>
+    <string name="register">没有</string>
+
+    <string name="register_user_name">来个酷酷的名字</string>
+    <string name="register_user_email">您可以用邮箱来找回密码</string>
+    <string name="register_password">您的密码即是您的账本密码</string>
+    <string name="go_register">注册！</string>
+
+    <string name="welcome_back">欢迎回来！</string>
+
+    <string name="hi">您好！</string>
+    <string name="log_out">登出</string>
+    <string name="whether_logout">真的，要走？</string>
+
+    <string name="go_login">登录!</string>
+    <string name="login_user_name">请输入您的注册名或者邮箱</string>
+    <string name="login_password">请输入您的密码（悄悄地）</string>
+
 </resources>

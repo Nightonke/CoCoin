@@ -280,7 +280,7 @@ public class EditPasswordActivity extends AppCompatActivity {
     private void showToast(int toastType) {
         SuperToast.cancelAllSuperToasts();
 
-        superToast.setAnimations(SuperToast.Animations.POPUP);
+        superToast.setAnimations(Util.TOAST_ANIMATION);
         superToast.setDuration(SuperToast.Duration.SHORT);
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);

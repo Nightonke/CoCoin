@@ -8,9 +8,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -22,12 +27,18 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
+import com.afollestad.materialdialogs.internal.MDButton;
+import com.afollestad.materialdialogs.internal.MDTintHelper;
+import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.RiseNumberTextView;
+import com.nightonke.saver.util.EmailValidator;
 import com.nightonke.saver.util.Util;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rey.material.widget.Switch;
 import com.rey.material.widget.Switch.OnCheckedChangeListener;
 
@@ -37,6 +48,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.SaveListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountBookSettingActivity extends AppCompatActivity
@@ -50,6 +63,12 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private MaterialIconView back;
 
     private CircleImageView logo;
+
+    private MaterialEditText registerUserName;
+    private MaterialEditText registerUserEmail;
+    private MaterialEditText registerPassword;
+    private MaterialEditText loginUserName;
+    private MaterialEditText loginPassword;
 
     private MaterialRippleLayout profileLayout;
     private MaterialIconView userNameIcon;
@@ -241,7 +260,336 @@ public class AccountBookSettingActivity extends AppCompatActivity
     }
 
     private void userOperator() {
-        Toast.makeText(mContext, "User operator", Toast.LENGTH_SHORT).show();
+        if (!SettingManager.getInstance().getLoggenOn()) {
+            // register or log on
+            new MaterialDialog.Builder(this)
+                    .iconRes(R.drawable.donation_icon)
+                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                    .limitIconToDefaultSize() // limits the displayed icon size to 48dp
+                    .title(R.string.welcome)
+                    .content(R.string.login_or_register)
+                    .positiveText(R.string.login)
+                    .negativeText(R.string.register)
+                    .neutralText(R.string.cancel)
+                    .onAny(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog,
+                                            @NonNull DialogAction which) {
+                            if (which.equals(DialogAction.POSITIVE)) {
+                                userLogin();
+                            } else if (which.equals(DialogAction.NEGATIVE)) {
+                                userRegister();
+                            } else {
+                                dialog.dismiss();
+                            }
+                        }
+                    })
+                    .show();
+        } else {
+            // log out or user operate
+            new MaterialDialog.Builder(this)
+                    .iconRes(R.drawable.donation_icon)
+                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                    .limitIconToDefaultSize() // limits the displayed icon size to 48dp
+                    .title(mContext.getResources().getString(R.string.hi)
+                            + SettingManager.getInstance().getUserName())
+                    .content(R.string.whether_logout)
+                    .positiveText(R.string.log_out)
+                    .neutralText(R.string.cancel)
+                    .onAny(new MaterialDialog.SingleButtonCallback() {
+                        @Override
+                        public void onClick(@NonNull MaterialDialog dialog,
+                                            @NonNull DialogAction which) {
+                            if (which.equals(DialogAction.POSITIVE)) {
+                                userLogout();
+                            } else {
+                                dialog.dismiss();
+                            }
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    private void userLogout() {
+        BmobUser.logOut(mContext);   //清除缓存用户对象
+        SettingManager.getInstance().setLoggenOn(false);
+        SettingManager.getInstance().setUserName(null);
+        SettingManager.getInstance().setUserEmail(null);
+        updateViews();
+    }
+
+    private void userLogin() {
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title(R.string.go_login)
+                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .customView(R.layout.user_login, true)
+                .positiveText(R.string.go_login)
+                .negativeText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (which.equals(DialogAction.POSITIVE)) {
+                            // login
+                            final User user = new User();
+                            user.setUsername(loginUserName.getText().toString());
+                            user.setPassword(loginPassword.getText().toString());
+                            user.login(CoCoinApplication.getAppContext(), new SaveListener() {
+                                @Override
+                                public void onSuccess() {
+                                    // login successfully through user name
+                                    Toast.makeText(mContext, "Login successfully", Toast.LENGTH_SHORT).show();
+                                    SettingManager.getInstance().setLoggenOn(true);
+                                    SettingManager.getInstance().setUserName(loginUserName.getText().toString());
+                                    SettingManager.getInstance().setUserEmail(
+                                            BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class).getEmail());
+                                    updateViews();
+                                    RecordManager.updateOldRecordsToServer();
+                                }
+
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    user.setEmail(loginUserName.getText().toString());
+                                    user.login(CoCoinApplication.getAppContext(), new SaveListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            // login successfully through user email
+                                            Toast.makeText(mContext, "Login successfully", Toast.LENGTH_SHORT).show();
+                                            SettingManager.getInstance().setLoggenOn(true);
+                                            SettingManager.getInstance().setUserName(
+                                                    BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class).getUsername());
+                                            SettingManager.getInstance().setUserEmail(loginUserName.getText().toString());
+                                            SettingManager.getInstance().setUserPassword(loginPassword.getText().toString());
+                                            updateViews();
+                                            RecordManager.updateOldRecordsToServer();
+                                        }
+
+                                        @Override
+                                        public void onFailure(int code, String msg) {
+                                            Log.d("Saver", "Login fail " + msg);
+                                            Toast.makeText(mContext, "Login fail", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }).build();
+
+        final MDButton positiveAction = dialog.getActionButton(DialogAction.POSITIVE);
+        positiveAction.setEnabled(false);
+
+        TextView userNameTV
+                = (TextView)dialog.getCustomView().findViewById(R.id.login_user_name_text);
+        TextView userPasswordTV
+                = (TextView)dialog.getCustomView().findViewById(R.id.login_password_text);
+        userNameTV.setTypeface(Util.GetTypeface());
+        userPasswordTV.setTypeface(Util.GetTypeface());
+
+        loginUserName
+                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.login_user_name);
+        loginPassword
+                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.login_password);
+
+        loginUserName.setTypeface(Util.GetTypeface());
+        loginUserName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                positiveAction.setEnabled(
+                        0 < loginUserName.getText().toString().length()
+                                && 0 < loginPassword.getText().toString().length());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        loginPassword.setTypeface(Util.GetTypeface());
+        loginPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                positiveAction.setEnabled(
+                        0 < loginUserName.getText().toString().length()
+                                && 0 < loginPassword.getText().toString().length());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void userRegister() {
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title(R.string.go_register)
+                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .customView(R.layout.user_register, true)
+                .positiveText(R.string.go_register)
+                .negativeText(android.R.string.cancel)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (which.equals(DialogAction.POSITIVE)) {
+                            // register
+                            final User user = new User();
+                            user.setUsername(registerUserName.getText().toString());
+                            user.setPassword(registerPassword.getText().toString());
+                            user.setEmail(registerUserEmail.getText().toString());
+                            user.signUp(CoCoinApplication.getAppContext(), new SaveListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Toast.makeText(mContext, "Register successfully", Toast.LENGTH_SHORT).show();
+                                    SettingManager.getInstance().setLoggenOn(true);
+                                    SettingManager.getInstance().setUserName(registerUserName.getText().toString());
+                                    SettingManager.getInstance().setUserEmail(registerUserEmail.getText().toString());
+                                    SettingManager.getInstance().setUserPassword(registerPassword.getText().toString());
+                                    user.login(CoCoinApplication.getAppContext(), new SaveListener() {
+                                        @Override
+                                        public void onSuccess() {
+                                            updateViews();
+                                            RecordManager.updateOldRecordsToServer();
+                                            Toast.makeText(mContext, "Login successfully", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onFailure(int code, String msg) {
+                                            Log.d("Saver", "Login fail " + msg);
+                                            Toast.makeText(mContext, "Login fail", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    Log.d("Saver", "Register fail: " + msg);
+                                    Toast.makeText(mContext, "Register fail", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                }).build();
+
+        final MDButton positiveAction = dialog.getActionButton(DialogAction.POSITIVE);
+        positiveAction.setEnabled(false);
+        final EmailValidator emailValidator = new EmailValidator();
+
+        TextView userNameTV
+                = (TextView)dialog.getCustomView().findViewById(R.id.register_user_name_text);
+        TextView userEmailTV
+                = (TextView)dialog.getCustomView().findViewById(R.id.register_user_email_text);
+        TextView userPasswordTV
+                = (TextView)dialog.getCustomView().findViewById(R.id.register_password_text);
+        userNameTV.setTypeface(Util.GetTypeface());
+        userEmailTV.setTypeface(Util.GetTypeface());
+        userPasswordTV.setTypeface(Util.GetTypeface());
+
+        registerUserName
+                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.register_user_name);
+        registerUserEmail
+                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.register_user_email);
+        registerPassword
+                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.register_password);
+
+        registerUserName.setTypeface(Util.GetTypeface());
+        registerUserName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean emailOK = emailValidator.validate(registerUserEmail.getText().toString());
+                positiveAction.setEnabled(
+                        0 < registerUserName.getText().toString().length()
+                                && registerUserName.getText().toString().length() <= 16
+                                && registerPassword.getText().toString().length() > 0
+                                && emailOK);
+                if (emailValidator.validate(registerUserEmail.getText().toString())) {
+                    registerUserEmail.validate();
+                } else {
+                    registerUserEmail.invalidate();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        registerUserEmail.setTypeface(Util.GetTypeface());
+        registerUserEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean emailOK = emailValidator.validate(registerUserEmail.getText().toString());
+                positiveAction.setEnabled(
+                        0 < registerUserName.getText().toString().length()
+                                && registerUserName.getText().toString().length() <= 16
+                                && registerPassword.getText().toString().length() > 0
+                                && emailOK);
+                if (emailValidator.validate(registerUserEmail.getText().toString())) {
+                    registerUserEmail.validate();
+                } else {
+                    registerUserEmail.invalidate();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        registerPassword.setTypeface(Util.GetTypeface());
+        registerPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean emailOK = emailValidator.validate(registerUserEmail.getText().toString());
+                positiveAction.setEnabled(
+                        0 < registerUserName.getText().toString().length()
+                                && registerUserName.getText().toString().length() <= 16
+                                && registerPassword.getText().toString().length() > 0
+                                && emailOK);
+                if (emailValidator.validate(registerUserEmail.getText().toString())) {
+                    registerUserEmail.validate();
+                } else {
+                    registerUserEmail.invalidate();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        dialog.show();
     }
 
     private void changeAccountBookName() {
@@ -262,6 +610,18 @@ public class AccountBookSettingActivity extends AppCompatActivity
                         accountBookName.setText(input.toString());
                     }
                 }).show();
+    }
+
+    private void updateViews() {
+        setIconEnable(userNameIcon, SettingManager.getInstance().getLoggenOn());
+        setIconEnable(userEmailIcon, SettingManager.getInstance().getLoggenOn());
+        if (SettingManager.getInstance().getLoggenOn()) {
+            userName.setText(SettingManager.getInstance().getUserName());
+            userEmail.setText(SettingManager.getInstance().getUserEmail());
+        } else {
+            userName.setText("");
+            userEmail.setText("");
+        }
     }
 
     private void changePassword() {
@@ -507,8 +867,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
             userName.setText(SettingManager.getInstance().getUserName());
             userEmail.setText(SettingManager.getInstance().getUserEmail());
         } else {
-            userName.setText(mContext.getResources().getString(R.string.default_user_name));
-            userEmail.setText(mContext.getResources().getString(R.string.default_user_email));
+            userName.setText("");
+            userEmail.setText("");
         }
         setIconEnable(userNameIcon, loggenOn);
         setIconEnable(userEmailIcon, loggenOn);
@@ -623,5 +983,4 @@ public class AccountBookSettingActivity extends AppCompatActivity
                     .customButton(R.string.custom)
                     .dynamicButtonColor(true)
                     .build();
-
 }

@@ -17,7 +17,10 @@ public class DBHelper extends SQLiteOpenHelper {
             "CURRENCY text," +
             "TAG integer," +
             "TIME text," +
-            "REMARK text)";
+            "REMARK text," +
+            "USER_ID text," +
+            "OBJECT_ID text," +
+            "IS_UPLOADED integer" + ")";
 
     public static final String CREATE_TAG_STRING =
             "create table Tag (" +

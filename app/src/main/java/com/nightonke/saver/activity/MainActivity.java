@@ -32,6 +32,7 @@ import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
 import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.DummyOperation;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.R;
@@ -52,6 +53,8 @@ import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
         implements TagChooseFragment.OnTagItemSelectedListener {
@@ -117,6 +120,7 @@ public class MainActivity extends AppCompatActivity
     private final int SAVE_SUCCESSFULLY_TOAST = 4;
     private final int SAVE_FAILED_TOAST = 5;
     private final int PRESS_AGAIN_TO_EXIT = 6;
+    private final int WELCOME_BACK = 7;
 
     boolean doubleBackToExitPressedOnce = false;
 
@@ -156,9 +160,23 @@ public class MainActivity extends AppCompatActivity
             // do something for phones running an SDK before lollipop
         }
 
+        Bmob.initialize(CoCoinApplication.getAppContext(), "0f0f9d45a39068bd6eea8896af1facf3");
+
         Util.init(this.getApplicationContext());
 
         RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
+
+        User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+        if (user != null) {
+            SettingManager.getInstance().setLoggenOn(true);
+            SettingManager.getInstance().setUserName(user.getUsername());
+            SettingManager.getInstance().setUserEmail(user.getEmail());
+            showToast(WELCOME_BACK);
+            // 允许用户使用应用
+        } else {
+            SettingManager.getInstance().setLoggenOn(false);
+            //缓存用户对象为空时， 可打开用户注册界面…
+        }
 
         guillotineBackground = (View)findViewById(R.id.guillotine_background);
 
@@ -465,12 +483,13 @@ public class MainActivity extends AppCompatActivity
             showToast(NO_MONEY_TOAST);
         } else  {
             Calendar calendar = Calendar.getInstance();
-            long saveId = RecordManager.saveRecord(new Record(
+            Record record = new Record(
                     -1,
                     Float.valueOf(editView.getText().toString()),
                     "RMB",
                     tagId,
-                    calendar));
+                    calendar);
+            long saveId = RecordManager.saveRecord(record);
             if (saveId == -1) {
                 if (!superToast.isShowing()) {
                     showToast(SAVE_FAILED_TOAST);
@@ -496,7 +515,7 @@ public class MainActivity extends AppCompatActivity
         SuperToast.cancelAllSuperToasts();
         SuperActivityToast.cancelAllSuperActivityToasts();
 
-        superToast.setAnimations(SuperToast.Animations.POPUP);
+        superToast.setAnimations(Util.TOAST_ANIMATION);
         superToast.setDuration(SuperToast.Duration.SHORT);
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);
@@ -529,7 +548,7 @@ public class MainActivity extends AppCompatActivity
 
                 superActivityToast.setText(
                         mContext.getResources().getString(R.string.toast_password_correct));
-                superActivityToast.setAnimations(SuperToast.Animations.POPUP);
+                superActivityToast.setAnimations(Util.TOAST_ANIMATION);
                 superActivityToast.setDuration(SuperToast.Duration.SHORT);
                 superActivityToast.setTextColor(Color.parseColor("#ffffff"));
                 superActivityToast.setBackground(SuperToast.Background.GREEN);
@@ -562,6 +581,13 @@ public class MainActivity extends AppCompatActivity
                 superToast.getTextView().setTypeface(Util.typefaceLatoLight);
 
                 break;
+            case WELCOME_BACK:
+
+                superToast.setText(
+                        mContext.getResources().getString(R.string.welcome_back)
+                                + "\n" + SettingManager.getInstance().getUserName());
+                superToast.setBackground(SuperToast.Background.BLUE);
+                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
             default:
 
                 break;
@@ -666,6 +692,7 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
+            SuperToast.cancelAllSuperToasts();
             return;
         }
 

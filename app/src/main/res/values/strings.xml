@@ -208,4 +208,26 @@
     <string name="set_remind_color_dialog_title">Colors!</string>
     <string name="set_remind_color_dialog_sub_title">Shades of Colors!</string>
 
+    <string name="this_month">This month:</string>
+
+    <string name="welcome">Welcome!</string>
+    <string name="login_or_register">Do you have a CoCoin account?</string>
+    <string name="login">Sure</string>
+    <string name="register">Not yet</string>
+
+    <string name="register_user_name">Show me a cool user name!</string>
+    <string name="register_user_email">You can regain your password by email.</string>
+    <string name="register_password">I can keep secret!</string>
+    <string name="go_register">Register!</string>
+
+    <string name="welcome_back">Welcome back!</string>
+
+    <string name="hi">Hi!&#160;</string>
+    <string name="log_out">Log out</string>
+    <string name="whether_logout">Are you sure to log out?</string>
+
+    <string name="go_login">Login!</string>
+    <string name="login_user_name">Tell me your register name or email.</string>
+    <string name="login_password">Tell me your password (be quiet!).</string>
+
 </resources>

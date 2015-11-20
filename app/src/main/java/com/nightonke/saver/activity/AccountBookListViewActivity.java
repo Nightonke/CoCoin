@@ -73,12 +73,16 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
     private VerticalRecyclerViewFastScroller verticalRecyclerViewFastScroller;
 
+    private int originalSum;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_book_list_view);
 
         mContext = this;
+
+        originalSum = RecordManager.SUM;
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -405,6 +409,10 @@ public class AccountBookListViewActivity extends AppCompatActivity {
     public void finish() {
 
         SettingManager.getInstance().setRecordIsUpdated(true);
+
+        if (RecordManager.SUM != originalSum) {
+            SettingManager.getInstance().setTodayViewMonthExpenseShouldChange(true);
+        }
 
         if (Util.backupRecord != null) {
             RecordManager.deleteRecord(Util.backupRecord, false);

@@ -38,6 +38,8 @@ public class SettingManager {
     private String ACCOUNT_BOOK_NAME;
     // the password
     private String PASSWORD;
+    // the user password
+    private String USER_PASSWORD;
     // whether show picture in account book
     private Boolean SHOW_PICTURE;
     // whether draw a hollow pie chart
@@ -289,6 +291,21 @@ public class SettingManager {
         editor.putString("PASSWORD", PASSWORD);
         editor.commit();
         this.PASSWORD = PASSWORD;
+    }
+
+    public String getUserPassword() {
+        USER_PASSWORD = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getString("USER_PASSWORD", "");
+        return USER_PASSWORD;
+    }
+
+    public void setUserPassword(String USER_PASSWORD) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putString("USER_PASSWORD", USER_PASSWORD);
+        editor.commit();
+        this.USER_PASSWORD = USER_PASSWORD;
     }
 
     public Boolean getShowPicture() {
