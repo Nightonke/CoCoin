@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
-import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,8 +27,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
-import com.afollestad.materialdialogs.internal.MDTintHelper;
-import com.afollestad.materialdialogs.internal.ThemeSingleton;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
@@ -49,7 +46,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountBookSettingActivity extends AppCompatActivity
@@ -62,6 +61,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
 
     private MaterialIconView back;
 
+    private File logoFile;
     private CircleImageView logo;
 
     private MaterialEditText registerUserName;
@@ -206,6 +206,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 SettingManager.getInstance().setMainViewRemindColorShouldChange(true);
                 SettingManager.getInstance().setTodayViewMonthExpenseShouldChange(true);
                 setMonthState();
+                updateSettingsToServer(1);
                 break;
             case R.id.month_color_remind_button:
                 SettingManager.getInstance().setIsColorRemind(isChecked);
@@ -345,6 +346,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                                             BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class).getEmail());
                                     updateViews();
                                     RecordManager.updateOldRecordsToServer();
+                                    updateAllSettings();
                                 }
 
                                 @Override
@@ -463,6 +465,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                                         public void onSuccess() {
                                             updateViews();
                                             RecordManager.updateOldRecordsToServer();
+                                            updateAllSettings();
                                             Toast.makeText(mContext, "Login successfully", Toast.LENGTH_SHORT).show();
                                         }
 
@@ -726,6 +729,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                                             .setMainViewMonthExpenseShouldChange(true);
                                     monthMaxExpense.withNumber(SettingManager.getInstance()
                                             .getMonthLimit()).setDuration(1000).start();
+                                    updateSettingsToServer(2);
                                 }
                             }).show();
                 }
@@ -893,9 +897,9 @@ public class AccountBookSettingActivity extends AppCompatActivity
 
     private void loadLogo() {
         try {
-            File f = new File(SettingManager.getInstance().getProfileImageDir(),
+            logoFile = new File(SettingManager.getInstance().getProfileImageDir(),
                     SettingManager.getInstance().getProfileImageName());
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(f));
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
             logo.setImageBitmap(b);
         }
         catch (FileNotFoundException e)
@@ -983,4 +987,79 @@ public class AccountBookSettingActivity extends AppCompatActivity
                     .customButton(R.string.custom)
                     .dynamicButtonColor(true)
                     .build();
+
+    private void updateAllSettings() {
+        updateSettingsToServer(0);
+        updateSettingsToServer(1);
+        updateSettingsToServer(2);
+    }
+
+    private void updateSettingsToServer(final int setting) {
+        User newUser = new User();
+        switch (setting) {
+            case 0:
+                // logo
+                break;
+            case 1:
+                // is month limit
+                newUser.setIsMonthLimit(SettingManager.getInstance().getIsMonthLimit());
+                break;
+            case 2:
+                // month limit
+                newUser.setMonthLimit(SettingManager.getInstance().getMonthLimit());
+                break;
+            case 3:
+                // is color remind
+                newUser.setIsColorRemind(SettingManager.getInstance().getIsColorRemind());
+                break;
+            case 4:
+                // month warning
+                newUser.setMonthWarning(SettingManager.getInstance().getMonthWarning());
+                break;
+            case 5:
+                // remind color
+                newUser.setRemindColor(SettingManager.getInstance().getRemindColor());
+                break;
+            case 6:
+                // is forbidden
+                newUser.setIsForbidden(SettingManager.getInstance().getIsForbidden());
+                break;
+            case 7:
+                // account book name
+                newUser.setAccountBookName(SettingManager.getInstance().getAccountBookName());
+                break;
+            case 8:
+                // account book password
+                newUser.setAccountBookPassword(SettingManager.getInstance().getPassword());
+                break;
+            case 9:
+                // show picture
+                newUser.setShowPicture(SettingManager.getInstance().getShowPicture());
+                break;
+            case 10:
+                // is hollow
+                newUser.setIsHollow(SettingManager.getInstance().getIsHollow());
+                break;
+        }
+        User currentUser = getCurrentUser();
+        newUser.update(this, currentUser.getObjectId(), new UpdateListener() {
+            @Override
+            public void onSuccess() {
+                Log.d("Saver", "Update " + setting + " successfully.");
+            }
+            @Override
+            public void onFailure(int code, String msg) {
+                Log.d("Saver", "Update " + setting + " fail.");
+            }
+        });
+    }
+
+    private void syncUserInfo() {
+        User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+
+    }
+
+    private User getCurrentUser() {
+        return BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+    }
 }
