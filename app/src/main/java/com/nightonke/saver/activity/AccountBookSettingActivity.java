@@ -2,12 +2,15 @@ package com.nightonke.saver.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +23,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -28,7 +30,12 @@ import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
 import com.balysv.materialripple.MaterialRippleLayout;
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.ProgressCallback;
 import com.nightonke.saver.R;
+import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
@@ -44,11 +51,18 @@ import net.steamcrafted.materialiconlib.MaterialIconView;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.listener.DeleteListener;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AccountBookSettingActivity extends AppCompatActivity
@@ -57,12 +71,25 @@ public class AccountBookSettingActivity extends AppCompatActivity
         ColorChooserDialog.ColorCallback,
         OnCheckedChangeListener {
 
+    private final int UPDATE_LOGO = 0;
+    private final int UPDATE_IS_MONTH_LIMIT = 1;
+    private final int UPDATE_MONTH_LIMIT = 2;
+    private final int UPDATE_IS_COLOR_REMIND = 3;
+    private final int UPDATE_MONTH_WARNING = 4;
+    private final int UPDATE_REMIND_COLOR = 5;
+    private final int UPDATE_IS_FORBIDDEN = 6;
+    private final int UPDATE_ACCOUNT_BOOK_NAME = 7;
+    private final int UPDATE_ACCOUNT_BOOK_PASSWORD = 8;
+    private final int UPDATE_SHOW_PICTURE = 9;
+    private final int UPDATE_IS_HOLLOW = 10;
+
     private Context mContext;
 
     private MaterialIconView back;
 
     private File logoFile;
     private CircleImageView logo;
+    private Bitmap logoBitmap;
 
     private MaterialEditText registerUserName;
     private MaterialEditText registerUserEmail;
@@ -120,8 +147,6 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private Switch hollowSB;
     private TextView hollowTV;
 
-    private ColorStateList myList;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -142,22 +167,6 @@ public class AccountBookSettingActivity extends AppCompatActivity
             View statusBarView = findViewById(R.id.status_bar_view);
             statusBarView.getLayoutParams().height = Util.getStatusBarHeight();
         }
-
-        int[][] states = new int[][] {
-                new int[] { android.R.attr.state_enabled}, // enabled
-                new int[] {-android.R.attr.state_enabled}, // disabled
-                new int[] {-android.R.attr.state_checked}, // unchecked
-                new int[] { android.R.attr.state_pressed}  // pressed
-        };
-
-        int[] colors = new int[] {
-                Color.BLACK,
-                Color.RED,
-                Color.GREEN,
-                Color.BLUE
-        };
-
-        myList = new ColorStateList(states, colors);
 
         init();
     }
@@ -185,6 +194,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        SuperToast.cancelAllSuperToasts();
         super.onBackPressed();
     }
 
@@ -197,19 +207,21 @@ public class AccountBookSettingActivity extends AppCompatActivity
         }
     }
 
+// switch change listener///////////////////////////////////////////////////////////////////////////
     @Override
     public void onCheckedChanged(Switch view, boolean isChecked) {
         switch (view.getId()) {
             case R.id.month_limit_enable_button:
                 SettingManager.getInstance().setIsMonthLimit(isChecked);
+                updateSettingsToServer(UPDATE_IS_MONTH_LIMIT);
                 SettingManager.getInstance().setMainViewMonthExpenseShouldChange(true);
                 SettingManager.getInstance().setMainViewRemindColorShouldChange(true);
                 SettingManager.getInstance().setTodayViewMonthExpenseShouldChange(true);
                 setMonthState();
-                updateSettingsToServer(1);
                 break;
             case R.id.month_color_remind_button:
                 SettingManager.getInstance().setIsColorRemind(isChecked);
+                updateSettingsToServer(UPDATE_IS_COLOR_REMIND);
                 SettingManager.getInstance().setMainViewRemindColorShouldChange(true);
                 setIconEnable(monthColorRemindIcon, isChecked
                         && SettingManager.getInstance().getIsMonthLimit());
@@ -239,15 +251,18 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 break;
             case R.id.month_forbidden_button:
                 SettingManager.getInstance().setIsForbidden(isChecked);
+                updateSettingsToServer(UPDATE_IS_FORBIDDEN);
                 setIconEnable(monthForbiddenIcon, isChecked
                         && SettingManager.getInstance().getIsMonthLimit());
                 break;
             case R.id.whether_show_picture_button:
                 SettingManager.getInstance().setShowPicture(isChecked);
+                updateSettingsToServer(UPDATE_SHOW_PICTURE);
                 setShowPictureState(isChecked);
                 break;
             case R.id.whether_show_circle_button:
                 SettingManager.getInstance().setIsHollow(isChecked);
+                updateSettingsToServer(UPDATE_IS_HOLLOW);
                 setHollowState(isChecked);
                 SettingManager.getInstance().setTodayViewPieShouldChange(Boolean.TRUE);
                 break;
@@ -256,10 +271,342 @@ public class AccountBookSettingActivity extends AppCompatActivity
         }
     }
 
-    private void changeLogo() {
-        Toast.makeText(mContext, "Change logo", Toast.LENGTH_SHORT).show();
+// Load logo from local/////////////////////////////////////////////////////////////////////////////
+    private void loadLogo() {
+        try {
+            logoFile = new File(Util.LOGO_PATH, Util.LOGO_NAME);
+            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
+            if (b == null) {
+                // the local logo file is missed
+                User user = getCurrentUser();
+                if (user != null) {
+                    // try to get from the server
+                    BmobQuery bmobQuery = new BmobQuery();
+                    bmobQuery.addWhereEqualTo("objectId", user.getLogoObjectId());
+                    bmobQuery.findObjects(CoCoinApplication.getAppContext()
+                            , new FindListener<Logo>() {
+                        @Override
+                        public void onSuccess(List<Logo> object) {
+// there has been an old logo in the server/////////////////////////////////////////////////////////
+                            Log.d("Saver", "There is an old logo");
+                            String url = object.get(0).getFile().getUrl();
+                            Ion.with(CoCoinApplication.getAppContext()).load(url)
+                                    .write(new File(Util.LOGO_PATH, Util.LOGO_NAME))
+                                    .setCallback(new FutureCallback<File>() {
+                                        @Override
+                                        public void onCompleted(Exception e, File file) {
+                                            logo.setImageBitmap(BitmapFactory.
+                                                    decodeFile(Util.LOGO_PATH + Util.LOGO_NAME));
+                                        }
+                                    });
+                        }
+                        @Override
+                        public void onError(int code, String msg) {
+                            // the picture is lost
+                            Log.d("Saver", "Can't find the old logo in server.");
+                        }
+                    });
+                } else {
+                    // use the default logo
+                    logo.setImageResource(R.drawable.default_user_logo);
+                }
+            } else {
+                // the user logo is in the storage
+                logo.setImageBitmap(b);
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
+// change the user logo/////////////////////////////////////////////////////////////////////////////
+    private void changeLogo() {
+        new MaterialDialog.Builder(this)
+                .iconRes(R.drawable.donation_icon)
+                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .limitIconToDefaultSize() // limits the displayed icon size to 48dp
+                .title(R.string.change_logo_title)
+                .content(R.string.change_logo_content)
+                .positiveText(R.string.from_gallery)
+                .negativeText(R.string.from_camera)
+                .neutralText(R.string.cancel)
+                .onAny(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        if (which == DialogAction.POSITIVE) {
+                            Intent intent1 = new Intent(Intent.ACTION_PICK, null);
+                            intent1.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                            startActivityForResult(intent1, 1);
+                        } else if (which == DialogAction.NEGATIVE) {
+                            Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            intent2.putExtra(MediaStore.EXTRA_OUTPUT,
+                                    Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
+                                    Util.LOGO_NAME)));
+                            startActivityForResult(intent2, 2);
+                        }
+                    }
+                })
+                .show();
+    }
+
+// Crop a picture///////////////////////////////////////////////////////////////////////////////////
+    public void cropPhoto(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.putExtra("crop", "true");
+        // aspectX : aspectY
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY the height and width
+        intent.putExtra("outputX", 200);
+        intent.putExtra("outputY", 200);
+        intent.putExtra("return-data", true);
+        startActivityForResult(intent, 3);
+    }
+
+// After select a picture///////////////////////////////////////////////////////////////////////////
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 1:
+                // after select from gallery
+                if (resultCode == RESULT_OK) {
+                    cropPhoto(data.getData());
+                }
+                break;
+            case 2:
+                // after taking a photo
+                if (resultCode == RESULT_OK) {
+                    File temp = new File(Environment.getExternalStorageDirectory() + Util.LOGO_NAME);
+                    cropPhoto(Uri.fromFile(temp));
+                }
+                break;
+            case 3:
+                // after crop the picture
+                if (data != null) {
+                    Bundle extras = data.getExtras();
+                    logoBitmap = extras.getParcelable("data");
+                    if(logoBitmap != null) {
+                        setPicToView(logoBitmap);
+                        logo.setImageBitmap(logoBitmap);
+                    }
+                }
+                break;
+            default:
+                break;
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+// Storage a picture////////////////////////////////////////////////////////////////////////////////
+    private void setPicToView(Bitmap mBitmap) {
+        String sdStatus = Environment.getExternalStorageState();
+        if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) { // 检测sd是否可用
+            return;
+        }
+        FileOutputStream b = null;
+        File file = new File(Util.LOGO_PATH);
+        file.mkdirs();// 创建文件夹
+        file = new File(Util.LOGO_PATH + Util.LOGO_NAME);
+        String fileName = Util.LOGO_PATH + Util.LOGO_NAME;  // get logo position
+        try {
+            b = new FileOutputStream(fileName);
+            mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, b);  // write the data to file
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // close
+                b.flush();
+                b.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        final User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+// if login/////////////////////////////////////////////////////////////////////////////////////////
+        if (user != null) {
+            final BmobFile bmobFile = new BmobFile(file);
+            bmobFile.uploadblock(this, new UploadFileListener() {
+                @Override
+                public void onSuccess() {
+                    String url = bmobFile.getFileUrl(CoCoinApplication.getAppContext());
+                    Log.d("Saver", "Upload successfully " + url);
+                    final Logo logo = new Logo(bmobFile);
+                    BmobQuery bmobQuery = new BmobQuery();
+                    bmobQuery.addWhereEqualTo("objectId", user.getObjectId());
+                    bmobQuery.findObjects(CoCoinApplication.getAppContext()
+                            , new FindListener<Logo>() {
+                        @Override
+                        public void onSuccess(List<Logo> object) {
+// there has been an old logo in the server/////////////////////////////////////////////////////////
+                            // delete the old logo file
+                            BmobFile file = new BmobFile();
+                            file.setUrl(logo.getFile().getUrl());
+                            file.delete(CoCoinApplication.getAppContext(), new DeleteListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("Saver", "Successfully delete the old logo.");
+                                    // update the logo object
+                                    logo.update(CoCoinApplication.getAppContext(),
+                                            user.getLogoObjectId(), new UpdateListener() {
+                                                @Override
+                                                public void onSuccess() {
+                                                    Log.d("Saver", "Update logo successfully");
+                                                }
+
+                                                @Override
+                                                public void onFailure(int arg0, String arg1) {
+                                                    Log.d("Saver", "Update logo failed " + arg1);
+                                                }
+                                            });
+                                }
+
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    Log.d("Saver", "Fail to delete the old logo. " + msg);
+                                }
+                            });
+                        }
+                        @Override
+                        public void onError(int code, String msg) {
+// this is a new logo///////////////////////////////////////////////////////////////////////////////
+                            logo.save(CoCoinApplication.getAppContext(), new SaveListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("Saver", "Insert Bmobject successfully");
+                                    User user = getCurrentUser();
+                                    user.setLogoObjectId(logo.getObjectId());
+                                    updateSettingsToServer(UPDATE_LOGO);
+                                }
+
+                                @Override
+                                public void onFailure(int arg0, String arg1) {
+                                    Log.d("Saver", "Insert Bmobject failed " + arg1);
+                                }
+                            });
+                        }
+                    });
+                }
+                @Override
+                public void onProgress(Integer arg0) {}
+                @Override
+                public void onFailure(int arg0, String arg1) {Log.d("Saver", "Upload failed " + arg1);}
+            });
+        }
+    }
+
+// download logo to local///////////////////////////////////////////////////////////////////////////
+    private void downloadLogoFromServer() {
+        User user = getCurrentUser();
+        BmobQuery bmobQuery = new BmobQuery();
+        bmobQuery.addWhereEqualTo("objectId", user.getLogoObjectId());
+        bmobQuery.findObjects(CoCoinApplication.getAppContext()
+                , new FindListener<Logo>() {
+            @Override
+            public void onSuccess(List<Logo> object) {
+// there has been an old logo in the server/////////////////////////////////////////////////////////
+                Log.d("Saver", "There is an old logo");
+                String url = object.get(0).getFile().getUrl();
+                Ion.with(CoCoinApplication.getAppContext()).load(url)
+                        .write(new File(Util.LOGO_PATH, Util.LOGO_NAME))
+                        .setCallback(new FutureCallback<File>() {
+                            @Override
+                            public void onCompleted(Exception e, File file) {
+                                logo.setImageBitmap(BitmapFactory.
+                                        decodeFile(Util.LOGO_PATH + Util.LOGO_NAME));
+                            }
+                        });
+            }
+            @Override
+            public void onError(int code, String msg) {
+                // the picture is lost
+                Log.d("Saver", "Can't find the old logo in server.");
+            }
+        });
+    }
+
+// update a logo to server//////////////////////////////////////////////////////////////////////////
+    private void uploadLogoToServer() {
+        File file = new File(Util.LOGO_PATH + Util.LOGO_NAME);
+        final User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+// if login/////////////////////////////////////////////////////////////////////////////////////////
+        if (user != null) {
+            final BmobFile bmobFile = new BmobFile(file);
+            bmobFile.uploadblock(this, new UploadFileListener() {
+                @Override
+                public void onSuccess() {
+                    String url = bmobFile.getFileUrl(CoCoinApplication.getAppContext());
+                    Log.d("Saver", "Upload successfully " + url);
+                    final Logo logo = new Logo(bmobFile);
+                    BmobQuery bmobQuery = new BmobQuery();
+                    bmobQuery.addWhereEqualTo("objectId", user.getLogoObjectId());
+                    bmobQuery.findObjects(CoCoinApplication.getAppContext()
+                            , new FindListener<Logo>() {
+                        @Override
+                        public void onSuccess(List<Logo> object) {
+// there has been an old logo in the server/////////////////////////////////////////////////////////
+                            // delete the old logo file
+                            BmobFile file = new BmobFile();
+                            file.setUrl(logo.getFile().getUrl());
+                            file.delete(CoCoinApplication.getAppContext(), new DeleteListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("Saver", "Successfully delete the old logo.");
+                                    // update the logo object
+                                    logo.update(CoCoinApplication.getAppContext(),
+                                            user.getLogoObjectId(), new UpdateListener() {
+                                                @Override
+                                                public void onSuccess() {
+                                                    Log.d("Saver", "Update logo successfully");
+                                                }
+
+                                                @Override
+                                                public void onFailure(int arg0, String arg1) {
+                                                    Log.d("Saver", "Update logo failed " + arg1);
+                                                }
+                                            });
+                                }
+
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    Log.d("Saver", "Fail to delete the old logo. " + msg);
+                                }
+                            });
+                        }
+                        @Override
+                        public void onError(int code, String msg) {
+// this is a new logo///////////////////////////////////////////////////////////////////////////////
+                            logo.save(CoCoinApplication.getAppContext(), new SaveListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("Saver", "Insert Bmobject successfully");
+                                    User user = getCurrentUser();
+                                    user.setLogoObjectId(logo.getObjectId());
+                                    updateSettingsToServer(UPDATE_LOGO);
+                                }
+
+                                @Override
+                                public void onFailure(int arg0, String arg1) {
+                                    Log.d("Saver", "Insert Bmobject failed " + arg1);
+                                }
+                            });
+                        }
+                    });
+                }
+                @Override
+                public void onProgress(Integer arg0) {}
+                @Override
+                public void onFailure(int arg0, String arg1) {Log.d("Saver", "Upload failed " + arg1);}
+            });
+        }
+    }
+
+// the user's operation when clicking the first card view///////////////////////////////////////////
     private void userOperator() {
         if (!SettingManager.getInstance().getLoggenOn()) {
             // register or log on
@@ -312,14 +659,17 @@ public class AccountBookSettingActivity extends AppCompatActivity
         }
     }
 
+// User log out/////////////////////////////////////////////////////////////////////////////////////
     private void userLogout() {
-        BmobUser.logOut(mContext);   //清除缓存用户对象
+        BmobUser.logOut(CoCoinApplication.getAppContext());
         SettingManager.getInstance().setLoggenOn(false);
         SettingManager.getInstance().setUserName(null);
         SettingManager.getInstance().setUserEmail(null);
         updateViews();
+        showToast(8, "");
     }
 
+// User login///////////////////////////////////////////////////////////////////////////////////////
     private void userLogin() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.go_login)
@@ -331,45 +681,61 @@ public class AccountBookSettingActivity extends AppCompatActivity
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (which.equals(DialogAction.POSITIVE)) {
-                            // login
+// the user ask to login////////////////////////////////////////////////////////////////////////////
                             final User user = new User();
                             user.setUsername(loginUserName.getText().toString());
                             user.setPassword(loginPassword.getText().toString());
                             user.login(CoCoinApplication.getAppContext(), new SaveListener() {
+// try with user name///////////////////////////////////////////////////////////////////////////////
                                 @Override
                                 public void onSuccess() {
-                                    // login successfully through user name
-                                    Toast.makeText(mContext, "Login successfully", Toast.LENGTH_SHORT).show();
+// login successfully through user name/////////////////////////////////////////////////////////////
+                                    User loginUser =
+                                            BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+                                    if (!CoCoinApplication.getAndroidId().equals(loginUser.getAndroidId())) {
+// 2 users on one mobile////////////////////////////////////////////////////////////////////////////
+                                        showToast(7, "unique...");
+                                        return;
+                                    }
                                     SettingManager.getInstance().setLoggenOn(true);
                                     SettingManager.getInstance().setUserName(loginUserName.getText().toString());
                                     SettingManager.getInstance().setUserEmail(
-                                            BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class).getEmail());
+                                            loginUser.getEmail());
                                     updateViews();
                                     RecordManager.updateOldRecordsToServer();
-                                    updateAllSettings();
+                                    whetherSyncSettingsFromServer();
+                                    showToast(6, loginUserName.getText().toString());
                                 }
-
+// login fail through user name/////////////////////////////////////////////////////////////////////
                                 @Override
                                 public void onFailure(int code, String msg) {
+// try with user email//////////////////////////////////////////////////////////////////////////////
                                     user.setEmail(loginUserName.getText().toString());
                                     user.login(CoCoinApplication.getAppContext(), new SaveListener() {
                                         @Override
                                         public void onSuccess() {
-                                            // login successfully through user email
-                                            Toast.makeText(mContext, "Login successfully", Toast.LENGTH_SHORT).show();
+// login successfully through user email////////////////////////////////////////////////////////////
+                                            User loginUser =
+                                                    BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+                                            if (!CoCoinApplication.getAndroidId().equals(loginUser.getAndroidId())) {
+// 2 users on one mobile////////////////////////////////////////////////////////////////////////////
+                                                showToast(7, "unique...");
+                                                return;
+                                            }
+                                            String userName = loginUser.getUsername();
                                             SettingManager.getInstance().setLoggenOn(true);
-                                            SettingManager.getInstance().setUserName(
-                                                    BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class).getUsername());
+                                            SettingManager.getInstance().setUserName(userName);
                                             SettingManager.getInstance().setUserEmail(loginUserName.getText().toString());
                                             SettingManager.getInstance().setUserPassword(loginPassword.getText().toString());
                                             updateViews();
                                             RecordManager.updateOldRecordsToServer();
+                                            whetherSyncSettingsFromServer();
+                                            showToast(6, userName);
                                         }
-
+// login fail through user name and email///////////////////////////////////////////////////////////
                                         @Override
                                         public void onFailure(int code, String msg) {
-                                            Log.d("Saver", "Login fail " + msg);
-                                            Toast.makeText(mContext, "Login fail", Toast.LENGTH_SHORT).show();
+                                            showToast(7, msg);
                                         }
                                     });
                                 }
@@ -396,46 +762,35 @@ public class AccountBookSettingActivity extends AppCompatActivity
         loginUserName.setTypeface(Util.GetTypeface());
         loginUserName.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 positiveAction.setEnabled(
                         0 < loginUserName.getText().toString().length()
                                 && 0 < loginPassword.getText().toString().length());
             }
-
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         loginPassword.setTypeface(Util.GetTypeface());
         loginPassword.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 positiveAction.setEnabled(
                         0 < loginUserName.getText().toString().length()
                                 && 0 < loginPassword.getText().toString().length());
             }
-
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         dialog.show();
     }
 
+// User register////////////////////////////////////////////////////////////////////////////////////
     private void userRegister() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.go_register)
@@ -447,40 +802,52 @@ public class AccountBookSettingActivity extends AppCompatActivity
                     @Override
                     public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
                         if (which.equals(DialogAction.POSITIVE)) {
-                            // register
+// User register, a new user////////////////////////////////////////////////////////////////////////
                             final User user = new User();
+                            // basic info
                             user.setUsername(registerUserName.getText().toString());
                             user.setPassword(registerPassword.getText().toString());
                             user.setEmail(registerUserEmail.getText().toString());
+                            user.setAndroidId(CoCoinApplication.getAndroidId());
+                            // settings info
+                            // user.setLogo();
+                            user.setIsMonthLimit(SettingManager.getInstance().getIsMonthLimit());
+                            user.setMonthLimit(SettingManager.getInstance().getMonthLimit());
+                            user.setIsColorRemind(SettingManager.getInstance().getIsColorRemind());
+                            user.setMonthWarning(SettingManager.getInstance().getMonthWarning());
+                            user.setRemindColor(SettingManager.getInstance().getRemindColor());
+                            user.setIsForbidden(SettingManager.getInstance().getIsForbidden());
+                            user.setAccountBookName(SettingManager.getInstance().getAccountBookName());
+                            user.setAccountBookPassword(SettingManager.getInstance().getPassword());
+                            // Todo store tag order
+                            user.setShowPicture(SettingManager.getInstance().getShowPicture());
+                            user.setIsHollow(SettingManager.getInstance().getIsHollow());
                             user.signUp(CoCoinApplication.getAppContext(), new SaveListener() {
                                 @Override
                                 public void onSuccess() {
-                                    Toast.makeText(mContext, "Register successfully", Toast.LENGTH_SHORT).show();
+// if register successfully/////////////////////////////////////////////////////////////////////////
                                     SettingManager.getInstance().setLoggenOn(true);
                                     SettingManager.getInstance().setUserName(registerUserName.getText().toString());
                                     SettingManager.getInstance().setUserEmail(registerUserEmail.getText().toString());
                                     SettingManager.getInstance().setUserPassword(registerPassword.getText().toString());
+                                    showToast(4, registerUserName.getText().toString());
+// if login successfully////////////////////////////////////////////////////////////////////////////
                                     user.login(CoCoinApplication.getAppContext(), new SaveListener() {
                                         @Override
                                         public void onSuccess() {
                                             updateViews();
                                             RecordManager.updateOldRecordsToServer();
-                                            updateAllSettings();
-                                            Toast.makeText(mContext, "Login successfully", Toast.LENGTH_SHORT).show();
                                         }
-
                                         @Override
                                         public void onFailure(int code, String msg) {
-                                            Log.d("Saver", "Login fail " + msg);
-                                            Toast.makeText(mContext, "Login fail", Toast.LENGTH_SHORT).show();
+// if login failed//////////////////////////////////////////////////////////////////////////////////
                                         }
                                     });
                                 }
-
+// if register failed///////////////////////////////////////////////////////////////////////////////
                                 @Override
                                 public void onFailure(int code, String msg) {
-                                    Log.d("Saver", "Register fail: " + msg);
-                                    Toast.makeText(mContext, "Register fail", Toast.LENGTH_SHORT).show();
+                                    showToast(5, msg);
                                 }
                             });
                         }
@@ -595,6 +962,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         dialog.show();
     }
 
+// Change account book name/////////////////////////////////////////////////////////////////////////
     private void changeAccountBookName() {
         new MaterialDialog.Builder(this)
                 .theme(Theme.LIGHT)
@@ -607,14 +975,24 @@ public class AccountBookSettingActivity extends AppCompatActivity
                         , null, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
+                        // local change
                         SettingManager.getInstance().setAccountBookName(input.toString());
                         SettingManager.getInstance().setTodayViewTitleShouldChange(true);
                         SettingManager.getInstance().setMainViewTitleShouldChange(true);
                         accountBookName.setText(input.toString());
+                        // update change
+                        User user = getCurrentUser();
+                        if (user != null) {
+                            updateSettingsToServer(UPDATE_ACCOUNT_BOOK_NAME);
+                        } else {
+                            // the new account book name is changed successfully
+                            showToast(2, "");
+                        }
                     }
                 }).show();
     }
 
+// Update some views when login/////////////////////////////////////////////////////////////////////
     private void updateViews() {
         setIconEnable(userNameIcon, SettingManager.getInstance().getLoggenOn());
         setIconEnable(userEmailIcon, SettingManager.getInstance().getLoggenOn());
@@ -627,16 +1005,21 @@ public class AccountBookSettingActivity extends AppCompatActivity
         }
     }
 
+// Start change account book password activity//////////////////////////////////////////////////////
+// I put the update to server part in the change password activity but not here/////////////////////
     private void changePassword() {
         Intent intent = new Intent(mContext, EditPasswordActivity.class);
         startActivity(intent);
     }
 
+// Start sort tags activity/////////////////////////////////////////////////////////////////////////
+// I put the update to server part in the sort tag activity but not here////////////////////////////
     private void sortTags() {
         Intent intent = new Intent(mContext, TagSettingActivity.class);
         startActivity(intent);
     }
 
+// Init the setting activity////////////////////////////////////////////////////////////////////////
     private void init() {
         back = (MaterialIconView)findViewById(R.id.icon_left);
         back.setOnClickListener(new View.OnClickListener() {
@@ -692,6 +1075,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         if (SettingManager.getInstance().getIsMonthLimit())
             monthMaxExpense.withNumber(SettingManager.getInstance()
                     .getMonthLimit()).setDuration(1000).start();
+// change the month limit///////////////////////////////////////////////////////////////////////////
         monthMaxExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -711,25 +1095,27 @@ public class AccountBookSettingActivity extends AppCompatActivity
                                     if (input.length() != 0) {
                                         newExpense = Integer.parseInt(input.toString());
                                     }
+                                    // the month limit must be smaller than the month warning
                                     if (newExpense < SettingManager.getInstance().getMonthWarning()) {
                                         SettingManager.getInstance().setMonthWarning(
                                                 ((int)(newExpense * 0.8) / 100 * 100));
                                         if (SettingManager.getInstance().getMonthWarning() < 100) {
                                             SettingManager.getInstance().setMonthWarning(100);
                                         }
+                                        updateSettingsToServer(UPDATE_MONTH_WARNING);
                                         SettingManager.getInstance()
                                                 .setMainViewRemindColorShouldChange(true);
                                         monthWarning.setText(SettingManager
                                                 .getInstance().getMonthWarning().toString());
                                     }
                                     SettingManager.getInstance().setMonthLimit(newExpense);
+                                    updateSettingsToServer(UPDATE_MONTH_LIMIT);
                                     SettingManager.getInstance()
                                             .setTodayViewMonthExpenseShouldChange(true);
                                     SettingManager.getInstance()
                                             .setMainViewMonthExpenseShouldChange(true);
                                     monthMaxExpense.withNumber(SettingManager.getInstance()
                                             .getMonthLimit()).setDuration(1000).start();
-                                    updateSettingsToServer(2);
                                 }
                             }).show();
                 }
@@ -741,6 +1127,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 && SettingManager.getInstance().getIsColorRemind())
             monthWarning.withNumber(SettingManager.getInstance()
                     .getMonthWarning()).setDuration(1000).start();
+// change month warning/////////////////////////////////////////////////////////////////////////////
         monthWarning.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -783,6 +1170,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                                         public void onClick(View v) {
                                             SettingManager.getInstance()
                                                     .setMonthWarning(Integer.parseInt(input.toString()));
+                                            updateSettingsToServer(UPDATE_MONTH_WARNING);
                                             SettingManager.getInstance()
                                                     .setMainViewRemindColorShouldChange(true);
                                             monthWarning.withNumber(SettingManager.getInstance()
@@ -795,6 +1183,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 }
             }
         });
+// change month remind color////////////////////////////////////////////////////////////////////////
         monthColorRemindSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -877,13 +1266,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         setIconEnable(userNameIcon, loggenOn);
         setIconEnable(userEmailIcon, loggenOn);
 
-        if (SettingManager.getInstance().getHasLogo()) {
-            // is has a logo, just set the logo
-            loadLogo();
-        } else {
-            // load a default image
-            // Todo
-        }
+        loadLogo();
 
         monthSB.setCheckedImmediately(SettingManager.getInstance().getIsMonthLimit());
         setMonthState();
@@ -895,19 +1278,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         setHollowState(SettingManager.getInstance().getIsHollow());
     }
 
-    private void loadLogo() {
-        try {
-            logoFile = new File(SettingManager.getInstance().getProfileImageDir(),
-                    SettingManager.getInstance().getProfileImageName());
-            Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
-            logo.setImageBitmap(b);
-        }
-        catch (FileNotFoundException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
+// Set all states about month limit/////////////////////////////////////////////////////////////////
     private void setMonthState() {
         boolean isMonthLimit = SettingManager.getInstance().getIsMonthLimit();
         boolean isMonthColorRemind = SettingManager.getInstance().getIsColorRemind();
@@ -970,10 +1341,12 @@ public class AccountBookSettingActivity extends AppCompatActivity
         else tv.setTextColor(mContext.getResources().getColor(R.color.my_gray));
     }
 
+// choose a color///////////////////////////////////////////////////////////////////////////////////
     @Override
     public void onColorSelection(ColorChooserDialog dialog, int selectedColor) {
         monthColorRemindSelect.setColor(selectedColor);
         SettingManager.getInstance().setRemindColor(selectedColor);
+        updateSettingsToServer(UPDATE_REMIND_COLOR);
         SettingManager.getInstance().setMainViewRemindColorShouldChange(true);
     }
 
@@ -988,70 +1361,180 @@ public class AccountBookSettingActivity extends AppCompatActivity
                     .dynamicButtonColor(true)
                     .build();
 
+// whether sync the settings from server////////////////////////////////////////////////////////////
+    private void whetherSyncSettingsFromServer() {
+        new MaterialDialog.Builder(this)
+                .iconRes(R.drawable.donation_icon)
+                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .limitIconToDefaultSize() // limits the displayed icon size to 48dp
+                .title(R.string.sync_dialog_title)
+                .forceStacking(true)
+                .content(R.string.sync_dialog_content)
+                .positiveText(R.string.sync_dialog_sync_to_local)
+                .negativeText(R.string.sync_dialog_sync_to_server)
+                .cancelable(false)
+                .onAny(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog,
+                                        @NonNull DialogAction which) {
+                        if (which.equals(DialogAction.POSITIVE)) {
+                            // sync to local
+                            downloadLogoFromServer();
+                            User user = getCurrentUser();
+                            String tip = "";
+                            boolean accountBookPasswordChanged = false;
+                            if (!user.getAccountBookPassword().equals(SettingManager.getInstance().getPassword()))
+                                accountBookPasswordChanged = true;
+
+                            SettingManager.getInstance().setIsMonthLimit(user.getIsMonthLimit());
+                            monthSB.setChecked(user.getIsMonthLimit());
+                            SettingManager.getInstance().setMonthLimit(user.getMonthLimit());
+                            if (SettingManager.getInstance().getIsMonthLimit())
+                                monthMaxExpense.withNumber(SettingManager.getInstance()
+                                        .getMonthLimit()).setDuration(1000).start();
+                            SettingManager.getInstance().setIsColorRemind(user.getIsColorRemind());
+                            monthColorRemindSB.setChecked(user.getIsColorRemind());
+                            SettingManager.getInstance().setMonthWarning(user.getMonthWarning());
+                            if (SettingManager.getInstance().getIsMonthLimit()
+                                    && SettingManager.getInstance().getIsColorRemind())
+                                monthWarning.withNumber(SettingManager.getInstance()
+                                        .getMonthWarning()).setDuration(1000).start();
+                            SettingManager.getInstance().setRemindColor(user.getRemindColor());
+                            monthColorRemindTypeIcon.setColor(SettingManager.getInstance().getRemindColor());
+                            SettingManager.getInstance().setIsForbidden(user.getIsForbidden());
+                            monthForbiddenSB.setChecked(user.getIsForbidden());
+                            SettingManager.getInstance().setAccountBookName(user.getAccountBookName());
+                            accountBookName.setText(user.getAccountBookName());
+                            SettingManager.getInstance().setPassword(user.getAccountBookPassword());
+                            // Todo tag sort
+                            SettingManager.getInstance().setShowPicture(user.getShowPicture());
+                            showPictureSB.setChecked(user.getShowPicture());
+                            SettingManager.getInstance().setIsHollow(user.getIsHollow());
+                            hollowSB.setChecked(user.getIsHollow());
+                            SettingManager.getInstance().setMainViewMonthExpenseShouldChange(true);
+                            SettingManager.getInstance().setMainViewRemindColorShouldChange(true);
+                            SettingManager.getInstance().setMainViewTitleShouldChange(true);
+                            SettingManager.getInstance().setTodayViewMonthExpenseShouldChange(true);
+                            SettingManager.getInstance().setTodayViewPieShouldChange(true);
+                            SettingManager.getInstance().setTodayViewTitleShouldChange(true);
+                            // SettingManager.getInstance().getMainActivityTagShouldChange();
+                            if (accountBookPasswordChanged)
+                                tip = "\n" + getString(R.string.your_current_account_book_password_is)
+                                        + SettingManager.getInstance().getPassword();
+                            new MaterialDialog.Builder(mContext)
+                                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                                    .limitIconToDefaultSize() // limits the displayed icon size to 48dp
+                                    .title(R.string.sync_to_local_successfully_dialog_title)
+                                    .content(getString(R.string.sync_to_local_successfully_dialog_content) + tip)
+                                    .positiveText(R.string.ok)
+                                    .show();
+                        } else if (which.equals(DialogAction.NEGATIVE)) {
+                            // sync to server
+                            uploadLogoToServer();
+                            User user = getCurrentUser();
+                            user.setIsMonthLimit(SettingManager.getInstance().getIsMonthLimit());
+                            user.setMonthLimit(SettingManager.getInstance().getMonthLimit());
+                            user.setIsColorRemind(SettingManager.getInstance().getIsColorRemind());
+                            user.setMonthWarning(SettingManager.getInstance().getMonthWarning());
+                            user.setRemindColor(SettingManager.getInstance().getRemindColor());
+                            user.setIsForbidden(SettingManager.getInstance().getIsForbidden());
+                            user.setAccountBookName(SettingManager.getInstance().getAccountBookName());
+                            user.setAccountBookPassword(SettingManager.getInstance().getPassword());
+                            // Todo tag sort
+                            user.setShowPicture(SettingManager.getInstance().getShowPicture());
+                            user.setIsHollow(SettingManager.getInstance().getIsHollow());
+                            user.update(CoCoinApplication.getAppContext(),
+                                    user.getObjectId(), new UpdateListener() {
+                                @Override
+                                public void onSuccess() {
+                                    showToast(9, "");
+                                }
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    showToast(10, msg);
+                                }
+                            });
+                        }
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+    }
+
     private void updateAllSettings() {
         updateSettingsToServer(0);
         updateSettingsToServer(1);
         updateSettingsToServer(2);
     }
 
+// update part of settings//////////////////////////////////////////////////////////////////////////
     private void updateSettingsToServer(final int setting) {
-        User newUser = new User();
+        User currentUser = getCurrentUser();
+        if (currentUser == null) {
+            Log.d("Saver", "User hasn't log in.");
+            return;
+        }
         switch (setting) {
-            case 0:
+            case UPDATE_LOGO:
                 // logo
                 break;
-            case 1:
+            case UPDATE_IS_MONTH_LIMIT:
                 // is month limit
-                newUser.setIsMonthLimit(SettingManager.getInstance().getIsMonthLimit());
+                currentUser.setIsMonthLimit(SettingManager.getInstance().getIsMonthLimit());
                 break;
-            case 2:
+            case UPDATE_MONTH_LIMIT:
                 // month limit
-                newUser.setMonthLimit(SettingManager.getInstance().getMonthLimit());
+                currentUser.setMonthLimit(SettingManager.getInstance().getMonthLimit());
                 break;
-            case 3:
+            case UPDATE_IS_COLOR_REMIND:
                 // is color remind
-                newUser.setIsColorRemind(SettingManager.getInstance().getIsColorRemind());
+                currentUser.setIsColorRemind(SettingManager.getInstance().getIsColorRemind());
                 break;
-            case 4:
+            case UPDATE_MONTH_WARNING:
                 // month warning
-                newUser.setMonthWarning(SettingManager.getInstance().getMonthWarning());
+                currentUser.setMonthWarning(SettingManager.getInstance().getMonthWarning());
                 break;
-            case 5:
+            case UPDATE_REMIND_COLOR:
                 // remind color
-                newUser.setRemindColor(SettingManager.getInstance().getRemindColor());
+                currentUser.setRemindColor(SettingManager.getInstance().getRemindColor());
                 break;
-            case 6:
+            case UPDATE_IS_FORBIDDEN:
                 // is forbidden
-                newUser.setIsForbidden(SettingManager.getInstance().getIsForbidden());
+                currentUser.setIsForbidden(SettingManager.getInstance().getIsForbidden());
                 break;
-            case 7:
+            case UPDATE_ACCOUNT_BOOK_NAME:
                 // account book name
-                newUser.setAccountBookName(SettingManager.getInstance().getAccountBookName());
+                currentUser.setAccountBookName(SettingManager.getInstance().getAccountBookName());
                 break;
-            case 8:
+            case UPDATE_ACCOUNT_BOOK_PASSWORD:
                 // account book password
-                newUser.setAccountBookPassword(SettingManager.getInstance().getPassword());
+                currentUser.setAccountBookPassword(SettingManager.getInstance().getPassword());
                 break;
-            case 9:
+            case UPDATE_SHOW_PICTURE:
                 // show picture
-                newUser.setShowPicture(SettingManager.getInstance().getShowPicture());
+                currentUser.setShowPicture(SettingManager.getInstance().getShowPicture());
                 break;
-            case 10:
+            case UPDATE_IS_HOLLOW:
                 // is hollow
-                newUser.setIsHollow(SettingManager.getInstance().getIsHollow());
+                currentUser.setIsHollow(SettingManager.getInstance().getIsHollow());
                 break;
         }
-        User currentUser = getCurrentUser();
-        newUser.update(this, currentUser.getObjectId(), new UpdateListener() {
-            @Override
-            public void onSuccess() {
-                Log.d("Saver", "Update " + setting + " successfully.");
-            }
-            @Override
-            public void onFailure(int code, String msg) {
-                Log.d("Saver", "Update " + setting + " fail.");
-            }
-        });
+        currentUser.update(CoCoinApplication.getAppContext(),
+                currentUser.getObjectId(), new UpdateListener() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d("Saver", "Update " + setting + " successfully.");
+                        // the new account book name is updated to server successfully
+                        if (setting == UPDATE_ACCOUNT_BOOK_NAME) showToast(0, "");
+                    }
+
+                    @Override
+                    public void onFailure(int code, String msg) {
+                        Log.d("Saver", "Update " + setting + " fail.");
+                        // the new account book name is failed to updated to server
+                        if (setting == UPDATE_ACCOUNT_BOOK_NAME) showToast(1, "");
+                    }
+                });
     }
 
     private void syncUserInfo() {
@@ -1059,7 +1542,112 @@ public class AccountBookSettingActivity extends AppCompatActivity
 
     }
 
+// Get the current user/////////////////////////////////////////////////////////////////////////////
     private User getCurrentUser() {
         return BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
     }
+
+// Get string///////////////////////////////////////////////////////////////////////////////////////
+    private String getResourceString(int resourceId) {
+        return CoCoinApplication.getAppContext().getResources().getString(resourceId);
+    }
+
+// activity finish//////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void finish() {
+
+        SuperToast.cancelAllSuperToasts();
+
+        super.finish();
+    }
+
+// Show toast///////////////////////////////////////////////////////////////////////////////////////
+    private void showToast(int toastType, String msg) {
+        Log.d("Saver", msg);
+        SuperToast.cancelAllSuperToasts();
+        SuperToast superToast = new SuperToast(mContext);
+
+        superToast.setAnimations(Util.TOAST_ANIMATION);
+        superToast.setDuration(SuperToast.Duration.LONG);
+        superToast.setTextColor(Color.parseColor("#ffffff"));
+        superToast.setTextSize(SuperToast.TextSize.SMALL);
+
+        String tip = "";
+
+        switch (toastType) {
+            case 0:
+                // the new account book name is updated to server successfully
+                superToast.setText(CoCoinApplication.getAppContext().getResources().getString(
+                        R.string.change_and_update_account_book_name_successfully));
+                superToast.setBackground(SuperToast.Background.BLUE);
+                break;
+            case 1:
+                // the new account book name is failed to updated to server
+                superToast.setText(CoCoinApplication.getAppContext().getResources().getString(
+                        R.string.change_and_update_account_book_name_fail));
+                superToast.setBackground(SuperToast.Background.RED);
+                break;
+            case 2:
+                // the new account book name is changed successfully
+                superToast.setText(CoCoinApplication.getAppContext().getResources().getString(
+                        R.string.change_account_book_name_successfully));
+                superToast.setBackground(SuperToast.Background.BLUE);
+                break;
+            case 3:
+                // the new account book name is failed to change
+                superToast.setText(CoCoinApplication.getAppContext().getResources().getString(
+                        R.string.change_account_book_name_fail));
+                superToast.setBackground(SuperToast.Background.RED);
+                break;
+            case 4:
+                // register successfully
+                tip = msg;
+                superToast.setText(getResourceString(R.string.register_successfully) + tip);
+                superToast.setBackground(SuperToast.Background.BLUE);
+                break;
+            case 5:
+                // register failed
+                tip = getResourceString(R.string.network_disconnection);
+                if (msg.charAt(1) == 's') tip = getResourceString(R.string.user_name_exist);
+                if (msg.charAt(0) == 'e') tip = getResourceString(R.string.user_email_exist);
+                if (msg.charAt(1) == 'n') tip = getResourceString(R.string.user_mobile_exist);
+                superToast.setText(getResourceString(R.string.register_fail) + tip);
+                superToast.setBackground(SuperToast.Background.RED);
+                break;
+            case 6:
+                // login successfully
+                tip = msg;
+                superToast.setText(getResourceString(R.string.login_successfully) + tip);
+                superToast.setBackground(SuperToast.Background.BLUE);
+                break;
+            case 7:
+                // login failed
+                tip = getResourceString(R.string.network_disconnection);
+                if (msg.charAt(0) == 'u') tip = getResourceString(R.string.user_name_or_password_incorrect);
+                if (msg.charAt(1) == 'n') tip = getResourceString(R.string.user_mobile_exist);
+                superToast.setText(getResourceString(R.string.login_fail) + tip);
+                superToast.setBackground(SuperToast.Background.RED);
+                break;
+            case 8:
+                // log out successfully
+                superToast.setText(getResourceString(R.string.log_out_successfully));
+                superToast.setBackground(SuperToast.Background.BLUE);
+                break;
+            case 9:
+                // sync settings successfully
+                superToast.setText(getResourceString(R.string.sync_to_server_successfully));
+                superToast.setBackground(SuperToast.Background.BLUE);
+                break;
+            case 10:
+                // sync settings failed
+                tip = getResourceString(R.string.network_disconnection);
+                superToast.setText(getResourceString(R.string.sync_to_server_failed) + tip);
+                superToast.setBackground(SuperToast.Background.RED);
+                break;
+
+        }
+        superToast.getTextView().setTypeface(Util.GetTypeface());
+        superToast.show();
+    }
+
 }

@@ -20,8 +20,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -208,12 +210,28 @@ public class RecordManager {
         return insertId;
     }
 
-    public static long deleteRecord(Record record, boolean deleteInList) {
+// delete a record//////////////////////////////////////////////////////////////////////////////////
+    public static long deleteRecord(final Record record, boolean deleteInList) {
         long deletedId = -1;
         Log.d("Saver",
                 "Manager: Delete record: " + "Record(id = "
                         + record.getId() + ", deletedId = " + deletedId + ")");
         deletedId = db.deleteRecord(record.getId());
+        User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+        // if we can delete the record from server
+        if (user != null && record.getLocalObjectId() != null) {
+            record.delete(CoCoinApplication.getAppContext(), new DeleteListener() {
+                @Override
+                public void onSuccess() {
+                    Log.d("Saver", "Delete " + record.toString() + " from server successfully.");
+                }
+                @Override
+                public void onFailure(int code, String msg) {
+                    Log.d("Saver", "Delete " + record.toString() + " from server failed.");
+                }
+            });
+        }
+
         if (deletedId == -1) {
             Log.d("Saver", "Delete the above record FAIL!");
         } else {
@@ -285,23 +303,42 @@ public class RecordManager {
                     .getCurrentUser(CoCoinApplication.getAppContext(), User.class);
             if (user != null) {
                 // already login
-                record.setUserId(user.getObjectId());
-                record.update(CoCoinApplication.getAppContext(),
-                        record.getLocalObjectId(), new UpdateListener() {
-                    @Override
-                    public void onSuccess() {
-                        Log.d("Saver", "SSS Update record(" + record.toString() + ") to DB");
-                        record.setIsUploaded(true);
-                        record.setLocalObjectId(record.getObjectId());
-                        db.updateRecord(record);
-                    }
+                if (record.getLocalObjectId() != null) {
+                    // this record has been push to the server
+                    record.setUserId(user.getObjectId());
+                    record.update(CoCoinApplication.getAppContext(),
+                            record.getLocalObjectId(), new UpdateListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("Saver", "SSS Update record(" + record.toString() + ") to DB");
+                                    record.setIsUploaded(true);
+                                    record.setLocalObjectId(record.getObjectId());
+                                    db.updateRecord(record);
+                                }
 
-                    @Override
-                    public void onFailure(int code, String msg) {
-                        Log.d("Saver", "FFF Update record(" + record.toString() + ") to DB");
-                        Log.d("Saver", msg);
-                    }
-                });
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    Log.d("Saver", "FFF Update record(" + record.toString() + ") to DB");
+                                    Log.d("Saver", msg);
+                                }
+                            });
+                } else {
+                    record.setUserId(user.getObjectId());
+                    record.save(CoCoinApplication.getAppContext(), new SaveListener() {
+                                @Override
+                                public void onSuccess() {
+                                    Log.d("Saver", "SSS Update record(" + record.toString() + ") to DB");
+                                    record.setIsUploaded(true);
+                                    record.setLocalObjectId(record.getObjectId());
+                                    db.updateRecord(record);
+                                }
+                                @Override
+                                public void onFailure(int code, String msg) {
+                                    Log.d("Saver", "FFF Update record(" + record.toString() + ") to DB");
+                                    Log.d("Saver", msg);
+                                }
+                            });
+                }
             } else {
                 db.updateRecord(record);
             }
@@ -309,16 +346,22 @@ public class RecordManager {
         return updateId;
     }
 
+// update the records changed to server/////////////////////////////////////////////////////////////
+    private static boolean isLastOne = false;
     public static long updateOldRecordsToServer() {
         long counter = 0;
         User user = BmobUser
                 .getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
-            // already login
+// already login////////////////////////////////////////////////////////////////////////////////////
+            isLastOne = false;
             for (int i = 0; i < RECORDS.size(); i++) {
+                if (i == RECORDS.size() - 1) isLastOne = true;
                 final Record record = RECORDS.get(i);
                 if (!record.getIsUploaded()) {
+// has been changed/////////////////////////////////////////////////////////////////////////////////
                     if (record.getLocalObjectId() != null) {
+// there is an old record in server, we should update this record///////////////////////////////////
                         record.setUserId(user.getObjectId());
                         record.update(CoCoinApplication.getAppContext(),
                                 record.getLocalObjectId(), new UpdateListener() {
@@ -328,6 +371,8 @@ public class RecordManager {
                                         record.setIsUploaded(true);
                                         record.setLocalObjectId(record.getObjectId());
                                         db.updateRecord(record);
+// after updating, get the old records from server//////////////////////////////////////////////////
+                                        if (isLastOne) getRecordsFromServer();
                                     }
 
                                     @Override
@@ -346,6 +391,8 @@ public class RecordManager {
                                 record.setIsUploaded(true);
                                 record.setLocalObjectId(record.getObjectId());
                                 db.updateRecord(record);
+// after updating, get the old records from server//////////////////////////////////////////////////
+                                if (isLastOne) getRecordsFromServer();
                             }
 
                             @Override
@@ -363,7 +410,7 @@ public class RecordManager {
 
         Log.d("Saver", "Update " + counter + " records to server.");
 
-        getRecordsFromServer();
+        if (RECORDS.size() == 0) getRecordsFromServer();
 
         return counter;
     }
@@ -388,6 +435,7 @@ public class RecordManager {
         return updateId;
     }
 
+//get records from server to local//////////////////////////////////////////////////////////////////
     private static long updateNum;
     public static long getRecordsFromServer() {
         updateNum = 0;
@@ -398,7 +446,6 @@ public class RecordManager {
         query.findObjects(CoCoinApplication.getAppContext(), new FindListener<Record>() {
             @Override
             public void onSuccess(List<Record> object) {
-                // TODO Auto-generated method stub
                 Log.d("Saver", "Get " + object.size() + " records from server");
                 updateNum = object.size();
                 for (Record record : object) {

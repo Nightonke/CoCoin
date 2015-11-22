@@ -208,7 +208,7 @@
 
     <string name="register_user_name">来个酷酷的名字</string>
     <string name="register_user_email">您可以用邮箱来找回密码</string>
-    <string name="register_password">您的密码即是您的账本密码</string>
+    <string name="register_password">不能说的密码</string>
     <string name="go_register">注册！</string>
 
     <string name="welcome_back">欢迎回来！</string>
@@ -220,5 +220,51 @@
     <string name="go_login">登录!</string>
     <string name="login_user_name">请输入您的注册名或者邮箱</string>
     <string name="login_password">请输入您的密码（悄悄地）</string>
+
+    <string name="change_account_book_name_successfully">成功修改账本名字</string>
+    <string name="change_account_book_name_fail">修改账本名字失败</string>
+    <string name="change_and_update_account_book_name_successfully">
+        已修改账本名字并上传成功
+    </string>
+    <string name="change_and_update_account_book_name_fail">
+        已修改账本名字但是上传失败
+    </string>
+
+    <string name="register_successfully">欢迎来到CoCoin！\n</string>
+    <string name="register_fail">注册失败！\n</string>
+    <string name="login_successfully">欢迎回来！\n</string>
+    <string name="login_fail">登录失败！\n</string>
+    <string name="user_name_exist">用户名已存在</string>
+    <string name="user_email_exist">邮箱已存在</string>
+    <string name="user_mobile_exist">
+        这台手机已经注册过CoCoin账号啦！\n
+        请用原来的账号登录吧~
+    </string>
+    <string name="network_disconnection">网络连接断开</string>
+
+    <string name="user_name_or_password_incorrect">用户不存在或密码错误！</string>
+    <string name="name_or_email_inexist">用户不存在！</string>
+    <string name="password_wrong">密码错误！</string>
+
+    <string name="log_out_successfully">登出成功！</string>
+
+    <string name="sync_dialog_title">同步设置?</string>
+    <string name="sync_dialog_content">
+        您之前已经在CoCoin服务器上同步了设置，您是否想要把之前的设置同步到本地呢？
+    </string>
+    <string name="sync_dialog_sync_to_local">同步以前的设置到本地</string>
+    <string name="sync_dialog_sync_to_server">同步现在的设置到服务器</string>
+    <string name="sync_to_local_successfully_dialog_title">同步成功</string>
+    <string name="sync_to_local_successfully_dialog_content">
+        您之前的设置已经同步到本地
+    </string>
+    <string name="your_current_account_book_password_is">您的账本密码已经同步为：</string>
+    <string name="sync_to_server_successfully">设置已经同步到服务器！</string>
+    <string name="sync_to_server_failed">设置无法同步到服务器！\n</string>
+
+    <string name="change_logo_title">换个样子！</string>
+    <string name="change_logo_content">选择一张图片来改变头像</string>
+    <string name="from_camera">从相机</string>
+    <string name="from_gallery">从相册</string>
 
 </resources>

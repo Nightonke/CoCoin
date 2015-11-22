@@ -230,4 +230,51 @@
     <string name="login_user_name">Tell me your register name or email.</string>
     <string name="login_password">Tell me your password (be quiet!).</string>
 
+    <string name="change_account_book_name_successfully">Change name successfully</string>
+    <string name="change_account_book_name_fail">Change name fail</string>
+    <string name="change_and_update_account_book_name_successfully">
+        Change name and update to server successfully
+    </string>
+    <string name="change_and_update_account_book_name_fail">
+        Change name but update to server fail
+    </string>
+
+    <string name="register_successfully">Welcome to CoCoin!\n</string>
+    <string name="register_fail">Register fail!\n</string>
+    <string name="login_successfully">Welcome back!\n</string>
+    <string name="login_fail">Login fail!\n</string>
+    <string name="user_name_exist">User name already exists</string>
+    <string name="user_email_exist">Email already exists</string>
+    <string name="user_mobile_exist">
+        This mobile has been registered!\n
+        Please use the original account.
+    </string>
+    <string name="network_disconnection">Network disconnection</string>
+
+    <string name="user_name_or_password_incorrect">User doesn\'t exist or password incorrect!</string>
+    <string name="name_or_email_inexist">The user name or email doesn\'t exist!</string>
+    <string name="password_wrong">Password is incorrect!</string>
+
+    <string name="log_out_successfully">Log out successfully!</string>
+
+    <string name="sync_dialog_title">Sync?</string>
+    <string name="sync_dialog_content">
+        You have already synchronized your settings to CoCoin server.
+        Would you want to synchronize your old settings to local?
+    </string>
+    <string name="sync_dialog_sync_to_local">Sync old settings to local</string>
+    <string name="sync_dialog_sync_to_server">Sync new settings to server</string>
+    <string name="sync_to_local_successfully_dialog_title">Sync successfully</string>
+    <string name="sync_to_local_successfully_dialog_content">
+        Your old settings has been synchronized to local.
+    </string>
+    <string name="your_current_account_book_password_is">Your current account book password is changed to </string>
+    <string name="sync_to_server_successfully">Sync settings to server successfully!</string>
+    <string name="sync_to_server_failed">Sync settings to server failed!\n</string>
+
+    <string name="change_logo_title">Change logo!</string>
+    <string name="change_logo_content">Select a picture to do so.</string>
+    <string name="from_camera">From camera</string>
+    <string name="from_gallery">From gallery</string>
+
 </resources>

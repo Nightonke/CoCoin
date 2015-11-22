@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.PasswordChangeButtonGridViewAdapter;
 import com.nightonke.saver.fragment.PasswordStateFragment;
 import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.FixedSpeedScroller;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.Util;
@@ -34,6 +36,9 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
 import java.lang.reflect.Field;
+
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class EditPasswordActivity extends AppCompatActivity {
 
@@ -254,6 +259,23 @@ public class EditPasswordActivity extends AppCompatActivity {
                             CURRENT_STATE = -1;
                             showToast(2);
                             SettingManager.getInstance().setPassword(newPassword);
+                            if (SettingManager.getInstance().getLoggenOn()) {
+                                User currentUser = BmobUser.getCurrentUser(
+                                        CoCoinApplication.getAppContext(), User.class);
+                                currentUser.setAccountBookPassword(newPassword);
+                                currentUser.update(CoCoinApplication.getAppContext(),
+                                        currentUser.getObjectId(), new UpdateListener() {
+                                            @Override
+                                            public void onSuccess() {
+                                                Log.d("Saver", "Update password successfully.");
+                                            }
+
+                                            @Override
+                                            public void onFailure(int code, String msg) {
+                                                Log.d("Saver", "Update password failed.");
+                                            }
+                                        });
+                            }
                             final Handler handler = new Handler();
                             handler.postDelayed(new Runnable() {
                                 @Override

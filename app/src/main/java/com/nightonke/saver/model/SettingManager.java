@@ -22,6 +22,8 @@ public class SettingManager {
     private String USER_EMAIL;
     // has profile logo
     private Boolean HAS_LOGO;
+    // the logo's name in server
+    private String LOGO_NAME_IN_SERVER;
     // whether is month-limit
     private Boolean IS_MONTH_LIMIT;
     // month-limit
@@ -171,6 +173,21 @@ public class SettingManager {
         editor.putBoolean("HAS_LOGO", HAS_LOGO);
         editor.commit();
         this.HAS_LOGO = HAS_LOGO;
+    }
+
+    public String getLogoNameInServer() {
+        LOGO_NAME_IN_SERVER = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getString("LOGO_NAME_IN_SERVER", null);
+        return LOGO_NAME_IN_SERVER;
+    }
+
+    public void setLogoNameInServer(String LOGO_NAME_IN_SERVER) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putString("LOGO_NAME_IN_SERVER", LOGO_NAME_IN_SERVER);
+        editor.commit();
+        this.LOGO_NAME_IN_SERVER = LOGO_NAME_IN_SERVER;
     }
 
     public Boolean getIsMonthLimit() {

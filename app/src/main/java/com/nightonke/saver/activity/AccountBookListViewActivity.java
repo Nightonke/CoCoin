@@ -24,6 +24,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
@@ -319,12 +320,18 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
                             @Override
                             public void onDismiss(Snackbar snackbar) {
-
+                                if (Util.backupRecord != null) {
+                                    RecordManager.deleteRecord(Util.backupRecord, false);
+                                }
+                                Util.backupRecord = null;
                             }
 
                             @Override
                             public void onDismissByReplace(Snackbar snackbar) {
-
+                                if (Util.backupRecord != null) {
+                                    RecordManager.deleteRecord(Util.backupRecord, false);
+                                }
+                                Util.backupRecord = null;
                             }
 
                             @Override
@@ -446,6 +453,8 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         }
         mAdapter = null;
         layoutManager = null;
+
+        SuperToast.cancelAllSuperToasts();
 
         super.onDestroy();
     }

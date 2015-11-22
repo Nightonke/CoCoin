@@ -83,5 +83,7 @@ dependencies {
 
     compile 'cn.bmob.android:bmob-sdk:3.4.5'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.squareup.okio:okio:1.4.0'
+    compile 'com.squareup.okio:okio:1.4.0'\
+
+    compile 'com.koushikdutta.ion:ion:2.+'
 }

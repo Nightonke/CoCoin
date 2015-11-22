@@ -1,5 +1,8 @@
 package com.nightonke.saver.model;
 
+import com.bmob.BmobPro;
+import com.bmob.BmobProFile;
+
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 
@@ -9,8 +12,11 @@ import cn.bmob.v3.datatype.BmobFile;
 
 public class User extends BmobUser {
 
+    // android id
+    private String androidId;
+
     // the user's logo
-    private BmobFile logo;
+    private String logoObjectId;
 
     // the user's setting for month limit
     private Boolean isMonthLimit;
@@ -42,12 +48,20 @@ public class User extends BmobUser {
     // the user's setting for whether hollow
     private Boolean isHollow;
 
-    public BmobFile getLogo() {
-        return logo;
+    public String getAndroidId() {
+        return androidId;
     }
 
-    public void setLogo(BmobFile logo) {
-        this.logo = logo;
+    public void setAndroidId(String androidId) {
+        this.androidId = androidId;
+    }
+
+    public String getLogoObjectId() {
+        return logoObjectId;
+    }
+
+    public void setLogoObjectId(String logoObjectId) {
+        this.logoObjectId = logoObjectId;
     }
 
     public Boolean getIsMonthLimit() {
