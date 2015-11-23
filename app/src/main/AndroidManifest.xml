@@ -63,6 +63,10 @@
             android:launchMode="singleTop">
         </activity>
         <activity
+            android:name=".activity.SetPasswordActivity"
+            android:launchMode="singleTop">
+        </activity>
+        <activity
             android:name=".activity.AccountBookSettingActivity"
             android:theme="@style/CoCoinSettingActivityStyle"
             android:launchMode="singleTop"

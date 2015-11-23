@@ -14,6 +14,8 @@ public class SettingManager {
 
 // store value//////////////////////////////////////////////////////////////////////////////////////
 
+    // whether it is CoCoin's first time
+    private Boolean FIRST_TIME;
     // whether is logged on
     private Boolean LOGGED_ON;
     // user name
@@ -24,6 +26,8 @@ public class SettingManager {
     private Boolean HAS_LOGO;
     // the logo's name in server
     private String LOGO_NAME_IN_SERVER;
+    // the logo's object id
+    private String LOGO_OBJECT_ID;
     // whether is month-limit
     private Boolean IS_MONTH_LIMIT;
     // month-limit
@@ -71,8 +75,16 @@ public class SettingManager {
     // tell the main view to update the remind color
     private Boolean MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE = false;
 
+    // tell the today view to update the logo
+    private Boolean TODAY_VIEW_LOGO_SHOULD_CHANGE = false;
+
+    // tell the today view to update the infomation of user
+    private Boolean TODAY_VIEW_INFO_SHOULD_CHANGE = false;
+
 // default value////////////////////////////////////////////////////////////////////////////////////
 
+    // default first time
+    private final Boolean DEFAULT_FIRST_TIME = true;
     // whether is logged on by default
     private final Boolean DEFAULT_LOGGED_ON = false;
     // user name by default
@@ -113,6 +125,21 @@ public class SettingManager {
     }
 
     private SettingManager() {
+    }
+
+    public Boolean getFirstTime() {
+        FIRST_TIME = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getBoolean("FIRST_TIME", DEFAULT_FIRST_TIME);
+        return FIRST_TIME;
+    }
+
+    public void setFirstTime(Boolean FIRST_TIME) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putBoolean("FIRST_TIME", FIRST_TIME);
+        editor.commit();
+        this.FIRST_TIME = FIRST_TIME;
     }
 
     public Boolean getLoggenOn() {
@@ -188,6 +215,21 @@ public class SettingManager {
         editor.putString("LOGO_NAME_IN_SERVER", LOGO_NAME_IN_SERVER);
         editor.commit();
         this.LOGO_NAME_IN_SERVER = LOGO_NAME_IN_SERVER;
+    }
+
+    public String getLogoObjectId() {
+        LOGO_OBJECT_ID = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getString("LOGO_OBJECT_ID", null);
+        return LOGO_OBJECT_ID;
+    }
+
+    public void setLogoObjectId(String LOGO_OBJECT_ID) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putString("LOGO_OBJECT_ID", LOGO_OBJECT_ID);
+        editor.commit();
+        this.LOGO_OBJECT_ID = LOGO_OBJECT_ID;
     }
 
     public Boolean getIsMonthLimit() {
@@ -425,5 +467,21 @@ public class SettingManager {
 
     public void setMainViewRemindColorShouldChange(Boolean MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE) {
         this.MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE = MAIN_VIEW_REMIND_COLOR_SHOULD_CHANGE;
+    }
+
+    public Boolean getTodayViewLogoShouldChange() {
+        return TODAY_VIEW_LOGO_SHOULD_CHANGE;
+    }
+
+    public void setTodayViewLogoShouldChange(Boolean TODAY_VIEW_LOGO_SHOULD_CHANGE) {
+        this.TODAY_VIEW_LOGO_SHOULD_CHANGE = TODAY_VIEW_LOGO_SHOULD_CHANGE;
+    }
+
+    public Boolean getTodayViewInfoShouldChange() {
+        return TODAY_VIEW_INFO_SHOULD_CHANGE;
+    }
+
+    public void setTodayViewInfoShouldChange(Boolean TODAY_VIEW_INFO_SHOULD_CHANGE) {
+        this.TODAY_VIEW_INFO_SHOULD_CHANGE = TODAY_VIEW_INFO_SHOULD_CHANGE;
     }
 }

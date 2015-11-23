@@ -41,7 +41,7 @@ import java.lang.reflect.Field;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.UpdateListener;
 
-public class EditPasswordActivity extends AppCompatActivity {
+public class SetPasswordActivity extends AppCompatActivity {
 
     private Context mContext;
 
@@ -50,13 +50,11 @@ public class EditPasswordActivity extends AppCompatActivity {
 
     private MaterialIconView back;
 
-    private static final int VERIFY_STATE = 0;
-    private static final int NEW_PASSWORD = 1;
-    private static final int PASSWORD_AGAIN = 2;
+    private static final int NEW_PASSWORD = 0;
+    private static final int PASSWORD_AGAIN = 1;
 
-    private int CURRENT_STATE = VERIFY_STATE;
+    private int CURRENT_STATE = NEW_PASSWORD;
 
-    private String oldPassword = "";
     private String newPassword = "";
     private String againPassword = "";
 
@@ -106,14 +104,14 @@ public class EditPasswordActivity extends AppCompatActivity {
         }
 
         FragmentPagerItems pages = new FragmentPagerItems(this);
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 2; i++) {
             pages.add(FragmentPagerItem.of("1", PasswordStateFragment.class));
         }
 
         passwordAdapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), pages);
 
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
         viewPager.setScrollBarFadeDuration(1000);
 
         viewPager.setAdapter(passwordAdapter);
@@ -138,12 +136,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 });
 
         back = (MaterialIconView)findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        back.setVisibility(View.INVISIBLE);
 
         superToast = new SuperToast(this);
 
@@ -159,9 +152,7 @@ public class EditPasswordActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        SuperToast.cancelAllSuperToasts();
-        overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+
     }
 
     @Override
@@ -189,40 +180,6 @@ public class EditPasswordActivity extends AppCompatActivity {
 
     private void buttonClickOperation(boolean longClick, int position) {
         switch (CURRENT_STATE) {
-            case VERIFY_STATE:
-                if (Util.ClickButtonDelete(position)) {
-                    if (longClick) {
-                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
-                        oldPassword = "";
-                    } else {
-                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
-                                .clear(oldPassword.length() - 1);
-                        if (oldPassword.length() != 0)
-                            oldPassword = oldPassword.substring(0, oldPassword.length() - 1);
-                    }
-                } else if (Util.ClickButtonCommit(position)) {
-
-                } else {
-                    ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
-                            .set(oldPassword.length());
-                    oldPassword += Util.BUTTONS[position];
-                    if (oldPassword.length() == 4) {
-                        if (oldPassword.equals(SettingManager.getInstance().getPassword())) {
-                            // old password correct
-                            // notice that if the old password is correct,
-                            // we won't go back to VERIFY_STATE any more
-                            CURRENT_STATE = NEW_PASSWORD;
-                            viewPager.setCurrentItem(NEW_PASSWORD, true);
-                        } else {
-                            // old password wrong
-                            ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
-                                    .clear(4);
-                            showToast(0);
-                            oldPassword = "";
-                        }
-                    }
-                }
-                break;
             case NEW_PASSWORD:
                 if (Util.ClickButtonDelete(position)) {
                     if (longClick) {
@@ -270,6 +227,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                             CURRENT_STATE = -1;
                             showToast(2);
                             SettingManager.getInstance().setPassword(newPassword);
+                            SettingManager.getInstance().setFirstTime(false);
                             if (SettingManager.getInstance().getLoggenOn()) {
                                 User currentUser = BmobUser.getCurrentUser(
                                         CoCoinApplication.getAppContext(), User.class);
@@ -278,12 +236,12 @@ public class EditPasswordActivity extends AppCompatActivity {
                                         currentUser.getObjectId(), new UpdateListener() {
                                             @Override
                                             public void onSuccess() {
-                                                Log.d("Saver", "Update password successfully.");
+                                                Log.d("Saver", "Set password successfully.");
                                             }
 
                                             @Override
                                             public void onFailure(int code, String msg) {
-                                                Log.d("Saver", "Update password failed.");
+                                                Log.d("Saver", "Set password failed.");
                                             }
                                         });
                             }

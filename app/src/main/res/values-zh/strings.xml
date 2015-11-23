@@ -267,4 +267,21 @@
     <string name="from_camera">从相机</string>
     <string name="from_gallery">从相册</string>
 
+    <string name="login_first_title">登录！</string>
+    <string name="login_first_content">请先注册或登录！</string>
+    <string name="ok">好！</string>
+
+    <string name="first_time_set_password">
+        &#160;Hi！\n
+        欢迎使用CoCoin！\n
+        为了您的账本安全，\n
+        我想你需要一个密码
+    </string>
+    <string name="first_time_set_password_again">
+        &#160;差不多了！\n
+        请再输入一遍密码吧
+    </string>
+
+    <string name="change_password_title">更改密码</string>
+
 </resources>

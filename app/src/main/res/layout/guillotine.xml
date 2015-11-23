@@ -73,7 +73,7 @@
                 <LinearLayout
                     android:id="@+id/radio_button_ly"
                     android:layout_width="192dp"
-                    android:layout_height="48dp"
+                    android:layout_height="60dp"
                     android:orientation="horizontal"
                     android:layout_gravity="center"
                     android:layout_marginLeft="14sp"
@@ -82,7 +82,7 @@
                     <com.rey.material.widget.RadioButton
                         android:id="@+id/radio_button_0"
                         android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_height="60dp"
                         app:rbd_strokeColor="#ffffff"
                         android:text=""
                         android:enabled="false"
@@ -92,7 +92,7 @@
                     <com.rey.material.widget.RadioButton
                         android:id="@+id/radio_button_1"
                         android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_height="60dp"
                         app:rbd_strokeColor="#ffffff"
                         android:text=""
                         android:enabled="false"
@@ -102,7 +102,7 @@
                     <com.rey.material.widget.RadioButton
                         android:id="@+id/radio_button_2"
                         android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_height="60dp"
                         app:rbd_strokeColor="#ffffff"
                         android:text=""
                         android:enabled="false"
@@ -112,7 +112,7 @@
                     <com.rey.material.widget.RadioButton
                         android:id="@+id/radio_button_3"
                         android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_height="60dp"
                         app:rbd_strokeColor="#ffffff"
                         android:text=""
                         android:enabled="false"

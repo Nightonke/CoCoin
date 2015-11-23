@@ -2,6 +2,8 @@ package com.nightonke.saver.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
@@ -32,11 +34,15 @@ import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDec
 import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.ion.Ion;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.MySwipeableItemAdapter;
+import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.model.User;
 import com.nightonke.saver.util.Util;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -44,6 +50,15 @@ import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.nispok.snackbar.listeners.EventListener;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.List;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.listener.FindListener;
+import de.hdodenhof.circleimageview.CircleImageView;
 import xyz.danoz.recyclerviewfastscroller.vertical.VerticalRecyclerViewFastScroller;
 
 public class AccountBookListViewActivity extends AppCompatActivity {
@@ -76,12 +91,28 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
     private int originalSum;
 
+    private CircleImageView profileImage;
+
+    private TextView userName;
+    private TextView userEmail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_book_list_view);
 
         mContext = this;
+
+        userName = (TextView)findViewById(R.id.user_name);
+        userEmail = (TextView)findViewById(R.id.user_email);
+        userName.setTypeface(Util.typefaceLatoRegular);
+        userEmail.setTypeface(Util.typefaceLatoLight);
+
+        User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+        if (user != null) {
+            userName.setText(user.getUsername());
+            userEmail.setText(user.getEmail());
+        }
 
         originalSum = RecordManager.SUM;
 
@@ -246,6 +277,10 @@ public class AccountBookListViewActivity extends AppCompatActivity {
             emptyTip.setVisibility(View.GONE);
             verticalRecyclerViewFastScroller.setVisibility(View.VISIBLE);
         }
+
+        profileImage= (CircleImageView)mDrawer.findViewById(R.id.profile_image);
+
+        loadLogo();
 
     }
 
@@ -457,6 +492,55 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         SuperToast.cancelAllSuperToasts();
 
         super.onDestroy();
+    }
+
+    private void loadLogo() {
+        User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+        if (user != null) {
+            try {
+                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
+                if (b == null) {
+                    // the local logo file is missed
+                    // try to get from the server
+                    BmobQuery<Logo> bmobQuery = new BmobQuery();
+                    bmobQuery.addWhereEqualTo("objectId", user.getLogoObjectId());
+                    bmobQuery.findObjects(CoCoinApplication.getAppContext()
+                            , new FindListener<Logo>() {
+                        @Override
+                        public void onSuccess(List<Logo> object) {
+                            // there has been an old logo in the server/////////////////////////////////////////////////////////
+                            Log.d("Saver", "There is an old logo");
+                            String url = object.get(0).getFile().getUrl();
+                            Ion.with(CoCoinApplication.getAppContext()).load(url)
+                                    .write(new File(CoCoinApplication.getAppContext().getFilesDir()
+                                            + Util.LOGO_NAME))
+                                    .setCallback(new FutureCallback<File>() {
+                                        @Override
+                                        public void onCompleted(Exception e, File file) {
+                                            profileImage.setImageBitmap(BitmapFactory.decodeFile(
+                                                    CoCoinApplication.getAppContext().getFilesDir()
+                                                            + Util.LOGO_NAME));
+                                        }
+                                    });
+                        }
+                        @Override
+                        public void onError(int code, String msg) {
+                            // the picture is lost
+                            Log.d("Saver", "Can't find the old logo in server.");
+                        }
+                    });
+                } else {
+                    // the user logo is in the storage
+                    profileImage.setImageBitmap(b);
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // use the default logo
+            profileImage.setImageResource(R.drawable.default_user_logo);
+        }
     }
 
 }

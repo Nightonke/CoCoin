@@ -304,6 +304,11 @@ public class MainActivity extends AppCompatActivity
         });
 
         changeColor();
+
+        if (SettingManager.getInstance().getFirstTime()) {
+            Intent intent = new Intent(mContext, SetPasswordActivity.class);
+            startActivity(intent);
+        }
     }
 
     private AdapterView.OnItemLongClickListener gridViewLongClickListener

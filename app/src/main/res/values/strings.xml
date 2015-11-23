@@ -277,4 +277,19 @@
     <string name="from_camera">From camera</string>
     <string name="from_gallery">From gallery</string>
 
+    <string name="login_first_title">Login!</string>
+    <string name="login_first_content">Please login or register first!</string>
+    <string name="ok">OK!</string>
+
+    <string name="first_time_set_password">
+        Hey!\nWelcome to use CoCoin!\nTo protect your account book,\n
+        you need a password to do so.
+    </string>
+    <string name="first_time_set_password_again">
+        You gonna do it!\n
+        Just input your password again!
+    </string>
+
+    <string name="change_password_title">Change Password</string>
+
 </resources>

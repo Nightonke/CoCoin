@@ -482,6 +482,7 @@ public class RecordManager {
                 SUM = 0;
                 for (int i = 0; i < RECORDS.size(); i++) {
                     RECORDS.get(i).setLocalObjectId(RECORDS.get(i).getObjectId());
+                    RECORDS.get(i).setIsUploaded(true);
                     db.saveRecord(RECORDS.get(i));
                     SUM += (int)RECORDS.get(i).getMoney();
                 }

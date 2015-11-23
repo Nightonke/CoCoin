@@ -13,6 +13,7 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
+import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.Util;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.rey.material.widget.RadioButton;
@@ -59,12 +60,22 @@ public class PasswordStateFragment extends Fragment {
         passwordTip.setTypeface(Util.GetTypeface());
         switch (fragmentPosition) {
             case 0:
-                passwordTip.setText(CoCoinApplication.getAppContext().getResources()
-                        .getString(R.string.password_tip_0));
+                if (SettingManager.getInstance().getFirstTime()) {
+                    passwordTip.setText(CoCoinApplication.getAppContext().getResources()
+                            .getString(R.string.first_time_set_password));
+                } else {
+                    passwordTip.setText(CoCoinApplication.getAppContext().getResources()
+                            .getString(R.string.password_tip_0));
+                }
                 break;
             case 1:
-                passwordTip.setText(CoCoinApplication.getAppContext().getResources()
-                        .getString(R.string.password_tip_1));
+                if (SettingManager.getInstance().getFirstTime()) {
+                    passwordTip.setText(CoCoinApplication.getAppContext().getResources()
+                            .getString(R.string.first_time_set_password_again));
+                } else {
+                    passwordTip.setText(CoCoinApplication.getAppContext().getResources()
+                            .getString(R.string.password_tip_1));
+                }
                 break;
             case 2:
                 passwordTip.setText(CoCoinApplication.getAppContext().getResources()
