@@ -20,7 +20,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +30,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
+import com.nightonke.saver.fragment.EditFragment;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.DummyOperation;
@@ -39,12 +39,12 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.fragment.TagChooseFragment;
+import com.nightonke.saver.ui.CoCoinViewPager;
 import com.nightonke.saver.util.Util;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
-import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rey.material.widget.RadioButton;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
@@ -76,8 +76,6 @@ public class MainActivity extends AppCompatActivity
     private MyGridView myGridView;
     private ButtonGridViewAdapter myGridViewAdapter;
 
-    private MaterialEditText editView;
-
     private LinearLayout transparentLy;
     private LinearLayout guillotineColorLy;
 
@@ -105,11 +103,10 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private SmartTabLayout smartTabLayout;
 
-    private boolean isLoading;
+    private CoCoinViewPager editViewPager;
+    private SmartTabLayout smartEditTabLayout;
 
-    public int tagId;
-    public TextView tagName;
-    public ImageView tagImage;
+    private boolean isLoading;
 
     private DummyOperation dummyOperation;
 
@@ -134,6 +131,7 @@ public class MainActivity extends AppCompatActivity
     View contentHamburger;
 
     private FragmentPagerItemAdapter tagChoicePagerAdapter;
+    private FragmentPagerItemAdapter editPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,12 +176,30 @@ public class MainActivity extends AppCompatActivity
             //缓存用户对象为空时， 可打开用户注册界面…
         }
 
-        guillotineBackground = (View)findViewById(R.id.guillotine_background);
+        guillotineBackground = findViewById(R.id.guillotine_background);
 
         toolBarTitle = (TextView)findViewById(R.id.guillotine_title);
         toolBarTitle.setTypeface(Util.typefaceLatoLight);
         toolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
+// edit viewpager///////////////////////////////////////////////////////////////////////////////////
+        editViewPager = (CoCoinViewPager)findViewById(R.id.edit_pager);
+        smartEditTabLayout = (SmartTabLayout)findViewById(R.id.edit_viewpager_tab);
+        FragmentPagerItems editPagers = new FragmentPagerItems(this);
+        for (int i = 0; i < 2; i++) {
+            editPagers.add(FragmentPagerItem.of("1", EditFragment.class));
+        }
+
+        editPagerAdapter = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(), editPagers);
+
+        editViewPager.setOffscreenPageLimit(2);
+        editViewPager.setAdapter(editPagerAdapter);
+
+        smartEditTabLayout.setViewPager(editViewPager);
+        smartEditTabLayout.setVisibility(View.GONE);
+
+// tag viewpager////////////////////////////////////////////////////////////////////////////////////
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
 
@@ -200,8 +216,9 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(tagChoicePagerAdapter);
 
         smartTabLayout.setViewPager(viewPager);
-        smartTabLayout.setVisibility(View.INVISIBLE);
+        smartTabLayout.setVisibility(View.GONE);
 
+// button grid view/////////////////////////////////////////////////////////////////////////////////
         myGridView = (MyGridView)findViewById(R.id.gridview);
         myGridViewAdapter = new ButtonGridViewAdapter(this);
         myGridView.setAdapter(myGridViewAdapter);
@@ -223,16 +240,6 @@ public class MainActivity extends AppCompatActivity
                         params.height = myGridView.getMeasuredHeight();
                     }
                 });
-
-        editView = (MaterialEditText)findViewById(R.id.edit_view);
-        editView.setTypeface(Util.typefaceLatoHairline);
-        editView.setText("0");
-        editView.requestFocus();
-        editView.setHelperText(" ");
-
-        tagName = (TextView)findViewById(R.id.tag_name);
-        tagName.setTypeface(Util.typefaceLatoLight);
-        tagImage = (ImageView)findViewById(R.id.tag_image);
 
         ButterKnife.inject(this);
 
@@ -279,13 +286,13 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onGuillotineOpened() {
                         isPassword = true;
-                        editView.setHelperText(" ");
                     }
 
                     @Override
                     public void onGuillotineClosed() {
                         isPassword = false;
-                        editView.requestFocus();
+                        ((EditFragment)editPagerAdapter.
+                                getItem(editViewPager.getCurrentItem())).editRequestFocus();
                         radioButton0.setChecked(false);
                         radioButton1.setChecked(false);
                         radioButton2.setChecked(false);
@@ -303,7 +310,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        changeColor();
+        //changeColor();
 
         if (SettingManager.getInstance().getFirstTime()) {
             Intent intent = new Intent(mContext, SetPasswordActivity.class);
@@ -373,7 +380,7 @@ public class MainActivity extends AppCompatActivity
                     if (data.getBooleanExtra("IS_CHANGED", false)) {
                         for (int i = 0; i < tagChoicePagerAdapter.getCount(); i++) {
                             ((TagChooseFragment)tagChoicePagerAdapter.
-                                    getPage(i)).updateTags();
+                                    getItem(i)).updateTags();
                         }
                     }
                 }
@@ -401,37 +408,45 @@ public class MainActivity extends AppCompatActivity
     };
 
     private void buttonClickOperation(boolean longClick, int position) {
+        if (editViewPager.getCurrentItem() == 1) return;
         if (!isPassword) {
-            if (editView.getText().toString().equals("0")
+            if (((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")
                     && !Util.ClickButtonCommit(position)) {
                 if (Util.ClickButtonDelete(position)
                         || Util.ClickButtonIsZero(position)) {
 
                 } else {
-                    editView.setText(Util.BUTTONS[position]);
+                    ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(Util.BUTTONS[position]);
                 }
             } else {
                 if (Util.ClickButtonDelete(position)) {
                     if (longClick) {
-                        editView.setText("0");
-                        editView.setHelperText(" ");
-                        editView.setHelperText(
-                                Util.FLOATINGLABELS[editView.getText().toString().length()]);
+                        ((EditFragment)editPagerAdapter.getPage(0)).setNumberText("0");
+                        ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(
+                                Util.FLOATINGLABELS[((EditFragment) editPagerAdapter.getItem(0))
+                                        .getNumberText().toString().length()]);
                     } else {
-                        editView.setText(editView.getText().toString()
-                                .substring(0, editView.getText().toString().length() - 1));
-                        if (editView.getText().toString().length() == 0) {
-                            editView.setText("0");
-                            editView.setHelperText(" ");
+                        ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(
+                                ((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString()
+                                .substring(0, ((EditFragment)editPagerAdapter.getPage(0))
+                                        .getNumberText().toString().length() - 1));
+                        if (((EditFragment)editPagerAdapter.getPage(0))
+                                .getNumberText().toString().length() == 0) {
+                            ((EditFragment)editPagerAdapter.getPage(0)).setNumberText("0");
+                            ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(" ");
                         }
                     }
                 } else if (Util.ClickButtonCommit(position)) {
                     commit();
                 } else {
-                    editView.setText(editView.getText().toString() + Util.BUTTONS[position]);
+                    ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(
+                            ((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString()
+                                    + Util.BUTTONS[position]);
                 }
             }
-            editView.setHelperText(Util.FLOATINGLABELS[editView.getText().toString().length()]);
+            ((EditFragment)editPagerAdapter.getPage(0))
+                    .setHelpText(Util.FLOATINGLABELS[
+                            ((EditFragment) editPagerAdapter.getPage(0)).getNumberText().toString().length()]);
         } else {
             if (Util.ClickButtonDelete(position)) {
                 if (longClick) {
@@ -482,17 +497,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void commit() {
-        if (tagName.getText().equals("")) {
+        if (((EditFragment)editPagerAdapter.getPage(0)).getTagId() == -1) {
             showToast(NO_TAG_TOAST);
-        } else if (editView.getText().toString().equals("0")) {
+        } else if (((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")) {
             showToast(NO_MONEY_TOAST);
         } else  {
             Calendar calendar = Calendar.getInstance();
             Record record = new Record(
                     -1,
-                    Float.valueOf(editView.getText().toString()),
+                    Float.valueOf(((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString()),
                     "RMB",
-                    tagId,
+                    ((EditFragment)editPagerAdapter.getPage(0)).getTagId(),
                     calendar);
             long saveId = RecordManager.saveRecord(record);
             if (saveId == -1) {
@@ -504,11 +519,11 @@ public class MainActivity extends AppCompatActivity
                     showToast(SAVE_SUCCESSFULLY_TOAST);
                     changeColor();
                 }
-                tagImage.setImageResource(R.color.transparent);
-                tagName.setText("");
+                ((EditFragment)editPagerAdapter.getPage(0)).setTagImage(R.color.transparent);
+                ((EditFragment)editPagerAdapter.getPage(0)).setTagName("");
             }
-            editView.setText("0");
-            editView.setHelperText(" ");
+            ((EditFragment)editPagerAdapter.getPage(0)).setNumberText("0");
+            ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(" ");
         }
     }
 
@@ -645,19 +660,15 @@ public class MainActivity extends AppCompatActivity
             guillotineBackground.setBackgroundColor(SettingManager.getInstance().getRemindColor());
             guillotineColorLy.setBackgroundColor(SettingManager.getInstance().getRemindColor());
             guillotineToolBar.setBackgroundColor(SettingManager.getInstance().getRemindColor());
-            editView.setTextColor(SettingManager.getInstance().getRemindColor());
-            editView.setPrimaryColor(SettingManager.getInstance().getRemindColor());
-            editView.setHelperTextColor(SettingManager.getInstance().getRemindColor());
         } else {
             root.setBackgroundColor(Util.MY_BLUE);
             toolbar.setBackgroundColor(Util.MY_BLUE);
             guillotineBackground.setBackgroundColor(Util.MY_BLUE);
             guillotineColorLy.setBackgroundColor(Util.MY_BLUE);
             guillotineToolBar.setBackgroundColor(Util.MY_BLUE);
-            editView.setTextColor(Util.MY_BLUE);
-            editView.setPrimaryColor(Util.MY_BLUE);
-            editView.setHelperTextColor(Util.MY_BLUE);
         }
+        ((EditFragment)editPagerAdapter.getItem(0)).setEditColor(shouldChange);
+        ((EditFragment)editPagerAdapter.getItem(1)).setEditColor(shouldChange);
         myGridViewAdapter.notifyDataSetInvalidated();
     }
 
@@ -722,7 +733,7 @@ public class MainActivity extends AppCompatActivity
             // change the tag fragment
             for (int i = 0; i < tagChoicePagerAdapter.getCount(); i++) {
                 ((TagChooseFragment)tagChoicePagerAdapter.
-                        getPage(i)).updateTags();
+                        getItem(i)).updateTags();
             }
             // and tell others that main activity has changed
             SettingManager.getInstance().setMainActivityTagShouldChange(false);
@@ -735,7 +746,7 @@ public class MainActivity extends AppCompatActivity
             SettingManager.getInstance().setMainViewTitleShouldChange(false);
         }
 
-        changeColor();
+        // changeColor();
 
         radioButton0.setChecked(false);
         radioButton1.setChecked(false);
@@ -743,7 +754,7 @@ public class MainActivity extends AppCompatActivity
         radioButton3.setChecked(false);
 
         isLoading = false;
-        editView.setText("0");
+        ((EditFragment)editPagerAdapter.getItem(0)).setNumberText("0");
         inputPassword = "";
         System.gc();
     }
@@ -751,21 +762,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
-        tagImage = null;
-        tagName = null;
     }
 
     @Override
     public void onTagItemPicked(int position) {
-        tagId = RecordManager.TAGS.
-                get(viewPager.getCurrentItem() * 8 + position + 2).getId();
-        tagName.setText(
-                Util.GetTagName(
-                        RecordManager.TAGS.get(
-                                viewPager.getCurrentItem() * 8 + position + 2).getId()));
-        tagImage.setImageResource(
-                Util.GetTagIcon(
-                        RecordManager.TAGS.
-                                get(viewPager.getCurrentItem() * 8 + position + 2).getId()));
+        ((EditFragment)editPagerAdapter.getPage(0)).setTag(viewPager.getCurrentItem() * 8 + position + 2);
     }
 }

@@ -112,7 +112,7 @@ public class SettingManager {
     // whether show picture in account book
     private final Boolean DEFAULT_SHOW_PICTURE = false;
     // whether draw a hollow pie chart
-    private final Boolean DEFAULT_IS_HOLLOW = false;
+    private final Boolean DEFAULT_IS_HOLLOW = true;
     // the profile logo store place
     private final String DEFAULT_PROFILE_IMAGE_DIR = "imageDir";
     // the profile logo name

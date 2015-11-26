@@ -22,6 +22,7 @@ import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 /**
  * Created by 伟平 on 2015/10/27.
  */
+
 public class TagChooseFragment extends Fragment {
 
     public TagChooseGridViewAdapter getTagAdapter() {

@@ -70,78 +70,51 @@
                     android:paddingRight="10dp"
                     >
 
-                    <FrameLayout
-                        android:layout_height="wrap_content"
+                    <com.nightonke.saver.ui.CoCoinViewPager
+                        android:id="@+id/edit_pager"
                         android:layout_width="match_parent"
-                        >
+                        android:layout_height="wrap_content"
+                        />
 
-                        <LinearLayout
-                            android:layout_height="wrap_content"
-                            android:layout_width="60dp"
-                            android:layout_marginLeft="10dp"
-                            android:orientation="vertical"
-                            android:layout_gravity="center|left"
-                            >
+                    <com.ogaclejapan.smarttablayout.SmartTabLayout
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/edit_viewpager_tab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="16dp"
+                        android:layout_gravity="bottom|left"
+                        android:paddingLeft="20dp"
+                        app:stl_clickable="false"
+                        app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
+                        app:stl_dividerColor="@color/transparent"
+                        app:stl_dividerThickness="0dp"
+                        app:stl_indicatorCornerRadius="4dp"
+                        app:stl_indicatorGravity="center"
+                        app:stl_indicatorInterpolation="linear"
+                        app:stl_indicatorThickness="8dp"
+                        app:stl_underlineColor="@color/transparent"
+                        app:stl_underlineThickness="0dp"
+                        />
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="10dp"
-                                />
-
-                            <ImageView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:layout_gravity="center_horizontal|bottom"
-                                android:id="@+id/tag_image"
-                                />
-
-                            <TextView
-                                android:id="@+id/tag_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:fontFamily="sans-serif"
-                                android:textSize="10sp"
-                                android:textColor="#666666"
-                                android:maxLines="2"
-                                android:minLines="2"
-                                android:layout_gravity="center_horizontal|center_vertical"
-                                android:gravity="center_horizontal|center_vertical"
-                                />
-
-                        </LinearLayout>
-
-                        <com.rengwuxian.materialedittext.MaterialEditText
-                            android:id="@+id/edit_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="top|center_horizontal"
-                            android:textSize="60sp"
-                            android:maxLength="5"
-                            android:editable="false"
-                            android:gravity="right"
-                            />
-
-                        <com.ogaclejapan.smarttablayout.SmartTabLayout
-                            xmlns:android="http://schemas.android.com/apk/res/android"
-                            xmlns:app="http://schemas.android.com/apk/res-auto"
-                            android:id="@+id/viewpagertab"
-                            android:layout_width="wrap_content"
-                            android:layout_height="16dp"
-                            android:layout_gravity="bottom|left"
-                            android:paddingLeft="20dp"
-                            app:stl_clickable="false"
-                            app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
-                            app:stl_dividerColor="@color/transparent"
-                            app:stl_dividerThickness="0dp"
-                            app:stl_indicatorCornerRadius="4dp"
-                            app:stl_indicatorGravity="center"
-                            app:stl_indicatorInterpolation="linear"
-                            app:stl_indicatorThickness="8dp"
-                            app:stl_underlineColor="@color/transparent"
-                            app:stl_underlineThickness="0dp"
-                            />
-
-                    </FrameLayout>
+                    <com.ogaclejapan.smarttablayout.SmartTabLayout
+                        xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:app="http://schemas.android.com/apk/res-auto"
+                        android:id="@+id/viewpagertab"
+                        android:layout_width="wrap_content"
+                        android:layout_height="16dp"
+                        android:layout_gravity="bottom|left"
+                        android:paddingLeft="20dp"
+                        app:stl_clickable="false"
+                        app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
+                        app:stl_dividerColor="@color/transparent"
+                        app:stl_dividerThickness="0dp"
+                        app:stl_indicatorCornerRadius="4dp"
+                        app:stl_indicatorGravity="center"
+                        app:stl_indicatorInterpolation="linear"
+                        app:stl_indicatorThickness="8dp"
+                        app:stl_underlineColor="@color/transparent"
+                        app:stl_underlineThickness="0dp"
+                        />
 
                     <android.support.v4.view.ViewPager
                         android:id="@+id/viewpager"
