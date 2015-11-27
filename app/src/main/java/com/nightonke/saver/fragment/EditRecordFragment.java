@@ -9,17 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.adapter.TagChooseGridViewAdapter;
+import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
-import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.Util;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -28,7 +25,7 @@ import com.rengwuxian.materialedittext.MaterialEditText;
  * Created by 伟平 on 2015/10/27.
  */
 
-public class EditFragment extends Fragment {
+public class EditRecordFragment extends Fragment {
 
     private int fragmentPosition;
     private int tagId = -1;
@@ -94,13 +91,21 @@ public class EditFragment extends Fragment {
 
         if (fragmentPosition == 0) {
             editView.setTypeface(Util.typefaceLatoHairline);
-            editView.setText("0");
+            editView.setText("" + (int) RecordManager.RECORDS.get(Util.editRecordPosition).getMoney());
             editView.requestFocus();
-            editView.setHelperText(" ");
+            editView.setHelperText(Util.FLOATINGLABELS[editView.getText().toString().length()]);
+
+            tagId = RecordManager.RECORDS.get(Util.editRecordPosition).getTag();
+            tagName.setText(Util.GetTagName(tagId));
+            tagImage.setImageResource(Util.GetTagIcon(tagId));
 
             remarkEditView.setVisibility(View.GONE);
         } else {
             remarkEditView.setTypeface(Util.GetTypeface());
+
+            remarkEditView.setText(RecordManager.RECORDS.get(Util.editRecordPosition).getRemark());
+            int pos = remarkEditView.getText().length();
+            remarkEditView.setSelection(pos);
 
             editView.setVisibility(View.GONE);
         }

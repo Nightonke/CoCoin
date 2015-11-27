@@ -15,25 +15,23 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.balysv.materialripple.MaterialRippleLayout;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
+import com.nightonke.saver.fragment.EditRecordFragment;
 import com.nightonke.saver.fragment.TagChooseFragment;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.ui.CoCoinViewPager;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.Util;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
-import com.rengwuxian.materialedittext.MaterialEditText;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -49,19 +47,17 @@ public class EditRecordActivity extends AppCompatActivity
     private SmartTabLayout smartTabLayout;
     private FragmentPagerItemAdapter tagChoicePagerAdapter;
 
+    private ViewPager editViewPager;
+    private SmartTabLayout editSmartTabLayout;
+    private FragmentPagerItemAdapter editPagerAdapter;
+
     private MyGridView myGridView;
     private ButtonGridViewAdapter myGridViewAdapter;
-
-    private MaterialEditText editView;
 
     private final int NO_TAG_TOAST = 0;
     private final int NO_MONEY_TOAST = 1;
     private final int SAVE_SUCCESSFULLY_TOAST = 4;
     private final int SAVE_FAILED_TOAST = 5;
-
-    public int tagId;
-    public TextView tagName;
-    public ImageView tagImage;
 
     private SuperToast superToast;
 
@@ -96,6 +92,44 @@ public class EditRecordActivity extends AppCompatActivity
             // do something for phones running an SDK before lollipop
         }
 
+// edit viewpager///////////////////////////////////////////////////////////////////////////////////
+        editViewPager = (CoCoinViewPager)findViewById(R.id.edit_pager);
+        editSmartTabLayout = (SmartTabLayout)findViewById(R.id.edit_viewpager_tab);
+        FragmentPagerItems editPagers = new FragmentPagerItems(this);
+        for (int i = 0; i < 2; i++) {
+            editPagers.add(FragmentPagerItem.of("1", EditRecordFragment.class));
+        }
+
+        editPagerAdapter = new FragmentPagerItemAdapter(
+                getSupportFragmentManager(), editPagers);
+        editViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position == 1) {
+                    ((EditRecordFragment) editPagerAdapter.getPage(1)).editRequestFocus();
+                } else {
+                    ((EditRecordFragment) editPagerAdapter.getPage(0)).editRequestFocus();
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
+
+        editViewPager.setOffscreenPageLimit(2);
+        editViewPager.setAdapter(editPagerAdapter);
+
+        editSmartTabLayout.setViewPager(editViewPager);
+        editSmartTabLayout.setVisibility(View.GONE);
+
+// tag viewpager////////////////////////////////////////////////////////////////////////////////////
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
 
@@ -112,6 +146,7 @@ public class EditRecordActivity extends AppCompatActivity
         viewPager.setAdapter(tagChoicePagerAdapter);
 
         smartTabLayout.setViewPager(viewPager);
+        smartTabLayout.setVisibility(View.GONE);
 
         myGridView = (MyGridView)findViewById(R.id.gridview);
         myGridViewAdapter = new ButtonGridViewAdapter(this);
@@ -132,21 +167,7 @@ public class EditRecordActivity extends AppCompatActivity
                     }
                 });
 
-        editView = (MaterialEditText)findViewById(R.id.edit_view);
-        editView.setTypeface(Util.typefaceLatoHairline);
-        editView.setText("" + (int) RecordManager.RECORDS.get(
-                RecordManager.RECORDS.size() - 1 - position).getMoney());
-        editView.requestFocus();
-        editView.setHelperText(" ");
-
-        tagName = (TextView)findViewById(R.id.tag_name);
-        tagName.setTypeface(Util.typefaceLatoLight);
-        tagImage = (ImageView)findViewById(R.id.tag_image);
-
-        tagId = RecordManager.RECORDS.get(
-                RecordManager.RECORDS.size() - 1 - position).getTag();
-        tagName.setText(Util.GetTagName(tagId));
-        tagImage.setImageResource(Util.GetTagIcon(tagId));
+        Util.editRecordPosition = RecordManager.RECORDS.size() - 1 - position;
 
         back = (MaterialIconView)findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -170,6 +191,8 @@ public class EditRecordActivity extends AppCompatActivity
         intent.putExtra("IS_CHANGED", IS_CHANGED);
         intent.putExtra("POSITION", position);
         setResult(RESULT_OK, intent);
+
+        Util.editRecordPosition = -1;
 
         super.finish();
     }
@@ -195,53 +218,60 @@ public class EditRecordActivity extends AppCompatActivity
         if (IS_CHANGED) {
             return;
         }
-        if (editView.getText().toString().equals("0")
+        if (((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")
                 && !Util.ClickButtonCommit(position)) {
             if (Util.ClickButtonDelete(position)
                     || Util.ClickButtonIsZero(position)) {
 
             } else {
-                editView.setText(Util.BUTTONS[position]);
+                ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText(Util.BUTTONS[position]);
             }
         } else {
             if (Util.ClickButtonDelete(position)) {
                 if (longClick) {
-                    editView.setText("0");
-                    editView.setHelperText(" ");
-                    editView.setHelperText(
-                            Util.FLOATINGLABELS[editView.getText().toString().length()]);
+                    ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText("0");
+                    ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(" ");
+                    ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(
+                            Util.FLOATINGLABELS[((EditRecordFragment) editPagerAdapter.getPage(0))
+                                    .getNumberText().toString().length()]);
                 } else {
-                    editView.setText(editView.getText().toString()
-                            .substring(0, editView.getText().toString().length() - 1));
-                    if (editView.getText().toString().length() == 0) {
-                        editView.setText("0");
-                        editView.setHelperText(" ");
+                    ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText(
+                            ((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString()
+                            .substring(0, ((EditRecordFragment) editPagerAdapter.getPage(0))
+                                    .getNumberText().toString().length() - 1));
+                    if (((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString().length() == 0) {
+                        ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText("0");
+                        ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(" ");
                     }
                 }
             } else if (Util.ClickButtonCommit(position)) {
                 commit();
             } else {
                 if (FIRST_EDIT) {
-                    editView.setText(Util.BUTTONS[position]);
+                    ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText(Util.BUTTONS[position]);
                     FIRST_EDIT = false;
                 } else {
-                    editView.setText(editView.getText().toString() + Util.BUTTONS[position]);
+                    ((EditRecordFragment) editPagerAdapter.getPage(0))
+                            .setNumberText(((EditRecordFragment) editPagerAdapter.getPage(0))
+                                    .getNumberText().toString() + Util.BUTTONS[position]);
                 }
             }
         }
-        editView.setHelperText(Util.FLOATINGLABELS[editView.getText().toString().length()]);
+        ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(Util.FLOATINGLABELS[
+                ((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString().length()]);
     }
 
     private void commit() {
-        if (tagName.getText().equals("")) {
+        if (((EditRecordFragment)editPagerAdapter.getPage(0)).getTagId() == -1) {
             showToast(NO_TAG_TOAST);
-        } else if (editView.getText().toString().equals("0")) {
+        } else if (((EditRecordFragment)editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")) {
             showToast(NO_MONEY_TOAST);
         } else  {
             Record record = new Record();
             record.set(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - position));
-            record.setMoney(Float.valueOf(editView.getText().toString()));
-            record.setTag(tagId);
+            record.setMoney(Float.valueOf(((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString()));
+            record.setTag(((EditRecordFragment) editPagerAdapter.getPage(0)).getTagId());
+            record.setRemark(((EditRecordFragment)editPagerAdapter.getPage(1)).getRemark());
             long updateId = RecordManager.updateRecord(record);
             if (updateId == -1) {
                 if (!superToast.isShowing()) {
@@ -299,15 +329,6 @@ public class EditRecordActivity extends AppCompatActivity
 
     @Override
     public void onTagItemPicked(int position) {
-        tagId = RecordManager.TAGS.
-                get(viewPager.getCurrentItem() * 8 + position + 2).getId();
-        tagName.setText(
-                Util.GetTagName(
-                        RecordManager.TAGS.get(
-                                viewPager.getCurrentItem() * 8 + position + 2).getId()));
-        tagImage.setImageResource(
-                Util.GetTagIcon(
-                        RecordManager.TAGS.
-                                get(viewPager.getCurrentItem() * 8 + position + 2).getId()));
+        ((EditRecordFragment)editPagerAdapter.getPage(0)).setTag(viewPager.getCurrentItem() * 8 + position + 2);
     }
 }

@@ -52,6 +52,7 @@ public class MySwipeableItemAdapter
     public static class MyViewHolder extends AbstractSwipeableItemViewHolder {
         public FrameLayout mContainer;
         public TextView money;
+        public TextView remark;
         public TextView date;
         public ImageView tagImage;
         public TextView index;
@@ -60,6 +61,7 @@ public class MySwipeableItemAdapter
             super(v);
             mContainer = (FrameLayout) v.findViewById(R.id.container);
             money = (TextView) v.findViewById(R.id.money);
+            remark = (TextView) v.findViewById(R.id.remark);
             date = (TextView) v.findViewById(R.id.date);
             tagImage = (ImageView) v.findViewById(R.id.image_view);
             index = (TextView)v.findViewById(R.id.index);
@@ -138,12 +140,14 @@ public class MySwipeableItemAdapter
                 Util.GetTagIcon(RecordManager.RECORDS.get(tPosition).getTag()));
         holder.date.setText(RecordManager.RECORDS.get(tPosition).getCalendarString());
         holder.money.setText(String.valueOf((int) RecordManager.RECORDS.get(tPosition).getMoney()));
-        holder.date.setTypeface(Util.GetTypeface());
+        holder.date.setTypeface(Util.typefaceLatoLight);
         holder.money.setTypeface(Util.typefaceLatoLight);
         holder.money.setTextColor(
                 Util.GetTagColorResource(RecordManager.RECORDS.get(tPosition).getTag()));
         holder.index.setText((position + 1) + "");
         holder.index.setTypeface(Util.typefaceLatoLight);
+        holder.remark.setText(RecordManager.RECORDS.get(tPosition).getRemark());
+        holder.remark.setTypeface(Util.typefaceLatoLight);
 
         // set background resource (target view ID: container)
         final int swipeState = holder.getSwipeStateFlags();

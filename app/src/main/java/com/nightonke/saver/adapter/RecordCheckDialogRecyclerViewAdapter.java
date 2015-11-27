@@ -45,13 +45,15 @@ public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<R
         holder.imageView.setImageResource(
                 Util.GetTagIcon(records.get(position).getTag()));
         holder.date.setText(records.get(position).getCalendarString());
-        holder.money.setText(String.valueOf((int) records.get(position).getMoney()));
-        holder.date.setTypeface(Util.GetTypeface());
+        holder.date.setTypeface(Util.typefaceLatoLight);
         holder.money.setTypeface(Util.typefaceLatoLight);
+        holder.money.setText(String.valueOf((int) records.get(position).getMoney()));
         holder.money.setTextColor(
                 Util.GetTagColorResource(RecordManager.TAGS.get(records.get(position).getTag()).getId()));
         holder.index.setText((position + 1) + "");
         holder.index.setTypeface(Util.typefaceLatoLight);
+        holder.remark.setText(records.get(position).getRemark());
+        holder.remark.setTypeface(Util.typefaceLatoLight);
 
     }
 
@@ -68,6 +70,8 @@ public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<R
         ImageView imageView;
         @InjectView(R.id.date)
         TextView date;
+        @InjectView(R.id.remark)
+        TextView remark;
         @InjectView(R.id.money)
         TextView money;
         @InjectView(R.id.index)

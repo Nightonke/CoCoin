@@ -281,6 +281,7 @@ public class RecordManager {
         return deletedId;
     }
 
+    private static int p;
     public static long updateRecord(final Record record) {
         long updateId = -1;
         Log.d("Saver",
@@ -290,11 +291,12 @@ public class RecordManager {
             Log.d("Saver", "Update the above record FAIL!");
         } else {
             Log.d("Saver", "Update the above record SUCCESSFULLY!");
-            for (Record r : RECORDS) {
-                if (r.getId() == record.getId()) {
-                    SUM -= (int)r.getMoney();
+            p = RECORDS.size() - 1;
+            for (; p >= 0; p--) {
+                if (RECORDS.get(p).getId() == record.getId()) {
+                    SUM -= (int)RECORDS.get(p).getMoney();
                     SUM += (int)record.getMoney();
-                    r.set(record);
+                    RECORDS.get(p).set(record);
                     break;
                 }
             }
@@ -312,7 +314,7 @@ public class RecordManager {
                                 public void onSuccess() {
                                     Log.d("Saver", "SSS Update record(" + record.toString() + ") to DB");
                                     record.setIsUploaded(true);
-                                    record.setLocalObjectId(record.getObjectId());
+                                    RECORDS.get(p).setIsUploaded(true);
                                     db.updateRecord(record);
                                 }
 
@@ -327,9 +329,11 @@ public class RecordManager {
                     record.save(CoCoinApplication.getAppContext(), new SaveListener() {
                                 @Override
                                 public void onSuccess() {
-                                    Log.d("Saver", "SSS Update record(" + record.toString() + ") to DB");
+                                    Log.d("Saver", "SSS save record(" + record.toString() + ") to DB");
                                     record.setIsUploaded(true);
                                     record.setLocalObjectId(record.getObjectId());
+                                    RECORDS.get(p).setIsUploaded(true);
+                                    RECORDS.get(p).setLocalObjectId(record.getObjectId());
                                     db.updateRecord(record);
                                 }
                                 @Override

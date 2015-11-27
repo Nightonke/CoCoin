@@ -600,6 +600,8 @@ public class TodayViewRecyclerViewAdapter
                 holder.money.setTypeface(Util.typefaceLatoLight);
                 holder.cell_date.setText(allData.get(position - 1).getCalendarString());
                 holder.cell_date.setTypeface(Util.typefaceLatoLight);
+                holder.remark.setText(allData.get(position - 1).getRemark());
+                holder.remark.setTypeface(Util.typefaceLatoLight);
                 holder.index.setText(position + "");
                 holder.index.setTypeface(Util.typefaceLatoLight);
 
@@ -654,6 +656,9 @@ public class TodayViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.cell_date)
         TextView cell_date;
+        @Optional
+        @InjectView(R.id.remark)
+        TextView remark;
         @Optional
         @InjectView(R.id.index)
         TextView index;

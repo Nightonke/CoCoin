@@ -292,4 +292,6 @@
 
     <string name="change_password_title">Change Password</string>
 
+    <string name="remark_hint">Add remarks for your record</string>
+
 </resources>

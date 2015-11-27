@@ -284,4 +284,6 @@
 
     <string name="change_password_title">更改密码</string>
 
+    <string name="remark_hint">添加备注</string>
+
 </resources>

@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -192,6 +193,26 @@ public class MainActivity extends AppCompatActivity
 
         editPagerAdapter = new FragmentPagerItemAdapter(
                 getSupportFragmentManager(), editPagers);
+        editViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                if (position == 1) {
+                    ((EditFragment)editPagerAdapter.getPage(1)).editRequestFocus();
+                } else {
+                    ((EditFragment)editPagerAdapter.getPage(0)).editRequestFocus();
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
 
         editViewPager.setOffscreenPageLimit(2);
         editViewPager.setAdapter(editPagerAdapter);
@@ -292,7 +313,7 @@ public class MainActivity extends AppCompatActivity
                     public void onGuillotineClosed() {
                         isPassword = false;
                         ((EditFragment)editPagerAdapter.
-                                getItem(editViewPager.getCurrentItem())).editRequestFocus();
+                                getPage(editViewPager.getCurrentItem())).editRequestFocus();
                         radioButton0.setChecked(false);
                         radioButton1.setChecked(false);
                         radioButton2.setChecked(false);
@@ -309,8 +330,6 @@ public class MainActivity extends AppCompatActivity
                 animation.open();
             }
         });
-
-        //changeColor();
 
         if (SettingManager.getInstance().getFirstTime()) {
             Intent intent = new Intent(mContext, SetPasswordActivity.class);
@@ -423,7 +442,7 @@ public class MainActivity extends AppCompatActivity
                     if (longClick) {
                         ((EditFragment)editPagerAdapter.getPage(0)).setNumberText("0");
                         ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(
-                                Util.FLOATINGLABELS[((EditFragment) editPagerAdapter.getItem(0))
+                                Util.FLOATINGLABELS[((EditFragment) editPagerAdapter.getPage(0))
                                         .getNumberText().toString().length()]);
                     } else {
                         ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(
@@ -509,6 +528,7 @@ public class MainActivity extends AppCompatActivity
                     "RMB",
                     ((EditFragment)editPagerAdapter.getPage(0)).getTagId(),
                     calendar);
+            record.setRemark(((EditFragment)editPagerAdapter.getPage(1)).getRemark());
             long saveId = RecordManager.saveRecord(record);
             if (saveId == -1) {
                 if (!superToast.isShowing()) {
@@ -667,8 +687,10 @@ public class MainActivity extends AppCompatActivity
             guillotineColorLy.setBackgroundColor(Util.MY_BLUE);
             guillotineToolBar.setBackgroundColor(Util.MY_BLUE);
         }
-        ((EditFragment)editPagerAdapter.getItem(0)).setEditColor(shouldChange);
-        ((EditFragment)editPagerAdapter.getItem(1)).setEditColor(shouldChange);
+        if (editPagerAdapter.getPage(0) != null)
+            ((EditFragment)editPagerAdapter.getPage(0)).setEditColor(shouldChange);
+        if (editPagerAdapter.getPage(1) != null)
+            ((EditFragment)editPagerAdapter.getPage(1)).setEditColor(shouldChange);
         myGridViewAdapter.notifyDataSetInvalidated();
     }
 
@@ -746,7 +768,7 @@ public class MainActivity extends AppCompatActivity
             SettingManager.getInstance().setMainViewTitleShouldChange(false);
         }
 
-        // changeColor();
+        changeColor();
 
         radioButton0.setChecked(false);
         radioButton1.setChecked(false);
@@ -754,7 +776,6 @@ public class MainActivity extends AppCompatActivity
         radioButton3.setChecked(false);
 
         isLoading = false;
-        ((EditFragment)editPagerAdapter.getItem(0)).setNumberText("0");
         inputPassword = "";
         System.gc();
     }

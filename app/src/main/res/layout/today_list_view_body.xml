@@ -49,19 +49,44 @@
                     android:text="777777"
                     />
 
-                <TextView
-                    android:id="@+id/cell_date"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="0dp"
                     android:layout_height="80dp"
                     android:layout_weight="1"
-                    android:textColor="#666666"
-                    android:textSize="10sp"
-                    android:layout_gravity="center"
-                    android:gravity="bottom|right"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="10dp"
-                    android:text="2015-12-10 10:23"
-                    />
+                    >
+
+                    <TextView
+                        android:id="@+id/remark"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_weight="1"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:textColor="#666666"
+                        android:textSize="10sp"
+                        android:layout_gravity="center"
+                        android:gravity="top|right"
+                        android:paddingRight="20dp"
+                        android:paddingTop="10dp"
+                        android:text="Use for a big ham"
+                        />
+
+                    <TextView
+                        android:id="@+id/cell_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_weight="1"
+                        android:textColor="#666666"
+                        android:textSize="10sp"
+                        android:layout_gravity="center"
+                        android:gravity="bottom|right"
+                        android:paddingRight="20dp"
+                        android:paddingBottom="10dp"
+                        android:text="2015-12-10 10:23"
+                        />
+
+                </LinearLayout>
 
             </LinearLayout>
 
