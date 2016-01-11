@@ -22,6 +22,7 @@ import com.balysv.materialripple.MaterialRippleLayout;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.nightonke.saver.R;
@@ -78,6 +79,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_book_today_view);
+        SuperToast.cancelAllSuperToasts();
 
         mContext = this;
 
@@ -111,7 +113,9 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         months = (MaterialRippleLayout)mDrawer.findViewById(R.id.month_layout);
         list = (MaterialRippleLayout)mDrawer.findViewById(R.id.list_layout);
         report = (MaterialRippleLayout)mDrawer.findViewById(R.id.report_layout);
+        report.setVisibility(View.INVISIBLE);
         sync = (MaterialRippleLayout)mDrawer.findViewById(R.id.sync_layout);
+        sync.setVisibility(View.INVISIBLE);
         settings = (MaterialRippleLayout)mDrawer.findViewById(R.id.settings_layout);
         help = (MaterialRippleLayout)mDrawer.findViewById(R.id.help_layout);
         monthExpenseTip = (TextView)mDrawer.findViewById(R.id.month_expense_tip);
@@ -363,6 +367,12 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadListMode();
+            }
+        });
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, HelpActivity.class));
             }
         });
     }

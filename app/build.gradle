@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'bugly'
 
 repositories {
     maven { url "https://jitpack.io" }
@@ -9,11 +10,11 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.nightonke.saver"
+        applicationId "com.nightonke.cocoin"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.2"
+        versionName "1.1.0"
 
         renderscriptTargetApi 20
         renderscriptSupportModeEnabled true
@@ -83,7 +84,19 @@ dependencies {
 
     compile 'cn.bmob.android:bmob-sdk:3.4.5'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
-    compile 'com.squareup.okio:okio:1.4.0'\
+    compile 'com.squareup.okio:okio:1.4.0'
 
     compile 'com.koushikdutta.ion:ion:2.+'
+
+    compile 'com.github.mmin18.layoutcast:library:1.+@aar'
+
+    compile 'com.github.ViksaaSkool:AwesomeSplash:v1.0.0'
+
+    compile 'com.tencent.bugly:crashreport:1.2.8'
+
+}
+
+bugly {
+    appId = '900016815'    //注册时分配的App ID
+    appKey = '91WxLHPA3RT4Hnyt'  //注册时分配的App Key
 }

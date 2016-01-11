@@ -279,9 +279,6 @@ public class EditRecordActivity extends AppCompatActivity
                 }
             } else {
                 IS_CHANGED = true;
-                if (!superToast.isShowing()) {
-                    showToast(SAVE_SUCCESSFULLY_TOAST);
-                }
                 onBackPressed();
             }
         }

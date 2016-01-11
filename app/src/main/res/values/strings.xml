@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">CoCoin</string>
+    <string name="app_info">
+        CoCoin&#13;&#10;
+        Copyright © Nightonke
+    </string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -293,5 +297,30 @@
     <string name="change_password_title">Change Password</string>
 
     <string name="remark_hint">Add remarks for your record</string>
+
+    <string name="save_successfully_online">Save and sync to cloud successfully!</string>
+    <string name="save_successfully_locale">Save successfully!</string>
+    <string name="save_failed_online">Save successfully!\nSync to cloud failed!</string>
+    <string name="save_failed_locale">Save failed!</string>
+
+    <string name="delete_successfully_online">Delete and sync to cloud successfully!</string>
+    <string name="delete_successfully_locale">Delete successfully!</string>
+    <string name="delete_failed_online">Delete successfully!\nSync to cloud failed!</string>
+    <string name="delete_failed_locale">Delete failed!</string>
+
+    <string name="update_successfully_online">Update and sync to cloud successfully!</string>
+    <string name="update_successfully_locale">Update successfully!</string>
+    <string name="update_failed_online">Update successfully!\nSync to cloud failed!</string>
+    <string name="update_failed_locale">Update failed!</string>
+
+    <string name="guide">Guide</string>
+
+    <string name="hey">Hello!</string>
+    <string name="thank">Thanks for using CoCoin.</string>
+    <string name="me">I\'m an android developer.</string>
+    <string name="github">All codes here: github.com/Nightonke/CoCoin</string>
+    <string name="blog">Blog: blog.csdn.net/u012925008</string>
+    <string name="email">Email: nightonke@outlook.com</string>
+    <string name="thank_again">If you get any questions about CoCoin or me, just mail me!</string>
 
 </resources>

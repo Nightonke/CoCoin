@@ -118,6 +118,10 @@ public class SettingManager {
     // the profile logo name
     private final String DEFAULT_PROFILE_IMAGE_NAME = "profile.jpg";
 
+    private boolean SHOW_MAIN_ACTIVITY_GUIDE = true;
+
+    private boolean SHOW_LIST_VIEW_GUIDE = true;
+
     private static SettingManager ourInstance = new SettingManager();
 
     public static SettingManager getInstance() {
@@ -483,5 +487,35 @@ public class SettingManager {
 
     public void setTodayViewInfoShouldChange(Boolean TODAY_VIEW_INFO_SHOULD_CHANGE) {
         this.TODAY_VIEW_INFO_SHOULD_CHANGE = TODAY_VIEW_INFO_SHOULD_CHANGE;
+    }
+
+    public boolean getShowMainActivityGuide() {
+        SHOW_MAIN_ACTIVITY_GUIDE = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getBoolean("SHOW_MAIN_ACTIVITY_GUIDE", false);
+        return SHOW_MAIN_ACTIVITY_GUIDE;
+    }
+
+    public void setShowMainActivityGuide(boolean SHOW_MAIN_ACTIVITY_GUIDE) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putBoolean("SHOW_MAIN_ACTIVITY_GUIDE", SHOW_MAIN_ACTIVITY_GUIDE);
+        editor.commit();
+        this.SHOW_MAIN_ACTIVITY_GUIDE = SHOW_MAIN_ACTIVITY_GUIDE;
+    }
+
+    public boolean getListViewGuide() {
+        SHOW_LIST_VIEW_GUIDE = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getBoolean("SHOW_LIST_VIEW_GUIDE", false);
+        return SHOW_LIST_VIEW_GUIDE;
+    }
+
+    public void setListViewGuide(boolean SHOW_LIST_VIEW_GUIDE) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putBoolean("SHOW_LIST_VIEW_GUIDE", SHOW_LIST_VIEW_GUIDE);
+        editor.commit();
+        this.SHOW_LIST_VIEW_GUIDE = SHOW_LIST_VIEW_GUIDE;
     }
 }

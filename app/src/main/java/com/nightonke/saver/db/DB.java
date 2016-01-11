@@ -6,8 +6,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.BuildConfig;
+import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.Tag;
 
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.util.LinkedList;
 /**
  * Created by 伟平 on 2015/10/20.
  */
+
 public class DB {
 
     public static final String DB_NAME_STRING = "CoCoin Database";
@@ -30,16 +33,13 @@ public class DB {
     private DBHelper dbHelper;
 
     private DB(Context context) throws IOException {
-        dbHelper = new DBHelper(
-                context, DB_NAME_STRING, null, VERSION);
+        dbHelper = new DBHelper(context, DB_NAME_STRING, null, VERSION);
         sqliteDatabase = dbHelper.getWritableDatabase();
     }
 
     public synchronized static DB getInstance(Context context)
             throws IOException {
-        if (db == null) {
-            db = new DB(context);
-        }
+        if (db == null) db = new DB(context);
         return db;
     }
 
@@ -57,9 +57,7 @@ public class DB {
                 tag.setWeight(cursor.getInt(cursor.getColumnIndex("WEIGHT")));
                 RecordManager.TAGS.add(tag);
             } while (cursor.moveToNext());
-            if (cursor != null) {
-                cursor.close();
-            }
+            if (cursor != null) cursor.close();
         }
 
         cursor = sqliteDatabase
@@ -75,16 +73,19 @@ public class DB {
                 record.setRemark(cursor.getString(cursor.getColumnIndex("REMARK")));
                 record.setUserId(cursor.getString(cursor.getColumnIndex("USER_ID")));
                 record.setLocalObjectId(cursor.getString(cursor.getColumnIndex("OBJECT_ID")));
-                record.setIsUploaded(cursor.getInt(cursor.getColumnIndex("IS_UPLOADED")) == 0 ? false : true);
+                record.setIsUploaded(
+                        cursor.getInt(cursor.getColumnIndex("IS_UPLOADED")) == 0 ? false : true);
+
+                if (BuildConfig.DEBUG) Log.d("CoCoin Debugger", "Load " + record.toString() + " S");
+
                 RecordManager.RECORDS.add(record);
                 RecordManager.SUM += (int)record.getMoney();
             } while (cursor.moveToNext());
-            if (cursor != null) {
-                cursor.close();
-            }
+            if (cursor != null) cursor.close();
         }
     }
 
+    // return the row ID of the newly inserted row, or -1 if an error occurred
     public long saveRecord(Record record) {
         ContentValues values = new ContentValues();
         values.put("MONEY", record.getMoney());
@@ -98,46 +99,47 @@ public class DB {
         values.put("IS_UPLOADED", record.getIsUploaded().equals(Boolean.FALSE) ? 0 : 1);
         long insertId = sqliteDatabase.insert(RECORD_DB_NAME_STRING, null, values);
         record.setId(insertId);
-        if (RecordManager.SHOW_LOG) {
-            Log.d("Saver", "DB: Insert record: " + record.toString());
-        }
+        if (BuildConfig.DEBUG)
+            Log.d("CoCoin Debugger", "db.saveRecord " + record.toString() + " S");
         return insertId;
     }
 
+    // return the row ID of the newly inserted row, or -1 if an error occurred
     public int saveTag(Tag tag) {
         ContentValues values = new ContentValues();
         values.put("NAME", tag.getName());
         values.put("WEIGHT", tag.getWeight());
         int insertId = (int)sqliteDatabase.insert(TAG_DB_NAME_STRING, null, values);
         tag.setId(insertId);
-        if (RecordManager.SHOW_LOG) {
-            Log.d("Saver", "DB: Insert tag: " + tag.toString());
-        }
+        if (BuildConfig.DEBUG) Log.d("CoCoin Debugger", "db.saveTag " + tag.toString() + " S");
         return insertId - 1;
     }
 
+    // return the id of the record deleted
     public long deleteRecord(long id) {
         long deletedNumber = sqliteDatabase.delete(RECORD_DB_NAME_STRING,
                 "ID = ?",
                 new String[]{id + ""});
-        if (RecordManager.SHOW_LOG) {
-            Log.d("Saver",
-                    "DB: Delete record: " + "Record(id = " + id + ", deletedId = " + deletedNumber + ")");
-        }
+        if (BuildConfig.DEBUG)
+            Log.d("CoCoin Debugger", "db.deleteRecord id = " + id + " S");
+        if (BuildConfig.DEBUG)
+            Log.d("CoCoin Debugger", "db.deleteRecord number = " + deletedNumber + " S");
         return id;
     }
 
+    // return the id of the tag deleted
     public int deleteTag(int id) {
         int deletedNumber = sqliteDatabase.delete(TAG_DB_NAME_STRING,
                 "ID = ?",
                 new String[]{(id + 1) + ""});
-        if (RecordManager.SHOW_LOG) {
-            Log.d("Saver",
-                    "DB: Delete tag: " + "tag(id = " + id + ", deletedId = " + deletedNumber + ")");
-        }
+        if (BuildConfig.DEBUG)
+            Log.d("CoCoin Debugger", "db.deleteTag id = " + id + " S");
+        if (BuildConfig.DEBUG)
+            Log.d("CoCoin Debugger", "db.deleteTag number = " + deletedNumber + " S");
         return id;
     }
 
+    // return the id of the record update
     public long updateRecord(Record record) {
         ContentValues values = new ContentValues();
         values.put("ID", record.getId());
@@ -153,12 +155,12 @@ public class DB {
         sqliteDatabase.update(RECORD_DB_NAME_STRING, values,
                 "ID = ?",
                 new String[]{record.getId() + ""});
-        if (RecordManager.SHOW_LOG) {
-            Log.d("Saver", "DB: Update record: " + record.toString());
-        }
+        if (BuildConfig.DEBUG)
+            Log.d("CoCoin Debugger", "db.updateRecord " + record.toString() + " S");
         return record.getId();
     }
 
+    // return the id of the tag update
     public int updateTag(Tag tag) {
         ContentValues values = new ContentValues();
         values.put("NAME", tag.getName());
@@ -166,15 +168,15 @@ public class DB {
         sqliteDatabase.update(TAG_DB_NAME_STRING, values,
                 "ID = ?",
                 new String[]{(tag.getId() + 1) + ""});
-        if (RecordManager.SHOW_LOG) {
-            Log.d("Saver", "DB: Update tag: " + tag.toString());
-        }
+        if (BuildConfig.DEBUG)
+            Log.d("CoCoin Debugger", "db.updateTag " + tag.toString() + " S");
         return tag.getId();
     }
 
-    public int deleteAll() {
+    // delete all the records
+    public int deleteAllRecords() {
         int deleteNum = sqliteDatabase.delete(RECORD_DB_NAME_STRING, null, null);
-        Log.d("Saver", "Delete all " + deleteNum + " records.");
+        Log.d("CoCoin Debugger", "db.deleteAllRecords " + deleteNum + " S");
         return deleteNum;
     }
 }

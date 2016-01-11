@@ -3,6 +3,10 @@ package com.nightonke.saver.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,12 +22,16 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuView;
 import com.daimajia.androidanimations.library.Techniques;
@@ -41,12 +49,14 @@ import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.fragment.TagChooseFragment;
 import com.nightonke.saver.ui.CoCoinViewPager;
+import com.nightonke.saver.util.CoCoinToast;
 import com.nightonke.saver.util.Util;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.rey.material.widget.RadioButton;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.yalantis.guillotine.animation.GuillotineAnimation;
 import com.yalantis.guillotine.interfaces.GuillotineListener;
 
@@ -134,6 +144,8 @@ public class MainActivity extends AppCompatActivity
     private FragmentPagerItemAdapter tagChoicePagerAdapter;
     private FragmentPagerItemAdapter editPagerAdapter;
 
+    private SensorManager sensorManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +153,16 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         mContext = this;
+
+        CrashReport.initCrashReport(mContext, "900016815", false);
+
+        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+
+        Sensor magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+        sensorManager.registerListener(listener, magneticSensor, SensorManager.SENSOR_DELAY_GAME);
+        sensorManager.registerListener(listener, accelerometerSensor, SensorManager.SENSOR_DELAY_GAME);
 
         superToast = new SuperToast(this);
         superActivityToast = new SuperActivityToast(this, SuperToast.Type.PROGRESS_HORIZONTAL);
@@ -159,7 +181,7 @@ public class MainActivity extends AppCompatActivity
             // do something for phones running an SDK before lollipop
         }
 
-        Bmob.initialize(CoCoinApplication.getAppContext(), "0f0f9d45a39068bd6eea8896af1facf3");
+//        Bmob.initialize(CoCoinApplication.getAppContext(), "0f0f9d45a39068bd6eea8896af1facf3");
 
         Util.init(this.getApplicationContext());
 
@@ -335,6 +357,17 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(mContext, SetPasswordActivity.class);
             startActivity(intent);
         }
+
+        if (SettingManager.getInstance().getShowMainActivityGuide()) {
+            boolean wrapInScrollView = true;
+            new MaterialDialog.Builder(this)
+                    .title(R.string.guide)
+                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                    .customView(R.layout.main_activity_guide, wrapInScrollView)
+                    .positiveText(R.string.ok)
+                    .show();
+            SettingManager.getInstance().setShowMainActivityGuide(false);
+        }
     }
 
     private AdapterView.OnItemLongClickListener gridViewLongClickListener
@@ -363,15 +396,11 @@ public class MainActivity extends AppCompatActivity
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    statusButton.setClickable(true);
-                    dummyOperation.cancel(true);
-                    SuperToast.cancelAllSuperToasts();
-                    SuperActivityToast.cancelAllSuperActivityToasts();
                     Intent intent = new Intent(mContext, AccountBookTodayViewActivity.class);
                     startActivityForResult(intent, SETTING_TAG);
                     isLoading = false;
                 }
-            }, 1500);
+            }, 1000);
             final Handler handler2 = new Handler();
             handler2.postDelayed(new Runnable() {
                 @Override
@@ -531,12 +560,9 @@ public class MainActivity extends AppCompatActivity
             record.setRemark(((EditFragment)editPagerAdapter.getPage(1)).getRemark());
             long saveId = RecordManager.saveRecord(record);
             if (saveId == -1) {
-                if (!superToast.isShowing()) {
-                    showToast(SAVE_FAILED_TOAST);
-                }
+
             } else {
                 if (!superToast.isShowing()) {
-                    showToast(SAVE_SUCCESSFULLY_TOAST);
                     changeColor();
                 }
                 ((EditFragment)editPagerAdapter.getPage(0)).setTagImage(R.color.transparent);
@@ -552,98 +578,32 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void showToast(int toastType) {
-        SuperToast.cancelAllSuperToasts();
-        SuperActivityToast.cancelAllSuperActivityToasts();
-
-        superToast.setAnimations(Util.TOAST_ANIMATION);
-        superToast.setDuration(SuperToast.Duration.SHORT);
-        superToast.setTextColor(Color.parseColor("#ffffff"));
-        superToast.setTextSize(SuperToast.TextSize.SMALL);
-
         switch (toastType) {
             case NO_TAG_TOAST:
-
-                superToast.setText(mContext.getResources().getString(R.string.toast_no_tag));
-                superToast.setBackground(SuperToast.Background.BLUE);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+                CoCoinToast.getInstance().showToast(R.string.toast_no_tag, SuperToast.Background.RED);
                 tagAnimation();
-
                 break;
             case NO_MONEY_TOAST:
-
-                superToast.setText(mContext.getResources().getString(R.string.toast_no_money));
-                superToast.setBackground(SuperToast.Background.BLUE);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
-
+                CoCoinToast.getInstance().showToast(R.string.toast_no_money, SuperToast.Background.RED);
                 break;
             case PASSWORD_WRONG_TOAST:
-
-                superToast.setText(
-                        mContext.getResources().getString(R.string.toast_password_wrong));
-                superToast.setBackground(SuperToast.Background.RED);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
-
+                CoCoinToast.getInstance().showToast(R.string.toast_password_wrong, SuperToast.Background.RED);
                 break;
             case PASSWORD_CORRECT_TOAST:
-
-                superActivityToast.setText(
-                        mContext.getResources().getString(R.string.toast_password_correct));
-                superActivityToast.setAnimations(Util.TOAST_ANIMATION);
-                superActivityToast.setDuration(SuperToast.Duration.SHORT);
-                superActivityToast.setTextColor(Color.parseColor("#ffffff"));
-                superActivityToast.setBackground(SuperToast.Background.GREEN);
-                superActivityToast.setTextSize(SuperToast.TextSize.SMALL);
-                superActivityToast.getTextView().setTypeface(Util.typefaceLatoLight);
-                superActivityToast.setIndeterminate(true);
-                dummyOperation = new DummyOperation(superActivityToast);
-
+                CoCoinToast.getInstance().showToast(R.string.toast_password_correct, SuperToast.Background.BLUE);
                 break;
             case SAVE_SUCCESSFULLY_TOAST:
-
-                superToast.setText(
-                        mContext.getResources().getString(R.string.toast_save_successfully));
-                superToast.setBackground(SuperToast.Background.GREEN);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
-
                 break;
             case SAVE_FAILED_TOAST:
-
-                superToast.setText(mContext.getResources().getString(R.string.toast_save_failed));
-                superToast.setBackground(SuperToast.Background.RED);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
-
                 break;
             case PRESS_AGAIN_TO_EXIT:
-
-                superToast.setText(
-                        mContext.getResources().getString(R.string.toast_press_again_to_exit));
-                superToast.setBackground(SuperToast.Background.BLUE);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
-
+                CoCoinToast.getInstance().showToast(R.string.toast_press_again_to_exit, SuperToast.Background.BLUE);
                 break;
             case WELCOME_BACK:
-
-                superToast.setText(
-                        mContext.getResources().getString(R.string.welcome_back)
-                                + "\n" + SettingManager.getInstance().getUserName());
-                superToast.setBackground(SuperToast.Background.BLUE);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+                CoCoinToast.getInstance().showToast(CoCoinApplication.getAppContext()
+                        .getResources().getString(R.string.welcome_back)
+                        + "\n" + SettingManager.getInstance().getUserName(), SuperToast.Background.BLUE);
             default:
-
-                break;
-        }
-
-        switch (toastType) {
-            case PASSWORD_CORRECT_TOAST:
-
-                dummyOperation.execute();
-                superActivityToast.show();
-
-                break;
-            default:
-
-                superToast.show();
-
                 break;
         }
     }
@@ -782,6 +742,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onDestroy() {
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(listener);
+        }
         super.onDestroy();
     }
 
@@ -789,4 +752,28 @@ public class MainActivity extends AppCompatActivity
     public void onTagItemPicked(int position) {
         ((EditFragment)editPagerAdapter.getPage(0)).setTag(viewPager.getCurrentItem() * 8 + position + 2);
     }
+
+    private static final float SHAKE_ACCELERATED_SPEED = 15;
+    private SensorEventListener listener = new SensorEventListener() {
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                if ((Math.abs(event.values[0]) > SHAKE_ACCELERATED_SPEED
+                        || Math.abs(event.values[1]) > SHAKE_ACCELERATED_SPEED
+                        || Math.abs(event.values[2]) > SHAKE_ACCELERATED_SPEED)) {
+                    if (!isPassword) {
+                        animation.open();
+                    } else {
+                        animation.close();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 }

@@ -286,4 +286,29 @@
 
     <string name="remark_hint">添加备注</string>
 
+    <string name="save_successfully_online">保存并同步成功</string>
+    <string name="save_successfully_locale">保存成功</string>
+    <string name="save_failed_online">保存成功\n上传至服务器失败</string>
+    <string name="save_failed_locale">保存失败</string>
+
+    <string name="delete_successfully_online">删除成功</string>
+    <string name="delete_successfully_locale">删除成功</string>
+    <string name="delete_failed_online">删除失败</string>
+    <string name="delete_failed_locale">删除失败</string>
+
+    <string name="update_successfully_online">修改成功</string>
+    <string name="update_successfully_locale">修改成功</string>
+    <string name="update_failed_online">修改成功</string>
+    <string name="update_failed_locale">修改成功</string>
+
+    <string name="guide">引导</string>
+
+    <string name="hey">嗨！</string>
+    <string name="thank">感谢您使用CoCoin。</string>
+    <string name="me">我是一名安卓开发者。</string>
+    <string name="github">项目已开源：github.com/Nightonke/CoCoin</string>
+    <string name="blog">博客：blog.csdn.net/u012925008</string>
+    <string name="email">邮箱：nightonke@outlook.com</string>
+    <string name="thank_again">如果有任何吐槽，就发邮件给我吧！</string>
+
 </resources>

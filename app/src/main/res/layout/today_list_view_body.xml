@@ -61,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
                         android:layout_weight="1"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:ellipsize="end"
                         android:textColor="#666666"
                         android:textSize="10sp"
@@ -70,6 +70,7 @@
                         android:paddingRight="20dp"
                         android:paddingTop="10dp"
                         android:text="Use for a big ham"
+                        android:paddingLeft="10dp"
                         />
 
                     <TextView
