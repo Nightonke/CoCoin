@@ -17,7 +17,7 @@ import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.adapter.MonthViewRecyclerViewAdapter;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.squareup.leakcanary.RefWatcher;
 
 import java.util.ArrayList;
@@ -96,8 +96,8 @@ public class MonthViewFragment extends Fragment {
                     nowYear, nowMonth, monthStart.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
             monthEnd.add(Calendar.MILLISECOND, 0);
 
-            Calendar leftRange = Util.GetThisWeekLeftRange(monthStart);
-            Calendar rightRange = Util.GetThisWeekRightRange(monthEnd);
+            Calendar leftRange = CoCoinUtil.GetThisWeekLeftRange(monthStart);
+            Calendar rightRange = CoCoinUtil.GetThisWeekRightRange(monthEnd);
 
             int start = -1;
             int end = 0;

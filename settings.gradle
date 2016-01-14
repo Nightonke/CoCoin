@@ -1,1 +1,1 @@
-include ':app', ':GuillotineMenu-Android'
+include ':app'

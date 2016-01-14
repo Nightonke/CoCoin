@@ -14,7 +14,7 @@ import com.nightonke.saver.fragment.RecordCheckDialogFragment;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import butterknife.ButterKnife;
@@ -116,8 +115,8 @@ public class MonthViewRecyclerViewAdapter
             sliceValues = new ArrayList<>();
 
             // for this month
-            dateStringList.add(Util.GetMonthShort(nowMonth + 1) + " " + nowYear);
-            dateShownStringList.add(" in " + Util.MONTHS_SHORT[nowMonth + 1] + " " + nowYear);
+            dateStringList.add(CoCoinUtil.GetMonthShort(nowMonth + 1) + " " + nowYear);
+            dateShownStringList.add(" in " + CoCoinUtil.MONTHS_SHORT[nowMonth + 1] + " " + nowYear);
             selectedPositionList.add(0);
             for (int j = 2; j < recordManager.TAGS.size(); j++) {
                 TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
@@ -132,7 +131,7 @@ public class MonthViewRecyclerViewAdapter
                 }
             }
 
-            TagExpanse = Util.SortTreeMapByValues(TagExpanse);
+            TagExpanse = CoCoinUtil.SortTreeMapByValues(TagExpanse);
 
             for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
                 if (entry.getValue() >= 1) {
@@ -140,7 +139,7 @@ public class MonthViewRecyclerViewAdapter
                     SliceValue sliceValue = new SliceValue(
                             (float) (double) entry.getValue(),
                             mContext.getResources().
-                                    getColor(Util.GetTagColorResource(entry.getKey())));
+                                    getColor(CoCoinUtil.GetTagColorResource(entry.getKey())));
                     sliceValue.setLabel(String.valueOf(entry.getKey()));
                     sliceValues.add(sliceValue);
                 }
@@ -169,20 +168,20 @@ public class MonthViewRecyclerViewAdapter
 
 
             while (!now.after(monthEnd)) {
-                Calendar leftWeekRange = Util.GetThisWeekLeftRange(now);
-                Calendar rightWeekRange = Util.GetThisWeekRightRange(now);
-                Calendar rightShownWeekRange = Util.GetThisWeekRightShownRange(now);
-                String dateString = Util.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
+                Calendar leftWeekRange = CoCoinUtil.GetThisWeekLeftRange(now);
+                Calendar rightWeekRange = CoCoinUtil.GetThisWeekRightRange(now);
+                Calendar rightShownWeekRange = CoCoinUtil.GetThisWeekRightShownRange(now);
+                String dateString = CoCoinUtil.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
                         leftWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                         leftWeekRange.get(Calendar.YEAR) + " - " +
-                        Util.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
+                        CoCoinUtil.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
                         rightShownWeekRange.get(Calendar.DAY_OF_MONTH) + " " +
                         rightShownWeekRange.get(Calendar.YEAR);
                 dateStringList.add(dateString);
                 dateShownStringList.add(" from " +
-                        Util.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
+                        CoCoinUtil.GetMonthShort(leftWeekRange.get(Calendar.MONTH) + 1) + " " +
                         leftWeekRange.get(Calendar.DAY_OF_MONTH) + " to " +
-                        Util.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
+                        CoCoinUtil.GetMonthShort(rightShownWeekRange.get(Calendar.MONTH) + 1) + " " +
                         rightShownWeekRange.get(Calendar.DAY_OF_MONTH));
                 selectedPositionList.add(0);
 
@@ -205,7 +204,7 @@ public class MonthViewRecyclerViewAdapter
                     }
                 }
 
-                TagExpanse = Util.SortTreeMapByValues(TagExpanse);
+                TagExpanse = CoCoinUtil.SortTreeMapByValues(TagExpanse);
 
                 for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
                     if (entry.getValue() >= 1) {
@@ -213,7 +212,7 @@ public class MonthViewRecyclerViewAdapter
                         SliceValue sliceValue = new SliceValue(
                                 (float) (double) entry.getValue(),
                                 mContext.getResources().
-                                        getColor(Util.GetTagColorResource(entry.getKey())));
+                                        getColor(CoCoinUtil.GetTagColorResource(entry.getKey())));
                         sliceValue.setLabel(String.valueOf(entry.getKey()));
                         sliceValues.add(sliceValue);
                     }
@@ -230,7 +229,7 @@ public class MonthViewRecyclerViewAdapter
                 pieChartData.setHasCenterCircle(SettingManager.getInstance().getIsHollow());
                 pieChartDataList.add(pieChartData);
 
-                now = Util.GetNextWeekLeftRange(now);
+                now = CoCoinUtil.GetNextWeekLeftRange(now);
             }
         }
     }
@@ -277,9 +276,9 @@ public class MonthViewRecyclerViewAdapter
 
         if (IS_EMPTY) {
             holder.expanseSum.setText("0");
-            holder.expanseSum.setTypeface(Util.typefaceLatoLight);
+            holder.expanseSum.setTypeface(CoCoinUtil.typefaceLatoLight);
             holder.emptyTip.setText(mContext.getResources().getString(R.string.tag_empty));
-            holder.emptyTip.setTypeface(Util.GetTypeface());
+            holder.emptyTip.setTypeface(CoCoinUtil.GetTypeface());
             holder.date.setVisibility(View.INVISIBLE);
             holder.pie.setVisibility(View.INVISIBLE);
             holder.iconLeft.setVisibility(View.INVISIBLE);
@@ -289,12 +288,12 @@ public class MonthViewRecyclerViewAdapter
             holder.date.setText(dateStringList.get(position));
             holder.expanseSum.setText(String.valueOf((int) (double) SumList.get(position)));
 
-            holder.date.setTypeface(Util.GetTypeface());
-            holder.expanseSum.setTypeface(Util.typefaceLatoLight);
+            holder.date.setTypeface(CoCoinUtil.GetTypeface());
+            holder.expanseSum.setTypeface(CoCoinUtil.typefaceLatoLight);
 
             if (SumList.get(position).equals(Double.valueOf(0))) {
                 holder.emptyTip.setVisibility(View.VISIBLE);
-                holder.emptyTip.setTypeface(Util.typefaceLatoLight);
+                holder.emptyTip.setTypeface(CoCoinUtil.typefaceLatoLight);
             } else {
                 holder.emptyTip.setVisibility(View.GONE);
             }
@@ -343,12 +342,12 @@ public class MonthViewRecyclerViewAdapter
             holder.all.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if ("zh".equals(Util.GetLanguage())) {
+                    if ("zh".equals(CoCoinUtil.GetLanguage())) {
                         dialogTitle = mContext.getResources().getString(R.string.in)
                                 + dateStringList.get(position) +
-                                " " + Util.GetSpendString((int) (double) SumList.get(position));
+                                " " + CoCoinUtil.GetSpendString((int) (double) SumList.get(position));
                     } else {
-                        dialogTitle = Util.GetSpendString((int) (double) SumList.get(position)) +
+                        dialogTitle = CoCoinUtil.GetSpendString((int) (double) SumList.get(position)) +
                                 mContext.getResources().getString(R.string.in) + " "
                                 + dateStringList.get(position);
                     }
@@ -406,23 +405,23 @@ public class MonthViewRecyclerViewAdapter
             String text = "";
             final int tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
             Double percent = sliceValue.getValue() / SumList.get(position) * 100;
-            if ("zh".equals(Util.GetLanguage())) {
-                text = Util.GetSpendString((int) sliceValue.getValue()) +
-                        Util.GetPercentString(percent) + "\n" +
-                        "于" + Util.GetTagName(tagId);
+            if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                text = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
+                        CoCoinUtil.GetPercentString(percent) + "\n" +
+                        "于" + CoCoinUtil.GetTagName(tagId);
                 dialogTitle = mContext.getResources().getString(R.string.in)
                         + dateStringList.get(position) +
-                        " " + Util.GetSpendString((int) sliceValue.getValue()) + "\n" +
-                        "于" + Util.GetTagName(tagId);
+                        " " + CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + "\n" +
+                        "于" + CoCoinUtil.GetTagName(tagId);
 
             } else {
-                text = Util.GetSpendString((int) sliceValue.getValue()) +
-                        Util.GetPercentString(percent) + "\n" +
-                        "in " + Util.GetTagName(RecordManager.TAGS.get(tagId).getId());
-                dialogTitle = Util.GetSpendString((int) sliceValue.getValue()) +
+                text = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
+                        CoCoinUtil.GetPercentString(percent) + "\n" +
+                        "in " + CoCoinUtil.GetTagName(RecordManager.TAGS.get(tagId).getId());
+                dialogTitle = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
                         mContext.getResources().getString(R.string.in) + " "
                         + dateStringList.get(position) + "\n" +
-                        "in " + Util.GetTagName(RecordManager.TAGS.get(tagId).getId());
+                        "in " + CoCoinUtil.GetTagName(RecordManager.TAGS.get(tagId).getId());
             }
             Snackbar snackbar =
                     Snackbar
@@ -431,11 +430,11 @@ public class MonthViewRecyclerViewAdapter
                             .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                             .position(Snackbar.SnackbarPosition.BOTTOM)
                             .margin(15, 15)
-                            .backgroundDrawable(Util.GetSnackBarBackground(fragmentPosition - 2))
+                            .backgroundDrawable(CoCoinUtil.GetSnackBarBackground(fragmentPosition - 2))
                             .text(text)
-                            .textTypeface(Util.GetTypeface())
+                            .textTypeface(CoCoinUtil.GetTypeface())
                             .textColor(Color.WHITE)
-                            .actionLabelTypeface(Util.GetTypeface())
+                            .actionLabelTypeface(CoCoinUtil.GetTypeface())
                             .actionLabel(mContext.getResources().getString(R.string.check))
                             .actionColor(Color.WHITE)
                             .actionListener(new ActionClickListener() {

@@ -8,8 +8,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -33,15 +31,14 @@ import com.balysv.materialripple.MaterialRippleLayout;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
-import com.koushikdutta.ion.ProgressCallback;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.RiseNumberTextView;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.nightonke.saver.util.EmailValidator;
-import com.nightonke.saver.util.Util;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.rey.material.widget.Switch;
 import com.rey.material.widget.Switch.OnCheckedChangeListener;
@@ -166,7 +163,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         } else{
             // do something for phones running an SDK before lollipop
             View statusBarView = findViewById(R.id.status_bar_view);
-            statusBarView.getLayoutParams().height = Util.getStatusBarHeight();
+            statusBarView.getLayoutParams().height = CoCoinUtil.getStatusBarHeight();
         }
 
         init();
@@ -277,7 +274,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
             try {
-                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
                 if (b == null) {
                     // the local logo file is missed
@@ -293,13 +290,13 @@ public class AccountBookSettingActivity extends AppCompatActivity
                             String url = object.get(0).getFile().getUrl();
                             Ion.with(CoCoinApplication.getAppContext()).load(url)
                                     .write(new File(CoCoinApplication.getAppContext().getFilesDir()
-                                            + Util.LOGO_NAME))
+                                            + CoCoinUtil.LOGO_NAME))
                                     .setCallback(new FutureCallback<File>() {
                                         @Override
                                         public void onCompleted(Exception e, File file) {
                                             logo.setImageBitmap(BitmapFactory.decodeFile(
                                                     CoCoinApplication.getAppContext().getFilesDir()
-                                                            + Util.LOGO_NAME));
+                                                            + CoCoinUtil.LOGO_NAME));
                                         }
                                     });
                         }
@@ -328,7 +325,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         if (user == null) {
             new MaterialDialog.Builder(this)
                     .iconRes(R.drawable.cocoin_logo)
-                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                    .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                     .limitIconToDefaultSize() // limits the displayed icon size to 48dp
                     .title(R.string.login_first_title)
                     .content(R.string.login_first_content)
@@ -348,7 +345,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         }
         new MaterialDialog.Builder(this)
                 .iconRes(R.drawable.cocoin_logo)
-                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                 .limitIconToDefaultSize() // limits the displayed icon size to 48dp
                 .title(R.string.change_logo_title)
                 .content(R.string.change_logo_content)
@@ -367,7 +364,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                             Intent intent2 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             intent2.putExtra(MediaStore.EXTRA_OUTPUT,
                                     Uri.fromFile(new File(CoCoinApplication.getAppContext().getFilesDir()
-                                            + Util.LOGO_NAME)));
+                                            + CoCoinUtil.LOGO_NAME)));
                             startActivityForResult(intent2, 2);
                         }
                     }
@@ -402,7 +399,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             case 2:
                 // after taking a photo
                 if (resultCode == RESULT_OK) {
-                    File temp = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+                    File temp = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
                     cropPhoto(Uri.fromFile(temp));
                 }
                 break;
@@ -429,7 +426,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
 // Storage a picture////////////////////////////////////////////////////////////////////////////////
     private void setPicToView(Bitmap mBitmap) {
         FileOutputStream b = null;
-        File file = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+        File file = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
         String fileName = file.getAbsolutePath();  // get logo position
         try {
             b = new FileOutputStream(fileName);
@@ -466,13 +463,13 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 String url = object.get(0).getFile().getUrl();
                 Ion.with(CoCoinApplication.getAppContext()).load(url)
                         .write(new File(CoCoinApplication.getAppContext().getFilesDir()
-                                + Util.LOGO_NAME))
+                                + CoCoinUtil.LOGO_NAME))
                                 .setCallback(new FutureCallback<File>() {
                                     @Override
                                     public void onCompleted(Exception e, File file) {
                                         Bitmap bitmap = BitmapFactory.
                                                 decodeFile(CoCoinApplication.getAppContext().getFilesDir()
-                                                        + Util.LOGO_NAME);
+                                                        + CoCoinUtil.LOGO_NAME);
                                         if (bitmap == null) {
                                             Log.d("Saver", "Logo misses");
                                         } else {
@@ -497,7 +494,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             // the user haven't set the logo
             return;
         }
-        final File file = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+        final File file = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
         final User user = getCurrentUser();
 // if login/////////////////////////////////////////////////////////////////////////////////////////
         if (user != null) {
@@ -600,7 +597,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             // register or log on
             new MaterialDialog.Builder(this)
                     .iconRes(R.drawable.cocoin_logo)
-                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                    .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                     .limitIconToDefaultSize() // limits the displayed icon size to 48dp
                     .title(R.string.welcome)
                     .content(R.string.login_or_register)
@@ -625,7 +622,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             // log out or user operate
             new MaterialDialog.Builder(this)
                     .iconRes(R.drawable.cocoin_logo)
-                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                    .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                     .limitIconToDefaultSize() // limits the displayed icon size to 48dp
                     .title(mContext.getResources().getString(R.string.hi)
                             + SettingManager.getInstance().getUserName())
@@ -662,7 +659,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private void userLogin() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.go_login)
-                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                 .customView(R.layout.user_login, true)
                 .positiveText(R.string.go_login)
                 .negativeText(android.R.string.cancel)
@@ -742,15 +739,15 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 = (TextView)dialog.getCustomView().findViewById(R.id.login_user_name_text);
         TextView userPasswordTV
                 = (TextView)dialog.getCustomView().findViewById(R.id.login_password_text);
-        userNameTV.setTypeface(Util.GetTypeface());
-        userPasswordTV.setTypeface(Util.GetTypeface());
+        userNameTV.setTypeface(CoCoinUtil.GetTypeface());
+        userPasswordTV.setTypeface(CoCoinUtil.GetTypeface());
 
         loginUserName
                 = (MaterialEditText)dialog.getCustomView().findViewById(R.id.login_user_name);
         loginPassword
                 = (MaterialEditText)dialog.getCustomView().findViewById(R.id.login_password);
 
-        loginUserName.setTypeface(Util.GetTypeface());
+        loginUserName.setTypeface(CoCoinUtil.GetTypeface());
         loginUserName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -764,7 +761,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             public void afterTextChanged(Editable s) {}
         });
 
-        loginPassword.setTypeface(Util.GetTypeface());
+        loginPassword.setTypeface(CoCoinUtil.GetTypeface());
         loginPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -785,7 +782,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private void userRegister() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.go_register)
-                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                 .customView(R.layout.user_register, true)
                 .positiveText(R.string.go_register)
                 .negativeText(android.R.string.cancel)
@@ -857,9 +854,9 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 = (TextView)dialog.getCustomView().findViewById(R.id.register_user_email_text);
         TextView userPasswordTV
                 = (TextView)dialog.getCustomView().findViewById(R.id.register_password_text);
-        userNameTV.setTypeface(Util.GetTypeface());
-        userEmailTV.setTypeface(Util.GetTypeface());
-        userPasswordTV.setTypeface(Util.GetTypeface());
+        userNameTV.setTypeface(CoCoinUtil.GetTypeface());
+        userEmailTV.setTypeface(CoCoinUtil.GetTypeface());
+        userPasswordTV.setTypeface(CoCoinUtil.GetTypeface());
 
         registerUserName
                 = (MaterialEditText)dialog.getCustomView().findViewById(R.id.register_user_name);
@@ -868,7 +865,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         registerPassword
                 = (MaterialEditText)dialog.getCustomView().findViewById(R.id.register_password);
 
-        registerUserName.setTypeface(Util.GetTypeface());
+        registerUserName.setTypeface(CoCoinUtil.GetTypeface());
         registerUserName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -896,7 +893,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             }
         });
 
-        registerUserEmail.setTypeface(Util.GetTypeface());
+        registerUserEmail.setTypeface(CoCoinUtil.GetTypeface());
         registerUserEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -924,7 +921,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             }
         });
 
-        registerPassword.setTypeface(Util.GetTypeface());
+        registerPassword.setTypeface(CoCoinUtil.GetTypeface());
         registerPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -959,7 +956,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private void changeAccountBookName() {
         new MaterialDialog.Builder(this)
                 .theme(Theme.LIGHT)
-                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                 .title(R.string.set_account_book_dialog_title)
                 .inputType(InputType.TYPE_TEXT_FLAG_CAP_WORDS)
                 .inputRange(1, 16)
@@ -1034,17 +1031,17 @@ public class AccountBookSettingActivity extends AppCompatActivity
         userNameIcon = (MaterialIconView)findViewById(R.id.user_name_icon);
         userEmailIcon = (MaterialIconView)findViewById(R.id.user_email_icon);
         userName = (TextView)findViewById(R.id.user_name);
-        userName.setTypeface(Util.typefaceLatoLight);
+        userName.setTypeface(CoCoinUtil.typefaceLatoLight);
         userEmail = (TextView)findViewById(R.id.user_email);
-        userEmail.setTypeface(Util.typefaceLatoLight);
+        userEmail.setTypeface(CoCoinUtil.typefaceLatoLight);
         expense = (RiseNumberTextView)findViewById(R.id.expense);
-        expense.setTypeface(Util.typefaceLatoLight);
+        expense.setTypeface(CoCoinUtil.typefaceLatoLight);
         records = (RiseNumberTextView)findViewById(R.id.records);
-        records.setTypeface(Util.typefaceLatoLight);
+        records.setTypeface(CoCoinUtil.typefaceLatoLight);
         expenseTV = (TextView)findViewById(R.id.expense_text);
-        expenseTV.setTypeface(Util.GetTypeface());
+        expenseTV.setTypeface(CoCoinUtil.GetTypeface());
         recordsTV = (TextView)findViewById(R.id.records_text);
-        recordsTV.setTypeface(Util.GetTypeface());
+        recordsTV.setTypeface(CoCoinUtil.GetTypeface());
 
         expense.withNumber(RecordManager.SUM).setDuration(1500).start();
         records.withNumber(RecordManager.RECORDS.size()).setDuration(1500).start();
@@ -1075,7 +1072,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 if (SettingManager.getInstance().getIsMonthLimit()) {
                     new MaterialDialog.Builder(mContext)
                             .theme(Theme.LIGHT)
-                            .typeface(Util.GetTypeface(), Util.GetTypeface())
+                            .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                             .title(R.string.set_month_expense_dialog_title)
                             .inputType(InputType.TYPE_CLASS_NUMBER)
                             .positiveText(R.string.submit)
@@ -1128,7 +1125,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                         && SettingManager.getInstance().getIsColorRemind()) {
                     new MaterialDialog.Builder(mContext)
                             .theme(Theme.LIGHT)
-                            .typeface(Util.GetTypeface(), Util.GetTypeface())
+                            .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                             .title(R.string.set_month_expense_dialog_title)
                             .inputType(InputType.TYPE_CLASS_NUMBER)
                             .positiveText(R.string.submit)
@@ -1185,20 +1182,20 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 remindColorSelectDialog.show((AppCompatActivity) mContext);
             }
         });
-        monthMaxExpense.setTypeface(Util.typefaceLatoLight);
-        monthWarning.setTypeface(Util.typefaceLatoLight);
+        monthMaxExpense.setTypeface(CoCoinUtil.typefaceLatoLight);
+        monthWarning.setTypeface(CoCoinUtil.typefaceLatoLight);
         monthLimitTV = (TextView)findViewById(R.id.month_limit_text);
-        monthLimitTV.setTypeface(Util.GetTypeface());
+        monthLimitTV.setTypeface(CoCoinUtil.GetTypeface());
         monthWarningTV = (TextView)findViewById(R.id.warning_expense_text);
-        monthWarningTV.setTypeface(Util.GetTypeface());
+        monthWarningTV.setTypeface(CoCoinUtil.GetTypeface());
         monthMaxExpenseTV = (TextView)findViewById(R.id.month_expense_text);
-        monthMaxExpenseTV.setTypeface(Util.GetTypeface());
+        monthMaxExpenseTV.setTypeface(CoCoinUtil.GetTypeface());
         monthColorRemindTV = (TextView)findViewById(R.id.month_color_remind_text);
-        monthColorRemindTV.setTypeface(Util.GetTypeface());
+        monthColorRemindTV.setTypeface(CoCoinUtil.GetTypeface());
         monthColorRemindTypeTV = (TextView)findViewById(R.id.month_color_type_text);
-        monthColorRemindTypeTV.setTypeface(Util.GetTypeface());
+        monthColorRemindTypeTV.setTypeface(CoCoinUtil.GetTypeface());
         monthForbiddenTV = (TextView)findViewById(R.id.month_forbidden_text);
-        monthForbiddenTV.setTypeface(Util.GetTypeface());
+        monthForbiddenTV.setTypeface(CoCoinUtil.GetTypeface());
 
         accountBookNameLayout = (MaterialRippleLayout)findViewById(R.id.account_book_name_layout);
         accountBookNameLayout.setOnClickListener(new View.OnClickListener() {
@@ -1208,10 +1205,10 @@ public class AccountBookSettingActivity extends AppCompatActivity
             }
         });
         accountBookName = (TextView)findViewById(R.id.account_book_name);
-        accountBookName.setTypeface(Util.GetTypeface());
+        accountBookName.setTypeface(CoCoinUtil.GetTypeface());
         accountBookName.setText(SettingManager.getInstance().getAccountBookName());
         accountBookNameTV = (TextView)findViewById(R.id.account_book_name_text);
-        accountBookNameTV.setTypeface(Util.GetTypeface());
+        accountBookNameTV.setTypeface(CoCoinUtil.GetTypeface());
 
         changePasswordLayout = (MaterialRippleLayout)findViewById(R.id.change_password_layout);
         changePasswordLayout.setOnClickListener(new View.OnClickListener() {
@@ -1221,7 +1218,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             }
         });
         changePasswordTV = (TextView)findViewById(R.id.change_password_text);
-        changePasswordTV.setTypeface(Util.GetTypeface());
+        changePasswordTV.setTypeface(CoCoinUtil.GetTypeface());
 
         sortTagsLayout = (MaterialRippleLayout)findViewById(R.id.sort_tags_layout);
         sortTagsLayout.setOnClickListener(new View.OnClickListener() {
@@ -1231,21 +1228,21 @@ public class AccountBookSettingActivity extends AppCompatActivity
             }
         });
         sortTagsTV = (TextView)findViewById(R.id.sort_tags_text);
-        sortTagsTV.setTypeface(Util.GetTypeface());
+        sortTagsTV.setTypeface(CoCoinUtil.GetTypeface());
 
         showPictureLayout = (MaterialRippleLayout)findViewById(R.id.whether_show_picture_layout);
         showPictureIcon = (MaterialIconView)findViewById(R.id.whether_show_picture_icon);
         showPictureSB = (Switch)findViewById(R.id.whether_show_picture_button);
         showPictureSB.setOnCheckedChangeListener(this);
         showPictureTV = (TextView)findViewById(R.id.whether_show_picture_text);
-        showPictureTV.setTypeface(Util.GetTypeface());
+        showPictureTV.setTypeface(CoCoinUtil.GetTypeface());
 
         hollowLayout = (MaterialRippleLayout)findViewById(R.id.whether_show_circle_layout);
         hollowIcon = (MaterialIconView)findViewById(R.id.whether_show_circle_icon);
         hollowSB = (Switch)findViewById(R.id.whether_show_circle_button);
         hollowSB.setOnCheckedChangeListener(this);
         hollowTV = (TextView)findViewById(R.id.whether_show_circle_text);
-        hollowTV.setTypeface(Util.GetTypeface());
+        hollowTV.setTypeface(CoCoinUtil.GetTypeface());
 
         boolean loggenOn = SettingManager.getInstance().getLoggenOn();
         if (loggenOn) {
@@ -1358,7 +1355,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private void whetherSyncSettingsFromServer() {
         new MaterialDialog.Builder(this)
                 .iconRes(R.drawable.cocoin_logo)
-                .typeface(Util.GetTypeface(), Util.GetTypeface())
+                .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                 .limitIconToDefaultSize() // limits the displayed icon size to 48dp
                 .title(R.string.sync_dialog_title)
                 .forceStacking(true)
@@ -1415,7 +1412,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                                 tip = "\n" + getString(R.string.your_current_account_book_password_is)
                                         + SettingManager.getInstance().getPassword();
                             new MaterialDialog.Builder(mContext)
-                                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                                    .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                                     .limitIconToDefaultSize() // limits the displayed icon size to 48dp
                                     .title(R.string.sync_to_local_successfully_dialog_title)
                                     .content(getString(R.string.sync_to_local_successfully_dialog_content) + tip)
@@ -1564,7 +1561,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         SuperToast.cancelAllSuperToasts();
         SuperToast superToast = new SuperToast(mContext);
 
-        superToast.setAnimations(Util.TOAST_ANIMATION);
+        superToast.setAnimations(CoCoinUtil.TOAST_ANIMATION);
         superToast.setDuration(SuperToast.Duration.LONG);
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);
@@ -1643,7 +1640,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 break;
 
         }
-        superToast.getTextView().setTypeface(Util.GetTypeface());
+        superToast.getTextView().setTypeface(CoCoinUtil.GetTypeface());
         superToast.show();
     }
 

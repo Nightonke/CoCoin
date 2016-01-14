@@ -14,7 +14,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.SettingManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.rey.material.widget.RadioButton;
 
@@ -57,7 +57,7 @@ public class PasswordStateFragment extends Fragment {
         button3 = (RadioButton)view.findViewById(R.id.button3);
         ly = (LinearLayout)view.findViewById(R.id.buttonLy);
         passwordTip = (TextView)view.findViewById(R.id.password_tip);
-        passwordTip.setTypeface(Util.GetTypeface());
+        passwordTip.setTypeface(CoCoinUtil.GetTypeface());
         switch (fragmentPosition) {
             case 0:
                 if (SettingManager.getInstance().getFirstTime()) {

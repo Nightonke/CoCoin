@@ -2,18 +2,16 @@ package com.nightonke.saver.model;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.BuildConfig;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.db.DB;
 import com.nightonke.saver.util.CoCoinToast;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -568,7 +566,7 @@ public class RecordManager {
 
     public static int getCurrentMonthExpense() {
         Calendar calendar = Calendar.getInstance();
-        Calendar left = Util.GetThisMonthLeftRange(calendar);
+        Calendar left = CoCoinUtil.GetThisMonthLeftRange(calendar);
         int monthSum = 0;
         for (int i = RECORDS.size() - 1; i >= 0; i--) {
             if (RECORDS.get(i).getCalendar().before(left)) break;
@@ -620,7 +618,7 @@ public class RecordManager {
     public static List<Record> queryRecordByRemark(String remark) {
         List<Record> list = new LinkedList<>();
         for (Record record : RECORDS) {
-            if (Util.IsStringRelation(record.getRemark(), remark)) {
+            if (CoCoinUtil.IsStringRelation(record.getRemark(), remark)) {
                 list.add(record);
             }
         }

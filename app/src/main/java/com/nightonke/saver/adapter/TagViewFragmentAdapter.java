@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.nightonke.saver.fragment.TagViewFragment;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 /**
  * Created by 伟平 on 2015/10/20.
@@ -28,7 +28,7 @@ public class TagViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return Util.GetTagName(
+        return CoCoinUtil.GetTagName(
                 RecordManager.TAGS.get(position % RecordManager.TAGS.size()).getId());
     }
 }

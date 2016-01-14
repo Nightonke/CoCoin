@@ -29,7 +29,7 @@ import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.FixedSpeedScroller;
 import com.nightonke.saver.ui.MyGridView;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
@@ -148,7 +148,7 @@ public class EditPasswordActivity extends AppCompatActivity {
         superToast = new SuperToast(this);
 
         title = (TextView)findViewById(R.id.title);
-        title.setTypeface(Util.typefaceLatoLight);
+        title.setTypeface(CoCoinUtil.typefaceLatoLight);
         if (SettingManager.getInstance().getFirstTime()) {
             title.setText(mContext.getResources().getString(R.string.app_name));
         } else {
@@ -190,7 +190,7 @@ public class EditPasswordActivity extends AppCompatActivity {
     private void buttonClickOperation(boolean longClick, int position) {
         switch (CURRENT_STATE) {
             case VERIFY_STATE:
-                if (Util.ClickButtonDelete(position)) {
+                if (CoCoinUtil.ClickButtonDelete(position)) {
                     if (longClick) {
                         ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
                         oldPassword = "";
@@ -200,12 +200,12 @@ public class EditPasswordActivity extends AppCompatActivity {
                         if (oldPassword.length() != 0)
                             oldPassword = oldPassword.substring(0, oldPassword.length() - 1);
                     }
-                } else if (Util.ClickButtonCommit(position)) {
+                } else if (CoCoinUtil.ClickButtonCommit(position)) {
 
                 } else {
                     ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
                             .set(oldPassword.length());
-                    oldPassword += Util.BUTTONS[position];
+                    oldPassword += CoCoinUtil.BUTTONS[position];
                     if (oldPassword.length() == 4) {
                         if (oldPassword.equals(SettingManager.getInstance().getPassword())) {
                             // old password correct
@@ -224,7 +224,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 }
                 break;
             case NEW_PASSWORD:
-                if (Util.ClickButtonDelete(position)) {
+                if (CoCoinUtil.ClickButtonDelete(position)) {
                     if (longClick) {
                         ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
                         newPassword = "";
@@ -234,12 +234,12 @@ public class EditPasswordActivity extends AppCompatActivity {
                         if (newPassword.length() != 0)
                             newPassword = newPassword.substring(0, newPassword.length() - 1);
                     }
-                } else if (Util.ClickButtonCommit(position)) {
+                } else if (CoCoinUtil.ClickButtonCommit(position)) {
 
                 } else {
                     ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
                             .set(newPassword.length());
-                    newPassword += Util.BUTTONS[position];
+                    newPassword += CoCoinUtil.BUTTONS[position];
                     if (newPassword.length() == 4) {
                         // finish the new password input
                         CURRENT_STATE = PASSWORD_AGAIN;
@@ -248,7 +248,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 }
                 break;
             case PASSWORD_AGAIN:
-                if (Util.ClickButtonDelete(position)) {
+                if (CoCoinUtil.ClickButtonDelete(position)) {
                     if (longClick) {
                         ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
                         againPassword = "";
@@ -258,12 +258,12 @@ public class EditPasswordActivity extends AppCompatActivity {
                         if (againPassword.length() != 0)
                             againPassword = againPassword.substring(0, againPassword.length() - 1);
                     }
-                } else if (Util.ClickButtonCommit(position)) {
+                } else if (CoCoinUtil.ClickButtonCommit(position)) {
 
                 } else {
                     ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
                             .set(againPassword.length());
-                    againPassword += Util.BUTTONS[position];
+                    againPassword += CoCoinUtil.BUTTONS[position];
                     if (againPassword.length() == 4) {
                         // if the password again is equal to the new password
                         if (againPassword.equals(newPassword)) {
@@ -314,7 +314,7 @@ public class EditPasswordActivity extends AppCompatActivity {
     private void showToast(int toastType) {
         SuperToast.cancelAllSuperToasts();
 
-        superToast.setAnimations(Util.TOAST_ANIMATION);
+        superToast.setAnimations(CoCoinUtil.TOAST_ANIMATION);
         superToast.setDuration(SuperToast.Duration.SHORT);
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);
@@ -326,7 +326,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 superToast.setText(
                         mContext.getResources().getString(R.string.toast_password_wrong));
                 superToast.setBackground(SuperToast.Background.RED);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+                superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
 
                 break;
             // password is different
@@ -335,7 +335,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 superToast.setText(
                         mContext.getResources().getString(R.string.different_password));
                 superToast.setBackground(SuperToast.Background.RED);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+                superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
 
                 break;
             // success
@@ -344,7 +344,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 superToast.setText(
                         mContext.getResources().getString(R.string.set_password_successfully));
                 superToast.setBackground(SuperToast.Background.GREEN);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+                superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
 
                 break;
             default:

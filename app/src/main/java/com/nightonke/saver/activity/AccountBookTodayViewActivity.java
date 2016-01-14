@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.color.CircleView;
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
@@ -32,7 +31,7 @@ import com.nightonke.saver.adapter.TodayViewFragmentAdapter;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.RiseNumberTextView;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -86,8 +85,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
         userName = (TextView)findViewById(R.id.user_name);
         userEmail = (TextView)findViewById(R.id.user_email);
-        userName.setTypeface(Util.typefaceLatoRegular);
-        userEmail.setTypeface(Util.typefaceLatoLight);
+        userName.setTypeface(CoCoinUtil.typefaceLatoRegular);
+        userEmail.setTypeface(CoCoinUtil.typefaceLatoLight);
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
             userName.setText(user.getUsername());
@@ -98,10 +97,10 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
 
         View view = mViewPager.getRootView();
         title = (TextView)view.findViewById(R.id.logo_white);
-        title.setTypeface(Util.typefaceLatoLight);
+        title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(SettingManager.getInstance().getAccountBookName());
 
-        mViewPager.getPagerTitleStrip().setTypeface(Util.GetTypeface(), Typeface.NORMAL);
+        mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.GetTypeface(), Typeface.NORMAL);
 
         setTitle("");
 
@@ -119,9 +118,9 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         settings = (MaterialRippleLayout)mDrawer.findViewById(R.id.settings_layout);
         help = (MaterialRippleLayout)mDrawer.findViewById(R.id.help_layout);
         monthExpenseTip = (TextView)mDrawer.findViewById(R.id.month_expense_tip);
-        monthExpenseTip.setTypeface(Util.GetTypeface());
+        monthExpenseTip.setTypeface(CoCoinUtil.GetTypeface());
         monthExpense = (RiseNumberTextView)mDrawer.findViewById(R.id.month_expense);
-        monthExpense.setTypeface(Util.typefaceLatoLight);
+        monthExpense.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         if (SettingManager.getInstance().getIsMonthLimit()) {
             monthExpenseTip.setVisibility(View.VISIBLE);
@@ -178,8 +177,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
                 return HeaderDesign.fromColorAndDrawable(
-                        Util.GetTagColor(page - 2),
-                        Util.GetTagDrawable(-3)
+                        CoCoinUtil.GetTagColor(page - 2),
+                        CoCoinUtil.GetTagDrawable(-3)
                 );
             }
         });
@@ -326,16 +325,16 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
     }
 
     private void setFonts() {
-        userName.setTypeface(Util.typefaceLatoRegular);
-        userEmail.setTypeface(Util.typefaceLatoLight);
-        ((TextView)findViewById(R.id.custom_text)).setTypeface(Util.GetTypeface());
-        ((TextView)findViewById(R.id.tag_text)).setTypeface(Util.GetTypeface());
-        ((TextView)findViewById(R.id.month_text)).setTypeface(Util.GetTypeface());
-        ((TextView)findViewById(R.id.list_text)).setTypeface(Util.GetTypeface());
-        ((TextView)findViewById(R.id.report_text)).setTypeface(Util.GetTypeface());
-        ((TextView)findViewById(R.id.sync_text)).setTypeface(Util.GetTypeface());
-        ((TextView)findViewById(R.id.settings_text)).setTypeface(Util.GetTypeface());
-        ((TextView)findViewById(R.id.help_text)).setTypeface(Util.GetTypeface());
+        userName.setTypeface(CoCoinUtil.typefaceLatoRegular);
+        userEmail.setTypeface(CoCoinUtil.typefaceLatoLight);
+        ((TextView)findViewById(R.id.custom_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.tag_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.month_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.list_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.report_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.sync_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.settings_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.help_text)).setTypeface(CoCoinUtil.GetTypeface());
     }
 
     private void setListeners() {
@@ -381,7 +380,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
             try {
-                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
                 if (b == null) {
                     // the local logo file is missed
@@ -397,13 +396,13 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
                             String url = object.get(0).getFile().getUrl();
                             Ion.with(CoCoinApplication.getAppContext()).load(url)
                                     .write(new File(CoCoinApplication.getAppContext().getFilesDir()
-                                            + Util.LOGO_NAME))
+                                            + CoCoinUtil.LOGO_NAME))
                                     .setCallback(new FutureCallback<File>() {
                                         @Override
                                         public void onCompleted(Exception e, File file) {
                                             profileImage.setImageBitmap(BitmapFactory.decodeFile(
                                                     CoCoinApplication.getAppContext().getFilesDir()
-                                                            + Util.LOGO_NAME));
+                                                            + CoCoinUtil.LOGO_NAME));
                                         }
                                     });
                         }

@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -94,17 +94,17 @@ public class DrawerMonthViewRecyclerViewAdapter
     @Override
     public void onBindViewHolder(final viewHolder holder, final int position) {
 
-        holder.month.setText(Util.GetMonthShort(months.get(position) + 1));
-        holder.month.setTypeface(Util.GetTypeface());
+        holder.month.setText(CoCoinUtil.GetMonthShort(months.get(position) + 1));
+        holder.month.setTypeface(CoCoinUtil.GetTypeface());
 
         holder.year.setText(years.get(position) + "");
-        holder.year.setTypeface(Util.GetTypeface());
+        holder.year.setTypeface(CoCoinUtil.GetTypeface());
 
-        if ("zh".equals(Util.GetLanguage()))
+        if ("zh".equals(CoCoinUtil.GetLanguage()))
             holder.money.setText("¥" + (int) (double) (expenses.get(position)));
         else
             holder.money.setText("$" + (int)(double)(expenses.get(position)));
-        holder.money.setTypeface(Util.GetTypeface());
+        holder.money.setTypeface(CoCoinUtil.GetTypeface());
 
     }
 

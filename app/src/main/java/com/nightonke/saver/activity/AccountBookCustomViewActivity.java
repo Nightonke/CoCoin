@@ -5,7 +5,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,10 +14,9 @@ import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.R;
-import com.nightonke.saver.adapter.DrawerMonthViewRecyclerViewAdapter;
 import com.nightonke.saver.adapter.CustomViewFragmentAdapter;
 import com.nightonke.saver.model.SettingManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 public class AccountBookCustomViewActivity extends AppCompatActivity {
 
@@ -41,10 +39,10 @@ public class AccountBookCustomViewActivity extends AppCompatActivity {
 
         View view = mViewPager.getRootView();
         TextView title = (TextView)view.findViewById(R.id.logo_white);
-        title.setTypeface(Util.typefaceLatoLight);
+        title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(SettingManager.getInstance().getAccountBookName());
 
-        mViewPager.getPagerTitleStrip().setTypeface(Util.GetTypeface(), Typeface.NORMAL);
+        mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.GetTypeface(), Typeface.NORMAL);
         mViewPager.getPagerTitleStrip().setVisibility(View.INVISIBLE);
 
         setTitle("");
@@ -83,8 +81,8 @@ public class AccountBookCustomViewActivity extends AppCompatActivity {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
                 return HeaderDesign.fromColorAndDrawable(
-                        Util.GetTagColor(-3),
-                        Util.GetTagDrawable(-3)
+                        CoCoinUtil.GetTagColor(-3),
+                        CoCoinUtil.GetTagDrawable(-3)
                 );
             }
         });

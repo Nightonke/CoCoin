@@ -25,7 +25,7 @@ import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
@@ -43,24 +43,11 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.TimeUnit;
 
-import lecho.lib.hellocharts.gesture.ContainerScrollType;
-import lecho.lib.hellocharts.gesture.ZoomType;
-import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
-import lecho.lib.hellocharts.listener.ViewportChangeListener;
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Column;
-import lecho.lib.hellocharts.model.ColumnChartData;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SelectedValue;
 import lecho.lib.hellocharts.model.SliceValue;
-import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.util.ChartUtils;
-import lecho.lib.hellocharts.view.ColumnChartView;
 import lecho.lib.hellocharts.view.PieChartView;
-import lecho.lib.hellocharts.view.PreviewColumnChartView;
 
 /**
  * Created by 伟平 on 2015/10/20.
@@ -145,7 +132,7 @@ public class CustomViewFragment extends Fragment {
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);
         superToast.setBackground(SuperToast.Background.RED);
-        superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+        superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
     }
 
     @Override
@@ -166,13 +153,13 @@ public class CustomViewFragment extends Fragment {
 
         fromDate = (TextView)view.findViewById(R.id.from_date);
         toDate = (TextView)view.findViewById(R.id.to_date);
-        fromDate.setTypeface(Util.GetTypeface());
-        toDate.setTypeface(Util.GetTypeface());
+        fromDate.setTypeface(CoCoinUtil.GetTypeface());
+        toDate.setTypeface(CoCoinUtil.GetTypeface());
         fromDate.setText(mContext.getResources().getString(R.string.from));
         toDate.setText(mContext.getResources().getString(R.string.to));
 
         expense = (TextView)view.findViewById(R.id.expense);
-        expense.setTypeface(Util.typefaceLatoLight);
+        expense.setTypeface(CoCoinUtil.typefaceLatoLight);
         expense.setText("0");
 
         pie = (PieChartView)view.findViewById(R.id.chart_pie);
@@ -187,7 +174,7 @@ public class CustomViewFragment extends Fragment {
         all.setVisibility(View.INVISIBLE);
 
         emptyTip = (TextView)view.findViewById(R.id.empty_tip);
-        emptyTip.setTypeface(Util.GetTypeface());
+        emptyTip.setTypeface(CoCoinUtil.GetTypeface());
 
         if (IS_EMPTY) {
             emptyTip.setVisibility(View.GONE);
@@ -289,7 +276,7 @@ public class CustomViewFragment extends Fragment {
                     YoYo.with(Techniques.Shake).duration(700).playOn(emptyTip);
                 }
                 fromDate.setText(mContext.getResources().getString(R.string.from) + " " +
-                        Util.GetMonthShort(from.get(Calendar.MONTH) + 1)
+                        CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1)
                         + " " + from.get(Calendar.DAY_OF_MONTH) + " " + from.get(Calendar.YEAR));
             } else {
                 toYear = year;
@@ -319,7 +306,7 @@ public class CustomViewFragment extends Fragment {
                     YoYo.with(Techniques.Shake).duration(700).playOn(emptyTip);
                 }
                 toDate.setText(mContext.getResources().getString(R.string.to) + " " +
-                        Util.GetMonthShort(to.get(Calendar.MONTH) + 1)
+                        CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1)
                         + " " + to.get(Calendar.DAY_OF_MONTH) + " " + to.get(Calendar.YEAR));
             }
             if (fromSet && toSet) {
@@ -404,7 +391,7 @@ public class CustomViewFragment extends Fragment {
         expense.setText(Sum + "");
         emptyTip.setVisibility(View.GONE);
 
-        TagExpanse = Util.SortTreeMapByValues(TagExpanse);
+        TagExpanse = CoCoinUtil.SortTreeMapByValues(TagExpanse);
 
         final ArrayList<SliceValue> sliceValues = new ArrayList<>();
 
@@ -412,7 +399,7 @@ public class CustomViewFragment extends Fragment {
             if (entry.getValue() >= 1) {
                 SliceValue sliceValue = new SliceValue(
                         (float)(double)entry.getValue(),
-                        Util.GetTagColor(entry.getKey()));
+                        CoCoinUtil.GetTagColor(entry.getKey()));
                 sliceValue.setLabel(String.valueOf(entry.getKey()));
                 sliceValues.add(sliceValue);
             }
@@ -470,11 +457,11 @@ public class CustomViewFragment extends Fragment {
 // set value touch listener of pie//////////////////////////////////////////////////////////////////
 
         dateShownString = mContext.getResources().getString(R.string.from) + " " +
-                Util.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
+                CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
                 from.get(Calendar.DAY_OF_MONTH) + " " +
                 from.get(Calendar.YEAR) + " " +
                 mContext.getResources().getString(R.string.to) + " " +
-                Util.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
+                CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
                 to.get(Calendar.DAY_OF_MONTH) + " " +
                 to.get(Calendar.YEAR);
 
@@ -485,30 +472,30 @@ public class CustomViewFragment extends Fragment {
                 String text;
                 tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
                 double percent = sliceValue.getValue() / Sum * 100;
-                if ("zh".equals(Util.GetLanguage())) {
-                    text = Util.GetSpendString((int) sliceValue.getValue()) +
-                            Util.GetPercentString(percent) + "\n" +
-                            "于" + Util.GetTagName(tagId);
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    text = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
+                            CoCoinUtil.GetPercentString(percent) + "\n" +
+                            "于" + CoCoinUtil.GetTagName(tagId);
                 } else {
-                    text = Util.GetSpendString((int) sliceValue.getValue())
+                    text = CoCoinUtil.GetSpendString((int) sliceValue.getValue())
                             + " (takes " + String.format("%.2f", percent) + "%)\n"
-                            + "in " + Util.GetTagName(tagId);
+                            + "in " + CoCoinUtil.GetTagName(tagId);
                 }
-                if ("zh".equals(Util.GetLanguage())) {
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
                     dialogTitle = dateShownString + "\n" +
-                            Util.GetSpendString((int) sliceValue.getValue()) + " " +
-                            "于" + Util.GetTagName(tagId);
+                            CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + " " +
+                            "于" + CoCoinUtil.GetTagName(tagId);
                 } else {
-                    dialogTitle = Util.GetSpendString((int) sliceValue.getValue()) + " " +
+                    dialogTitle = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + " " +
                             mContext.getResources().getString(R.string.from) + " " +
-                            Util.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
+                            CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
                             from.get(Calendar.DAY_OF_MONTH) + " " +
                             from.get(Calendar.YEAR) + "\n" +
                             mContext.getResources().getString(R.string.to) + " " +
-                            Util.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
+                            CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
                             to.get(Calendar.DAY_OF_MONTH) + " " +
                             to.get(Calendar.YEAR) + " " +
-                            "in " + Util.GetTagName(tagId);
+                            "in " + CoCoinUtil.GetTagName(tagId);
                 }
                 Snackbar snackbar =
                         Snackbar
@@ -517,11 +504,11 @@ public class CustomViewFragment extends Fragment {
                                 .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                                 .position(Snackbar.SnackbarPosition.BOTTOM)
                                 .margin(15, 15)
-                                .backgroundDrawable(Util.GetSnackBarBackground(-3))
+                                .backgroundDrawable(CoCoinUtil.GetSnackBarBackground(-3))
                                 .text(text)
-                                .textTypeface(Util.GetTypeface())
+                                .textTypeface(CoCoinUtil.GetTypeface())
                                 .textColor(Color.WHITE)
-                                .actionLabelTypeface(Util.GetTypeface())
+                                .actionLabelTypeface(CoCoinUtil.GetTypeface())
                                 .actionLabel(mContext.getResources()
                                         .getString(R.string.check))
                                 .actionColor(Color.WHITE)
@@ -547,21 +534,21 @@ public class CustomViewFragment extends Fragment {
             public void onClick(View v) {
                 List<Record> data = new LinkedList<Record>();
                 for (int i = start; i >= end; i--) data.add(RecordManager.RECORDS.get(i));
-                if ("zh".equals(Util.GetLanguage())) {
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
                     dialogTitle = dateShownString + "\n" +
-                            Util.GetSpendString(Sum) +
-                            "于" + Util.GetTagName(tagId);
+                            CoCoinUtil.GetSpendString(Sum) +
+                            "于" + CoCoinUtil.GetTagName(tagId);
                 } else {
-                    dialogTitle = Util.GetSpendString(Sum) + " "
+                    dialogTitle = CoCoinUtil.GetSpendString(Sum) + " "
                             + mContext.getResources().getString(R.string.from) + " " +
-                            Util.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
+                            CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
                             from.get(Calendar.DAY_OF_MONTH) + " " +
                             from.get(Calendar.YEAR) + "\n" +
                             mContext.getResources().getString(R.string.to) + " " +
-                            Util.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
+                            CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
                             to.get(Calendar.DAY_OF_MONTH) + " " +
                             to.get(Calendar.YEAR) + " " +
-                            "in " + Util.GetTagName(tagId);
+                            "in " + CoCoinUtil.GetTagName(tagId);
                 }
                 ((FragmentActivity)mContext).getSupportFragmentManager()
                         .beginTransaction()

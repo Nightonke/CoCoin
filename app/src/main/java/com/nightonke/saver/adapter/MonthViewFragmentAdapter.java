@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.nightonke.saver.fragment.MonthViewFragment;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -71,6 +71,6 @@ public class MonthViewFragmentAdapter extends FragmentStatePagerAdapter {
         if (IS_EMPTY) return "";
         int nowMonth = (startMonth + (monthNumber - position - 1)) % 12;
         int nowYear = startYear + (startMonth + (monthNumber - position - 1)) / 12;
-        return Util.GetMonthShort(nowMonth + 1) + " " + nowYear;
+        return CoCoinUtil.GetMonthShort(nowMonth + 1) + " " + nowYear;
     }
 }

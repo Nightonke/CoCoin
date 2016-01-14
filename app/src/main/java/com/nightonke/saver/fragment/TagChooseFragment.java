@@ -12,11 +12,8 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import com.nightonke.saver.R;
-import com.nightonke.saver.activity.MainActivity;
 import com.nightonke.saver.adapter.TagChooseGridViewAdapter;
-import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.ui.MyGridView;
-import com.nightonke.saver.util.Util;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 
 /**

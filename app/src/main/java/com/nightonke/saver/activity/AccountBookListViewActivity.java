@@ -43,7 +43,7 @@ import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
@@ -105,8 +105,8 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
         userName = (TextView)findViewById(R.id.user_name);
         userEmail = (TextView)findViewById(R.id.user_email);
-        userName.setTypeface(Util.typefaceLatoRegular);
-        userEmail.setTypeface(Util.typefaceLatoLight);
+        userName.setTypeface(CoCoinUtil.typefaceLatoRegular);
+        userEmail.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
@@ -134,7 +134,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         } else{
             // do something for phones running an SDK before lollipop
             View statusBarView = (View)findViewById(R.id.status_bar_view);
-            statusBarView.getLayoutParams().height = Util.getStatusBarHeight();
+            statusBarView.getLayoutParams().height = CoCoinUtil.getStatusBarHeight();
         }
 
         if (toolbar != null) {
@@ -169,7 +169,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                 //Do some magic
                 // Todo
                 if (newText.length() == 1) {
-                    if (Util.isNumber(newText.charAt(0))) {
+                    if (CoCoinUtil.isNumber(newText.charAt(0))) {
 
                     }
                 } else if (newText.length() == 2) {
@@ -196,7 +196,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         });
 
         emptyTip = (TextView)findViewById(R.id.empty_tip);
-        emptyTip.setTypeface(Util.GetTypeface());
+        emptyTip.setTypeface(CoCoinUtil.GetTypeface());
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false);
@@ -268,7 +268,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         recyclerView.setOnScrollListener(
                 verticalRecyclerViewFastScroller.getOnScrollListener());
 
-        Util.backupRecord = null;
+        CoCoinUtil.backupRecord = null;
 
         if (RecordManager.RECORDS.size() == 0) {
             emptyTip.setVisibility(View.VISIBLE);
@@ -301,19 +301,19 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                         .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
                         .position(Snackbar.SnackbarPosition.BOTTOM)
                         .margin(15, 15)
-                        .backgroundDrawable(Util.GetSnackBarBackground(-3))
+                        .backgroundDrawable(CoCoinUtil.GetSnackBarBackground(-3))
                         .text(mContext.getResources().getString(R.string.deleting))
-                        .textTypeface(Util.GetTypeface())
+                        .textTypeface(CoCoinUtil.GetTypeface())
                         .textColor(Color.WHITE)
-                        .actionLabelTypeface(Util.GetTypeface())
+                        .actionLabelTypeface(CoCoinUtil.GetTypeface())
                         .actionLabel(mContext.getResources()
                                 .getString(R.string.undo))
                         .actionColor(Color.WHITE)
                         .actionListener(new ActionClickListener() {
                             @Override
                             public void onActionClicked(Snackbar snackbar) {
-                                RecordManager.RECORDS.add(lastPosition, Util.backupRecord);
-                                Util.backupRecord = null;
+                                RecordManager.RECORDS.add(lastPosition, CoCoinUtil.backupRecord);
+                                CoCoinUtil.backupRecord = null;
                                 LinearLayoutManager linearLayoutManager
                                         = (LinearLayoutManager) recyclerView.getLayoutManager();
                                 int firstVisiblePosition = linearLayoutManager
@@ -355,26 +355,26 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
                             @Override
                             public void onDismiss(Snackbar snackbar) {
-                                if (Util.backupRecord != null) {
-                                    RecordManager.deleteRecord(Util.backupRecord, false);
+                                if (CoCoinUtil.backupRecord != null) {
+                                    RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
                                 }
-                                Util.backupRecord = null;
+                                CoCoinUtil.backupRecord = null;
                             }
 
                             @Override
                             public void onDismissByReplace(Snackbar snackbar) {
-                                if (Util.backupRecord != null) {
-                                    RecordManager.deleteRecord(Util.backupRecord, false);
+                                if (CoCoinUtil.backupRecord != null) {
+                                    RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
                                 }
-                                Util.backupRecord = null;
+                                CoCoinUtil.backupRecord = null;
                             }
 
                             @Override
                             public void onDismissed(Snackbar snackbar) {
-                                if (Util.backupRecord != null) {
-                                    RecordManager.deleteRecord(Util.backupRecord, false);
+                                if (CoCoinUtil.backupRecord != null) {
+                                    RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
                                 }
-                                Util.backupRecord = null;
+                                CoCoinUtil.backupRecord = null;
                             }
                         });
         SnackbarManager.show(snackbar);
@@ -456,10 +456,10 @@ public class AccountBookListViewActivity extends AppCompatActivity {
             SettingManager.getInstance().setTodayViewMonthExpenseShouldChange(true);
         }
 
-        if (Util.backupRecord != null) {
-            RecordManager.deleteRecord(Util.backupRecord, false);
+        if (CoCoinUtil.backupRecord != null) {
+            RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
         }
-        Util.backupRecord = null;
+        CoCoinUtil.backupRecord = null;
 
         super.finish();
     }
@@ -498,7 +498,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
             try {
-                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
                 if (b == null) {
                     // the local logo file is missed
@@ -514,13 +514,13 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                             String url = object.get(0).getFile().getUrl();
                             Ion.with(CoCoinApplication.getAppContext()).load(url)
                                     .write(new File(CoCoinApplication.getAppContext().getFilesDir()
-                                            + Util.LOGO_NAME))
+                                            + CoCoinUtil.LOGO_NAME))
                                     .setCallback(new FutureCallback<File>() {
                                         @Override
                                         public void onCompleted(Exception e, File file) {
                                             profileImage.setImageBitmap(BitmapFactory.decodeFile(
                                                     CoCoinApplication.getAppContext().getFilesDir()
-                                                            + Util.LOGO_NAME));
+                                                            + CoCoinUtil.LOGO_NAME));
                                         }
                                     });
                         }

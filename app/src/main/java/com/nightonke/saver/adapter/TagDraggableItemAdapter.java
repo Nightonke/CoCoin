@@ -15,7 +15,7 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractDraggableItemView
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.Tag;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.ArrayList;
 
@@ -103,9 +103,9 @@ public class TagDraggableItemAdapter
         // set background resource (target view ID: container)
         final int dragState = holder.getDragStateFlags();
 
-        holder.tagImage.setImageResource(Util.GetTagIcon(tags.get(position).getId()));
-        holder.tagName.setText(Util.GetTagName(tags.get(position).getId()));
-        holder.tagName.setTypeface(Util.typefaceLatoLight);
+        holder.tagImage.setImageResource(CoCoinUtil.GetTagIcon(tags.get(position).getId()));
+        holder.tagName.setText(CoCoinUtil.GetTagName(tags.get(position).getId()));
+        holder.tagName.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         if (((dragState & Draggable.STATE_FLAG_IS_UPDATED) != 0)) {
             int bgResId;
@@ -114,7 +114,7 @@ public class TagDraggableItemAdapter
                 bgResId = R.drawable.bg_item_dragging_active_state;
 
                 // need to clear drawable state here to get correct appearance of the dragging item.
-                Util.clearState(holder.mContainer.getForeground());
+                CoCoinUtil.clearState(holder.mContainer.getForeground());
             } else if ((dragState & Draggable.STATE_FLAG_DRAGGING) != 0) {
                 bgResId = R.drawable.bg_item_normal_state;
             } else {

@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.RecordCheckDialogRecyclerViewAdapter;
 import com.nightonke.saver.model.Record;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class RecordCheckDialogFragment extends DialogFragment {
         TextView title = new TextView(mContext);
         title.setHeight(120);
         title.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
-        title.setTypeface(Util.typefaceLatoLight);
+        title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(this.title);
         alert.setCustomTitle(title);
 
@@ -82,7 +82,7 @@ public class RecordCheckDialogFragment extends DialogFragment {
             @Override
             public void onShow(DialogInterface dialog) {
                 Button btnPositive = alert.getButton(Dialog.BUTTON_POSITIVE);
-                btnPositive.setTypeface(Util.typefaceLatoLight);
+                btnPositive.setTypeface(CoCoinUtil.typefaceLatoLight);
             }
         });
 

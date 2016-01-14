@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,17 +43,17 @@ public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<R
     @Override
     public void onBindViewHolder(viewHolder holder, int position) {
         holder.imageView.setImageResource(
-                Util.GetTagIcon(records.get(position).getTag()));
+                CoCoinUtil.GetTagIcon(records.get(position).getTag()));
         holder.date.setText(records.get(position).getCalendarString());
-        holder.date.setTypeface(Util.typefaceLatoLight);
-        holder.money.setTypeface(Util.typefaceLatoLight);
+        holder.date.setTypeface(CoCoinUtil.typefaceLatoLight);
+        holder.money.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.money.setText(String.valueOf((int) records.get(position).getMoney()));
         holder.money.setTextColor(
-                Util.GetTagColorResource(RecordManager.TAGS.get(records.get(position).getTag()).getId()));
+                CoCoinUtil.GetTagColorResource(RecordManager.TAGS.get(records.get(position).getTag()).getId()));
         holder.index.setText((position + 1) + "");
-        holder.index.setTypeface(Util.typefaceLatoLight);
+        holder.index.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.remark.setText(records.get(position).getRemark());
-        holder.remark.setTypeface(Util.typefaceLatoLight);
+        holder.remark.setTypeface(CoCoinUtil.typefaceLatoLight);
 
     }
 

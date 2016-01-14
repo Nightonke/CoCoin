@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.nightonke.saver.fragment.TodayViewFragment;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 /**
  * Created by 伟平 on 2015/10/20.
@@ -30,7 +30,7 @@ public class TodayViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return Util.GetTodayViewTitle(position % TODAY_VIEW_FRAGMENT_NUMBER);
+        return CoCoinUtil.GetTodayViewTitle(position % TODAY_VIEW_FRAGMENT_NUMBER);
     }
 
     @Override

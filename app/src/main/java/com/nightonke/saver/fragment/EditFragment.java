@@ -9,18 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.adapter.TagChooseGridViewAdapter;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
-import com.nightonke.saver.ui.MyGridView;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
@@ -90,17 +86,17 @@ public class EditFragment extends Fragment {
         editView = (MaterialEditText)mView.findViewById(R.id.edit_view_fuck);
         tagImage = (ImageView)mView.findViewById(R.id.tag_image);
         tagName = (TextView)mView.findViewById(R.id.tag_name);
-        tagName.setTypeface(Util.typefaceLatoLight);
+        tagName.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         if (fragmentPosition == 0) {
-            editView.setTypeface(Util.typefaceLatoHairline);
+            editView.setTypeface(CoCoinUtil.typefaceLatoHairline);
             editView.setText("0");
             editView.requestFocus();
             editView.setHelperText(" ");
 
             remarkEditView.setVisibility(View.GONE);
         } else {
-            remarkEditView.setTypeface(Util.GetTypeface());
+            remarkEditView.setTypeface(CoCoinUtil.GetTypeface());
 
             editView.setVisibility(View.GONE);
         }
@@ -129,8 +125,8 @@ public class EditFragment extends Fragment {
 
     public void setTag(int p) {
         tagId = RecordManager.TAGS.get(p).getId();
-        tagName.setText(Util.GetTagName(RecordManager.TAGS.get(p).getId()));
-        tagImage.setImageResource(Util.GetTagIcon(RecordManager.TAGS.get(p).getId()));
+        tagName.setText(CoCoinUtil.GetTagName(RecordManager.TAGS.get(p).getId()));
+        tagImage.setImageResource(CoCoinUtil.GetTagIcon(RecordManager.TAGS.get(p).getId()));
     }
 
     public String getNumberText() {
@@ -173,12 +169,12 @@ public class EditFragment extends Fragment {
             remarkEditView.setPrimaryColor(SettingManager.getInstance().getRemindColor());
             remarkEditView.setHelperTextColor(SettingManager.getInstance().getRemindColor());
         } else {
-            editView.setTextColor(Util.MY_BLUE);
-            editView.setPrimaryColor(Util.MY_BLUE);
-            editView.setHelperTextColor(Util.MY_BLUE);
-            remarkEditView.setTextColor(Util.MY_BLUE);
-            remarkEditView.setPrimaryColor(Util.MY_BLUE);
-            remarkEditView.setHelperTextColor(Util.MY_BLUE);
+            editView.setTextColor(CoCoinUtil.MY_BLUE);
+            editView.setPrimaryColor(CoCoinUtil.MY_BLUE);
+            editView.setHelperTextColor(CoCoinUtil.MY_BLUE);
+            remarkEditView.setTextColor(CoCoinUtil.MY_BLUE);
+            remarkEditView.setPrimaryColor(CoCoinUtil.MY_BLUE);
+            remarkEditView.setHelperTextColor(CoCoinUtil.MY_BLUE);
         }
     }
 

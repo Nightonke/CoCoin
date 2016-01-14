@@ -23,7 +23,7 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemView
 import com.h6ah4i.android.widget.advrecyclerview.utils.RecyclerViewAdapterUtils;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.HashMap;
 
@@ -137,17 +137,17 @@ public class MySwipeableItemAdapter
         // set text
         int tPosition = RecordManager.RECORDS.size() - 1 - position;
         holder.tagImage.setImageResource(
-                Util.GetTagIcon(RecordManager.RECORDS.get(tPosition).getTag()));
+                CoCoinUtil.GetTagIcon(RecordManager.RECORDS.get(tPosition).getTag()));
         holder.date.setText(RecordManager.RECORDS.get(tPosition).getCalendarString());
         holder.money.setText(String.valueOf((int) RecordManager.RECORDS.get(tPosition).getMoney()));
-        holder.date.setTypeface(Util.typefaceLatoLight);
-        holder.money.setTypeface(Util.typefaceLatoLight);
+        holder.date.setTypeface(CoCoinUtil.typefaceLatoLight);
+        holder.money.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.money.setTextColor(
-                Util.GetTagColorResource(RecordManager.RECORDS.get(tPosition).getTag()));
+                CoCoinUtil.GetTagColorResource(RecordManager.RECORDS.get(tPosition).getTag()));
         holder.index.setText((position + 1) + "");
-        holder.index.setTypeface(Util.typefaceLatoLight);
+        holder.index.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.remark.setText(RecordManager.RECORDS.get(tPosition).getRemark());
-        holder.remark.setTypeface(Util.typefaceLatoLight);
+        holder.remark.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         // set background resource (target view ID: container)
         final int swipeState = holder.getSwipeStateFlags();
@@ -281,11 +281,11 @@ public class MySwipeableItemAdapter
         @Override
         protected void onPerformAction() {
             super.onPerformAction();
-            if (Util.backupRecord != null) {
-                RecordManager.deleteRecord(Util.backupRecord, false);
+            if (CoCoinUtil.backupRecord != null) {
+                RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
             }
-            Util.backupRecord = null;
-            Util.backupRecord
+            CoCoinUtil.backupRecord = null;
+            CoCoinUtil.backupRecord
                     = RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - mPosition);
             RecordManager.RECORDS.remove(RecordManager.RECORDS.size() - 1 - mPosition);
             mAdapter.notifyItemRemoved(mPosition);

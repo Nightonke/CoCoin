@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 /**
  * Created by 伟平 on 2015/10/16.
@@ -59,11 +59,11 @@ public class TagChooseGridViewAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.tagName.setText(Util.GetTagName(RecordManager.TAGS.
+        holder.tagName.setText(CoCoinUtil.GetTagName(RecordManager.TAGS.
                 get(fragmentPosition * 8 + position + 2).getId()));
-        holder.tagName.setTypeface(Util.typefaceLatoLight);
+        holder.tagName.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.tagImage.setImageResource(
-                Util.GetTagIcon(RecordManager.TAGS.
+                CoCoinUtil.GetTagIcon(RecordManager.TAGS.
                         get(fragmentPosition * 8 + position + 2).getId()));
 
         return convertView;

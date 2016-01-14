@@ -10,9 +10,8 @@ import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
 import com.nightonke.saver.R;
-import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import net.steamcrafted.materialiconlib.MaterialDrawableBuilder;
 import net.steamcrafted.materialiconlib.MaterialIconView;
@@ -33,7 +32,7 @@ public class PasswordChangeButtonGridViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return Util.BUTTONS.length;
+        return CoCoinUtil.BUTTONS.length;
     }
 
     @Override
@@ -62,32 +61,32 @@ public class PasswordChangeButtonGridViewAdapter extends BaseAdapter {
         }
 
         if (position == 11) {
-            holder.tv.setTypeface(Util.typefaceLatoHairline);
+            holder.tv.setTypeface(CoCoinUtil.typefaceLatoHairline);
             holder.tv.setVisibility(View.INVISIBLE);
             holder.iv.setIcon(MaterialDrawableBuilder.IconValue.CHECK);
             holder.ml.setRippleAlpha(50);
         } else if (position == 9) {
             holder.iv.setIcon(MaterialDrawableBuilder.IconValue.ERASER);
-            holder.tv.setTypeface(Util.typefaceLatoHairline);
+            holder.tv.setTypeface(CoCoinUtil.typefaceLatoHairline);
             holder.tv.setVisibility(View.INVISIBLE);
             holder.ml.setRippleAlpha(50);
         } else {
             holder.iv.setVisibility(View.INVISIBLE);
-            holder.tv.setTypeface(Util.typefaceLatoHairline);
-            holder.tv.setText(Util.BUTTONS[position]);
+            holder.tv.setTypeface(CoCoinUtil.typefaceLatoHairline);
+            holder.tv.setText(CoCoinUtil.BUTTONS[position]);
             holder.ml.setRippleDelayClick(false);
         }
 
         holder.ml.setRippleDuration(300);
         holder.fl.setBackgroundColor(
-                Util.getAlphaColor(SettingManager.getInstance().getRemindColor()));
+                CoCoinUtil.getAlphaColor(SettingManager.getInstance().getRemindColor()));
         holder.ml.setRippleColor(SettingManager.getInstance().getRemindColor());
         holder.iv.setColor(SettingManager.getInstance().getRemindColor());
         holder.tv.setTextColor(SettingManager.getInstance().getRemindColor());
-        holder.fl.setBackgroundColor(Util.getAlphaColor(Util.MY_BLUE));
-        holder.ml.setRippleColor(Util.MY_BLUE);
-        holder.iv.setColor(Util.MY_BLUE);
-        holder.tv.setTextColor(Util.MY_BLUE);
+        holder.fl.setBackgroundColor(CoCoinUtil.getAlphaColor(CoCoinUtil.MY_BLUE));
+        holder.ml.setRippleColor(CoCoinUtil.MY_BLUE);
+        holder.iv.setColor(CoCoinUtil.MY_BLUE);
+        holder.tv.setTextColor(CoCoinUtil.MY_BLUE);
 
 
         return convertView;

@@ -40,7 +40,6 @@ dependencies {
 
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.jakewharton:butterknife:6.1.0'
-    compile project(':GuillotineMenu-Android')
 
     compile ('com.github.florent37:materialviewpager:1.1.2@aar'){
         transitive = true

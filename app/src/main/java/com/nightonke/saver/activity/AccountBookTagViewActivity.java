@@ -33,7 +33,7 @@ import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.adapter.TagViewFragmentAdapter;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -76,10 +76,10 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
 
         View view = mViewPager.getRootView();
         TextView title = (TextView)view.findViewById(R.id.logo_white);
-        title.setTypeface(Util.typefaceLatoLight);
+        title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(SettingManager.getInstance().getAccountBookName());
 
-        mViewPager.getPagerTitleStrip().setTypeface(Util.typefaceLatoLight, Typeface.NORMAL);
+        mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.typefaceLatoLight, Typeface.NORMAL);
 
         setTitle("");
 
@@ -88,8 +88,8 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
 
         userName = (TextView)findViewById(R.id.user_name);
         userEmail = (TextView)findViewById(R.id.user_email);
-        userName.setTypeface(Util.typefaceLatoRegular);
-        userEmail.setTypeface(Util.typefaceLatoLight);
+        userName.setTypeface(CoCoinUtil.typefaceLatoRegular);
+        userEmail.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
@@ -134,8 +134,8 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
                 @Override
                 public HeaderDesign getHeaderDesign(int page) {
                     return HeaderDesign.fromColorAndDrawable(
-                            Util.GetTagColor(RecordManager.TAGS.get(page).getId()),
-                            Util.GetTagDrawable(RecordManager.TAGS.get(page).getId()));
+                            CoCoinUtil.GetTagColor(RecordManager.TAGS.get(page).getId()),
+                            CoCoinUtil.GetTagDrawable(RecordManager.TAGS.get(page).getId()));
                 }
             });
         } else {
@@ -143,8 +143,8 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
                 @Override
                 public HeaderDesign getHeaderDesign(int page) {
                     return HeaderDesign.fromColorAndDrawable(
-                            Util.GetTagColor(RecordManager.TAGS.get(page).getId()),
-                            Util.GetTagDrawable(-3));
+                            CoCoinUtil.GetTagColor(RecordManager.TAGS.get(page).getId()),
+                            CoCoinUtil.GetTagDrawable(-3));
                 }
             });
         }
@@ -211,7 +211,7 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
             try {
-                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
                 if (b == null) {
                     // the local logo file is missed
@@ -227,13 +227,13 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
                             String url = object.get(0).getFile().getUrl();
                             Ion.with(CoCoinApplication.getAppContext()).load(url)
                                     .write(new File(CoCoinApplication.getAppContext().getFilesDir()
-                                            + Util.LOGO_NAME))
+                                            + CoCoinUtil.LOGO_NAME))
                                     .setCallback(new FutureCallback<File>() {
                                         @Override
                                         public void onCompleted(Exception e, File file) {
                                             profileImage.setImageBitmap(BitmapFactory.decodeFile(
                                                     CoCoinApplication.getAppContext().getFilesDir()
-                                                            + Util.LOGO_NAME));
+                                                            + CoCoinUtil.LOGO_NAME));
                                         }
                                     });
                         }

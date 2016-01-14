@@ -27,7 +27,7 @@ import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.ui.CoCoinViewPager;
 import com.nightonke.saver.ui.MyGridView;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
@@ -167,7 +167,7 @@ public class EditRecordActivity extends AppCompatActivity
                     }
                 });
 
-        Util.editRecordPosition = RecordManager.RECORDS.size() - 1 - position;
+        CoCoinUtil.editRecordPosition = RecordManager.RECORDS.size() - 1 - position;
 
         back = (MaterialIconView)findViewById(R.id.back);
         back.setOnClickListener(new View.OnClickListener() {
@@ -192,7 +192,7 @@ public class EditRecordActivity extends AppCompatActivity
         intent.putExtra("POSITION", position);
         setResult(RESULT_OK, intent);
 
-        Util.editRecordPosition = -1;
+        CoCoinUtil.editRecordPosition = -1;
 
         super.finish();
     }
@@ -219,20 +219,20 @@ public class EditRecordActivity extends AppCompatActivity
             return;
         }
         if (((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")
-                && !Util.ClickButtonCommit(position)) {
-            if (Util.ClickButtonDelete(position)
-                    || Util.ClickButtonIsZero(position)) {
+                && !CoCoinUtil.ClickButtonCommit(position)) {
+            if (CoCoinUtil.ClickButtonDelete(position)
+                    || CoCoinUtil.ClickButtonIsZero(position)) {
 
             } else {
-                ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText(Util.BUTTONS[position]);
+                ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText(CoCoinUtil.BUTTONS[position]);
             }
         } else {
-            if (Util.ClickButtonDelete(position)) {
+            if (CoCoinUtil.ClickButtonDelete(position)) {
                 if (longClick) {
                     ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText("0");
                     ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(" ");
                     ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(
-                            Util.FLOATINGLABELS[((EditRecordFragment) editPagerAdapter.getPage(0))
+                            CoCoinUtil.FLOATINGLABELS[((EditRecordFragment) editPagerAdapter.getPage(0))
                                     .getNumberText().toString().length()]);
                 } else {
                     ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText(
@@ -244,20 +244,20 @@ public class EditRecordActivity extends AppCompatActivity
                         ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(" ");
                     }
                 }
-            } else if (Util.ClickButtonCommit(position)) {
+            } else if (CoCoinUtil.ClickButtonCommit(position)) {
                 commit();
             } else {
                 if (FIRST_EDIT) {
-                    ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText(Util.BUTTONS[position]);
+                    ((EditRecordFragment) editPagerAdapter.getPage(0)).setNumberText(CoCoinUtil.BUTTONS[position]);
                     FIRST_EDIT = false;
                 } else {
                     ((EditRecordFragment) editPagerAdapter.getPage(0))
                             .setNumberText(((EditRecordFragment) editPagerAdapter.getPage(0))
-                                    .getNumberText().toString() + Util.BUTTONS[position]);
+                                    .getNumberText().toString() + CoCoinUtil.BUTTONS[position]);
                 }
             }
         }
-        ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(Util.FLOATINGLABELS[
+        ((EditRecordFragment) editPagerAdapter.getPage(0)).setHelpText(CoCoinUtil.FLOATINGLABELS[
                 ((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString().length()]);
     }
 
@@ -288,7 +288,7 @@ public class EditRecordActivity extends AppCompatActivity
         SuperToast.cancelAllSuperToasts();
         SuperActivityToast.cancelAllSuperActivityToasts();
 
-        superToast.setAnimations(Util.TOAST_ANIMATION);
+        superToast.setAnimations(CoCoinUtil.TOAST_ANIMATION);
         superToast.setDuration(SuperToast.Duration.SHORT);
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);
@@ -298,7 +298,7 @@ public class EditRecordActivity extends AppCompatActivity
 
                 superToast.setText(mContext.getResources().getString(R.string.toast_no_money));
                 superToast.setBackground(SuperToast.Background.BLUE);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+                superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
 
                 break;
             case SAVE_SUCCESSFULLY_TOAST:
@@ -306,14 +306,14 @@ public class EditRecordActivity extends AppCompatActivity
                 superToast.setText(
                         mContext.getResources().getString(R.string.toast_save_successfully));
                 superToast.setBackground(SuperToast.Background.GREEN);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+                superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
 
                 break;
             case SAVE_FAILED_TOAST:
 
                 superToast.setText(mContext.getResources().getString(R.string.toast_save_failed));
                 superToast.setBackground(SuperToast.Background.RED);
-                superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+                superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
 
                 break;
             default:

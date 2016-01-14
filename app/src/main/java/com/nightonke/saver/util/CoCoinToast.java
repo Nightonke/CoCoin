@@ -21,26 +21,26 @@ public class CoCoinToast {
     public void showToast(int text, int color) {
         SuperToast.cancelAllSuperToasts();
         SuperToast superToast = new SuperToast(CoCoinApplication.getAppContext());
-        superToast.setAnimations(Util.TOAST_ANIMATION);
+        superToast.setAnimations(CoCoinUtil.TOAST_ANIMATION);
         superToast.setDuration(SuperToast.Duration.SHORT);
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);
         superToast.setText(CoCoinApplication.getAppContext().getResources().getString(text));
         superToast.setBackground(color);
-        superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+        superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
         superToast.show();
     }
 
     public void showToast(String text, int color) {
         SuperToast.cancelAllSuperToasts();
         SuperToast superToast = new SuperToast(CoCoinApplication.getAppContext());
-        superToast.setAnimations(Util.TOAST_ANIMATION);
+        superToast.setAnimations(CoCoinUtil.TOAST_ANIMATION);
         superToast.setDuration(SuperToast.Duration.SHORT);
         superToast.setTextColor(Color.parseColor("#ffffff"));
         superToast.setTextSize(SuperToast.TextSize.SMALL);
         superToast.setText(text);
         superToast.setBackground(color);
-        superToast.getTextView().setTypeface(Util.typefaceLatoLight);
+        superToast.getTextView().setTypeface(CoCoinUtil.typefaceLatoLight);
         superToast.show();
     }
 }

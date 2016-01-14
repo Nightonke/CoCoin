@@ -33,7 +33,7 @@ import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -74,8 +74,8 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
 
         userName = (TextView)findViewById(R.id.user_name);
         userEmail = (TextView)findViewById(R.id.user_email);
-        userName.setTypeface(Util.typefaceLatoRegular);
-        userEmail.setTypeface(Util.typefaceLatoLight);
+        userName.setTypeface(CoCoinUtil.typefaceLatoRegular);
+        userEmail.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
@@ -87,10 +87,10 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
 
         View view = mViewPager.getRootView();
         TextView title = (TextView)view.findViewById(R.id.logo_white);
-        title.setTypeface(Util.typefaceLatoLight);
+        title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(SettingManager.getInstance().getAccountBookName());
 
-        mViewPager.getPagerTitleStrip().setTypeface(Util.GetTypeface(), Typeface.NORMAL);
+        mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.GetTypeface(), Typeface.NORMAL);
 
         setTitle("");
 
@@ -135,8 +135,8 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
             @Override
             public HeaderDesign getHeaderDesign(int page) {
                 return HeaderDesign.fromColorAndDrawable(
-                        Util.GetTagColor(RecordManager.TAGS.get(page).getId()),
-                        Util.GetTagDrawable(-3)
+                        CoCoinUtil.GetTagColor(RecordManager.TAGS.get(page).getId()),
+                        CoCoinUtil.GetTagDrawable(-3)
                 );
             }
         });
@@ -204,7 +204,7 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {
             try {
-                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + Util.LOGO_NAME);
+                File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
                 Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
                 if (b == null) {
                     // the local logo file is missed
@@ -220,13 +220,13 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
                             String url = object.get(0).getFile().getUrl();
                             Ion.with(CoCoinApplication.getAppContext()).load(url)
                                     .write(new File(CoCoinApplication.getAppContext().getFilesDir()
-                                            + Util.LOGO_NAME))
+                                            + CoCoinUtil.LOGO_NAME))
                                     .setCallback(new FutureCallback<File>() {
                                         @Override
                                         public void onCompleted(Exception e, File file) {
                                             profileImage.setImageBitmap(BitmapFactory.decodeFile(
                                                     CoCoinApplication.getAppContext().getFilesDir()
-                                                            + Util.LOGO_NAME));
+                                                            + CoCoinUtil.LOGO_NAME));
                                         }
                                     });
                         }

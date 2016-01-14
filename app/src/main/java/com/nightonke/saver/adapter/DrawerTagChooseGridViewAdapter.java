@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 
 /**
  * Created by 伟平 on 2015/11/10.
@@ -53,9 +53,9 @@ public class DrawerTagChooseGridViewAdapter extends BaseAdapter {
         }
 
         holder.tagImage.setImageResource(
-                Util.GetTagIcon(RecordManager.TAGS.get(position).getId()));
-        holder.tagName.setText(Util.GetTagName(RecordManager.TAGS.get(position).getId()));
-        holder.tagName.setTypeface(Util.GetTypeface());
+                CoCoinUtil.GetTagIcon(RecordManager.TAGS.get(position).getId()));
+        holder.tagName.setText(CoCoinUtil.GetTagName(RecordManager.TAGS.get(position).getId()));
+        holder.tagName.setTypeface(CoCoinUtil.GetTypeface());
 
         return convertView;
     }

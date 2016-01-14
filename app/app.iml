@@ -165,6 +165,5 @@
     <orderEntry type="library" exported="" name="utils-v4-1.4.2" level="project" />
     <orderEntry type="library" exported="" name="bmob-sdk-3.4.5" level="project" />
     <orderEntry type="library" exported="" name="crashreport-1.2.8" level="project" />
-    <orderEntry type="module" module-name="GuillotineMenu-Android" exported="" />
   </component>
 </module>

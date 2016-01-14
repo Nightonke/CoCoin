@@ -2,7 +2,6 @@ package com.nightonke.saver.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -22,49 +21,44 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.balysv.materialmenu.MaterialMenuDrawable;
 import com.balysv.materialmenu.MaterialMenuView;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
-import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.johnpersano.supertoasts.SuperActivityToast;
+import com.github.johnpersano.supertoasts.SuperToast;
+import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
 import com.nightonke.saver.fragment.EditFragment;
-import com.nightonke.saver.model.SettingManager;
-import com.nightonke.saver.model.User;
-import com.nightonke.saver.ui.DummyOperation;
-import com.nightonke.saver.ui.MyGridView;
-import com.nightonke.saver.R;
+import com.nightonke.saver.fragment.TagChooseFragment;
 import com.nightonke.saver.model.Record;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.fragment.TagChooseFragment;
+import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.CoCoinViewPager;
+import com.nightonke.saver.ui.DummyOperation;
+import com.nightonke.saver.ui.MyGridView;
+import com.nightonke.saver.ui.guillotine.animation.GuillotineAnimation;
+import com.nightonke.saver.ui.guillotine.interfaces.GuillotineListener;
 import com.nightonke.saver.util.CoCoinToast;
-import com.nightonke.saver.util.Util;
+import com.nightonke.saver.util.CoCoinUtil;
 import com.ogaclejapan.smarttablayout.SmartTabLayout;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
 import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.rey.material.widget.RadioButton;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.yalantis.guillotine.animation.GuillotineAnimation;
-import com.yalantis.guillotine.interfaces.GuillotineListener;
 
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
@@ -183,7 +177,7 @@ public class MainActivity extends AppCompatActivity
 
 //        Bmob.initialize(CoCoinApplication.getAppContext(), "0f0f9d45a39068bd6eea8896af1facf3");
 
-        Util.init(this.getApplicationContext());
+        CoCoinUtil.init(this.getApplicationContext());
 
         RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
 
@@ -202,7 +196,7 @@ public class MainActivity extends AppCompatActivity
         guillotineBackground = findViewById(R.id.guillotine_background);
 
         toolBarTitle = (TextView)findViewById(R.id.guillotine_title);
-        toolBarTitle.setTypeface(Util.typefaceLatoLight);
+        toolBarTitle.setTypeface(CoCoinUtil.typefaceLatoLight);
         toolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
 // edit viewpager///////////////////////////////////////////////////////////////////////////////////
@@ -301,7 +295,7 @@ public class MainActivity extends AppCompatActivity
         guillotineToolBar = (Toolbar)guillotineMenu.findViewById(R.id.toolbar);
 
         menuToolBarTitle = (TextView)guillotineMenu.findViewById(R.id.guillotine_title);
-        menuToolBarTitle.setTypeface(Util.typefaceLatoLight);
+        menuToolBarTitle.setTypeface(CoCoinUtil.typefaceLatoLight);
         menuToolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
         radioButton0 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_0);
@@ -311,7 +305,7 @@ public class MainActivity extends AppCompatActivity
 
         passwordTip = (TextView)guillotineMenu.findViewById(R.id.password_tip);
         passwordTip.setText(mContext.getResources().getString(R.string.password_tip));
-        passwordTip.setTypeface(Util.typefaceLatoLight);
+        passwordTip.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         radioButtonLy = (LinearLayout)guillotineMenu.findViewById(R.id.radio_button_ly);
 
@@ -362,7 +356,7 @@ public class MainActivity extends AppCompatActivity
             boolean wrapInScrollView = true;
             new MaterialDialog.Builder(this)
                     .title(R.string.guide)
-                    .typeface(Util.GetTypeface(), Util.GetTypeface())
+                    .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                     .customView(R.layout.main_activity_guide, wrapInScrollView)
                     .positiveText(R.string.ok)
                     .show();
@@ -459,19 +453,19 @@ public class MainActivity extends AppCompatActivity
         if (editViewPager.getCurrentItem() == 1) return;
         if (!isPassword) {
             if (((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")
-                    && !Util.ClickButtonCommit(position)) {
-                if (Util.ClickButtonDelete(position)
-                        || Util.ClickButtonIsZero(position)) {
+                    && !CoCoinUtil.ClickButtonCommit(position)) {
+                if (CoCoinUtil.ClickButtonDelete(position)
+                        || CoCoinUtil.ClickButtonIsZero(position)) {
 
                 } else {
-                    ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(Util.BUTTONS[position]);
+                    ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(CoCoinUtil.BUTTONS[position]);
                 }
             } else {
-                if (Util.ClickButtonDelete(position)) {
+                if (CoCoinUtil.ClickButtonDelete(position)) {
                     if (longClick) {
                         ((EditFragment)editPagerAdapter.getPage(0)).setNumberText("0");
                         ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(
-                                Util.FLOATINGLABELS[((EditFragment) editPagerAdapter.getPage(0))
+                                CoCoinUtil.FLOATINGLABELS[((EditFragment) editPagerAdapter.getPage(0))
                                         .getNumberText().toString().length()]);
                     } else {
                         ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(
@@ -484,19 +478,19 @@ public class MainActivity extends AppCompatActivity
                             ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(" ");
                         }
                     }
-                } else if (Util.ClickButtonCommit(position)) {
+                } else if (CoCoinUtil.ClickButtonCommit(position)) {
                     commit();
                 } else {
                     ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(
                             ((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString()
-                                    + Util.BUTTONS[position]);
+                                    + CoCoinUtil.BUTTONS[position]);
                 }
             }
             ((EditFragment)editPagerAdapter.getPage(0))
-                    .setHelpText(Util.FLOATINGLABELS[
+                    .setHelpText(CoCoinUtil.FLOATINGLABELS[
                             ((EditFragment) editPagerAdapter.getPage(0)).getNumberText().toString().length()]);
         } else {
-            if (Util.ClickButtonDelete(position)) {
+            if (CoCoinUtil.ClickButtonDelete(position)) {
                 if (longClick) {
                     radioButton0.setChecked(false);
                     radioButton1.setChecked(false);
@@ -519,7 +513,7 @@ public class MainActivity extends AppCompatActivity
                         inputPassword = inputPassword.substring(0, inputPassword.length() - 1);
                     }
                 }
-            } else if (Util.ClickButtonCommit(position)) {
+            } else if (CoCoinUtil.ClickButtonCommit(position)) {
             } else {
                 if (statusButton.getState() == MaterialMenuDrawable.IconState.X) {
                     statusButton.animateState(MaterialMenuDrawable.IconState.ARROW);
@@ -537,7 +531,7 @@ public class MainActivity extends AppCompatActivity
                     radioButton3.setChecked(true);
                 }
                 if (inputPassword.length() < 4) {
-                    inputPassword += Util.BUTTONS[position];
+                    inputPassword += CoCoinUtil.BUTTONS[position];
                 }
             }
             checkPassword();
@@ -625,7 +619,7 @@ public class MainActivity extends AppCompatActivity
 
             if (shouldChange) {
                 window.setStatusBarColor(
-                        Util.getDeeperColor(SettingManager.getInstance().getRemindColor()));
+                        CoCoinUtil.getDeeperColor(SettingManager.getInstance().getRemindColor()));
             } else {
                 window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
             }
@@ -641,11 +635,11 @@ public class MainActivity extends AppCompatActivity
             guillotineColorLy.setBackgroundColor(SettingManager.getInstance().getRemindColor());
             guillotineToolBar.setBackgroundColor(SettingManager.getInstance().getRemindColor());
         } else {
-            root.setBackgroundColor(Util.MY_BLUE);
-            toolbar.setBackgroundColor(Util.MY_BLUE);
-            guillotineBackground.setBackgroundColor(Util.MY_BLUE);
-            guillotineColorLy.setBackgroundColor(Util.MY_BLUE);
-            guillotineToolBar.setBackgroundColor(Util.MY_BLUE);
+            root.setBackgroundColor(CoCoinUtil.MY_BLUE);
+            toolbar.setBackgroundColor(CoCoinUtil.MY_BLUE);
+            guillotineBackground.setBackgroundColor(CoCoinUtil.MY_BLUE);
+            guillotineColorLy.setBackgroundColor(CoCoinUtil.MY_BLUE);
+            guillotineToolBar.setBackgroundColor(CoCoinUtil.MY_BLUE);
         }
         if (editPagerAdapter.getPage(0) != null)
             ((EditFragment)editPagerAdapter.getPage(0)).setEditColor(shouldChange);
