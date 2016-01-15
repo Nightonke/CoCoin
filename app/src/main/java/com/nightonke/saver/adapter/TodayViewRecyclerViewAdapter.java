@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.CoCoinUtil;
@@ -70,12 +70,12 @@ public class TodayViewRecyclerViewAdapter
     private int fragmentPosition;
 
     // the data of this fragment
-    private ArrayList<Record> allData;
+    private ArrayList<CoCoinRecord> allData;
 
     // store the sum of expenses of each tag
     private Map<Integer, Double> TagExpanse;
     // store the records of each tag
-    private Map<Integer, List<Record>> Expanse;
+    private Map<Integer, List<CoCoinRecord>> Expanse;
     // the original target value of the whole pie
     private float[] originalTargets;
     // whether the data of this fragment is empty
@@ -151,28 +151,28 @@ public class TodayViewRecyclerViewAdapter
             int size = recordManager.TAGS.size();
             for (int j = 2; j < size; j++) {
                 TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
-                Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
+                Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<CoCoinRecord>());
             }
 
             size = allData.size();
             for (int i = 0; i < size; i++) {
-                Record record = allData.get(i);
-                TagExpanse.put(record.getTag(),
-                        TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
-                Expanse.get(record.getTag()).add(record);
-                Sum += record.getMoney();
+                CoCoinRecord coCoinRecord = allData.get(i);
+                TagExpanse.put(coCoinRecord.getTag(),
+                        TagExpanse.get(coCoinRecord.getTag()) + Double.valueOf(coCoinRecord.getMoney()));
+                Expanse.get(coCoinRecord.getTag()).add(coCoinRecord);
+                Sum += coCoinRecord.getMoney();
                 if (axis_date == Calendar.DAY_OF_WEEK) {
                     if (CoCoinUtil.WEEK_START_WITH_SUNDAY)
-                        originalTargets[record.getCalendar().get(axis_date) - 1]
-                                += record.getMoney();
-                    else originalTargets[(record.getCalendar().get(axis_date) + 5) % 7]
-                                += record.getMoney();
+                        originalTargets[coCoinRecord.getCalendar().get(axis_date) - 1]
+                                += coCoinRecord.getMoney();
+                    else originalTargets[(coCoinRecord.getCalendar().get(axis_date) + 5) % 7]
+                                += coCoinRecord.getMoney();
                 } else if (axis_date == Calendar.DAY_OF_MONTH) {
-                    originalTargets[record.getCalendar().get(axis_date) - 1]
-                            += record.getMoney();
+                    originalTargets[coCoinRecord.getCalendar().get(axis_date) - 1]
+                            += coCoinRecord.getMoney();
                 } else {
-                    originalTargets[record.getCalendar().get(axis_date)]
-                            += record.getMoney();
+                    originalTargets[coCoinRecord.getCalendar().get(axis_date)]
+                            += coCoinRecord.getMoney();
                 }
             }
 
@@ -459,21 +459,21 @@ public class TodayViewRecyclerViewAdapter
                                 for (int i = 0; i < columnNumber; i++) targets[i] = 0;
 
                                 for (int i = Expanse.get(tagId).size() - 1; i >= 0; i--) {
-                                    Record record = Expanse.get(tagId).get(i);
+                                    CoCoinRecord coCoinRecord = Expanse.get(tagId).get(i);
                                     if (axis_date == Calendar.DAY_OF_WEEK) {
                                         if (CoCoinUtil.WEEK_START_WITH_SUNDAY) {
-                                            targets[record.getCalendar().get(axis_date) - 1]
-                                                    += record.getMoney();
+                                            targets[coCoinRecord.getCalendar().get(axis_date) - 1]
+                                                    += coCoinRecord.getMoney();
                                         } else {
-                                            targets[(record.getCalendar().get(axis_date) + 5) % 7]
-                                                    += record.getMoney();
+                                            targets[(coCoinRecord.getCalendar().get(axis_date) + 5) % 7]
+                                                    += coCoinRecord.getMoney();
                                         }
                                     } else if (axis_date == Calendar.DAY_OF_MONTH) {
-                                        targets[record.getCalendar().get(axis_date) - 1]
-                                                += record.getMoney();
+                                        targets[coCoinRecord.getCalendar().get(axis_date) - 1]
+                                                += coCoinRecord.getMoney();
                                     } else {
-                                        targets[record.getCalendar().get(axis_date)]
-                                                += record.getMoney();
+                                        targets[coCoinRecord.getCalendar().get(axis_date)]
+                                                += coCoinRecord.getMoney();
                                     }
                                 }
 
@@ -673,11 +673,11 @@ public class TodayViewRecyclerViewAdapter
     private class mActionClickListenerForPie implements ActionClickListener {
         @Override
         public void onActionClicked(Snackbar snackbar) {
-            List<Record> shownRecords = Expanse.get(tagId);
+            List<CoCoinRecord> shownCoCoinRecords = Expanse.get(tagId);
             ((FragmentActivity)mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .add(new RecordCheckDialogFragment(
-                            mContext, shownRecords, dialogTitle), "MyDialog")
+                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                     .commit();
         }
     }
@@ -686,7 +686,7 @@ public class TodayViewRecyclerViewAdapter
     private class mActionClickListenerForHistogram implements ActionClickListener {
         @Override
         public void onActionClicked(Snackbar snackbar) {
-            ArrayList<Record> shownRecords = new ArrayList<>();
+            ArrayList<CoCoinRecord> shownCoCoinRecords = new ArrayList<>();
             int index = timeIndex;
             if (axis_date == Calendar.DAY_OF_WEEK) {
                 if (CoCoinUtil.WEEK_START_WITH_SUNDAY) index++;
@@ -698,16 +698,16 @@ public class TodayViewRecyclerViewAdapter
             if (tagId != -1) {
                 for (int i = 0; i < Expanse.get(tagId).size(); i++)
                     if (Expanse.get(tagId).get(i).getCalendar().get(axis_date) == index)
-                        shownRecords.add(Expanse.get(tagId).get(i));
+                        shownCoCoinRecords.add(Expanse.get(tagId).get(i));
             } else {
                 for (int i = 0; i < allData.size(); i++)
                     if (allData.get(i).getCalendar().get(axis_date) == index)
-                        shownRecords.add(allData.get(i));
+                        shownCoCoinRecords.add(allData.get(i));
             }
             ((FragmentActivity)mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .add(new RecordCheckDialogFragment(
-                            mContext, shownRecords, dialogTitle), "MyDialog")
+                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                     .commit();
         }
     }

@@ -7,8 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.nightonke.saver.BuildConfig;
-import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.Tag;
 
@@ -23,7 +22,7 @@ import java.util.LinkedList;
 public class DB {
 
     public static final String DB_NAME_STRING = "CoCoin Database";
-    public static final String RECORD_DB_NAME_STRING = "Record";
+    public static final String RECORD_DB_NAME_STRING = "CoCoinRecord";
     public static final String TAG_DB_NAME_STRING = "Tag";
 
     public static final int VERSION = 1;
@@ -64,43 +63,43 @@ public class DB {
                 .query(RECORD_DB_NAME_STRING, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
             do {
-                Record record = new Record();
-                record.setId(cursor.getLong(cursor.getColumnIndex("ID")));
-                record.setMoney(cursor.getFloat(cursor.getColumnIndex("MONEY")));
-                record.setCurrency(cursor.getString(cursor.getColumnIndex("CURRENCY")));
-                record.setTag(cursor.getInt(cursor.getColumnIndex("TAG")));
-                record.setCalendar(cursor.getString(cursor.getColumnIndex("TIME")));
-                record.setRemark(cursor.getString(cursor.getColumnIndex("REMARK")));
-                record.setUserId(cursor.getString(cursor.getColumnIndex("USER_ID")));
-                record.setLocalObjectId(cursor.getString(cursor.getColumnIndex("OBJECT_ID")));
-                record.setIsUploaded(
+                CoCoinRecord coCoinRecord = new CoCoinRecord();
+                coCoinRecord.setId(cursor.getLong(cursor.getColumnIndex("ID")));
+                coCoinRecord.setMoney(cursor.getFloat(cursor.getColumnIndex("MONEY")));
+                coCoinRecord.setCurrency(cursor.getString(cursor.getColumnIndex("CURRENCY")));
+                coCoinRecord.setTag(cursor.getInt(cursor.getColumnIndex("TAG")));
+                coCoinRecord.setCalendar(cursor.getString(cursor.getColumnIndex("TIME")));
+                coCoinRecord.setRemark(cursor.getString(cursor.getColumnIndex("REMARK")));
+                coCoinRecord.setUserId(cursor.getString(cursor.getColumnIndex("USER_ID")));
+                coCoinRecord.setLocalObjectId(cursor.getString(cursor.getColumnIndex("OBJECT_ID")));
+                coCoinRecord.setIsUploaded(
                         cursor.getInt(cursor.getColumnIndex("IS_UPLOADED")) == 0 ? false : true);
 
-                if (BuildConfig.DEBUG) Log.d("CoCoin Debugger", "Load " + record.toString() + " S");
+                if (BuildConfig.DEBUG) Log.d("CoCoin Debugger", "Load " + coCoinRecord.toString() + " S");
 
-                RecordManager.RECORDS.add(record);
-                RecordManager.SUM += (int)record.getMoney();
+                RecordManager.RECORDS.add(coCoinRecord);
+                RecordManager.SUM += (int) coCoinRecord.getMoney();
             } while (cursor.moveToNext());
             if (cursor != null) cursor.close();
         }
     }
 
     // return the row ID of the newly inserted row, or -1 if an error occurred
-    public long saveRecord(Record record) {
+    public long saveRecord(CoCoinRecord coCoinRecord) {
         ContentValues values = new ContentValues();
-        values.put("MONEY", record.getMoney());
-        values.put("CURRENCY", record.getCurrency());
-        values.put("TAG", record.getTag());
+        values.put("MONEY", coCoinRecord.getMoney());
+        values.put("CURRENCY", coCoinRecord.getCurrency());
+        values.put("TAG", coCoinRecord.getTag());
         values.put("TIME", new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                .format(record.getCalendar().getTime()));
-        values.put("REMARK", record.getRemark());
-        values.put("USER_ID", record.getUserId());
-        values.put("OBJECT_ID", record.getLocalObjectId());
-        values.put("IS_UPLOADED", record.getIsUploaded().equals(Boolean.FALSE) ? 0 : 1);
+                .format(coCoinRecord.getCalendar().getTime()));
+        values.put("REMARK", coCoinRecord.getRemark());
+        values.put("USER_ID", coCoinRecord.getUserId());
+        values.put("OBJECT_ID", coCoinRecord.getLocalObjectId());
+        values.put("IS_UPLOADED", coCoinRecord.getIsUploaded().equals(Boolean.FALSE) ? 0 : 1);
         long insertId = sqliteDatabase.insert(RECORD_DB_NAME_STRING, null, values);
-        record.setId(insertId);
+        coCoinRecord.setId(insertId);
         if (BuildConfig.DEBUG)
-            Log.d("CoCoin Debugger", "db.saveRecord " + record.toString() + " S");
+            Log.d("CoCoin Debugger", "db.saveRecord " + coCoinRecord.toString() + " S");
         return insertId;
     }
 
@@ -139,25 +138,25 @@ public class DB {
         return id;
     }
 
-    // return the id of the record update
-    public long updateRecord(Record record) {
+    // return the id of the coCoinRecord update
+    public long updateRecord(CoCoinRecord coCoinRecord) {
         ContentValues values = new ContentValues();
-        values.put("ID", record.getId());
-        values.put("MONEY", record.getMoney());
-        values.put("CURRENCY", record.getCurrency());
-        values.put("TAG", record.getTag());
+        values.put("ID", coCoinRecord.getId());
+        values.put("MONEY", coCoinRecord.getMoney());
+        values.put("CURRENCY", coCoinRecord.getCurrency());
+        values.put("TAG", coCoinRecord.getTag());
         values.put("TIME", new SimpleDateFormat("yyyy-MM-dd HH:mm")
-                .format(record.getCalendar().getTime()));
-        values.put("REMARK", record.getRemark());
-        values.put("USER_ID", record.getUserId());
-        values.put("OBJECT_ID", record.getLocalObjectId());
-        values.put("IS_UPLOADED", record.getIsUploaded().equals(Boolean.FALSE) ? 0 : 1);
+                .format(coCoinRecord.getCalendar().getTime()));
+        values.put("REMARK", coCoinRecord.getRemark());
+        values.put("USER_ID", coCoinRecord.getUserId());
+        values.put("OBJECT_ID", coCoinRecord.getLocalObjectId());
+        values.put("IS_UPLOADED", coCoinRecord.getIsUploaded().equals(Boolean.FALSE) ? 0 : 1);
         sqliteDatabase.update(RECORD_DB_NAME_STRING, values,
                 "ID = ?",
-                new String[]{record.getId() + ""});
+                new String[]{coCoinRecord.getId() + ""});
         if (BuildConfig.DEBUG)
-            Log.d("CoCoin Debugger", "db.updateRecord " + record.toString() + " S");
-        return record.getId();
+            Log.d("CoCoin Debugger", "db.updateRecord " + coCoinRecord.toString() + " S");
+        return coCoinRecord.getId();
     }
 
     // return the id of the tag update

@@ -22,7 +22,7 @@ import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.CoCoinUtil;
@@ -98,7 +98,7 @@ public class CustomViewFragment extends Fragment {
     // store the sum of expenses of each tag
     private Map<Integer, Double> TagExpanse;
     // store the records of each tag
-    private Map<Integer, List<Record>> Expanse;
+    private Map<Integer, List<CoCoinRecord>> Expanse;
     // the original target value of the whole pie
     private float[] originalTargets;
 
@@ -375,17 +375,17 @@ public class CustomViewFragment extends Fragment {
         int size = RecordManager.TAGS.size();
         for (int j = 2; j < size; j++) {
             TagExpanse.put(RecordManager.TAGS.get(j).getId(), Double.valueOf(0));
-            Expanse.put(RecordManager.TAGS.get(j).getId(), new ArrayList<Record>());
+            Expanse.put(RecordManager.TAGS.get(j).getId(), new ArrayList<CoCoinRecord>());
         }
 
         for (int i = start; i >= end; i--) {
-            Record record = RecordManager.RECORDS.get(i);
-            TagExpanse.put(record.getTag(),
-                    TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
-            Expanse.get(record.getTag()).add(record);
-            Sum += record.getMoney();
+            CoCoinRecord coCoinRecord = RecordManager.RECORDS.get(i);
+            TagExpanse.put(coCoinRecord.getTag(),
+                    TagExpanse.get(coCoinRecord.getTag()) + Double.valueOf(coCoinRecord.getMoney()));
+            Expanse.get(coCoinRecord.getTag()).add(coCoinRecord);
+            Sum += coCoinRecord.getMoney();
             originalTargets[(int)(TimeUnit.MILLISECONDS.toDays(
-                    record.getCalendar().getTimeInMillis()) - startDay)] += record.getMoney();
+                    coCoinRecord.getCalendar().getTimeInMillis()) - startDay)] += coCoinRecord.getMoney();
         }
 
         expense.setText(Sum + "");
@@ -532,7 +532,7 @@ public class CustomViewFragment extends Fragment {
         all.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                List<Record> data = new LinkedList<Record>();
+                List<CoCoinRecord> data = new LinkedList<CoCoinRecord>();
                 for (int i = start; i >= end; i--) data.add(RecordManager.RECORDS.get(i));
                 if ("zh".equals(CoCoinUtil.GetLanguage())) {
                     dialogTitle = dateShownString + "\n" +
@@ -575,11 +575,11 @@ public class CustomViewFragment extends Fragment {
     private class mActionClickListenerForPie implements ActionClickListener {
         @Override
         public void onActionClicked(Snackbar snackbar) {
-            List<Record> shownRecords = Expanse.get(tagId);
+            List<CoCoinRecord> shownCoCoinRecords = Expanse.get(tagId);
             ((FragmentActivity)mContext).getSupportFragmentManager()
                     .beginTransaction()
                     .add(new RecordCheckDialogFragment(
-                            mContext, shownRecords, dialogTitle), "MyDialog")
+                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                     .commit();
         }
     }

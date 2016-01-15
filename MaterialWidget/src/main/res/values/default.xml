@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TabIndicator Default -->
+    <dimen name="tab_text_size">15sp</dimen>
+    <color name="tab_text_color">#9FC1FB</color>
+    <color name="tab_text_selected_color">#FFFFFF</color>
+    <color name="tab_text_disabled_color">#000000</color>
+    <color name="tab_ripple_color">#000000</color>
+    <color name="tab_underline_color">#283593</color>
+    <dimen name="tab_underline_height">5dp</dimen>
+    <integer name="tab_max_column">4</integer>
+    <dimen name="tab_nav_button_width">36dp</dimen>
+
+    <!-- Switch Default -->
+    <dimen name="switch_width">86dp</dimen>
+    <dimen name="switch_height">48dp</dimen>
+    <dimen name="switch_thumb_radius">10dp</dimen>
+    <dimen name="switch_ripple_max_radius">24dp</dimen>
+    <dimen name="switch_stroke_width">2dp</dimen>
+    <dimen name="switch_track_width">2dp</dimen>
+    <color name="switch_track_color">#4f4f4f</color>
+    <color name="switch_track_checked_color">#2d523e</color>
+    <color name="switch_thumb_color">#929292</color>
+    <color name="switch_thumb_checked_color">#289d4d</color>
+
+    <!-- RadioButton Default -->
+    <dimen name="radio_width">48dp</dimen>
+    <dimen name="radio_height">48dp</dimen>
+    <dimen name="radio_border_radius">10dp</dimen>
+    <dimen name="radio_thumb_radius">6dp</dimen>
+    <dimen name="radio_ripple_radius">24dp</dimen>
+    <dimen name="radio_stroke_width">2dp</dimen>
+    <color name="radio_color">#6d6d6d</color>
+    <color name="radio_checked_color">#55b03d</color>
+
+    <!-- CheckBox Default -->
+    <dimen name="checkbox_width">48dp</dimen>
+    <dimen name="checkbox_height">48dp</dimen>
+    <dimen name="checkbox_thumb_size">20dp</dimen>
+    <dimen name="checkbox_corner_radius">2dp</dimen>
+    <dimen name="checkbox_border_width">2dp</dimen>
+    <dimen name="checkbox_mark_width">2dp</dimen>
+    <dimen name="checkbox_ripple_radius">24dp</dimen>
+    <dimen name="checkbox_mark_left_right_padding">3dp</dimen>
+    <dimen name="checkbox_mark_top_padding">4dp</dimen>
+    <dimen name="checkbox_mark_bottom_padding">5dp</dimen>
+    <color name="checkbox_color">#6d6d6d</color>
+    <color name="checkbox_checked_color">#55b03d</color>
+    <color name="checkbox_mark_color">#eeeeee</color>
+
+    <!-- CircleButton Default -->
+    <dimen name="circle_button_width">72dp</dimen>
+    <dimen name="circle_button_height">72dp</dimen>
+    <color name="circle_button_color">#ff3f51b5</color>
+    <color name="circle_button_shadow_color">#ff000000</color>
+
+    <!-- PaperButton Default -->
+    <dimen name="paper_text_size">15sp</dimen>
+    <color name="paper_text_color">#60000000</color>
+    <color name="paper_button_color">#ffffffff</color>
+    <color name="paper_button_shadow_color">#000000</color>
+    <dimen name="paper_button_corner_radius">2dp</dimen>
+    <dimen name="paper_padding">7dp</dimen>
+
+    <!-- CircularProgress Default -->
+    <color name="circular_progress_color">#ff3f51b5</color>
+    <bool name="circular_progress_indeterminate">true</bool>
+    <dimen name="circular_progress_border_width">4dp</dimen>
+    <dimen name="circular_progress_small_size">36dp</dimen>
+    <dimen name="circular_progress_normal_size">48dp</dimen>
+    <dimen name="circular_progress_large_size">60dp</dimen>
+    <integer name="circular_progress_max">100</integer>
+
+    <!-- LinearProgress Default -->
+    <color name="linear_progress_color">#ff3f51b5</color>
+    <dimen name="linear_progress_line_width">4dp</dimen>
+    <integer name="linear_progress_max">100</integer>
+
+    <!-- FloatingEditText Default -->
+    <color name="floating_edit_text_color">#ffc8c8c8</color>
+    <color name="floating_edit_text_highlighted_color">#ff3f51b5</color>
+    <color name="floating_edit_text_error_color">#DB4437</color>
+    <dimen name="floating_edit_text_underline_height">1dp</dimen>
+    <dimen name="floating_edit_text_underline_highlighted_height">2dp</dimen>
+
+    <!-- Slider Default -->
+    <color name="slider_color">#ffc8c8c8</color>
+    <color name="slider_tint_color">#ff3f51b5</color>
+    <color name="slider_ripple_color">#ffd4d4d4</color>
+    <dimen name="slider_thumb_radius">10dp</dimen>
+    <dimen name="slider_thumb_ripple_radius">30dp</dimen>
+    <dimen name="slider_bar_height">2dp</dimen>
+    <dimen name="slider_thumb_border_width">2dp</dimen>
+
+    <!-- TrackSlider Default -->
+    <color name="track_slider_color">#ffc8c8c8</color>
+    <color name="track_slider_tint_color">#ff3f51b5</color>
+    <dimen name="track_slider_thumb_radius">10dp</dimen>
+    <dimen name="track_slider_ripple_radius">20dp</dimen>
+    <dimen name="track_slider_bar_height">2dp</dimen>
+</resources>

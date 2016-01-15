@@ -14,7 +14,7 @@ import com.daimajia.androidanimations.library.BaseViewAnimator;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nineoldandroids.animation.ObjectAnimator;
 
 import java.util.Calendar;
@@ -43,7 +43,7 @@ public class CoCoinUtil {
 
     public static int MY_BLUE;
 
-    public static Record backupRecord;
+    public static CoCoinRecord backupCoCoinRecord;
 
     public static String PASSWORD = "1234";
 

@@ -24,13 +24,13 @@
     <string name="help">Help &amp; feedback</string>
 
     <string name="today_empty">New day!</string>
-    <string name="yesterday_empty">No records.</string>
+    <string name="yesterday_empty">No coCoinRecords.</string>
     <string name="this_week_empty">New week!</string>
-    <string name="last_week_empty">No records.</string>
+    <string name="last_week_empty">No coCoinRecords.</string>
     <string name="this_month_empty">New month!</string>
-    <string name="last_month_empty">No records.</string>
+    <string name="last_month_empty">No coCoinRecords.</string>
     <string name="this_year_empty">Happy new year!</string>
-    <string name="last_year_empty">No records.</string>
+    <string name="last_year_empty">No coCoinRecords.</string>
 
     <string name="january_short">Jan.</string>
     <string name="february_short">Feb.</string>
@@ -151,11 +151,11 @@
 
     <string name="search">Search</string>
 
-    <string name="tag_empty">No records!</string>
+    <string name="tag_empty">No coCoinRecords!</string>
 
     <string name="undo">Undo</string>
 
-    <string name="deleting">Delete this record</string>
+    <string name="deleting">Delete this coCoinRecord</string>
     <string name="title_activity_edit_record">EditRecordActivity</string>
 
     <string name="from_invalid">The starting time is invalid!</string>
@@ -176,9 +176,9 @@
     <string name="month_color_remind">Color remind</string>
     <string name="month_warning">Color remind when expense over</string>
     <string name="month_color_remind_type">Remind color</string>
-    <string name="month_forbidden">Forbidden record money when out of limit</string>
+    <string name="month_forbidden">Forbidden coCoinRecord money when out of limit</string>
 
-    <string name="auto_back_up">Auto backup records</string>
+    <string name="auto_back_up">Auto backup coCoinRecords</string>
 
     <string name="account_book_name">Name of account book</string>
 
@@ -191,7 +191,7 @@
     <string name="whether_show_circle">Doughnut-shape pie chart</string>
 
     <string name="default_user_name">You haven\'t logged on! After logging on, </string>
-    <string name="default_user_email">you can save your records to cloud. Click me to do so!</string>
+    <string name="default_user_email">you can save your coCoinRecords to cloud. Click me to do so!</string>
 
     <string name="set_account_book_dialog_title">Name your account book!</string>
 
@@ -296,7 +296,7 @@
 
     <string name="change_password_title">Change Password</string>
 
-    <string name="remark_hint">Add remarks for your record</string>
+    <string name="remark_hint">Add remarks for your coCoinRecord</string>
 
     <string name="save_successfully_online">Save and sync to cloud successfully!</string>
     <string name="save_successfully_locale">Save successfully!</string>

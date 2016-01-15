@@ -281,11 +281,11 @@ public class MySwipeableItemAdapter
         @Override
         protected void onPerformAction() {
             super.onPerformAction();
-            if (CoCoinUtil.backupRecord != null) {
-                RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
+            if (CoCoinUtil.backupCoCoinRecord != null) {
+                RecordManager.deleteRecord(CoCoinUtil.backupCoCoinRecord, false);
             }
-            CoCoinUtil.backupRecord = null;
-            CoCoinUtil.backupRecord
+            CoCoinUtil.backupCoCoinRecord = null;
+            CoCoinUtil.backupCoCoinRecord
                     = RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - mPosition);
             RecordManager.RECORDS.remove(RecordManager.RECORDS.size() - 1 - mPosition);
             mAdapter.notifyItemRemoved(mPosition);

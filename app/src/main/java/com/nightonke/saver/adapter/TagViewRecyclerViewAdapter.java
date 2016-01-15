@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.Tag;
@@ -60,7 +60,7 @@ public class TagViewRecyclerViewAdapter
 
     private Context mContext;
 
-    private List<List<Record>> contents;
+    private List<List<CoCoinRecord>> contents;
     private List<Integer> type;
     private List<Double> SumList;
     private List<Map<Integer, Double>> AllTagExpanse;
@@ -94,7 +94,7 @@ public class TagViewRecyclerViewAdapter
 
     private boolean IS_EMPTY = false;
 
-    public TagViewRecyclerViewAdapter(List<Record> records, Context context, int position) {
+    public TagViewRecyclerViewAdapter(List<CoCoinRecord> coCoinRecords, Context context, int position) {
 
         mContext = context;
         fragmentPosition = position;
@@ -106,68 +106,68 @@ public class TagViewRecyclerViewAdapter
             chartType = HISTOGRAM;
         }
 
-        IS_EMPTY = records.isEmpty();
+        IS_EMPTY = coCoinRecords.isEmpty();
 
         Sum = 0;
 
         if (!IS_EMPTY) {
 
-            Collections.sort(records, new Comparator<Record>() {
+            Collections.sort(coCoinRecords, new Comparator<CoCoinRecord>() {
                 @Override
-                public int compare(Record lhs, Record rhs) {
+                public int compare(CoCoinRecord lhs, CoCoinRecord rhs) {
                     return rhs.getCalendar().compareTo(lhs.getCalendar());
                 }
             });
             contents = new ArrayList<>();
             SumList = new ArrayList<>();
             type = new ArrayList<>();
-            year = records.get(0).getCalendar().get(Calendar.YEAR);
-            month = records.get(0).getCalendar().get(Calendar.MONTH) + 1;
+            year = coCoinRecords.get(0).getCalendar().get(Calendar.YEAR);
+            month = coCoinRecords.get(0).getCalendar().get(Calendar.MONTH) + 1;
             endYear = year;
             endMonth = month;
             int yearPosition = 0;
             double monthSum = 0;
             double yearSum = 0;
-            List<Record> yearSet = new ArrayList<>();
-            List<Record> monthSet = new ArrayList<>();
+            List<CoCoinRecord> yearSet = new ArrayList<>();
+            List<CoCoinRecord> monthSet = new ArrayList<>();
 
-            for (Record record : records) {
-                Sum += record.getMoney();
-                if (record.getCalendar().get(Calendar.YEAR) == year) {
-                    yearSet.add(record);
-                    yearSum += record.getMoney();
-                    if (record.getCalendar().get(Calendar.MONTH) == month - 1) {
-                        monthSet.add(record);
-                        monthSum += record.getMoney();
+            for (CoCoinRecord coCoinRecord : coCoinRecords) {
+                Sum += coCoinRecord.getMoney();
+                if (coCoinRecord.getCalendar().get(Calendar.YEAR) == year) {
+                    yearSet.add(coCoinRecord);
+                    yearSum += coCoinRecord.getMoney();
+                    if (coCoinRecord.getCalendar().get(Calendar.MONTH) == month - 1) {
+                        monthSet.add(coCoinRecord);
+                        monthSum += coCoinRecord.getMoney();
                     } else {
                         contents.add(monthSet);
                         SumList.add(monthSum);
-                        monthSum = record.getMoney();
+                        monthSum = coCoinRecord.getMoney();
                         type.add(SHOW_IN_MONTH);
                         monthSet = new ArrayList<>();
-                        monthSet.add(record);
-                        month = record.getCalendar().get(Calendar.MONTH) + 1;
+                        monthSet.add(coCoinRecord);
+                        month = coCoinRecord.getCalendar().get(Calendar.MONTH) + 1;
                     }
                 } else {
                     contents.add(monthSet);
                     SumList.add(monthSum);
-                    monthSum = record.getMoney();
+                    monthSum = coCoinRecord.getMoney();
                     type.add(SHOW_IN_MONTH);
                     monthSet = new ArrayList<>();
-                    monthSet.add(record);
-                    month = record.getCalendar().get(Calendar.MONTH) + 1;
+                    monthSet.add(coCoinRecord);
+                    month = coCoinRecord.getCalendar().get(Calendar.MONTH) + 1;
 
                     contents.add(yearPosition, yearSet);
                     SumList.add(yearPosition, yearSum);
-                    yearSum = record.getMoney();
+                    yearSum = coCoinRecord.getMoney();
                     type.add(yearPosition, SHOW_IN_YEAR);
                     yearPosition = contents.size();
                     yearSet = new ArrayList<>();
-                    yearSet.add(record);
-                    year = record.getCalendar().get(Calendar.YEAR);
+                    yearSet.add(coCoinRecord);
+                    year = coCoinRecord.getCalendar().get(Calendar.YEAR);
                     monthSet = new ArrayList<>();
-                    monthSet.add(record);
-                    month = record.getCalendar().get(Calendar.MONTH) + 1;
+                    monthSet.add(coCoinRecord);
+                    month = coCoinRecord.getCalendar().get(Calendar.MONTH) + 1;
                 }
             }
             contents.add(monthSet);
@@ -190,10 +190,10 @@ public class TagViewRecyclerViewAdapter
                         tagExpanse.put(tag.getId(), Double.valueOf(0));
                     }
 
-                    for (Record record : contents.get(i)) {
-                        double d = tagExpanse.get(record.getTag());
-                        d += record.getMoney();
-                        tagExpanse.put(record.getTag(), d);
+                    for (CoCoinRecord coCoinRecord : contents.get(i)) {
+                        double d = tagExpanse.get(coCoinRecord.getTag());
+                        d += coCoinRecord.getMoney();
+                        tagExpanse.put(coCoinRecord.getTag(), d);
                     }
 
                     tagExpanse = CoCoinUtil.SortTreeMapByValues(tagExpanse);
@@ -204,17 +204,17 @@ public class TagViewRecyclerViewAdapter
 
             if (chartType == SUM_HISTOGRAM) {
                 DayExpanseSum = new int[(endYear - startYear + 1) * 372];
-                for (Record record : records) {
-                    DayExpanseSum[(record.getCalendar().get(Calendar.YEAR) - startYear) * 372 +
-                            record.getCalendar().get(Calendar.MONTH) * 31 +
-                            record.getCalendar().get(Calendar.DAY_OF_MONTH) - 1] += (int) record.getMoney();
+                for (CoCoinRecord coCoinRecord : coCoinRecords) {
+                    DayExpanseSum[(coCoinRecord.getCalendar().get(Calendar.YEAR) - startYear) * 372 +
+                            coCoinRecord.getCalendar().get(Calendar.MONTH) * 31 +
+                            coCoinRecord.getCalendar().get(Calendar.DAY_OF_MONTH) - 1] += (int) coCoinRecord.getMoney();
                 }
             }
 
             MonthExpanseSum = new int[(endYear - startYear + 1) * 12];
-            for (Record record : records) {
-                MonthExpanseSum[(record.getCalendar().get(Calendar.YEAR) - startYear) * 12 +
-                        record.getCalendar().get(Calendar.MONTH)] += (int) record.getMoney();
+            for (CoCoinRecord coCoinRecord : coCoinRecords) {
+                MonthExpanseSum[(coCoinRecord.getCalendar().get(Calendar.YEAR) - startYear) * 12 +
+                        coCoinRecord.getCalendar().get(Calendar.MONTH)] += (int) coCoinRecord.getMoney();
             }
 
             SelectedPosition = new int[contents.size() + 1];
@@ -721,11 +721,11 @@ public class TagViewRecyclerViewAdapter
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
-                            List<Record> shownRecords = new ArrayList<>();
+                            List<CoCoinRecord> shownCoCoinRecords = new ArrayList<>();
                             boolean isSamed = false;
-                            for (Record record : contents.get(position)) {
-                                if (record.getCalendar().get(Calendar.DAY_OF_MONTH) == columnIndex + 1) {
-                                    shownRecords.add(record);
+                            for (CoCoinRecord coCoinRecord : contents.get(position)) {
+                                if (coCoinRecord.getCalendar().get(Calendar.DAY_OF_MONTH) == columnIndex + 1) {
+                                    shownCoCoinRecords.add(coCoinRecord);
                                     isSamed = true;
                                 } else {
                                     if (isSamed) {
@@ -736,7 +736,7 @@ public class TagViewRecyclerViewAdapter
                             ((FragmentActivity)mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
-                                            mContext, shownRecords, dialogTitle), "MyDialog")
+                                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                                     .commit();
                         }
                     });
@@ -763,11 +763,11 @@ public class TagViewRecyclerViewAdapter
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
-                            List<Record> shownRecords = new ArrayList<>();
+                            List<CoCoinRecord> shownCoCoinRecords = new ArrayList<>();
                             boolean isSamed = false;
-                            for (Record record : contents.get(position)) {
-                                if (record.getCalendar().get(Calendar.MONTH) == columnIndex) {
-                                    shownRecords.add(record);
+                            for (CoCoinRecord coCoinRecord : contents.get(position)) {
+                                if (coCoinRecord.getCalendar().get(Calendar.MONTH) == columnIndex) {
+                                    shownCoCoinRecords.add(coCoinRecord);
                                     isSamed = true;
                                 } else {
                                     if (isSamed) {
@@ -778,7 +778,7 @@ public class TagViewRecyclerViewAdapter
                             ((FragmentActivity)mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
-                                            mContext, shownRecords, dialogTitle), "MyDialog")
+                                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                                     .commit();
                         }
                     });
@@ -812,12 +812,12 @@ public class TagViewRecyclerViewAdapter
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
-                            List<Record> shownRecords = new ArrayList<>();
+                            List<CoCoinRecord> shownCoCoinRecords = new ArrayList<>();
                             boolean isSamed = false;
-                            for (Record record : contents.get(position)) {
-                                if (record.getCalendar().
+                            for (CoCoinRecord coCoinRecord : contents.get(position)) {
+                                if (coCoinRecord.getCalendar().
                                         get(Calendar.DAY_OF_MONTH) == columnIndex + 1) {
-                                    shownRecords.add(record);
+                                    shownCoCoinRecords.add(coCoinRecord);
                                     isSamed = true;
                                 } else {
                                     if (isSamed) {
@@ -828,7 +828,7 @@ public class TagViewRecyclerViewAdapter
                             ((FragmentActivity)mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
-                                            mContext, shownRecords, dialogTitle), "MyDialog")
+                                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                                     .commit();
                         }
                     });
@@ -859,11 +859,11 @@ public class TagViewRecyclerViewAdapter
                     snackbar.actionListener(new ActionClickListener() {
                         @Override
                         public void onActionClicked(Snackbar snackbar) {
-                            List<Record> shownRecords = new ArrayList<>();
+                            List<CoCoinRecord> shownCoCoinRecords = new ArrayList<>();
                             boolean isSamed = false;
-                            for (Record record : contents.get(position)) {
-                                if (record.getCalendar().get(Calendar.MONTH) == columnIndex) {
-                                    shownRecords.add(record);
+                            for (CoCoinRecord coCoinRecord : contents.get(position)) {
+                                if (coCoinRecord.getCalendar().get(Calendar.MONTH) == columnIndex) {
+                                    shownCoCoinRecords.add(coCoinRecord);
                                     isSamed = true;
                                 } else {
                                     if (isSamed) {
@@ -874,7 +874,7 @@ public class TagViewRecyclerViewAdapter
                             ((FragmentActivity)mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
-                                            mContext, shownRecords, dialogTitle), "MyDialog")
+                                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                                     .commit();
                         }
                     });
@@ -945,16 +945,16 @@ public class TagViewRecyclerViewAdapter
                             .actionListener(new ActionClickListener() {
                                 @Override
                                 public void onActionClicked(Snackbar snackbar) {
-                                    List<Record> shownRecords = new ArrayList<>();
-                                    for (Record record : contents.get(position)) {
+                                    List<CoCoinRecord> shownCoCoinRecords = new ArrayList<>();
+                                    for (CoCoinRecord record : contents.get(position)) {
                                         if (record.getTag() == tagId) {
-                                            shownRecords.add(record);
+                                            shownCoCoinRecords.add(record);
                                         }
                                     }
                                     ((FragmentActivity) mContext).getSupportFragmentManager()
                                             .beginTransaction()
                                             .add(new RecordCheckDialogFragment(
-                                                    mContext, shownRecords, dialogTitle), "MyDialog")
+                                                    mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                                             .commit();
                                 }
                             });

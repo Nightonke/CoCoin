@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="No records!"
+                android:text="No coCoinRecords!"
                 android:textSize="15sp"
                 android:textColor="@color/my_blue"
                 />

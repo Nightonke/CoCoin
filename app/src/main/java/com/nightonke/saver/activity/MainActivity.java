@@ -37,7 +37,7 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
 import com.nightonke.saver.fragment.EditFragment;
 import com.nightonke.saver.fragment.TagChooseFragment;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
@@ -545,14 +545,14 @@ public class MainActivity extends AppCompatActivity
             showToast(NO_MONEY_TOAST);
         } else  {
             Calendar calendar = Calendar.getInstance();
-            Record record = new Record(
+            CoCoinRecord coCoinRecord = new CoCoinRecord(
                     -1,
                     Float.valueOf(((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString()),
                     "RMB",
                     ((EditFragment)editPagerAdapter.getPage(0)).getTagId(),
                     calendar);
-            record.setRemark(((EditFragment)editPagerAdapter.getPage(1)).getRemark());
-            long saveId = RecordManager.saveRecord(record);
+            coCoinRecord.setRemark(((EditFragment)editPagerAdapter.getPage(1)).getRemark());
+            long saveId = RecordManager.saveRecord(coCoinRecord);
             if (saveId == -1) {
 
             } else {

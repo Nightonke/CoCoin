@@ -15,7 +15,7 @@ import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapte
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.adapter.TodayViewRecyclerViewAdapter;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.util.CoCoinUtil;
 import com.squareup.leakcanary.RefWatcher;
@@ -32,7 +32,7 @@ public class TodayViewFragment extends Fragment {
 
     private int position;
 
-    private List<Record> list = new ArrayList<>();
+    private List<CoCoinRecord> list = new ArrayList<>();
 
     private Context mContext;
 

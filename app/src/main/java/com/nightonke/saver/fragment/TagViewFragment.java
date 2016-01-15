@@ -15,7 +15,7 @@ import com.github.florent37.materialviewpager.adapter.RecyclerViewMaterialAdapte
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.adapter.TagViewRecyclerViewAdapter;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -30,7 +30,7 @@ public class TagViewFragment extends Fragment {
 
     private int position;
 
-    private List<Record> list = new ArrayList<>();
+    private List<CoCoinRecord> list = new ArrayList<>();
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -67,17 +67,17 @@ public class TagViewFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
 
         if (position == 0) {
-            for (Record record : RecordManager.RECORDS) {
-                list.add(record);
+            for (CoCoinRecord coCoinRecord : RecordManager.RECORDS) {
+                list.add(coCoinRecord);
             }
         } if (position == 1) {
-            for (Record record : RecordManager.RECORDS) {
-                list.add(record);
+            for (CoCoinRecord coCoinRecord : RecordManager.RECORDS) {
+                list.add(coCoinRecord);
             }
         } else {
-            for (Record record : RecordManager.RECORDS) {
-                if (record.getTag() == RecordManager.TAGS.get(position).getId()) {
-                    list.add(record);
+            for (CoCoinRecord coCoinRecord : RecordManager.RECORDS) {
+                if (coCoinRecord.getTag() == RecordManager.TAGS.get(position).getId()) {
+                    list.add(coCoinRecord);
                 }
             }
         }

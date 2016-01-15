@@ -202,7 +202,7 @@
                                 >
 
                                 <com.nightonke.saver.ui.RiseNumberTextView
-                                    android:id="@+id/records"
+                                    android:id="@+id/coCoinRecords"
                                     android:layout_width="wrap_content"
                                     android:layout_height="0dp"
                                     android:layout_weight="1"

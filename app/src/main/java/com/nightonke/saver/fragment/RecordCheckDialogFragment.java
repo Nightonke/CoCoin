@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.RecordCheckDialogRecyclerViewAdapter;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.List;
@@ -30,11 +30,11 @@ public class RecordCheckDialogFragment extends DialogFragment {
 
     private ViewGroup mSnackbarContainer;
     private RecyclerView recyclerView;
-    private List<Record> list;
+    private List<CoCoinRecord> list;
     private Context mContext;
     private String title;
 
-    public RecordCheckDialogFragment(Context context, List<Record> list, String title) {
+    public RecordCheckDialogFragment(Context context, List<CoCoinRecord> list, String title) {
         this.list = list;
         this.title = title;
         mContext = context;

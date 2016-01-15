@@ -23,7 +23,7 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
 import com.nightonke.saver.fragment.EditRecordFragment;
 import com.nightonke.saver.fragment.TagChooseFragment;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.ui.CoCoinViewPager;
 import com.nightonke.saver.ui.MyGridView;
@@ -267,12 +267,12 @@ public class EditRecordActivity extends AppCompatActivity
         } else if (((EditRecordFragment)editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")) {
             showToast(NO_MONEY_TOAST);
         } else  {
-            Record record = new Record();
-            record.set(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - position));
-            record.setMoney(Float.valueOf(((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString()));
-            record.setTag(((EditRecordFragment) editPagerAdapter.getPage(0)).getTagId());
-            record.setRemark(((EditRecordFragment)editPagerAdapter.getPage(1)).getRemark());
-            long updateId = RecordManager.updateRecord(record);
+            CoCoinRecord coCoinRecord = new CoCoinRecord();
+            coCoinRecord.set(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - position));
+            coCoinRecord.setMoney(Float.valueOf(((EditRecordFragment) editPagerAdapter.getPage(0)).getNumberText().toString()));
+            coCoinRecord.setTag(((EditRecordFragment) editPagerAdapter.getPage(0)).getTagId());
+            coCoinRecord.setRemark(((EditRecordFragment)editPagerAdapter.getPage(1)).getRemark());
+            long updateId = RecordManager.updateRecord(coCoinRecord);
             if (updateId == -1) {
                 if (!superToast.isShowing()) {
                     showToast(SAVE_FAILED_TOAST);

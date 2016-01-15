@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TabIndicator Attribute -->
+    <declare-styleable name="TabIndicator">
+        <attr name="tab_text_size" format="dimension"/>
+        <attr name="tab_text_color" format="color"/>
+        <attr name="tab_text_selected_color" format="color"/>
+        <attr name="tab_text_disabled_color" format="color"/>
+        <attr name="tab_ripple_color" format="color"/>
+        <attr name="tab_underline_color" format="color"/>
+        <attr name="tab_underline_height" format="dimension"/>
+        <attr name="tab_max_column" format="integer"/>
+    </declare-styleable>
+
+    <!-- RadioButton Attribute -->
+    <declare-styleable name="RadioButton">
+        <attr name="radio_color" format="color"/>
+        <attr name="radio_checked_color" format="color"/>
+    </declare-styleable>
+
+    <!-- CheckBox Attribute -->
+    <declare-styleable name="CheckBox">
+        <attr name="checkbox_color" format="color"/>
+        <attr name="checkbox_checked_color" format="color"/>
+    </declare-styleable>
+
+    <!-- CircleButton Attribute -->
+    <declare-styleable name="CircleButton">
+        <attr name="circle_icon" format="reference"/>
+        <attr name="circle_color" format="color"/>
+        <attr name="circle_shadow_radius" format="float"/>
+        <attr name="circle_shadow_offset_x" format="float"/>
+        <attr name="circle_shadow_offset_y" format="float"/>
+        <attr name="circle_shadow_color" format="color"/>
+    </declare-styleable>
+
+    <!-- PaperButton Attribute -->
+    <declare-styleable name="PaperButton">
+        <attr name="paper_text" format="string"/>
+        <attr name="paper_text_size" format="dimension"/>
+        <attr name="paper_text_color" format="color"/>
+        <attr name="paper_font" format="string"/>
+        <attr name="paper_color" format="color"/>
+        <attr name="paper_corner_radius" format="dimension"/>
+        <attr name="paper_shadow_radius" format="float"/>
+        <attr name="paper_shadow_offset_x" format="float"/>
+        <attr name="paper_shadow_offset_y" format="float"/>
+        <attr name="paper_shadow_color" format="color"/>
+    </declare-styleable>
+
+    <!-- CircularProgress Attribute -->
+    <declare-styleable name="CircularProgress">
+        <attr name="circular_progress_color" format="color"/>
+        <attr name="circular_progress_size" format="enum">
+            <enum name="Small" value="0"/>
+            <enum name="Normal" value="1"/>
+            <enum name="Large" value="2"/>
+        </attr>
+        <attr name="circular_progress_border_width" format="dimension"/>
+        <attr name="circular_progress_indeterminate" format="boolean"/>
+        <attr name="circular_progress_max" format="integer"/>
+        <attr name="circular_progress_duration" format="integer"/>
+    </declare-styleable>
+
+    <!-- LinearProgress Attribute -->
+    <declare-styleable name="LinearProgress">
+        <attr name="linear_progress_color" format="color"/>
+        <attr name="linear_progress_line_width" format="dimension"/>
+        <attr name="linear_progress_max" format="integer"/>
+        <attr name="linear_progress_duration" format="integer"/>
+    </declare-styleable>
+
+    <!-- FloatingEditText Attribute -->
+    <declare-styleable name="FloatingEditText">
+        <attr name="floating_edit_text_hint_scale" format="float"/>
+        <attr name="floating_edit_text_color" format="color"/>
+        <attr name="floating_edit_text_highlighted_color" format="color"/>
+        <attr name="floating_edit_text_error_color" format="color"/>
+        <attr name="floating_edit_text_underline_height" format="dimension"/>
+        <attr name="floating_edit_text_underline_highlighted_height" format="dimension"/>
+    </declare-styleable>
+
+    <!-- Slider Attribute -->
+    <declare-styleable name="Slider">
+        <attr name="slider_color" format="color"/>
+        <attr name="slider_tint_color" format="color"/>
+        <attr name="slider_ripple_color" format="color"/>
+        <attr name="slider_thumb_radius" format="dimension"/>
+        <attr name="slider_ripple_radius" format="dimension"/>
+        <attr name="slider_bar_height" format="dimension"/>
+        <attr name="slider_max" format="integer"/>
+        <attr name="slider_progress" format="integer"/>
+    </declare-styleable>
+
+    <!-- TrackSlider Attribute -->
+    <declare-styleable name="TrackSlider">
+        <attr name="track_slider_color" format="color"/>
+        <attr name="track_slider_tint_color" format="color"/>
+        <attr name="track_slider_thumb_radius" format="dimension"/>
+        <attr name="track_slider_ripple_radius" format="dimension"/>
+        <attr name="track_slider_bar_height" format="dimension"/>
+        <attr name="slider_thumb_border_width" format="dimension"/>
+    </declare-styleable>
+</resources>

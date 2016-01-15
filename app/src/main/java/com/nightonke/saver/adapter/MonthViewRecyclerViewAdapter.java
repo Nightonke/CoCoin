@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
-import com.nightonke.saver.model.Record;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.CoCoinUtil;
@@ -49,7 +49,7 @@ public class MonthViewRecyclerViewAdapter
 
     private Context mContext;
 
-    private List<Record> list;
+    private List<CoCoinRecord> list;
 
     static final int TYPE_HEADER = 0;
     static final int TYPE_CELL = 1;
@@ -58,7 +58,7 @@ public class MonthViewRecyclerViewAdapter
 
     private ArrayList<List<SliceValue>> sliceValuesList;
     private ArrayList<Map<Integer, Double>> TagExpanseList;
-    private ArrayList<Map<Integer, ArrayList<Record>>> ExpanseList;
+    private ArrayList<Map<Integer, ArrayList<CoCoinRecord>>> ExpanseList;
     private ArrayList<PieChartData> pieChartDataList;
     private ArrayList<Double> SumList;
     private ArrayList<Integer> selectedPositionList;
@@ -106,7 +106,7 @@ public class MonthViewRecyclerViewAdapter
             int nowMonth = (startMonth + (monthNumber - fragmentPosition - 1)) % 12;
 
             Map<Integer, Double> TagExpanse;
-            Map<Integer, ArrayList<Record>> Expanse;
+            Map<Integer, ArrayList<CoCoinRecord>> Expanse;
             List<SliceValue> sliceValues;
             PieChartData pieChartData;
             double Sum = 0;
@@ -120,14 +120,14 @@ public class MonthViewRecyclerViewAdapter
             selectedPositionList.add(0);
             for (int j = 2; j < recordManager.TAGS.size(); j++) {
                 TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
-                Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
+                Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<CoCoinRecord>());
             }
-            for (Record record : list) {
-                if (record.getCalendar().get(Calendar.MONTH) == nowMonth) {
-                    TagExpanse.put(record.getTag(),
-                            TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
-                    Expanse.get(record.getTag()).add(record);
-                    Sum += record.getMoney();
+            for (CoCoinRecord coCoinRecord : list) {
+                if (coCoinRecord.getCalendar().get(Calendar.MONTH) == nowMonth) {
+                    TagExpanse.put(coCoinRecord.getTag(),
+                            TagExpanse.get(coCoinRecord.getTag()) + Double.valueOf(coCoinRecord.getMoney()));
+                    Expanse.get(coCoinRecord.getTag()).add(coCoinRecord);
+                    Sum += coCoinRecord.getMoney();
                 }
             }
 
@@ -192,15 +192,15 @@ public class MonthViewRecyclerViewAdapter
 
                 for (int j = 2; j < recordManager.TAGS.size(); j++) {
                     TagExpanse.put(recordManager.TAGS.get(j).getId(), Double.valueOf(0));
-                    Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<Record>());
+                    Expanse.put(recordManager.TAGS.get(j).getId(), new ArrayList<CoCoinRecord>());
                 }
-                for (Record record : list) {
-                    if (!record.getCalendar().before(leftWeekRange) &&
-                            record.getCalendar().before(rightWeekRange)) {
-                        TagExpanse.put(record.getTag(),
-                                TagExpanse.get(record.getTag()) + Double.valueOf(record.getMoney()));
-                        Expanse.get(record.getTag()).add(record);
-                        Sum += record.getMoney();
+                for (CoCoinRecord coCoinRecord : list) {
+                    if (!coCoinRecord.getCalendar().before(leftWeekRange) &&
+                            coCoinRecord.getCalendar().before(rightWeekRange)) {
+                        TagExpanse.put(coCoinRecord.getTag(),
+                                TagExpanse.get(coCoinRecord.getTag()) + Double.valueOf(coCoinRecord.getMoney()));
+                        Expanse.get(coCoinRecord.getTag()).add(coCoinRecord);
+                        Sum += coCoinRecord.getMoney();
                     }
                 }
 
@@ -440,12 +440,12 @@ public class MonthViewRecyclerViewAdapter
                             .actionListener(new ActionClickListener() {
                                 @Override
                                 public void onActionClicked(Snackbar snackbar) {
-                                    List<Record> shownRecords
+                                    List<CoCoinRecord> shownCoCoinRecords
                                             = ExpanseList.get(position).get(tagId);
                                     ((FragmentActivity) mContext).getSupportFragmentManager()
                                             .beginTransaction()
                                             .add(new RecordCheckDialogFragment(
-                                                            mContext, shownRecords, dialogTitle),
+                                                            mContext, shownCoCoinRecords, dialogTitle),
                                                     "MyDialog")
                                             .commit();
                                 }

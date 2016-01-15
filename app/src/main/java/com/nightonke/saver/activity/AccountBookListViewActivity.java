@@ -268,7 +268,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         recyclerView.setOnScrollListener(
                 verticalRecyclerViewFastScroller.getOnScrollListener());
 
-        CoCoinUtil.backupRecord = null;
+        CoCoinUtil.backupCoCoinRecord = null;
 
         if (RecordManager.RECORDS.size() == 0) {
             emptyTip.setVisibility(View.VISIBLE);
@@ -312,8 +312,8 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                         .actionListener(new ActionClickListener() {
                             @Override
                             public void onActionClicked(Snackbar snackbar) {
-                                RecordManager.RECORDS.add(lastPosition, CoCoinUtil.backupRecord);
-                                CoCoinUtil.backupRecord = null;
+                                RecordManager.RECORDS.add(lastPosition, CoCoinUtil.backupCoCoinRecord);
+                                CoCoinUtil.backupCoCoinRecord = null;
                                 LinearLayoutManager linearLayoutManager
                                         = (LinearLayoutManager) recyclerView.getLayoutManager();
                                 int firstVisiblePosition = linearLayoutManager
@@ -355,26 +355,26 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
                             @Override
                             public void onDismiss(Snackbar snackbar) {
-                                if (CoCoinUtil.backupRecord != null) {
-                                    RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
+                                if (CoCoinUtil.backupCoCoinRecord != null) {
+                                    RecordManager.deleteRecord(CoCoinUtil.backupCoCoinRecord, false);
                                 }
-                                CoCoinUtil.backupRecord = null;
+                                CoCoinUtil.backupCoCoinRecord = null;
                             }
 
                             @Override
                             public void onDismissByReplace(Snackbar snackbar) {
-                                if (CoCoinUtil.backupRecord != null) {
-                                    RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
+                                if (CoCoinUtil.backupCoCoinRecord != null) {
+                                    RecordManager.deleteRecord(CoCoinUtil.backupCoCoinRecord, false);
                                 }
-                                CoCoinUtil.backupRecord = null;
+                                CoCoinUtil.backupCoCoinRecord = null;
                             }
 
                             @Override
                             public void onDismissed(Snackbar snackbar) {
-                                if (CoCoinUtil.backupRecord != null) {
-                                    RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
+                                if (CoCoinUtil.backupCoCoinRecord != null) {
+                                    RecordManager.deleteRecord(CoCoinUtil.backupCoCoinRecord, false);
                                 }
-                                CoCoinUtil.backupRecord = null;
+                                CoCoinUtil.backupCoCoinRecord = null;
                             }
                         });
         SnackbarManager.show(snackbar);
@@ -456,10 +456,10 @@ public class AccountBookListViewActivity extends AppCompatActivity {
             SettingManager.getInstance().setTodayViewMonthExpenseShouldChange(true);
         }
 
-        if (CoCoinUtil.backupRecord != null) {
-            RecordManager.deleteRecord(CoCoinUtil.backupRecord, false);
+        if (CoCoinUtil.backupCoCoinRecord != null) {
+            RecordManager.deleteRecord(CoCoinUtil.backupCoCoinRecord, false);
         }
-        CoCoinUtil.backupRecord = null;
+        CoCoinUtil.backupCoCoinRecord = null;
 
         super.finish();
     }
