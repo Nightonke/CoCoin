@@ -13,6 +13,7 @@ CoCoin是一款记账APP，有记账、多种方式显示支出占比和支出�
 http://beta.qq.com/m/wggf
 
 或者直接从github上下载:
+
 https://github.com/Nightonke/CoCoin/blob/master/APK/CoCoin%20V1.1.0.apk
 
 ####或者二维码：
