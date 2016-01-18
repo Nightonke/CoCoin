@@ -2,11 +2,17 @@
 
 CoCoin是一款记账APP，有记账、多种方式显示支出占比和支出变化、云同步、智能提醒等功能。
 
+###Note
+
+仅供学习之用，请勿用于商业用途。
+
 #下载
 
 ####APK地址：
+
 http://beta.qq.com/m/wggf
-或者直接从github上下载：
+
+或者直接从github上下载:
 https://github.com/Nightonke/CoCoin/blob/master/APK/CoCoin%20V1.1.0.apk
 
 ####或者二维码：
