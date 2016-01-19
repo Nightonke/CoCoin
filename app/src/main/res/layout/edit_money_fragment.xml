@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -47,7 +46,7 @@
         </LinearLayout>
 
         <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/edit_view_fuck"
+            android:id="@+id/money"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center_horizontal"
@@ -55,23 +54,6 @@
             android:maxLength="5"
             android:editable="false"
             android:gravity="right"
-            />
-
-        <com.rengwuxian.materialedittext.MaterialEditText
-            android:id="@+id/remark"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|left"
-            android:hint="@string/remark_hint"
-            android:textSize="18sp"
-            android:minLines="3"
-            android:maxLines="3"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            app:met_maxCharacters="80"
-            app:met_errorColor="#ddaa00"
-            app:et_supportLines="3"
-            android:maxLength="80"
             />
 
     </FrameLayout>

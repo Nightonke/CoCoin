@@ -1,6 +1,7 @@
 package com.nightonke.saver.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,13 +28,15 @@ public class TagChooseGridViewAdapter extends BaseAdapter {
         this.inflater = LayoutInflater.from(context);
         this.mContext = context;
         this.fragmentPosition = fragmentPosition;
-        if (fragmentPosition < 3) count = 8;
-        else count = 3;
     }
 
     @Override
     public int getCount() {
-        return count;
+        if ((fragmentPosition + 1) * 8 >= (RecordManager.TAGS.size() - 2)) {
+            return (RecordManager.TAGS.size() - 2) % 8;
+        } else {
+            return 8;
+        }
     }
 
     @Override

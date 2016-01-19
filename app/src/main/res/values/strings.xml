@@ -296,7 +296,7 @@
 
     <string name="change_password_title">Change Password</string>
 
-    <string name="remark_hint">Add remarks for your coCoinRecord</string>
+    <string name="remark_hint">Add remarks for your record</string>
 
     <string name="save_successfully_online">Save and sync to cloud successfully!</string>
     <string name="save_successfully_locale">Save successfully!</string>

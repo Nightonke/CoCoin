@@ -9,6 +9,10 @@
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
     </style>
 
+    <style name="EditRecordActivityStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/white</item>
+    </style>
+
     <style name="AppTheme" parent="AppBaseTheme">
 
         <item name="md_medium_font">LatoLatin-Light.ttf</item>

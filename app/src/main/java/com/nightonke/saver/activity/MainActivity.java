@@ -9,6 +9,7 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -35,7 +36,9 @@ import com.github.johnpersano.supertoasts.SuperActivityToast;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.ButtonGridViewAdapter;
-import com.nightonke.saver.fragment.EditFragment;
+import com.nightonke.saver.adapter.EditMoneyRemarkFragmentAdapter;
+import com.nightonke.saver.adapter.TagChooseFragmentAdapter;
+import com.nightonke.saver.fragment.CoCoinFragmentManager;
 import com.nightonke.saver.fragment.TagChooseFragment;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
@@ -48,10 +51,6 @@ import com.nightonke.saver.ui.guillotine.animation.GuillotineAnimation;
 import com.nightonke.saver.ui.guillotine.interfaces.GuillotineListener;
 import com.nightonke.saver.util.CoCoinToast;
 import com.nightonke.saver.util.CoCoinUtil;
-import com.ogaclejapan.smarttablayout.SmartTabLayout;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 import com.rey.material.widget.RadioButton;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -62,7 +61,8 @@ import butterknife.InjectView;
 import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
-        implements TagChooseFragment.OnTagItemSelectedListener {
+        implements
+        TagChooseFragment.OnTagItemSelectedListener {
 
     private final int SETTING_TAG = 0;
 
@@ -105,11 +105,10 @@ public class MainActivity extends AppCompatActivity
 
     private View guillotineMenu;
 
-    private ViewPager viewPager;
-    private SmartTabLayout smartTabLayout;
-
+    private ViewPager tagViewPager;
     private CoCoinViewPager editViewPager;
-    private SmartTabLayout smartEditTabLayout;
+    private FragmentPagerAdapter tagAdapter;
+    private FragmentPagerAdapter editAdapter;
 
     private boolean isLoading;
 
@@ -134,9 +133,6 @@ public class MainActivity extends AppCompatActivity
     FrameLayout root;
     @InjectView(R.id.content_hamburger)
     View contentHamburger;
-
-    private FragmentPagerItemAdapter tagChoicePagerAdapter;
-    private FragmentPagerItemAdapter editPagerAdapter;
 
     private SensorManager sensorManager;
 
@@ -175,8 +171,6 @@ public class MainActivity extends AppCompatActivity
             // do something for phones running an SDK before lollipop
         }
 
-//        Bmob.initialize(CoCoinApplication.getAppContext(), "0f0f9d45a39068bd6eea8896af1facf3");
-
         CoCoinUtil.init(this.getApplicationContext());
 
         RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
@@ -200,22 +194,18 @@ public class MainActivity extends AppCompatActivity
         toolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
 // edit viewpager///////////////////////////////////////////////////////////////////////////////////
-        editViewPager = (CoCoinViewPager)findViewById(R.id.edit_pager);
-        smartEditTabLayout = (SmartTabLayout)findViewById(R.id.edit_viewpager_tab);
-        FragmentPagerItems editPagers = new FragmentPagerItems(this);
-        for (int i = 0; i < 2; i++) {
-            editPagers.add(FragmentPagerItem.of("1", EditFragment.class));
-        }
-
-        editPagerAdapter = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), editPagers);
+        editViewPager = (CoCoinViewPager) findViewById(R.id.edit_pager);
+        editAdapter = new EditMoneyRemarkFragmentAdapter(getSupportFragmentManager(), CoCoinFragmentManager.MAIN_ACTIVITY_FRAGMENT);
+        
         editViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 if (position == 1) {
-                    ((EditFragment)editPagerAdapter.getPage(1)).editRequestFocus();
+                    if (CoCoinFragmentManager.mainActivityEditRemarkFragment != null)
+                        CoCoinFragmentManager.mainActivityEditRemarkFragment.editRequestFocus();
                 } else {
-                    ((EditFragment)editPagerAdapter.getPage(0)).editRequestFocus();
+                    if (CoCoinFragmentManager.mainActivityEditMoneyFragment != null)
+                        CoCoinFragmentManager.mainActivityEditMoneyFragment.editRequestFocus();
                 }
             }
 
@@ -230,31 +220,17 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        editViewPager.setOffscreenPageLimit(2);
-        editViewPager.setAdapter(editPagerAdapter);
-
-        smartEditTabLayout.setViewPager(editViewPager);
-        smartEditTabLayout.setVisibility(View.GONE);
+        editViewPager.setAdapter(editAdapter);
 
 // tag viewpager////////////////////////////////////////////////////////////////////////////////////
-        viewPager = (ViewPager)findViewById(R.id.viewpager);
-        smartTabLayout = (SmartTabLayout)findViewById(R.id.viewpagertab);
+        tagViewPager = (ViewPager)findViewById(R.id.viewpager);
 
-        FragmentPagerItems pages = new FragmentPagerItems(this);
-        for (int i = 0; i < 4; i++) {
-            pages.add(FragmentPagerItem.of("1", TagChooseFragment.class));
-        }
-
-        tagChoicePagerAdapter = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), pages);
-
-        viewPager.setOffscreenPageLimit(4);
-
-        viewPager.setAdapter(tagChoicePagerAdapter);
-
-        smartTabLayout.setViewPager(viewPager);
-        smartTabLayout.setVisibility(View.GONE);
-
+        if (RecordManager.TAGS.size() % 8 == 0)
+            tagAdapter = new TagChooseFragmentAdapter(getSupportFragmentManager(), RecordManager.TAGS.size() / 8);
+        else
+            tagAdapter = new TagChooseFragmentAdapter(getSupportFragmentManager(), RecordManager.TAGS.size() / 8 + 1);
+        tagViewPager.setAdapter(tagAdapter);
+        
 // button grid view/////////////////////////////////////////////////////////////////////////////////
         myGridView = (MyGridView)findViewById(R.id.gridview);
         myGridViewAdapter = new ButtonGridViewAdapter(this);
@@ -328,8 +304,7 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onGuillotineClosed() {
                         isPassword = false;
-                        ((EditFragment)editPagerAdapter.
-                                getPage(editViewPager.getCurrentItem())).editRequestFocus();
+                        CoCoinFragmentManager.mainActivityEditMoneyFragment.editRequestFocus();
                         radioButton0.setChecked(false);
                         radioButton1.setChecked(false);
                         radioButton2.setChecked(false);
@@ -420,8 +395,8 @@ public class MainActivity extends AppCompatActivity
             case SETTING_TAG:
                 if (resultCode == RESULT_OK) {
                     if (data.getBooleanExtra("IS_CHANGED", false)) {
-                        for (int i = 0; i < tagChoicePagerAdapter.getCount(); i++) {
-                            ((TagChooseFragment)tagChoicePagerAdapter.
+                        for (int i = 0; i < tagAdapter.getCount(); i++) {
+                            ((TagChooseFragment) tagAdapter.
                                     getItem(i)).updateTags();
                         }
                     }
@@ -452,43 +427,43 @@ public class MainActivity extends AppCompatActivity
     private void buttonClickOperation(boolean longClick, int position) {
         if (editViewPager.getCurrentItem() == 1) return;
         if (!isPassword) {
-            if (((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")
+            if (CoCoinFragmentManager.mainActivityEditMoneyFragment.getNumberText().toString().equals("0")
                     && !CoCoinUtil.ClickButtonCommit(position)) {
                 if (CoCoinUtil.ClickButtonDelete(position)
                         || CoCoinUtil.ClickButtonIsZero(position)) {
 
                 } else {
-                    ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(CoCoinUtil.BUTTONS[position]);
+                    CoCoinFragmentManager.mainActivityEditMoneyFragment.setNumberText(CoCoinUtil.BUTTONS[position]);
                 }
             } else {
                 if (CoCoinUtil.ClickButtonDelete(position)) {
                     if (longClick) {
-                        ((EditFragment)editPagerAdapter.getPage(0)).setNumberText("0");
-                        ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(
-                                CoCoinUtil.FLOATINGLABELS[((EditFragment) editPagerAdapter.getPage(0))
+                        CoCoinFragmentManager.mainActivityEditMoneyFragment.setNumberText("0");
+                        CoCoinFragmentManager.mainActivityEditMoneyFragment.setHelpText(
+                                CoCoinUtil.FLOATINGLABELS[CoCoinFragmentManager.mainActivityEditMoneyFragment
                                         .getNumberText().toString().length()]);
                     } else {
-                        ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(
-                                ((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString()
-                                .substring(0, ((EditFragment)editPagerAdapter.getPage(0))
+                        CoCoinFragmentManager.mainActivityEditMoneyFragment.setNumberText(
+                                CoCoinFragmentManager.mainActivityEditMoneyFragment.getNumberText().toString()
+                                .substring(0, CoCoinFragmentManager.mainActivityEditMoneyFragment
                                         .getNumberText().toString().length() - 1));
-                        if (((EditFragment)editPagerAdapter.getPage(0))
+                        if (CoCoinFragmentManager.mainActivityEditMoneyFragment
                                 .getNumberText().toString().length() == 0) {
-                            ((EditFragment)editPagerAdapter.getPage(0)).setNumberText("0");
-                            ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(" ");
+                            CoCoinFragmentManager.mainActivityEditMoneyFragment.setNumberText("0");
+                            CoCoinFragmentManager.mainActivityEditMoneyFragment.setHelpText(" ");
                         }
                     }
                 } else if (CoCoinUtil.ClickButtonCommit(position)) {
                     commit();
                 } else {
-                    ((EditFragment)editPagerAdapter.getPage(0)).setNumberText(
-                            ((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString()
+                    CoCoinFragmentManager.mainActivityEditMoneyFragment.setNumberText(
+                            CoCoinFragmentManager.mainActivityEditMoneyFragment.getNumberText().toString()
                                     + CoCoinUtil.BUTTONS[position]);
                 }
             }
-            ((EditFragment)editPagerAdapter.getPage(0))
+            CoCoinFragmentManager.mainActivityEditMoneyFragment
                     .setHelpText(CoCoinUtil.FLOATINGLABELS[
-                            ((EditFragment) editPagerAdapter.getPage(0)).getNumberText().toString().length()]);
+                            CoCoinFragmentManager.mainActivityEditMoneyFragment.getNumberText().toString().length()]);
         } else {
             if (CoCoinUtil.ClickButtonDelete(position)) {
                 if (longClick) {
@@ -539,19 +514,19 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void commit() {
-        if (((EditFragment)editPagerAdapter.getPage(0)).getTagId() == -1) {
+        if (CoCoinFragmentManager.mainActivityEditMoneyFragment.getTagId() == -1) {
             showToast(NO_TAG_TOAST);
-        } else if (((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString().equals("0")) {
+        } else if (CoCoinFragmentManager.mainActivityEditMoneyFragment.getNumberText().toString().equals("0")) {
             showToast(NO_MONEY_TOAST);
         } else  {
             Calendar calendar = Calendar.getInstance();
             CoCoinRecord coCoinRecord = new CoCoinRecord(
                     -1,
-                    Float.valueOf(((EditFragment)editPagerAdapter.getPage(0)).getNumberText().toString()),
+                    Float.valueOf(CoCoinFragmentManager.mainActivityEditMoneyFragment.getNumberText().toString()),
                     "RMB",
-                    ((EditFragment)editPagerAdapter.getPage(0)).getTagId(),
+                    CoCoinFragmentManager.mainActivityEditMoneyFragment.getTagId(),
                     calendar);
-            coCoinRecord.setRemark(((EditFragment)editPagerAdapter.getPage(1)).getRemark());
+            coCoinRecord.setRemark(CoCoinFragmentManager.mainActivityEditRemarkFragment.getRemark());
             long saveId = RecordManager.saveRecord(coCoinRecord);
             if (saveId == -1) {
 
@@ -559,16 +534,16 @@ public class MainActivity extends AppCompatActivity
                 if (!superToast.isShowing()) {
                     changeColor();
                 }
-                ((EditFragment)editPagerAdapter.getPage(0)).setTagImage(R.color.transparent);
-                ((EditFragment)editPagerAdapter.getPage(0)).setTagName("");
+                CoCoinFragmentManager.mainActivityEditMoneyFragment.setTagImage(R.color.transparent);
+                CoCoinFragmentManager.mainActivityEditMoneyFragment.setTagName("");
             }
-            ((EditFragment)editPagerAdapter.getPage(0)).setNumberText("0");
-            ((EditFragment)editPagerAdapter.getPage(0)).setHelpText(" ");
+            CoCoinFragmentManager.mainActivityEditMoneyFragment.setNumberText("0");
+            CoCoinFragmentManager.mainActivityEditMoneyFragment.setHelpText(" ");
         }
     }
 
     private void tagAnimation() {
-        YoYo.with(Techniques.Shake).duration(1000).playOn(viewPager);
+        YoYo.with(Techniques.Shake).duration(1000).playOn(tagViewPager);
     }
 
     private void showToast(int toastType) {
@@ -641,10 +616,10 @@ public class MainActivity extends AppCompatActivity
             guillotineColorLy.setBackgroundColor(CoCoinUtil.MY_BLUE);
             guillotineToolBar.setBackgroundColor(CoCoinUtil.MY_BLUE);
         }
-        if (editPagerAdapter.getPage(0) != null)
-            ((EditFragment)editPagerAdapter.getPage(0)).setEditColor(shouldChange);
-        if (editPagerAdapter.getPage(1) != null)
-            ((EditFragment)editPagerAdapter.getPage(1)).setEditColor(shouldChange);
+        if (CoCoinFragmentManager.mainActivityEditMoneyFragment != null)
+            CoCoinFragmentManager.mainActivityEditMoneyFragment.setEditColor(shouldChange);
+        if (CoCoinFragmentManager.mainActivityEditRemarkFragment != null)
+            CoCoinFragmentManager.mainActivityEditRemarkFragment.setEditColor(shouldChange);
         myGridViewAdapter.notifyDataSetInvalidated();
     }
 
@@ -707,8 +682,8 @@ public class MainActivity extends AppCompatActivity
         // if the tags' order has been changed
         if (SettingManager.getInstance().getMainActivityTagShouldChange()) {
             // change the tag fragment
-            for (int i = 0; i < tagChoicePagerAdapter.getCount(); i++) {
-                ((TagChooseFragment)tagChoicePagerAdapter.
+            for (int i = 0; i < tagAdapter.getCount(); i++) {
+                ((TagChooseFragment) tagAdapter.
                         getItem(i)).updateTags();
             }
             // and tell others that main activity has changed
@@ -744,7 +719,13 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onTagItemPicked(int position) {
-        ((EditFragment)editPagerAdapter.getPage(0)).setTag(viewPager.getCurrentItem() * 8 + position + 2);
+        if (CoCoinFragmentManager.mainActivityEditMoneyFragment != null)
+            CoCoinFragmentManager.mainActivityEditMoneyFragment.setTag(tagViewPager.getCurrentItem() * 8 + position + 2);
+    }
+
+    @Override
+    public void onAnimationStart(int id) {
+        // Todo add animation for changing tag
     }
 
     private static final float SHAKE_ACCELERATED_SPEED = 15;
@@ -770,4 +751,5 @@ public class MainActivity extends AppCompatActivity
 
         }
     };
+
 }

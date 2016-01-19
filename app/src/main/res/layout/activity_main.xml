@@ -1,12 +1,8 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    >
+    android:layout_height="match_parent">
 
     <View
         android:id="@+id/guillotine_background"
@@ -55,8 +51,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
                 android:background="#ffffff"
                 >
 
@@ -66,54 +60,14 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:orientation="vertical"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     >
 
                     <com.nightonke.saver.ui.CoCoinViewPager
                         android:id="@+id/edit_pager"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        />
-
-                    <com.ogaclejapan.smarttablayout.SmartTabLayout
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/edit_viewpager_tab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="16dp"
-                        android:layout_gravity="bottom|left"
                         android:paddingLeft="20dp"
-                        app:stl_clickable="false"
-                        app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
-                        app:stl_dividerColor="@color/transparent"
-                        app:stl_dividerThickness="0dp"
-                        app:stl_indicatorCornerRadius="4dp"
-                        app:stl_indicatorGravity="center"
-                        app:stl_indicatorInterpolation="linear"
-                        app:stl_indicatorThickness="8dp"
-                        app:stl_underlineColor="@color/transparent"
-                        app:stl_underlineThickness="0dp"
-                        />
-
-                    <com.ogaclejapan.smarttablayout.SmartTabLayout
-                        xmlns:android="http://schemas.android.com/apk/res/android"
-                        xmlns:app="http://schemas.android.com/apk/res-auto"
-                        android:id="@+id/viewpagertab"
-                        android:layout_width="wrap_content"
-                        android:layout_height="16dp"
-                        android:layout_gravity="bottom|left"
-                        android:paddingLeft="20dp"
-                        app:stl_clickable="false"
-                        app:stl_customTabTextLayoutId="@layout/custom_tab_circle"
-                        app:stl_dividerColor="@color/transparent"
-                        app:stl_dividerThickness="0dp"
-                        app:stl_indicatorCornerRadius="4dp"
-                        app:stl_indicatorGravity="center"
-                        app:stl_indicatorInterpolation="linear"
-                        app:stl_indicatorThickness="8dp"
-                        app:stl_underlineColor="@color/transparent"
-                        app:stl_underlineThickness="0dp"
+                        android:paddingRight="20dp"
                         />
 
                     <android.support.v4.view.ViewPager

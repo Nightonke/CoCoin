@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -24,15 +25,13 @@ import android.widget.TextView;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.PasswordChangeButtonGridViewAdapter;
-import com.nightonke.saver.fragment.PasswordStateFragment;
+import com.nightonke.saver.adapter.PasswordChangeFragmentAdapter;
+import com.nightonke.saver.fragment.PasswordChangeFragment;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.FixedSpeedScroller;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItemAdapter;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItems;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -61,7 +60,7 @@ public class EditPasswordActivity extends AppCompatActivity {
     private String againPassword = "";
 
     private ViewPager viewPager;
-    private FragmentPagerItemAdapter passwordAdapter;
+    private FragmentPagerAdapter adapter;
 
     private SuperToast superToast;
 
@@ -105,18 +104,12 @@ public class EditPasswordActivity extends AppCompatActivity {
         } catch (IllegalAccessException e) {
         }
 
-        FragmentPagerItems pages = new FragmentPagerItems(this);
-        for (int i = 0; i < 3; i++) {
-            pages.add(FragmentPagerItem.of("1", PasswordStateFragment.class));
-        }
-
-        passwordAdapter = new FragmentPagerItemAdapter(
-                getSupportFragmentManager(), pages);
+        adapter = new PasswordChangeFragmentAdapter(getSupportFragmentManager());
 
         viewPager.setOffscreenPageLimit(3);
         viewPager.setScrollBarFadeDuration(1000);
 
-        viewPager.setAdapter(passwordAdapter);
+        viewPager.setAdapter(adapter);
 
         myGridView = (MyGridView)findViewById(R.id.gridview);
         myGridViewAdapter = new PasswordChangeButtonGridViewAdapter(this);
@@ -192,10 +185,10 @@ public class EditPasswordActivity extends AppCompatActivity {
             case VERIFY_STATE:
                 if (CoCoinUtil.ClickButtonDelete(position)) {
                     if (longClick) {
-                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
+                        ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE)).init();
                         oldPassword = "";
                     } else {
-                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                        ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE))
                                 .clear(oldPassword.length() - 1);
                         if (oldPassword.length() != 0)
                             oldPassword = oldPassword.substring(0, oldPassword.length() - 1);
@@ -203,7 +196,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 } else if (CoCoinUtil.ClickButtonCommit(position)) {
 
                 } else {
-                    ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                    ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE))
                             .set(oldPassword.length());
                     oldPassword += CoCoinUtil.BUTTONS[position];
                     if (oldPassword.length() == 4) {
@@ -215,7 +208,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                             viewPager.setCurrentItem(NEW_PASSWORD, true);
                         } else {
                             // old password wrong
-                            ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                            ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE))
                                     .clear(4);
                             showToast(0);
                             oldPassword = "";
@@ -226,10 +219,10 @@ public class EditPasswordActivity extends AppCompatActivity {
             case NEW_PASSWORD:
                 if (CoCoinUtil.ClickButtonDelete(position)) {
                     if (longClick) {
-                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
+                        ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE)).init();
                         newPassword = "";
                     } else {
-                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                        ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE))
                                 .clear(newPassword.length() - 1);
                         if (newPassword.length() != 0)
                             newPassword = newPassword.substring(0, newPassword.length() - 1);
@@ -237,7 +230,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 } else if (CoCoinUtil.ClickButtonCommit(position)) {
 
                 } else {
-                    ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                    ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE))
                             .set(newPassword.length());
                     newPassword += CoCoinUtil.BUTTONS[position];
                     if (newPassword.length() == 4) {
@@ -250,10 +243,10 @@ public class EditPasswordActivity extends AppCompatActivity {
             case PASSWORD_AGAIN:
                 if (CoCoinUtil.ClickButtonDelete(position)) {
                     if (longClick) {
-                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).init();
+                        ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE)).init();
                         againPassword = "";
                     } else {
-                        ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                        ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE))
                                 .clear(againPassword.length() - 1);
                         if (againPassword.length() != 0)
                             againPassword = againPassword.substring(0, againPassword.length() - 1);
@@ -261,7 +254,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                 } else if (CoCoinUtil.ClickButtonCommit(position)) {
 
                 } else {
-                    ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE))
+                    ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE))
                             .set(againPassword.length());
                     againPassword += CoCoinUtil.BUTTONS[position];
                     if (againPassword.length() == 4) {
@@ -295,8 +288,8 @@ public class EditPasswordActivity extends AppCompatActivity {
                                 }
                             }, 1000);
                         } else {
-                            ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE)).clear(4);
-                            ((PasswordStateFragment)passwordAdapter.getPage(CURRENT_STATE - 1)).init();
+                            ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE)).clear(4);
+                            ((PasswordChangeFragment)adapter.getItem(CURRENT_STATE - 1)).init();
                             CURRENT_STATE = NEW_PASSWORD;
                             viewPager.setCurrentItem(NEW_PASSWORD, true);
                             newPassword = "";

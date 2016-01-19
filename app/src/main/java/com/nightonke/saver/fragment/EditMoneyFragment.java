@@ -23,13 +23,12 @@ import com.rengwuxian.materialedittext.MaterialEditText;
  * Created by 伟平 on 2015/10/27.
  */
 
-public class EditRecordFragment extends Fragment {
+public class EditMoneyFragment extends Fragment {
 
     private int fragmentPosition;
     private int tagId = -1;
 
     public MaterialEditText editView;
-    public MaterialEditText remarkEditView;
 
     public ImageView tagImage;
     public TextView tagName;
@@ -38,11 +37,12 @@ public class EditRecordFragment extends Fragment {
 
     Activity activity;
 
-    static public EditRecordFragment newInstance(int position) {
-        EditRecordFragment fragment = new EditRecordFragment();
+    static public EditMoneyFragment newInstance(int position, int type) {
+        EditMoneyFragment fragment = new EditMoneyFragment();
 
         Bundle args = new Bundle();
         args.putInt("position", position);
+        args.putInt("type", type);
         fragment.setArguments(args);
 
         return fragment;
@@ -53,33 +53,22 @@ public class EditRecordFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.edit_money_fragment, container, false);
 
+        if (getArguments().getInt("type") == CoCoinFragmentManager.MAIN_ACTIVITY_FRAGMENT) {
+            CoCoinFragmentManager.mainActivityEditMoneyFragment = this;
+        } else if (getArguments().getInt("type") == CoCoinFragmentManager.EDIT_RECORD_ACTIVITY_FRAGMENT) {
+            CoCoinFragmentManager.editRecordActivityEditMoneyFragment = this;
+        }
+
         fragmentPosition = getArguments().getInt("position");
-        remarkEditView = (MaterialEditText) mView.findViewById(R.id.remark);
-        editView = (MaterialEditText) mView.findViewById(R.id.money);
-        tagImage = (ImageView) mView.findViewById(R.id.tag_image);
-        tagName = (TextView) mView.findViewById(R.id.tag_name);
+        editView = (MaterialEditText)mView.findViewById(R.id.money);
+        tagImage = (ImageView)mView.findViewById(R.id.tag_image);
+        tagName = (TextView)mView.findViewById(R.id.tag_name);
         tagName.setTypeface(CoCoinUtil.typefaceLatoLight);
 
-        if (fragmentPosition == 0) {
-            editView.setTypeface(CoCoinUtil.typefaceLatoHairline);
-            editView.setText("" + (int) RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getMoney());
-            editView.requestFocus();
-            editView.setHelperText(CoCoinUtil.FLOATINGLABELS[editView.getText().toString().length()]);
-
-            tagId = RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getTag();
-            tagName.setText(CoCoinUtil.GetTagName(tagId));
-            tagImage.setImageResource(CoCoinUtil.GetTagIcon(tagId));
-
-            remarkEditView.setVisibility(View.GONE);
-        } else {
-            remarkEditView.setTypeface(CoCoinUtil.GetTypeface());
-
-            remarkEditView.setText(RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getRemark());
-            int pos = remarkEditView.getText().length();
-            remarkEditView.setSelection(pos);
-
-            editView.setVisibility(View.GONE);
-        }
+        editView.setTypeface(CoCoinUtil.typefaceLatoHairline);
+        editView.setText("0");
+        editView.requestFocus();
+        editView.setHelperText(" ");
 
         boolean shouldChange
                 = SettingManager.getInstance().getIsMonthLimit()
@@ -88,6 +77,18 @@ public class EditRecordFragment extends Fragment {
                 >= SettingManager.getInstance().getMonthWarning();
 
         setEditColor(shouldChange);
+
+        if (getArguments().getInt("type") == CoCoinFragmentManager.EDIT_RECORD_ACTIVITY_FRAGMENT
+                && CoCoinUtil.editRecordPosition != -1) {
+            CoCoinFragmentManager.editRecordActivityEditMoneyFragment
+                    .setTagImage(CoCoinUtil.GetTagIcon(
+                            (int)RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getId()));
+            CoCoinFragmentManager.editRecordActivityEditMoneyFragment
+                    .setTagName(CoCoinUtil.GetTagName(
+                            (int)RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getId()));
+            CoCoinFragmentManager.editRecordActivityEditMoneyFragment
+                    .setNumberText(String.format("%.0f", RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getMoney()));
+        }
 
         return mView;
     }
@@ -127,18 +128,10 @@ public class EditRecordFragment extends Fragment {
     }
 
     public void editRequestFocus() {
-        if (fragmentPosition == 0) {
-            editView.requestFocus();
-            InputMethodManager imm = (InputMethodManager)
-                    CoCoinApplication.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(mView.getWindowToken(), 0);
-        } else {
-            remarkEditView.requestFocus();
-            InputMethodManager keyboard = (InputMethodManager)
-                    CoCoinApplication.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-            keyboard.showSoftInput(remarkEditView, InputMethodManager.SHOW_IMPLICIT);
-        }
-
+        editView.requestFocus();
+        InputMethodManager imm = (InputMethodManager)
+                CoCoinApplication.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mView.getWindowToken(), 0);
     }
 
     public void setEditColor(boolean shouldChange) {
@@ -146,16 +139,10 @@ public class EditRecordFragment extends Fragment {
             editView.setTextColor(SettingManager.getInstance().getRemindColor());
             editView.setPrimaryColor(SettingManager.getInstance().getRemindColor());
             editView.setHelperTextColor(SettingManager.getInstance().getRemindColor());
-            remarkEditView.setTextColor(SettingManager.getInstance().getRemindColor());
-            remarkEditView.setPrimaryColor(SettingManager.getInstance().getRemindColor());
-            remarkEditView.setHelperTextColor(SettingManager.getInstance().getRemindColor());
         } else {
             editView.setTextColor(CoCoinUtil.MY_BLUE);
             editView.setPrimaryColor(CoCoinUtil.MY_BLUE);
             editView.setHelperTextColor(CoCoinUtil.MY_BLUE);
-            remarkEditView.setTextColor(CoCoinUtil.MY_BLUE);
-            remarkEditView.setPrimaryColor(CoCoinUtil.MY_BLUE);
-            remarkEditView.setHelperTextColor(CoCoinUtil.MY_BLUE);
         }
     }
 
@@ -167,12 +154,10 @@ public class EditRecordFragment extends Fragment {
         tagImage.setImageResource(resource);
     }
 
-    public String getRemark() {
-        return remarkEditView.getText().toString();
-    }
-
-    public void setRemark(String string) {
-        remarkEditView.setText(string);
+    public void getTagPosition(int[] position) {
+        tagImage.getLocationOnScreen(position);
+        position[0] += tagImage.getWidth() / 2;
+        position[1] += tagImage.getHeight() / 2;
     }
 
 }

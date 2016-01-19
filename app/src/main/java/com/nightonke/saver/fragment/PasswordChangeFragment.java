@@ -15,14 +15,14 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.CoCoinUtil;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
 import com.rey.material.widget.RadioButton;
 
 
 /**
  * Created by 伟平 on 2015/10/27.
  */
-public class PasswordStateFragment extends Fragment {
+
+public class PasswordChangeFragment extends Fragment {
 
     private int fragmentPosition;
     private RadioButton button0;
@@ -32,25 +32,22 @@ public class PasswordStateFragment extends Fragment {
     private LinearLayout ly;
     private TextView passwordTip;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        View view = LayoutInflater.from(
-                getActivity()).inflate(R.layout.password_state_fragment, null);
+    static public PasswordChangeFragment newInstance(int position) {
+        PasswordChangeFragment fragment = new PasswordChangeFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("position", position);
+        fragment.setArguments(args);
+
+        return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.password_state_fragment, container, false);
-        return view;
-    }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        fragmentPosition = FragmentPagerItem.getPosition(getArguments());
+        fragmentPosition = getArguments().getInt("position");
         button0 = (RadioButton)view.findViewById(R.id.button0);
         button1 = (RadioButton)view.findViewById(R.id.button1);
         button2 = (RadioButton)view.findViewById(R.id.button2);
@@ -84,6 +81,8 @@ public class PasswordStateFragment extends Fragment {
             default:
                 break;
         }
+
+        return view;
     }
 
     public void set(int i) {

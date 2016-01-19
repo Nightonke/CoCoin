@@ -2,19 +2,27 @@ package com.nightonke.saver.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.TagChooseGridViewAdapter;
+import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.ui.MyGridView;
-import com.ogaclejapan.smarttablayout.utils.v4.FragmentPagerItem;
+import com.nightonke.saver.util.CoCoinUtil;
 
 /**
  * Created by 伟平 on 2015/10/27.
@@ -35,6 +43,16 @@ public class TagChooseFragment extends Fragment {
     public MyGridView myGridView;
 
     Activity activity;
+
+    static public TagChooseFragment newInstance(int position) {
+        TagChooseFragment fragment = new TagChooseFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("position", position);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -64,7 +82,7 @@ public class TagChooseFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        fragmentPosition = FragmentPagerItem.getPosition(getArguments());
+        fragmentPosition = getArguments().getInt("position");
 
         tagAdapter = new TagChooseGridViewAdapter(getActivity(), fragmentPosition);
 
@@ -75,6 +93,7 @@ public class TagChooseFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try {
                     ((OnTagItemSelectedListener)activity).onTagItemPicked(position);
+                    ((OnTagItemSelectedListener)activity).onAnimationStart(RecordManager.TAGS.get(fragmentPosition * 8 + position + 2).getId());
                 } catch (ClassCastException cce){
                     cce.printStackTrace();
                 }
@@ -85,6 +104,7 @@ public class TagChooseFragment extends Fragment {
 
     public interface OnTagItemSelectedListener {
         void onTagItemPicked(int position);
+        void onAnimationStart(int id);
     }
 
     public void updateTags() {
