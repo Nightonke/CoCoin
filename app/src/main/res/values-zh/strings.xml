@@ -318,4 +318,8 @@
     <string name="login_complete">登录成功</string>
     <string name="login_error">登录失败，点击重试</string>
 
+    <string name="register_idle">注册</string>
+    <string name="register_complete">注册成功</string>
+    <string name="register_error">注册失败，点击重试</string>
+
 </resources>

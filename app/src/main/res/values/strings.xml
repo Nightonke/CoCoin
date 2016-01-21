@@ -330,4 +330,8 @@
     <string name="login_complete">Sign in successfully</string>
     <string name="login_error">Sign in failed, tap to retry</string>
 
+    <string name="register_idle">Sign up</string>
+    <string name="register_complete">Sign up successfully</string>
+    <string name="register_error">Sign up failed, tap to retry</string>
+
 </resources>

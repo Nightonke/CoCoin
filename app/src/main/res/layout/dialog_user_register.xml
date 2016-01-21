@@ -69,4 +69,20 @@
         app:met_clearButton="true"
         />
 
+    <com.dd.CircularProgressButton
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:cpb_cornerRadius="48dp"
+        app:cpb_textComplete="@string/register_complete"
+        app:cpb_selectorComplete="@drawable/button_login_successfully_dialog"
+        app:cpb_textError="@string/register_error"
+        app:cpb_selectorError="@drawable/button_login_error_dialog"
+        app:cpb_textIdle="@string/register_idle"
+        app:cpb_selectorIdle="@drawable/button_login_idle_dialog"
+        />
+
 </LinearLayout>

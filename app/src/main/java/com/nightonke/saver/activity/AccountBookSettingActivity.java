@@ -33,6 +33,7 @@ import com.dd.CircularProgressButton;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.nightonke.saver.BuildConfig;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
@@ -690,7 +691,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
                     @Override
                     public void onSuccess() {
                         loginDialog.setCancelable(true);
-                        loginDialogButton.setProgress(100);
+                        loginDialogButton.setProgress(0);
+                        loginDialogButton.setIdleText(getResourceString(R.string.login_complete));
 // login successfully through user name/////////////////////////////////////////////////////////////
                         SettingManager.getInstance().setTodayViewInfoShouldChange(true);
                         User loginUser =
@@ -718,7 +720,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
                             @Override
                             public void onSuccess() {
                                 loginDialog.setCancelable(true);
-                                loginDialogButton.setProgress(100);
+                                loginDialogButton.setProgress(0);
+                                loginDialogButton.setIdleText(getResourceString(R.string.login_complete));
 // login successfully through user email////////////////////////////////////////////////////////////
                                 SettingManager.getInstance().setTodayViewInfoShouldChange(true);
                                 User loginUser =
@@ -742,11 +745,11 @@ public class AccountBookSettingActivity extends AppCompatActivity
                             @Override
                             public void onFailure(int code, String msg) {
                                 loginDialog.setCancelable(true);
-                                loginDialogButton.setProgress(-1);
+                                loginDialogButton.setProgress(0);
                                 String tip = getResourceString(R.string.network_disconnection);
                                 if (msg.charAt(0) == 'u') tip = getResourceString(R.string.user_name_or_password_incorrect);
                                 if (msg.charAt(1) == 'n') tip = getResourceString(R.string.user_mobile_exist);
-                                loginDialogButton.setErrorText(tip);
+                                loginDialogButton.setIdleText(tip);
                             }
                         });
                     }
@@ -775,7 +778,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                positiveAction.setEnabled(
+                loginDialogButton.setEnabled(
                         0 < loginUserName.getText().toString().length()
                                 && 0 < loginPassword.getText().toString().length());
             }
@@ -789,7 +792,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                positiveAction.setEnabled(
+                loginDialogButton.setEnabled(
                         0 < loginUserName.getText().toString().length()
                                 && 0 < loginPassword.getText().toString().length());
             }
@@ -801,91 +804,110 @@ public class AccountBookSettingActivity extends AppCompatActivity
     }
 
 // User register////////////////////////////////////////////////////////////////////////////////////
+    MaterialDialog registerDialog;
+    View registerDialogView;
+    CircularProgressButton registerDialogButton;
     private void userRegister() {
-        MaterialDialog dialog = new MaterialDialog.Builder(this)
+        registerDialog = new MaterialDialog.Builder(this)
                 .title(R.string.go_register)
                 .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
                 .customView(R.layout.dialog_user_register, true)
-                .positiveText(R.string.go_register)
-                .negativeText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (which.equals(DialogAction.POSITIVE)) {
-// User register, a new user////////////////////////////////////////////////////////////////////////
-                            final User user = new User();
-                            // basic info
-                            user.setUsername(registerUserName.getText().toString());
-                            user.setPassword(registerPassword.getText().toString());
-                            user.setEmail(registerUserEmail.getText().toString());
-                            user.setAndroidId(CoCoinApplication.getAndroidId());
-                            // settings info
-                            // user.setLogo();
-                            user.setIsMonthLimit(SettingManager.getInstance().getIsMonthLimit());
-                            user.setMonthLimit(SettingManager.getInstance().getMonthLimit());
-                            user.setIsColorRemind(SettingManager.getInstance().getIsColorRemind());
-                            user.setMonthWarning(SettingManager.getInstance().getMonthWarning());
-                            user.setRemindColor(SettingManager.getInstance().getRemindColor());
-                            user.setIsForbidden(SettingManager.getInstance().getIsForbidden());
-                            user.setAccountBookName(SettingManager.getInstance().getAccountBookName());
-                            user.setAccountBookPassword(SettingManager.getInstance().getPassword());
-                            // Todo store tag order
-                            user.setShowPicture(SettingManager.getInstance().getShowPicture());
-                            user.setIsHollow(SettingManager.getInstance().getIsHollow());
-                            user.setLogoObjectId(null);
-                            user.signUp(CoCoinApplication.getAppContext(), new SaveListener() {
-                                @Override
-                                public void onSuccess() {
-// if register successfully/////////////////////////////////////////////////////////////////////////
-                                    SettingManager.getInstance().setLoggenOn(true);
-                                    SettingManager.getInstance().setUserName(registerUserName.getText().toString());
-                                    SettingManager.getInstance().setUserEmail(registerUserEmail.getText().toString());
-                                    SettingManager.getInstance().setUserPassword(registerPassword.getText().toString());
-                                    showToast(4, registerUserName.getText().toString());
-// if login successfully////////////////////////////////////////////////////////////////////////////
-                                    user.login(CoCoinApplication.getAppContext(), new SaveListener() {
-                                        @Override
-                                        public void onSuccess() {
-                                            SettingManager.getInstance().setTodayViewInfoShouldChange(true);
-                                            updateViews();
-                                            RecordManager.updateOldRecordsToServer();
-                                        }
-                                        @Override
-                                        public void onFailure(int code, String msg) {
-// if login failed//////////////////////////////////////////////////////////////////////////////////
-                                        }
-                                    });
-                                }
-// if register failed///////////////////////////////////////////////////////////////////////////////
-                                @Override
-                                public void onFailure(int code, String msg) {
-                                    showToast(5, msg);
-                                }
-                            });
-                        }
-                    }
-                }).build();
+                .build();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 
-        final MDButton positiveAction = dialog.getActionButton(DialogAction.POSITIVE);
+        registerDialogView = registerDialog.getCustomView();
+        registerDialogButton = (CircularProgressButton)registerDialogView.findViewById(R.id.button);
+        registerDialogButton.setTypeface(CoCoinUtil.GetTypeface());
+        registerDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerDialogButton.setProgress(1);
+                registerDialog.setCancelable(false);
+// User register, a new user////////////////////////////////////////////////////////////////////////
+                final User user = new User();
+                // basic info
+                user.setUsername(registerUserName.getText().toString());
+                user.setPassword(registerPassword.getText().toString());
+                user.setEmail(registerUserEmail.getText().toString());
+                user.setAndroidId(CoCoinApplication.getAndroidId());
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "Android Id: " + user.getAndroidId());
+                // settings info
+                // user.setLogo();
+                user.setIsMonthLimit(SettingManager.getInstance().getIsMonthLimit());
+                user.setMonthLimit(SettingManager.getInstance().getMonthLimit());
+                user.setIsColorRemind(SettingManager.getInstance().getIsColorRemind());
+                user.setMonthWarning(SettingManager.getInstance().getMonthWarning());
+                user.setRemindColor(SettingManager.getInstance().getRemindColor());
+                user.setIsForbidden(SettingManager.getInstance().getIsForbidden());
+                user.setAccountBookName(SettingManager.getInstance().getAccountBookName());
+                user.setAccountBookPassword(SettingManager.getInstance().getPassword());
+                // Todo store tag order
+                user.setShowPicture(SettingManager.getInstance().getShowPicture());
+                user.setIsHollow(SettingManager.getInstance().getIsHollow());
+                user.setLogoObjectId(null);
+                user.signUp(CoCoinApplication.getAppContext(), new SaveListener() {
+                    @Override
+                    public void onSuccess() {
+                        registerDialogButton.setProgress(0);
+                        registerDialog.setCancelable(true);
+                        registerDialogButton.setIdleText(getResourceString(R.string.register_complete));
+// if register successfully/////////////////////////////////////////////////////////////////////////
+                        SettingManager.getInstance().setLoggenOn(true);
+                        SettingManager.getInstance().setUserName(registerUserName.getText().toString());
+                        SettingManager.getInstance().setUserEmail(registerUserEmail.getText().toString());
+                        SettingManager.getInstance().setUserPassword(registerPassword.getText().toString());
+                        showToast(4, registerUserName.getText().toString());
+// if login successfully////////////////////////////////////////////////////////////////////////////
+                        user.login(CoCoinApplication.getAppContext(), new SaveListener() {
+                            @Override
+                            public void onSuccess() {
+                                SettingManager.getInstance().setTodayViewInfoShouldChange(true);
+                                updateViews();
+                                RecordManager.updateOldRecordsToServer();
+                            }
+                            @Override
+                            public void onFailure(int code, String msg) {
+// if login failed//////////////////////////////////////////////////////////////////////////////////
+                            }
+                        });
+                    }
+                    // if register failed///////////////////////////////////////////////////////////////////////////////
+                    @Override
+                    public void onFailure(int code, String msg) {
+                        if (BuildConfig.DEBUG) Log.d("CoCoin", "Register failed: " + msg);
+                        String tip = getResourceString(R.string.network_disconnection);
+                        if (msg.charAt(1) == 's') tip = getResourceString(R.string.user_name_exist);
+                        if (msg.charAt(0) == 'e') tip = getResourceString(R.string.user_email_exist);
+                        if (msg.charAt(1) == 'n') tip = getResourceString(R.string.user_mobile_exist);
+                        registerDialogButton.setIdleText(tip);
+                        registerDialogButton.setProgress(0);
+                        registerDialog.setCancelable(true);
+                    }
+                });
+            }
+        });
+
+        final MDButton positiveAction = registerDialog.getActionButton(DialogAction.POSITIVE);
         positiveAction.setEnabled(false);
         final EmailValidator emailValidator = new EmailValidator();
 
         TextView userNameTV
-                = (TextView)dialog.getCustomView().findViewById(R.id.register_user_name_text);
+                = (TextView)registerDialog.getCustomView().findViewById(R.id.register_user_name_text);
         TextView userEmailTV
-                = (TextView)dialog.getCustomView().findViewById(R.id.register_user_email_text);
+                = (TextView)registerDialog.getCustomView().findViewById(R.id.register_user_email_text);
         TextView userPasswordTV
-                = (TextView)dialog.getCustomView().findViewById(R.id.register_password_text);
+                = (TextView)registerDialog.getCustomView().findViewById(R.id.register_password_text);
         userNameTV.setTypeface(CoCoinUtil.GetTypeface());
         userEmailTV.setTypeface(CoCoinUtil.GetTypeface());
         userPasswordTV.setTypeface(CoCoinUtil.GetTypeface());
 
         registerUserName
-                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.register_user_name);
+                = (MaterialEditText)registerDialog.getCustomView().findViewById(R.id.register_user_name);
         registerUserEmail
-                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.register_user_email);
+                = (MaterialEditText)registerDialog.getCustomView().findViewById(R.id.register_user_email);
         registerPassword
-                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.register_password);
+                = (MaterialEditText)registerDialog.getCustomView().findViewById(R.id.register_password);
 
         registerUserName.setTypeface(CoCoinUtil.GetTypeface());
         registerUserName.addTextChangedListener(new TextWatcher() {
@@ -897,7 +919,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean emailOK = emailValidator.validate(registerUserEmail.getText().toString());
-                positiveAction.setEnabled(
+                registerDialogButton.setEnabled(
                         0 < registerUserName.getText().toString().length()
                                 && registerUserName.getText().toString().length() <= 16
                                 && registerPassword.getText().toString().length() > 0
@@ -925,7 +947,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean emailOK = emailValidator.validate(registerUserEmail.getText().toString());
-                positiveAction.setEnabled(
+                registerDialogButton.setEnabled(
                         0 < registerUserName.getText().toString().length()
                                 && registerUserName.getText().toString().length() <= 16
                                 && registerPassword.getText().toString().length() > 0
@@ -953,7 +975,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 boolean emailOK = emailValidator.validate(registerUserEmail.getText().toString());
-                positiveAction.setEnabled(
+                registerDialogButton.setEnabled(
                         0 < registerUserName.getText().toString().length()
                                 && registerUserName.getText().toString().length() <= 16
                                 && registerPassword.getText().toString().length() > 0
@@ -971,7 +993,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             }
         });
 
-        dialog.show();
+        registerDialog.show();
     }
 
 // Change account book name/////////////////////////////////////////////////////////////////////////
