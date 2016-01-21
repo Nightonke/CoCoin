@@ -48,6 +48,8 @@ public class PasswordChangeFragment extends Fragment {
         View view = inflater.inflate(R.layout.password_state_fragment, container, false);
 
         fragmentPosition = getArguments().getInt("position");
+        CoCoinFragmentManager.passwordChangeFragment[fragmentPosition] = this ;
+
         button0 = (RadioButton)view.findViewById(R.id.button0);
         button1 = (RadioButton)view.findViewById(R.id.button1);
         button2 = (RadioButton)view.findViewById(R.id.button2);

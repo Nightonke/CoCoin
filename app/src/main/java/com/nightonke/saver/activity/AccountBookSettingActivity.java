@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -28,6 +29,7 @@ import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.afollestad.materialdialogs.internal.MDButton;
 import com.balysv.materialripple.MaterialRippleLayout;
+import com.dd.CircularProgressButton;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -100,6 +102,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private MaterialIconView userEmailIcon;
     private TextView userName;
     private TextView userEmail;
+    private TextView loginButton;
     private RiseNumberTextView expense;
     private TextView expenseTV;
     private RiseNumberTextView records;
@@ -656,96 +659,115 @@ public class AccountBookSettingActivity extends AppCompatActivity
     }
 
 // User login///////////////////////////////////////////////////////////////////////////////////////
+    MaterialDialog loginDialog;
+    View loginDialogView;
+    CircularProgressButton loginDialogButton;
     private void userLogin() {
-        MaterialDialog dialog = new MaterialDialog.Builder(this)
+        loginDialog = new MaterialDialog.Builder(this)
                 .title(R.string.go_login)
                 .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
-                .customView(R.layout.user_login, true)
-                .positiveText(R.string.go_login)
-                .negativeText(android.R.string.cancel)
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (which.equals(DialogAction.POSITIVE)) {
-// the user ask to login////////////////////////////////////////////////////////////////////////////
-                            final User user = new User();
-                            user.setUsername(loginUserName.getText().toString());
-                            user.setPassword(loginPassword.getText().toString());
-                            user.login(CoCoinApplication.getAppContext(), new SaveListener() {
-// try with user name///////////////////////////////////////////////////////////////////////////////
-                                @Override
-                                public void onSuccess() {
-// login successfully through user name/////////////////////////////////////////////////////////////
-                                    SettingManager.getInstance().setTodayViewInfoShouldChange(true);
-                                    User loginUser =
-                                            BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
-                                    if (!CoCoinApplication.getAndroidId().equals(loginUser.getAndroidId())) {
-// 2 users on one mobile////////////////////////////////////////////////////////////////////////////
-                                        showToast(7, "unique...");
-                                        return;
-                                    }
-                                    SettingManager.getInstance().setLoggenOn(true);
-                                    SettingManager.getInstance().setUserName(loginUserName.getText().toString());
-                                    SettingManager.getInstance().setUserEmail(
-                                            loginUser.getEmail());
-                                    updateViews();
-                                    RecordManager.updateOldRecordsToServer();
-                                    whetherSyncSettingsFromServer();
-                                    showToast(6, loginUserName.getText().toString());
-                                }
-// login fail through user name/////////////////////////////////////////////////////////////////////
-                                @Override
-                                public void onFailure(int code, String msg) {
-// try with user email//////////////////////////////////////////////////////////////////////////////
-                                    user.setEmail(loginUserName.getText().toString());
-                                    user.login(CoCoinApplication.getAppContext(), new SaveListener() {
-                                        @Override
-                                        public void onSuccess() {
-// login successfully through user email////////////////////////////////////////////////////////////
-                                            SettingManager.getInstance().setTodayViewInfoShouldChange(true);
-                                            User loginUser =
-                                                    BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
-                                            if (!CoCoinApplication.getAndroidId().equals(loginUser.getAndroidId())) {
-// 2 users on one mobile////////////////////////////////////////////////////////////////////////////
-                                                showToast(7, "unique...");
-                                                return;
-                                            }
-                                            String userName = loginUser.getUsername();
-                                            SettingManager.getInstance().setLoggenOn(true);
-                                            SettingManager.getInstance().setUserName(userName);
-                                            SettingManager.getInstance().setUserEmail(loginUserName.getText().toString());
-                                            SettingManager.getInstance().setUserPassword(loginPassword.getText().toString());
-                                            updateViews();
-                                            RecordManager.updateOldRecordsToServer();
-                                            whetherSyncSettingsFromServer();
-                                            showToast(6, userName);
-                                        }
-// login fail through user name and email///////////////////////////////////////////////////////////
-                                        @Override
-                                        public void onFailure(int code, String msg) {
-                                            showToast(7, msg);
-                                        }
-                                    });
-                                }
-                            });
-                        }
-                    }
-                }).build();
+                .customView(R.layout.dialog_user_login, true)
+                .build();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 
-        final MDButton positiveAction = dialog.getActionButton(DialogAction.POSITIVE);
+        loginDialogView = loginDialog.getCustomView();
+        loginDialogButton = (CircularProgressButton) loginDialogView.findViewById(R.id.button);
+        loginDialogButton.isIndeterminateProgressMode();
+        loginDialogButton.setProgress(0);
+        loginDialogButton.setTypeface(CoCoinUtil.GetTypeface());
+        loginDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loginDialog.setCancelable(false);
+                loginDialogButton.setProgress(1);
+// the user ask to login////////////////////////////////////////////////////////////////////////////
+                final User user = new User();
+                user.setUsername(loginUserName.getText().toString());
+                user.setPassword(loginPassword.getText().toString());
+                user.login(CoCoinApplication.getAppContext(), new SaveListener() {
+// try with user name///////////////////////////////////////////////////////////////////////////////
+                    @Override
+                    public void onSuccess() {
+                        loginDialog.setCancelable(true);
+                        loginDialogButton.setProgress(100);
+// login successfully through user name/////////////////////////////////////////////////////////////
+                        SettingManager.getInstance().setTodayViewInfoShouldChange(true);
+                        User loginUser =
+                                BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+                        if (!CoCoinApplication.getAndroidId().equals(loginUser.getAndroidId())) {
+// 2 users on one mobile////////////////////////////////////////////////////////////////////////////
+                            showToast(7, "unique...");
+                            return;
+                        }
+                        SettingManager.getInstance().setLoggenOn(true);
+                        SettingManager.getInstance().setUserName(loginUserName.getText().toString());
+                        SettingManager.getInstance().setUserEmail(
+                                loginUser.getEmail());
+                        updateViews();
+                        RecordManager.updateOldRecordsToServer();
+                        whetherSyncSettingsFromServer();
+                        showToast(6, loginUserName.getText().toString());
+                    }
+                    // login fail through user name/////////////////////////////////////////////////////////////////////
+                    @Override
+                    public void onFailure(int code, String msg) {
+// try with user email//////////////////////////////////////////////////////////////////////////////
+                        user.setEmail(loginUserName.getText().toString());
+                        user.login(CoCoinApplication.getAppContext(), new SaveListener() {
+                            @Override
+                            public void onSuccess() {
+                                loginDialog.setCancelable(true);
+                                loginDialogButton.setProgress(100);
+// login successfully through user email////////////////////////////////////////////////////////////
+                                SettingManager.getInstance().setTodayViewInfoShouldChange(true);
+                                User loginUser =
+                                        BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+                                if (!CoCoinApplication.getAndroidId().equals(loginUser.getAndroidId())) {
+// 2 users on one mobile////////////////////////////////////////////////////////////////////////////
+                                    showToast(7, "unique...");
+                                    return;
+                                }
+                                String userName = loginUser.getUsername();
+                                SettingManager.getInstance().setLoggenOn(true);
+                                SettingManager.getInstance().setUserName(userName);
+                                SettingManager.getInstance().setUserEmail(loginUserName.getText().toString());
+                                SettingManager.getInstance().setUserPassword(loginPassword.getText().toString());
+                                updateViews();
+                                RecordManager.updateOldRecordsToServer();
+                                whetherSyncSettingsFromServer();
+                                showToast(6, userName);
+                            }
+// login fail through user name and email///////////////////////////////////////////////////////////
+                            @Override
+                            public void onFailure(int code, String msg) {
+                                loginDialog.setCancelable(true);
+                                loginDialogButton.setProgress(-1);
+                                String tip = getResourceString(R.string.network_disconnection);
+                                if (msg.charAt(0) == 'u') tip = getResourceString(R.string.user_name_or_password_incorrect);
+                                if (msg.charAt(1) == 'n') tip = getResourceString(R.string.user_mobile_exist);
+                                loginDialogButton.setErrorText(tip);
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+        final MDButton positiveAction = loginDialog.getActionButton(DialogAction.POSITIVE);
         positiveAction.setEnabled(false);
 
         TextView userNameTV
-                = (TextView)dialog.getCustomView().findViewById(R.id.login_user_name_text);
+                = (TextView)loginDialog.getCustomView().findViewById(R.id.login_user_name_text);
         TextView userPasswordTV
-                = (TextView)dialog.getCustomView().findViewById(R.id.login_password_text);
+                = (TextView)loginDialog.getCustomView().findViewById(R.id.login_password_text);
         userNameTV.setTypeface(CoCoinUtil.GetTypeface());
         userPasswordTV.setTypeface(CoCoinUtil.GetTypeface());
 
         loginUserName
-                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.login_user_name);
+                = (MaterialEditText)loginDialog.getCustomView().findViewById(R.id.login_user_name);
         loginPassword
-                = (MaterialEditText)dialog.getCustomView().findViewById(R.id.login_password);
+                = (MaterialEditText)loginDialog.getCustomView().findViewById(R.id.login_password);
 
         loginUserName.setTypeface(CoCoinUtil.GetTypeface());
         loginUserName.addTextChangedListener(new TextWatcher() {
@@ -775,7 +797,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
             public void afterTextChanged(Editable s) {}
         });
 
-        dialog.show();
+        loginDialog.show();
     }
 
 // User register////////////////////////////////////////////////////////////////////////////////////
@@ -783,7 +805,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title(R.string.go_register)
                 .typeface(CoCoinUtil.GetTypeface(), CoCoinUtil.GetTypeface())
-                .customView(R.layout.user_register, true)
+                .customView(R.layout.dialog_user_register, true)
                 .positiveText(R.string.go_register)
                 .negativeText(android.R.string.cancel)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
@@ -989,9 +1011,13 @@ public class AccountBookSettingActivity extends AppCompatActivity
         if (SettingManager.getInstance().getLoggenOn()) {
             userName.setText(SettingManager.getInstance().getUserName());
             userEmail.setText(SettingManager.getInstance().getUserEmail());
+            loginButton.setText(mContext.getResources().getText(R.string.logout_button));
+            loginButton.setBackgroundResource(R.drawable.button_logout);
         } else {
             userName.setText("");
             userEmail.setText("");
+            loginButton.setText(mContext.getResources().getText(R.string.login_button));
+            loginButton.setBackgroundResource(R.drawable.button_login);
         }
     }
 
@@ -1022,18 +1048,20 @@ public class AccountBookSettingActivity extends AppCompatActivity
         logo = (CircleImageView)findViewById(R.id.profile_image);
         logo.setOnClickListener(this);
         profileLayout = (MaterialRippleLayout)findViewById(R.id.profile_layout);
-        profileLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userOperator();
-            }
-        });
         userNameIcon = (MaterialIconView)findViewById(R.id.user_name_icon);
         userEmailIcon = (MaterialIconView)findViewById(R.id.user_email_icon);
         userName = (TextView)findViewById(R.id.user_name);
         userName.setTypeface(CoCoinUtil.typefaceLatoLight);
         userEmail = (TextView)findViewById(R.id.user_email);
         userEmail.setTypeface(CoCoinUtil.typefaceLatoLight);
+        loginButton = (TextView)findViewById(R.id.login_button);
+        loginButton.setTypeface(CoCoinUtil.typefaceLatoLight);
+        loginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userOperator();
+            }
+        });
         expense = (RiseNumberTextView)findViewById(R.id.expense);
         expense.setTypeface(CoCoinUtil.typefaceLatoLight);
         records = (RiseNumberTextView)findViewById(R.id.records);
@@ -1557,7 +1585,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
 
 // Show toast///////////////////////////////////////////////////////////////////////////////////////
     private void showToast(int toastType, String msg) {
-        Log.d("Saver", msg);
+        Log.d("CoCoin", msg);
         SuperToast.cancelAllSuperToasts();
         SuperToast superToast = new SuperToast(mContext);
 

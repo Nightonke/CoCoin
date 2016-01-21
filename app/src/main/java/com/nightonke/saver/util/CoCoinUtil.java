@@ -9,6 +9,8 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.daimajia.androidanimations.library.BaseViewAnimator;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -16,6 +18,7 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.util.Calendar;
 import java.util.Comparator;
@@ -842,5 +845,19 @@ public class CoCoinUtil {
         int green = Color.green(color);
         int blue = Color.blue(color);
         return Color.argb(alpha, red, green, blue);
+    }
+
+    public static void getKeyBoard(MaterialEditText editText, Context context) {
+        editText.requestFocus();
+        InputMethodManager keyboard = (InputMethodManager)
+                context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    public static void getKeyBoard(EditText editText) {
+        editText.requestFocus();
+        InputMethodManager keyboard = (InputMethodManager)
+                CoCoinApplication.getAppContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        keyboard.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 }

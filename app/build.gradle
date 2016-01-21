@@ -44,9 +44,13 @@ dependencies {
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
     compile 'com.jakewharton:butterknife:6.1.0'
 
+    // material viewpager
     compile ('com.github.florent37:materialviewpager:1.1.2@aar'){
         transitive = true
     }
+
+    // progress-button
+    compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 
     compile 'com.balysv.materialmenu:material-menu:1.5.4'
 

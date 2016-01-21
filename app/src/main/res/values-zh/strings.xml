@@ -242,8 +242,8 @@
     </string>
     <string name="network_disconnection">网络连接断开</string>
 
-    <string name="user_name_or_password_incorrect">用户不存在或密码错误！</string>
-    <string name="name_or_email_inexist">用户不存在！</string>
+    <string name="user_name_or_password_incorrect">用户不存在或密码错误</string>
+    <string name="name_or_email_inexist">用户不存在</string>
     <string name="password_wrong">密码错误！</string>
 
     <string name="log_out_successfully">登出成功！</string>
@@ -310,5 +310,12 @@
     <string name="blog">博客：blog.csdn.net/u012925008</string>
     <string name="email">邮箱：nightonke@outlook.com</string>
     <string name="thank_again">如果有任何吐槽，就发邮件给我吧！</string>
+
+    <string name="login_button">登录/注册</string>
+    <string name="logout_button">注销</string>
+
+    <string name="login_idle">登录</string>
+    <string name="login_complete">登录成功</string>
+    <string name="login_error">登录失败，点击重试</string>
 
 </resources>

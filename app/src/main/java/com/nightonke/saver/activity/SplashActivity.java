@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.nightonke.saver.R;
+import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.RecordManager;
 import com.viksaa.sssplash.lib.activity.AwesomeSplash;
 import com.viksaa.sssplash.lib.cnst.Flags;
@@ -36,7 +37,7 @@ public class SplashActivity extends AwesomeSplash {
         configSplash.setAnimTitleTechnique(Techniques.FadeIn);
         configSplash.setTitleFont("fonts/LatoLatin-Light.ttf"); //provide string to your font located in assets/fonts/
 
-        Bmob.initialize(CoCoinApplication.getAppContext(), "0f0f9d45a39068bd6eea8896af1facf3");
+        Bmob.initialize(CoCoinApplication.getAppContext(), CoCoin.APPLICATION_ID);
         RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
 
     }

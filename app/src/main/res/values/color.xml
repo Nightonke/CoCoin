@@ -85,4 +85,13 @@
 
     <color name="setting_ripple">#2196F3</color>
 
+    <color name="login_button">#2196F3</color>
+    <color name="login_button_press">#51adf6</color>
+
+    <color name="login_button_successfully">#8bc34a</color>
+    <color name="login_button_successfully_press">#a4d070</color>
+
+    <color name="logout_button">#FF4081</color>
+    <color name="logout_button_press">#ff73a3</color>
+
 </resources>

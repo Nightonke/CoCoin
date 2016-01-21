@@ -323,4 +323,11 @@
     <string name="email">Email: nightonke@outlook.com</string>
     <string name="thank_again">If you get any questions about CoCoin or me, just mail me!</string>
 
+    <string name="login_button">Sign in/Sign up</string>
+    <string name="logout_button">Sign out</string>
+
+    <string name="login_idle">Sign in</string>
+    <string name="login_complete">Sign in successfully</string>
+    <string name="login_error">Sign in failed, tap to retry</string>
+
 </resources>

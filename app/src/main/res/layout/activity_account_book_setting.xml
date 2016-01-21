@@ -23,7 +23,7 @@
             />
 
         <FrameLayout
-            android:layout_height="400dp"
+            android:layout_height="320dp"
             android:layout_width="match_parent"
             >
 
@@ -42,6 +42,7 @@
                     android:src="@drawable/default_user_logo"
                     android:layout_marginTop="30dp"
                     android:layout_gravity="center"
+                    android:padding="5dp"
                     app:civ_border_width="1dp"
                     app:civ_border_color="#ffffff"/>
 
@@ -62,7 +63,7 @@
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
+                android:layout_height="wrap_content"
                 app:cardCornerRadius="2dp"
                 app:cardElevation="2dp"
                 android:layout_gravity="bottom"
@@ -156,77 +157,17 @@
 
                         </LinearLayout>
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/login_button"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                >
-
-                                <com.nightonke.saver.ui.RiseNumberTextView
-                                    android:id="@+id/expense"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"
-                                    android:textSize="40sp"
-                                    android:textColor="@color/my_blue"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/expense_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:layout_gravity="center_horizontal"
-                                    android:text="@string/expense_text"
-                                    android:textColor="@color/drawer_text"
-                                    android:textSize="12sp"
-                                    android:paddingBottom="10dp"
-                                    />
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                >
-
-                                <com.nightonke.saver.ui.RiseNumberTextView
-                                    android:id="@+id/records"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="0dp"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"
-                                    android:textSize="40sp"
-                                    android:textColor="@color/my_blue"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/records_text"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:layout_gravity="center_horizontal"
-                                    android:text="@string/records_text"
-                                    android:textColor="@color/drawer_text"
-                                    android:textSize="12sp"
-                                    android:paddingBottom="10dp"
-                                    />
-
-                            </LinearLayout>
-
-                        </LinearLayout>
+                            android:layout_height="30dp"
+                            android:layout_gravity="center_horizontal"
+                            android:text="@string/login_button"
+                            android:textColor="@color/white"
+                            android:gravity="center"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/button_login"
+                            />
 
                     </LinearLayout>
 
@@ -238,13 +179,118 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="2dp"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/cardMarginVertical"
+            android:layout_marginLeft="@dimen/cardMarginHorizontal"
+            android:layout_marginRight="@dimen/cardMarginHorizontal"
+            app:cardPreventCornerOverlap="false"
+            app:contentPadding="0dp">
+
+            <com.balysv.materialripple.MaterialRippleLayout
+                android:id="@+id/record_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:mrl_rippleAlpha="0.2"
+                app:mrl_rippleColor="@color/setting_ripple"
+                app:mrl_rippleHover="true"
+                app:mrl_rippleOverlay="false">
+
+                <LinearLayout
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:clickable="false"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            >
+
+                            <com.nightonke.saver.ui.RiseNumberTextView
+                                android:id="@+id/expense"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:textSize="40sp"
+                                android:textColor="@color/my_blue"
+                                />
+
+                            <TextView
+                                android:id="@+id/expense_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_gravity="center_horizontal"
+                                android:text="@string/expense_text"
+                                android:textColor="@color/drawer_text"
+                                android:textSize="12sp"
+                                android:paddingBottom="10dp"
+                                />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            >
+
+                            <com.nightonke.saver.ui.RiseNumberTextView
+                                android:id="@+id/records"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:textSize="40sp"
+                                android:textColor="@color/my_blue"
+                                />
+
+                            <TextView
+                                android:id="@+id/records_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:layout_gravity="center_horizontal"
+                                android:text="@string/records_text"
+                                android:textColor="@color/drawer_text"
+                                android:textSize="12sp"
+                                android:paddingBottom="10dp"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.balysv.materialripple.MaterialRippleLayout>
+
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="360dp"
             app:cardCornerRadius="2dp"
             app:cardElevation="2dp"
             android:layout_marginBottom="@dimen/cardMarginVertical"
             android:layout_marginLeft="@dimen/cardMarginHorizontal"
             android:layout_marginRight="@dimen/cardMarginHorizontal"
-            android:layout_marginTop="@dimen/cardMarginVertical"
             app:cardPreventCornerOverlap="false"
             app:contentPadding="0dp">
 
@@ -557,7 +603,6 @@
             android:layout_marginBottom="@dimen/cardMarginVertical"
             android:layout_marginLeft="@dimen/cardMarginHorizontal"
             android:layout_marginRight="@dimen/cardMarginHorizontal"
-            android:layout_marginTop="@dimen/cardMarginVertical"
             app:cardPreventCornerOverlap="false"
             app:contentPadding="0dp">
 
@@ -630,7 +675,6 @@
             android:layout_marginBottom="@dimen/cardMarginVertical"
             android:layout_marginLeft="@dimen/cardMarginHorizontal"
             android:layout_marginRight="@dimen/cardMarginHorizontal"
-            android:layout_marginTop="@dimen/cardMarginVertical"
             app:cardPreventCornerOverlap="false"
             app:contentPadding="0dp">
 
@@ -688,7 +732,6 @@
             android:layout_marginBottom="@dimen/cardMarginVertical"
             android:layout_marginLeft="@dimen/cardMarginHorizontal"
             android:layout_marginRight="@dimen/cardMarginHorizontal"
-            android:layout_marginTop="@dimen/cardMarginVertical"
             app:cardPreventCornerOverlap="false"
             app:contentPadding="0dp">
 
@@ -746,7 +789,6 @@
             android:layout_marginBottom="@dimen/cardMarginVertical"
             android:layout_marginLeft="@dimen/cardMarginHorizontal"
             android:layout_marginRight="@dimen/cardMarginHorizontal"
-            android:layout_marginTop="@dimen/cardMarginVertical"
             app:cardPreventCornerOverlap="false"
             app:contentPadding="0dp">
 
@@ -815,7 +857,6 @@
             android:layout_marginBottom="@dimen/cardMarginVertical"
             android:layout_marginLeft="@dimen/cardMarginHorizontal"
             android:layout_marginRight="@dimen/cardMarginHorizontal"
-            android:layout_marginTop="@dimen/cardMarginVertical"
             app:cardPreventCornerOverlap="false"
             app:contentPadding="0dp">
 
