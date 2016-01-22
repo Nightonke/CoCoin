@@ -1302,7 +1302,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
             // is logged on, set the user name and email
             userName.setText(SettingManager.getInstance().getUserName());
             userEmail.setText(SettingManager.getInstance().getUserEmail());
-            loginButton.setText(getResourceString(R.string.log_out));
+            loginButton.setText(mContext.getResources().getText(R.string.logout_button));
+            loginButton.setBackgroundResource(R.drawable.button_logout);
         } else {
             userName.setText("");
             userEmail.setText("");

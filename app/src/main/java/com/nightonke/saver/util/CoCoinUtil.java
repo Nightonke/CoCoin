@@ -396,6 +396,13 @@ public class CoCoinUtil {
             return "";
     }
 
+    public static String GetInMoney(int money) {
+        if ("zh".equals(Locale.getDefault().getLanguage()))
+            return "¥" + money;
+        else
+            return "$" + money + " ";
+    }
+
     public static String GetSpendString(int money) {
         if ("zh".equals(Locale.getDefault().getLanguage()))
             return "消费 ¥" + money;

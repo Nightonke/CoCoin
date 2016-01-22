@@ -52,6 +52,12 @@ dependencies {
     // progress-button
     compile 'com.github.dmytrodanylyk.circular-progress-button:library:1.1.3'
 
+    // date range picker
+    compile 'com.wdullaer:materialdatetimepicker:2.1.1'
+
+    // floating action button
+    compile 'com.melnykov:floatingactionbutton:1.3.0'
+
     compile 'com.balysv.materialmenu:material-menu:1.5.4'
 
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'

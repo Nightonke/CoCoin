@@ -14,4 +14,8 @@
     <dimen name="list_group_item_height">96dp</dimen>
     <dimen name="list_item_height">64dp</dimen>
     <dimen name="list_item_translation_z">2dp</dimen>
+
+    <dimen name="material_viewpager_head_height">150dp</dimen>
+    <dimen name="material_viewpager_logo_margin_top">80dp</dimen>
+
 </resources>

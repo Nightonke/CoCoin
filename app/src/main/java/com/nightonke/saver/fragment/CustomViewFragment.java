@@ -1,10 +1,10 @@
 package com.nightonke.saver.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
@@ -14,14 +14,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
-import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
+import com.melnykov.fab.FloatingActionButton;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
+import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
@@ -31,6 +32,7 @@ import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.squareup.leakcanary.RefWatcher;
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 
 import net.steamcrafted.materialiconlib.MaterialIconView;
 
@@ -55,26 +57,22 @@ import lecho.lib.hellocharts.view.PieChartView;
 
 public class CustomViewFragment extends Fragment {
 
+    private DatePickerDialog.OnDateSetListener onDateSetListener;
+
     private Context mContext;
 
+    private FloatingActionButton button;
     private ObservableScrollView mScrollView;
 
     private int fromYear;
     private int fromMonth;
     private int fromDay;
-    private int toYear;
-    private int toMonth;
-    private int toDay;
 
     private boolean isFrom;
 
     private TextView fromDate;
-    private TextView toDate;
     private TextView expense;
     private TextView emptyTip;
-
-    private boolean fromSet = false;
-    private boolean toSet = false;
 
     private Calendar from = Calendar.getInstance();
     private Calendar to = Calendar.getInstance();
@@ -145,22 +143,18 @@ public class CustomViewFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        IS_EMPTY = RecordManager.RECORDS.isEmpty();
+        IS_EMPTY = RecordManager.getInstance(mContext).RECORDS.isEmpty();
 
         mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
         fromDate = (TextView)view.findViewById(R.id.from_date);
-        toDate = (TextView)view.findViewById(R.id.to_date);
         fromDate.setTypeface(CoCoinUtil.GetTypeface());
-        toDate.setTypeface(CoCoinUtil.GetTypeface());
-        fromDate.setText(mContext.getResources().getString(R.string.from));
-        toDate.setText(mContext.getResources().getString(R.string.to));
 
         expense = (TextView)view.findViewById(R.id.expense);
         expense.setTypeface(CoCoinUtil.typefaceLatoLight);
-        expense.setText("0");
+        expense.setText(CoCoinUtil.GetInMoney(0));
 
         pie = (PieChartView)view.findViewById(R.id.chart_pie);
         pie.setVisibility(View.INVISIBLE);
@@ -180,49 +174,69 @@ public class CustomViewFragment extends Fragment {
             emptyTip.setVisibility(View.GONE);
         }
 
-        MaterialIconView setFromDate = (MaterialIconView)view.findViewById(R.id.set_from_date);
-        setFromDate.setOnClickListener(new View.OnClickListener() {
+        isFrom = true;
+
+        onDateSetListener = new DatePickerDialog.OnDateSetListener() {
             @Override
-            public void onClick(View v) {
-                SublimePickerFragment pickerFrag = new SublimePickerFragment();
-                pickerFrag.setCallback(mFragmentCallback);
+            public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+                if (isFrom) {
+                    fromYear = year;
+                    fromMonth = monthOfYear + 1;
+                    fromDay = dayOfMonth;
+                    Calendar now = Calendar.getInstance();
+                    DatePickerDialog dpd = DatePickerDialog.newInstance(
+                            onDateSetListener,
+                            now.get(Calendar.YEAR),
+                            now.get(Calendar.MONTH),
+                            now.get(Calendar.DAY_OF_MONTH)
+                    );
+                    dpd.setTitle(mContext.getResources().getString(R.string.to));
+                    dpd.show(((Activity)mContext).getFragmentManager(), "Datepickerdialog");
+                    isFrom = false;
+                } else {
+                    from.set(fromYear, fromMonth - 1, fromDay, 0, 0, 0);
+                    from.add(Calendar.SECOND, 0);
 
-                mContext.getTheme().applyStyle(R.style.ShowSingleMonthPerPosition, true);
+                    to.set(year, monthOfYear, dayOfMonth, 23, 59, 59);
+                    to.add(Calendar.SECOND, 0);
 
-                isFrom = true;
-
-                Pair<Boolean, SublimeOptions> optionsPair = getOptions();
-
-                // Valid options
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("SUBLIME_OPTIONS", optionsPair.second);
-                pickerFrag.setArguments(bundle);
-
-                pickerFrag.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-                pickerFrag.show(getFragmentManager(), "SUBLIME_PICKER");
+                    if (to.before(from)) {
+                        superToast.setText(
+                                mContext.getResources().getString(R.string.from_invalid));
+                        superToast.setText(
+                                mContext.getResources().getString(R.string.to_invalid));
+                        SuperToast.cancelAllSuperToasts();
+                        superToast.show();
+                    } else {
+                        fromDate.setText(" ● " +
+                                mContext.getResources().getString(R.string.from) + " " +
+                                CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1)
+                                + " " + from.get(Calendar.DAY_OF_MONTH) + CoCoinUtil.GetWhetherFuck() +
+                                from.get(Calendar.YEAR) + " " +
+                                mContext.getResources().getString(R.string.to) + " " +
+                                CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1)
+                                + " " + to.get(Calendar.DAY_OF_MONTH)  + CoCoinUtil.GetWhetherFuck() +
+                                to.get(Calendar.YEAR));
+                        select();
+                    }
+                }
             }
-        });
+        };
 
-        MaterialIconView setToDate = (MaterialIconView)view.findViewById(R.id.set_to_date);
-        setToDate.setOnClickListener(new View.OnClickListener() {
+        button = (FloatingActionButton) view.findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SublimePickerFragment pickerFrag = new SublimePickerFragment();
-                pickerFrag.setCallback(mFragmentCallback);
-
-                mContext.getTheme().applyStyle(R.style.ShowSingleMonthPerPosition, true);
-
-                isFrom = false;
-
-                Pair<Boolean, SublimeOptions> optionsPair = getOptions();
-
-                // Valid options
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("SUBLIME_OPTIONS", optionsPair.second);
-                pickerFrag.setArguments(bundle);
-
-                pickerFrag.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-                pickerFrag.show(getFragmentManager(), "SUBLIME_PICKER");
+                Calendar now = Calendar.getInstance();
+                DatePickerDialog dpd = DatePickerDialog.newInstance(
+                        onDateSetListener,
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH)
+                );
+                dpd.setTitle(mContext.getResources().getString(R.string.from));
+                dpd.show(((Activity)mContext).getFragmentManager(), "Datepickerdialog");
+                isFrom = true;
             }
         });
 
@@ -237,104 +251,10 @@ public class CustomViewFragment extends Fragment {
         refWatcher.watch(this);
     }
 
-
-    SublimePickerFragment.Callback mFragmentCallback = new SublimePickerFragment.Callback() {
-        @Override
-        public void onCancelled() {
-
-        }
-
-        @Override
-        public void onDateTimeRecurrenceSet(
-                int year, int monthOfYear, int dayOfMonth, int hourOfDay, int minute,
-                SublimeRecurrencePicker.RecurrenceOption recurrenceOption, String recurrenceRule) {
-            if (isFrom) {
-                fromYear = year;
-                fromMonth = monthOfYear + 1;
-                fromDay = dayOfMonth;
-                from.set(year, monthOfYear, dayOfMonth, 0, 0, 0);
-                from.add(Calendar.SECOND, 0);
-                fromSet = true;
-                if (!IS_EMPTY) {
-                    if (from.before(RecordManager.RECORDS.get(0).getCalendar())) {
-                        from = (Calendar)RecordManager.RECORDS.get(0).getCalendar().clone();
-                        from.set(Calendar.HOUR_OF_DAY, 0);
-                        from.set(Calendar.MINUTE, 0);
-                        from.set(Calendar.SECOND, 0);
-                        from.add(Calendar.SECOND, 0);
-                    }
-                    if (from.after(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
-                            .getCalendar())) {
-                        from = (Calendar)RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
-                                .getCalendar().clone();
-                        from.set(Calendar.HOUR_OF_DAY, 23);
-                        from.set(Calendar.MINUTE, 59);
-                        from.set(Calendar.SECOND, 59);
-                        from.add(Calendar.SECOND, 0);
-                    }
-                } else {
-                    YoYo.with(Techniques.Shake).duration(700).playOn(emptyTip);
-                }
-                fromDate.setText(mContext.getResources().getString(R.string.from) + " " +
-                        CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1)
-                        + " " + from.get(Calendar.DAY_OF_MONTH) + " " + from.get(Calendar.YEAR));
-            } else {
-                toYear = year;
-                toMonth = monthOfYear + 1;
-                toDay = dayOfMonth;
-                to.set(year, monthOfYear, dayOfMonth, 23, 59, 59);
-                to.add(Calendar.SECOND, 0);
-                toSet = true;
-                if (!IS_EMPTY) {
-                    if (to.before(RecordManager.RECORDS.get(0).getCalendar())) {
-                        to = (Calendar)RecordManager.RECORDS.get(0).getCalendar().clone();
-                        to.set(Calendar.HOUR_OF_DAY, 0);
-                        to.set(Calendar.MINUTE, 0);
-                        to.set(Calendar.SECOND, 0);
-                        to.add(Calendar.SECOND, 0);
-                    }
-                    if (to.after(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
-                            .getCalendar())) {
-                        to = (Calendar)RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1)
-                                .getCalendar().clone();
-                        to.set(Calendar.HOUR_OF_DAY, 23);
-                        to.set(Calendar.MINUTE, 59);
-                        to.set(Calendar.SECOND, 59);
-                        to.add(Calendar.SECOND, 0);
-                    }
-                } else {
-                    YoYo.with(Techniques.Shake).duration(700).playOn(emptyTip);
-                }
-                toDate.setText(mContext.getResources().getString(R.string.to) + " " +
-                        CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1)
-                        + " " + to.get(Calendar.DAY_OF_MONTH) + " " + to.get(Calendar.YEAR));
-            }
-            if (fromSet && toSet) {
-                if (!from.before(to)) {
-                    if (isFrom) {
-                        superToast.setText(
-                                mContext.getResources().getString(R.string.from_invalid));
-                        fromDate.setText(mContext.getResources().getString(R.string.from));
-                        fromSet = false;
-                    } else {
-                        superToast.setText(
-                                mContext.getResources().getString(R.string.to_invalid));
-                        toDate.setText(mContext.getResources().getString(R.string.to));
-                        toSet = false;
-                    }
-                    SuperToast.cancelAllSuperToasts();
-                    superToast.show();
-                    return;
-                } else {
-                    select();
-                }
-            }
-        }
-    };
-
     private void select() {
 
-        if (IS_EMPTY) {
+        if (RecordManager.getInstance(mContext).RECORDS == null
+                || RecordManager.getInstance(mContext).RECORDS.size() == 0) {
             return;
         }
 
@@ -388,7 +308,7 @@ public class CustomViewFragment extends Fragment {
                     coCoinRecord.getCalendar().getTimeInMillis()) - startDay)] += coCoinRecord.getMoney();
         }
 
-        expense.setText(Sum + "");
+        expense.setText(CoCoinUtil.GetInMoney(Sum));
         emptyTip.setVisibility(View.GONE);
 
         TagExpanse = CoCoinUtil.SortTreeMapByValues(TagExpanse);

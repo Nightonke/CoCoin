@@ -94,4 +94,7 @@
     <color name="logout_button">#FF4081</color>
     <color name="logout_button_press">#ff73a3</color>
 
+    <color name="time_picker_icon_button">#FF4081</color>
+    <color name="time_picker_icon_button_press">#ff73a3</color>
+
 </resources>
