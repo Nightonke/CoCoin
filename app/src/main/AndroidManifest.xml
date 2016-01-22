@@ -30,44 +30,45 @@
         <activity
             android:name=".activity.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppThemeMain"></activity>
+            android:theme="@style/AppThemeMain" />
         <activity
             android:name=".activity.AccountBookTodayViewActivity"
             android:label="@string/title_activity_account_book"
             android:launchMode="singleTop"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.AccountBookCustomViewActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.AccountBookTagViewActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.AccountBookMonthViewActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.TagSettingActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.AccountBookListViewActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.EditRecordActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.EditPasswordActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.SetPasswordActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.AccountBookSettingActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/CoCoinSettingActivityStyle"></activity>
+            android:theme="@style/CoCoinSettingActivityStyle" />
         <activity android:name="com.github.mmin18.layoutcast.ResetActivity" />
-        <activity android:name=".activity.HelpActivity"></activity>
+        <activity android:name=".activity.HelpActivity" />
+        <activity android:name=".activity.ShowActivity"></activity>
     </application>
 
 </manifest>

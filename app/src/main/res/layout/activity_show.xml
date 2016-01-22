@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.nightonke.saver.activity.ShowActivity">
+
+    <com.dev.sacot41.scviewpager.SCViewPager
+        android:id="@+id/viewpager_main_activity"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </com.dev.sacot41.scviewpager.SCViewPager>
+
+    <com.dev.sacot41.scviewpager.DotsView
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:id="@+id/dotsview_main"
+        />
+
+    <ImageView
+        android:id="@+id/example1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/fruit_icon"
+        />
+
+    <ImageView
+        android:id="@+id/example2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/fruit_icon"
+        />
+
+    <ImageView
+        android:id="@+id/example3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/fruit_icon"
+        />
+
+    <ImageView
+        android:id="@+id/example4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/fruit_icon"
+        />
+
+    <LinearLayout
+        android:id="@+id/toolbar_layout"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@+id/status_bar"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                app:contentInsetStart="0dp"
+                style="@style/Toolbar">
+
+            </android.support.v7.widget.Toolbar>
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:text="@string/app_name"
+                />
+
+        </FrameLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:background="@drawable/toolbar_dropshadow" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/status_bar"
+        android:layout_height="25dp"
+        android:layout_width="match_parent"
+        android:background="@color/blue"
+        />
+
+    <com.nightonke.saver.ui.CoCoinViewPager
+        android:id="@+id/viewpager"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_below="@id/toolbar_layout"
+        android:background="@color/white"
+        />
+
+    <com.nightonke.saver.ui.MyGridView
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:verticalSpacing="1sp"
+        android:horizontalSpacing="1sp"
+        android:stretchMode="columnWidth"
+        android:background="#ffffff"
+        android:isScrollContainer="false"
+        android:layout_alignParentBottom="true"
+        />
+
+</RelativeLayout>

@@ -322,8 +322,8 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (SettingManager.getInstance().getFirstTime()) {
-            Intent intent = new Intent(mContext, SetPasswordActivity.class);
+        if (true || SettingManager.getInstance().getFirstTime()) {
+            Intent intent = new Intent(mContext, ShowActivity.class);
             startActivity(intent);
         }
 

@@ -2,52 +2,55 @@ package com.nightonke.saver.activity;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.os.Build;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Interpolator;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
+import com.dev.sacot41.scviewpager.DotsView;
+import com.dev.sacot41.scviewpager.SCPositionAnimation;
+import com.dev.sacot41.scviewpager.SCViewAnimation;
+import com.dev.sacot41.scviewpager.SCViewAnimationUtil;
+import com.dev.sacot41.scviewpager.SCViewPager;
+import com.dev.sacot41.scviewpager.SCViewPagerAdapter;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.PasswordChangeButtonGridViewAdapter;
 import com.nightonke.saver.adapter.PasswordChangeFragmentAdapter;
 import com.nightonke.saver.fragment.CoCoinFragmentManager;
-import com.nightonke.saver.fragment.PasswordChangeFragment;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
-import com.nightonke.saver.ui.FixedSpeedScroller;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
-
-import net.steamcrafted.materialiconlib.MaterialIconView;
-
-import java.lang.reflect.Field;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.UpdateListener;
 
-public class SetPasswordActivity extends AppCompatActivity {
+public class ShowActivity extends AppCompatActivity {
+
+    private static final int NUM_PAGES = 5;
+
+    private SCViewPager mViewPager;
+    private SCViewPagerAdapter mPageAdapter;
+    private DotsView mDotsView;
+
+    private View toolbarLayout;
 
     private Context mContext;
 
     private MyGridView myGridView;
     private PasswordChangeButtonGridViewAdapter myGridViewAdapter;
-
-    private MaterialIconView back;
 
     private static final int NEW_PASSWORD = 0;
     private static final int PASSWORD_AGAIN = 1;
@@ -64,49 +67,88 @@ public class SetPasswordActivity extends AppCompatActivity {
 
     private float x1, y1, x2, y2;
 
-    private TextView title;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_password);
-        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+        setContentView(R.layout.activity_show);
 
         mContext = this;
 
-        int currentapiVersion = Build.VERSION.SDK_INT;
+        mViewPager = (SCViewPager) findViewById(R.id.viewpager_main_activity);
+        mDotsView = (DotsView) findViewById(R.id.dotsview_main);
+        mDotsView.setDotRessource(R.drawable.dot_selected, R.drawable.dot_unselected);
+        mDotsView.setNumberOfPage(NUM_PAGES);
 
-        if (currentapiVersion >= Build.VERSION_CODES.LOLLIPOP) {
-            // Do something for lollipop and above versions
-            Window window = this.getWindow();
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
-        } else{
-            // do something for phones running an SDK before lollipop
-        }
+        mPageAdapter = new SCViewPagerAdapter(getSupportFragmentManager());
+        mPageAdapter.setNumberOfPage(NUM_PAGES);
+        mPageAdapter.setFragmentBackgroundColor(R.color.my_blue);
+        mViewPager.setAdapter(mPageAdapter);
 
-        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
-        try {
-            Interpolator sInterpolator = new AccelerateInterpolator();
-            Field mScroller;
-            mScroller = ViewPager.class.getDeclaredField("mScroller");
-            mScroller.setAccessible(true);
-            FixedSpeedScroller scroller
-                    = new FixedSpeedScroller(viewPager.getContext(), sInterpolator);
-            scroller.setmDuration(1000);
-            mScroller.set(viewPager, scroller);
-        } catch (NoSuchFieldException e) {
-        } catch (IllegalArgumentException e) {
-        } catch (IllegalAccessException e) {
-        }
+            @Override
+            public void onPageSelected(int position) {
+                mDotsView.selectDot(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+        final Point size = SCViewAnimationUtil.getDisplaySize(this);
+
+        View example1 = findViewById(R.id.example1);
+        SCViewAnimation currentlyWorkAnimation = new SCViewAnimation(example1);
+        currentlyWorkAnimation.addPageAnimation(new SCPositionAnimation(this, 0, -size.x, 0));
+        mViewPager.addAnimation(currentlyWorkAnimation);
+
+        View example2 = findViewById(R.id.example2);
+        SCViewAnimation djangoAnimation = new SCViewAnimation(example2);
+        djangoAnimation.startToPosition(null, -size.y);
+        djangoAnimation.addPageAnimation(new SCPositionAnimation(this, 0, 0, size.y));
+        djangoAnimation.addPageAnimation(new SCPositionAnimation(this, 1, 0, size.y));
+        mViewPager.addAnimation(djangoAnimation);
+
+        View example3 = findViewById(R.id.example3);
+        SCViewAnimation diplomeAnimation = new SCViewAnimation(example3);
+        diplomeAnimation.startToPosition((size.x *2), null);
+        diplomeAnimation.addPageAnimation(new SCPositionAnimation(this, 1, -size.x*2,0));
+        diplomeAnimation.addPageAnimation(new SCPositionAnimation(this, 2, -size.x*2 ,0));
+        mViewPager.addAnimation(diplomeAnimation);
+
+        View example4 = findViewById(R.id.example4);
+        SCViewAnimation raspberryAnimation = new SCViewAnimation(example4);
+        raspberryAnimation.startToPosition(-size.x, null);
+        raspberryAnimation.addPageAnimation(new SCPositionAnimation(this, 2, size.x, 0));
+        raspberryAnimation.addPageAnimation(new SCPositionAnimation(this, 3, -size.x, 0));
+        mViewPager.addAnimation(raspberryAnimation);
+
+        View statusBar = findViewById(R.id.status_bar);
+        statusBar.setLayoutParams(new RelativeLayout.LayoutParams(statusBar.getLayoutParams().width, getStatusBarHeight()));
+        SCViewAnimation statusBarAnimation = new SCViewAnimation(statusBar);
+        statusBarAnimation.startToPosition(null, -getStatusBarHeight());
+        statusBarAnimation.addPageAnimation(new SCPositionAnimation(this, 3, 0, getStatusBarHeight()));
+        mViewPager.addAnimation(statusBarAnimation);
+
+        toolbarLayout = findViewById(R.id.toolbar_layout);
+        SCViewAnimation toolbarLayoutAnimation = new SCViewAnimation(toolbarLayout);
+        toolbarLayoutAnimation.startToPosition(null, -size.y / 2);
+        toolbarLayoutAnimation.addPageAnimation(new SCPositionAnimation(this, 3, 0, size.y / 2));
+        mViewPager.addAnimation(toolbarLayoutAnimation);
 
         passwordAdapter = new PasswordChangeFragmentAdapter(
                 getSupportFragmentManager());
 
-        viewPager.setOffscreenPageLimit(2);
-        viewPager.setScrollBarFadeDuration(1000);
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPager.setScrollBarFadeDuration(700);
 
         viewPager.setAdapter(passwordAdapter);
 
@@ -123,24 +165,33 @@ public class SetPasswordActivity extends AppCompatActivity {
                     public void onGlobalLayout() {
                         myGridView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
                         View lastChild = myGridView.getChildAt(myGridView.getChildCount() - 1);
-                        myGridView.setLayoutParams(
-                                new LinearLayout.LayoutParams(
-                                        ViewGroup.LayoutParams.FILL_PARENT, lastChild.getBottom()));
+                        RelativeLayout.LayoutParams relativeLayout = new RelativeLayout.LayoutParams(
+                                ViewGroup.LayoutParams.FILL_PARENT, lastChild.getBottom());
+                        relativeLayout.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        myGridView.setLayoutParams(relativeLayout);
+
+                        DisplayMetrics displaymetrics = new DisplayMetrics();
+                        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                        int height = displaymetrics.heightPixels;
+                        RelativeLayout.LayoutParams viewPagerLayoutParams
+                                = new RelativeLayout.LayoutParams(viewPager.getLayoutParams().width,
+                                height - getStatusBarHeight() - toolbarLayout.getLayoutParams().height - relativeLayout.height);
+                        viewPagerLayoutParams.addRule(RelativeLayout.BELOW, R.id.toolbar_layout);
+                        viewPager.setLayoutParams(viewPagerLayoutParams);
                     }
                 });
 
-        back = (MaterialIconView)findViewById(R.id.back);
-        back.setVisibility(View.INVISIBLE);
-
         superToast = new SuperToast(this);
 
-        title = (TextView)findViewById(R.id.title);
-        title.setTypeface(CoCoinUtil.typefaceLatoLight);
-        if (SettingManager.getInstance().getFirstTime()) {
-            title.setText(mContext.getResources().getString(R.string.app_name));
-        } else {
-            title.setText(mContext.getResources().getString(R.string.change_password));
-        }
+        SCViewAnimation gridViewAnimation = new SCViewAnimation(myGridView);
+        gridViewAnimation.startToPosition(null, size.y);
+        gridViewAnimation.addPageAnimation(new SCPositionAnimation(this, 3, 0, -size.y));
+        mViewPager.addAnimation(gridViewAnimation);
+
+        SCViewAnimation viewpagerAnimation = new SCViewAnimation(viewPager);
+        viewpagerAnimation.startToPosition(null, -size.y);
+        viewpagerAnimation.addPageAnimation(new SCPositionAnimation(this, 3, 0, size.y));
+        mViewPager.addAnimation(viewpagerAnimation);
 
     }
 
@@ -248,7 +299,7 @@ public class SetPasswordActivity extends AppCompatActivity {
                             }, 1000);
                         } else {
                             CoCoinFragmentManager.passwordChangeFragment[CURRENT_STATE].clear(4);
-                            ((PasswordChangeFragment)passwordAdapter.getItem(CURRENT_STATE - 1)).init();
+                            CoCoinFragmentManager.passwordChangeFragment[CURRENT_STATE - 1].init();
                             CURRENT_STATE = NEW_PASSWORD;
                             viewPager.setCurrentItem(NEW_PASSWORD, true);
                             newPassword = "";
@@ -306,33 +357,33 @@ public class SetPasswordActivity extends AppCompatActivity {
         superToast.show();
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-
-        switch (ev.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                x1 = ev.getX();
-                y1 = ev.getY();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                x2 = ev.getX();
-                y2 = ev.getY();
-                if (Math.abs(x1 - x2) > 20) {
-                    return true;
-                }
-                break;
-            case MotionEvent.ACTION_UP:
-                x2 = ev.getX();
-                y2 = ev.getY();
-                if (Math.abs(x1 - x2) > 20) {
-                    return true;
-                }
-                break;
-            default:
-                break;
-        }
-        return super.dispatchTouchEvent(ev);
-    }
+//    @Override
+//    public boolean dispatchTouchEvent(MotionEvent ev) {
+//
+//        switch (ev.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                x1 = ev.getX();
+//                y1 = ev.getY();
+//                break;
+//            case MotionEvent.ACTION_MOVE:
+//                x2 = ev.getX();
+//                y2 = ev.getY();
+//                if (Math.abs(x1 - x2) > 20) {
+//                    return true;
+//                }
+//                break;
+//            case MotionEvent.ACTION_UP:
+//                x2 = ev.getX();
+//                y2 = ev.getY();
+//                if (Math.abs(x1 - x2) > 20) {
+//                    return true;
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//        return super.dispatchTouchEvent(ev);
+//    }
 
     @Override
     protected void onDestroy() {
@@ -341,6 +392,15 @@ public class SetPasswordActivity extends AppCompatActivity {
             CoCoinFragmentManager.passwordChangeFragment[i] = null;
         }
         super.onDestroy();
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 
 }

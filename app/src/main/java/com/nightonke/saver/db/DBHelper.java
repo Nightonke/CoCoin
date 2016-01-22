@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DBHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_RECORD_STRING =
-            "create table CoCoinRecord (" +
+            "create table Record (" +
             "ID integer primary key autoincrement," +
             "MONEY float," +
             "CURRENCY text," +
