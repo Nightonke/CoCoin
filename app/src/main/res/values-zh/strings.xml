@@ -322,4 +322,15 @@
     <string name="register_complete">注册成功</string>
     <string name="register_error">注册失败，点击重试</string>
 
+    <string name="saving_tags_title">保存</string>
+    <string name="saving_tags_content">正在保存标签，请稍候。</string>
+
+    <string name="tag_number">个标签</string>
+
+    <string name="whether_save">保存？</string>
+    <string name="whether_save_tag">是否保存对标签所做的更改？</string>
+
+    <string name="save_y">保存</string>
+    <string name="save_n">不保存</string>
+
 </resources>

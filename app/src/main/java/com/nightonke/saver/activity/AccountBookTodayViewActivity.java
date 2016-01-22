@@ -25,9 +25,9 @@ import com.github.johnpersano.supertoasts.SuperToast;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.nightonke.saver.R;
+import com.nightonke.saver.adapter.TodayViewFragmentAdapter;
 import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.adapter.TodayViewFragmentAdapter;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.RiseNumberTextView;
@@ -114,7 +114,6 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         report = (MaterialRippleLayout)mDrawer.findViewById(R.id.report_layout);
         report.setVisibility(View.INVISIBLE);
         sync = (MaterialRippleLayout)mDrawer.findViewById(R.id.sync_layout);
-        sync.setVisibility(View.INVISIBLE);
         settings = (MaterialRippleLayout)mDrawer.findViewById(R.id.settings_layout);
         help = (MaterialRippleLayout)mDrawer.findViewById(R.id.help_layout);
         monthExpenseTip = (TextView)mDrawer.findViewById(R.id.month_expense_tip);

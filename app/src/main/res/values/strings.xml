@@ -334,4 +334,15 @@
     <string name="register_complete">Sign up successfully</string>
     <string name="register_error">Sign up failed, tap to retry</string>
 
+    <string name="saving_tags_title">Saving...</string>
+    <string name="saving_tags_content">Saving tags, please wait.</string>
+
+    <string name="tag_number"> tags</string>
+
+    <string name="whether_save">Save?</string>
+    <string name="whether_save_tag">Save your changes for the tags?</string>
+
+    <string name="save_y">Save</string>
+    <string name="save_n">Don\'t save</string>
+
 </resources>

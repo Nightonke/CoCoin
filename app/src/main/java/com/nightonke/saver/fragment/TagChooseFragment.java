@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.TagChooseGridViewAdapter;
+import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
@@ -64,25 +65,19 @@ public class TagChooseFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.tag_choose_fragment, null);
-        myGridView = (MyGridView)view.findViewById(R.id.gridview);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.tag_choose_fragment, container, false);
         myGridView = (MyGridView)view.findViewById(R.id.gridview);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
 
         fragmentPosition = getArguments().getInt("position");
+
+        if (fragmentPosition >= CoCoinFragmentManager.tagChooseFragments.size()) {
+            while (fragmentPosition >= CoCoinFragmentManager.tagChooseFragments.size()) {
+                CoCoinFragmentManager.tagChooseFragments.add(new TagChooseFragment());
+            }
+        }
+        CoCoinFragmentManager.tagChooseFragments.set(fragmentPosition, this);
 
         tagAdapter = new TagChooseGridViewAdapter(getActivity(), fragmentPosition);
 
@@ -99,7 +94,7 @@ public class TagChooseFragment extends Fragment {
                 }
             }
         });
-
+        return view;
     }
 
     public interface OnTagItemSelectedListener {

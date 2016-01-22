@@ -31,6 +31,16 @@
 
             </android.support.v7.widget.Toolbar>
 
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                />
+
             <net.steamcrafted.materialiconlib.MaterialIconView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="48dp"
@@ -42,6 +52,19 @@
                 android:scaleType="center"
                 android:background="@color/transparent"
                 android:id="@+id/icon_left"
+                />
+
+            <net.steamcrafted.materialiconlib.MaterialIconView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center_vertical|right"
+                app:materialIcon="check"
+                app:materialIconColor="@color/white"
+                app:materialIconSize="24dp"
+                android:scaleType="center"
+                android:background="@color/transparent"
+                android:id="@+id/check"
                 />
 
         </FrameLayout>

@@ -707,7 +707,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
                         SettingManager.getInstance().setUserEmail(
                                 loginUser.getEmail());
                         updateViews();
-                        RecordManager.updateOldRecordsToServer();
+                        // use a new method
+//                        RecordManager.updateOldRecordsToServer();
                         whetherSyncSettingsFromServer();
                         showToast(6, loginUserName.getText().toString());
                     }
@@ -737,7 +738,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
                                 SettingManager.getInstance().setUserEmail(loginUserName.getText().toString());
                                 SettingManager.getInstance().setUserPassword(loginPassword.getText().toString());
                                 updateViews();
-                                RecordManager.updateOldRecordsToServer();
+                                // use a new method
+//                                RecordManager.updateOldRecordsToServer();
                                 whetherSyncSettingsFromServer();
                                 showToast(6, userName);
                             }
@@ -864,7 +866,8 @@ public class AccountBookSettingActivity extends AppCompatActivity
                             public void onSuccess() {
                                 SettingManager.getInstance().setTodayViewInfoShouldChange(true);
                                 updateViews();
-                                RecordManager.updateOldRecordsToServer();
+                                // use a new method
+//                                RecordManager.updateOldRecordsToServer();
                             }
                             @Override
                             public void onFailure(int code, String msg) {
@@ -1299,9 +1302,11 @@ public class AccountBookSettingActivity extends AppCompatActivity
             // is logged on, set the user name and email
             userName.setText(SettingManager.getInstance().getUserName());
             userEmail.setText(SettingManager.getInstance().getUserEmail());
+            loginButton.setText(getResourceString(R.string.log_out));
         } else {
             userName.setText("");
             userEmail.setText("");
+            loginButton.setText(getResourceString(R.string.login));
         }
         setIconEnable(userNameIcon, loggenOn);
         setIconEnable(userEmailIcon, loggenOn);

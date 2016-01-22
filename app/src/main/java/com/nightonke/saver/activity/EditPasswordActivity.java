@@ -376,4 +376,13 @@ public class EditPasswordActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
 
+    @Override
+    protected void onDestroy() {
+        for (int i = 0; i < 3; i++) {
+            CoCoinFragmentManager.passwordChangeFragment[i].onDestroy();
+            CoCoinFragmentManager.passwordChangeFragment[i] = null;
+        }
+        super.onDestroy();
+    }
+
 }

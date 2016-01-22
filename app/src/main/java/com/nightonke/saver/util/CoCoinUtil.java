@@ -370,6 +370,7 @@ public class CoCoinUtil {
     }
 
     public static Typeface GetTypeface() {
+        if (typefaceLatoLight == null) init(CoCoinApplication.getAppContext());
         if ("en".equals(Locale.getDefault().getLanguage()))
             return typefaceLatoLight;
         if ("zh".equals(Locale.getDefault().getLanguage()))

@@ -1,9 +1,12 @@
 package com.nightonke.saver.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,7 +14,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.RefactoredDefaultItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
@@ -37,12 +43,13 @@ public class TagSettingActivity extends AppCompatActivity {
     private Context mContext;
 
     private MaterialIconView back;
+    private MaterialIconView check;
+    private TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tag_setting);
-        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
 
         mContext = this;
 
@@ -92,6 +99,9 @@ public class TagSettingActivity extends AppCompatActivity {
         mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
 
         back = (MaterialIconView)findViewById(R.id.icon_left);
+        check = (MaterialIconView)findViewById(R.id.check);
+        title = (TextView)findViewById(R.id.title);
+        title.setText((RecordManager.TAGS.size() - 2) + mContext.getResources().getString(R.string.tag_number));
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,26 +109,59 @@ public class TagSettingActivity extends AppCompatActivity {
                 finish();
             }
         });
+        check.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveChanges(true);
+            }
+        });
+    }
 
+    private void whetherQuit() {
+        if (!myItemAdapter.equals(null)) {
+            if (myItemAdapter.isChanged()) {
+                new MaterialDialog.Builder(this)
+                        .title(R.string.whether_save)
+                        .content(R.string.whether_save_tag)
+                        .positiveText(R.string.save_y)
+                        .negativeText(R.string.save_n)
+                        .onAny(new MaterialDialog.SingleButtonCallback() {
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                if (which == DialogAction.POSITIVE) {
+                                    saveChanges(true);
+                                } else {
+                                    finish();
+                                }
+                            }
+                        })
+                        .show();
+            } else {
+                finish();
+            }
+        } else {
+            finish();
+        }
+    }
+
+    MaterialDialog progressDialog;
+    private void saveChanges(boolean quit) {
+        if (!myItemAdapter.equals(null)) {
+            if (myItemAdapter.isChanged()) {
+                progressDialog = new MaterialDialog.Builder(this)
+                        .title(R.string.saving_tags_title)
+                        .content(R.string.saving_tags_content)
+                        .progress(true, 0)
+                        .cancelable(false)
+                        .show();
+                new SaveTags(quit).execute();
+            }
+        }
     }
 
     @Override
     public void finish() {
         super.finish();
-        if (!myItemAdapter.equals(null)) {
-
-            if (myItemAdapter.isChanged()) {
-                for (int i = 0; i < myItemAdapter.getTags().size(); i++) {
-                    RecordManager.TAGS.set(i + 2, myItemAdapter.getTags().get(i));
-                    RecordManager.TAGS.get(i + 2).setWeight(i);
-                }
-                for (int i = 2; i < RecordManager.TAGS.size(); i++) {
-                    RecordManager.updateTag(RecordManager.TAGS.get(i));
-                }
-            }
-
-        }
-
         if (mRecyclerViewDragDropManager != null) {
             mRecyclerViewDragDropManager.release();
             mRecyclerViewDragDropManager = null;
@@ -143,10 +186,35 @@ public class TagSettingActivity extends AppCompatActivity {
         }
     }
 
+    public class SaveTags extends AsyncTask<String, Void, String> {
+
+        private boolean quit;
+
+        public SaveTags(boolean quit) {
+            this.quit = quit;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            for (int i = 0; i < myItemAdapter.getTags().size(); i++) {
+                RecordManager.TAGS.set(i + 2, myItemAdapter.getTags().get(i));
+                RecordManager.TAGS.get(i + 2).setWeight(i);
+            }
+            for (int i = 2; i < RecordManager.TAGS.size(); i++) {
+                RecordManager.updateTag(RecordManager.TAGS.get(i));
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if (progressDialog != null) progressDialog.cancel();
+            if (quit) ((Activity)mContext).finish();
+        }
+    }
+
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        overridePendingTransition(R.anim.trans_right_in, R.anim.trans_right_out);
+        whetherQuit();
     }
 
 }

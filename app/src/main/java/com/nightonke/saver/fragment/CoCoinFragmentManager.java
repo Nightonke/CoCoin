@@ -1,5 +1,7 @@
 package com.nightonke.saver.fragment;
 
+import java.util.ArrayList;
+
 /**
  * Created by Weiping on 2016/1/19.
  */
@@ -14,6 +16,8 @@ public class CoCoinFragmentManager {
     public static EditRemarkFragment editRecordActivityEditRemarkFragment = null;
 
     public static PasswordChangeFragment passwordChangeFragment[] = new PasswordChangeFragment[3];
+
+    public static ArrayList<TagChooseFragment> tagChooseFragments = new ArrayList<>();
 
 
 

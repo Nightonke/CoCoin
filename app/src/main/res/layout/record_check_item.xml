@@ -10,10 +10,10 @@
         android:layout_height="60dp"
         app:cardCornerRadius="2dp"
         app:cardElevation="2dp"
-        android:layout_marginBottom="@dimen/cardMarginVertical"
-        android:layout_marginLeft="@dimen/cardMarginHorizontal"
-        android:layout_marginRight="@dimen/cardMarginHorizontal"
-        android:layout_marginTop="@dimen/cardMarginVertical"
+        android:layout_marginBottom="2.5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="2.5dp"
         app:cardPreventCornerOverlap="false"
         app:contentPadding="0dp">
 

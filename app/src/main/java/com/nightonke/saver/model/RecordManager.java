@@ -63,7 +63,7 @@ public class RecordManager {
     private RecordManager(Context context) {
         try {
             db = db.getInstance(context);
-            if (BuildConfig.DEBUG) Log.d("CoCoin Debugger", "db.getInstance(context) S");
+            if (BuildConfig.DEBUG) if (BuildConfig.DEBUG) Log.d("CoCoin", "db.getInstance(context) S");
         } catch(IOException e) {
             e.printStackTrace();
         }
@@ -115,8 +115,8 @@ public class RecordManager {
             db.getData();
 
             if (BuildConfig.DEBUG) {
-                Log.d("CoCoin Debugger", "Load " + RECORDS.size() + " records S");
-                Log.d("CoCoin Debugger", "Load " + TAGS.size() + " tags S");
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "Load " + RECORDS.size() + " records S");
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "Load " + TAGS.size() + " tags S");
             }
 
             TAGS.add(0, new Tag(-1, "Sum Histogram", -1));
@@ -134,49 +134,51 @@ public class RecordManager {
         long insertId = -1;
         // this is a new coCoinRecord, which is not uploaded
         coCoinRecord.setIsUploaded(false);
-        User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
-        if (user != null) coCoinRecord.setUserId(user.getObjectId());
-        else coCoinRecord.setUserId(null);
+//        User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+//        if (user != null) coCoinRecord.setUserId(user.getObjectId());
+//        else coCoinRecord.setUserId(null);
         if (BuildConfig.DEBUG)
-            Log.d("CoCoin Debugger", "recordManager.saveRecord: Save " + coCoinRecord.toString() + " S");
+            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.saveRecord: Save " + coCoinRecord.toString() + " S");
         insertId = db.saveRecord(coCoinRecord);
         if (insertId == -1) {
             if (BuildConfig.DEBUG)
-                Log.d("CoCoin Debugger", "recordManager.saveRecord: Save the above coCoinRecord FAIL!");
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.saveRecord: Save the above coCoinRecord FAIL!");
             CoCoinToast.getInstance()
                     .showToast(R.string.save_failed_locale, SuperToast.Background.RED);
         } else {
             if (BuildConfig.DEBUG)
-                Log.d("CoCoin Debugger", "recordManager.saveRecord: Save the above coCoinRecord SUCCESSFULLY!");
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.saveRecord: Save the above coCoinRecord SUCCESSFULLY!");
             RECORDS.add(coCoinRecord);
             SUM += (int) coCoinRecord.getMoney();
-            if (user != null) {
-                // already login
-                coCoinRecord.save(CoCoinApplication.getAppContext(), new SaveListener() {
-                    @Override
-                    public void onSuccess() {
-                        if (BuildConfig.DEBUG)
-                            Log.d("CoCoin Debugger", "recordManager.saveRecord: Save online " + coCoinRecord.toString() + " S");
-                        coCoinRecord.setIsUploaded(true);
-                        coCoinRecord.setLocalObjectId(coCoinRecord.getObjectId());
-                        db.updateRecord(coCoinRecord);
-                        CoCoinToast.getInstance()
-                                .showToast(R.string.save_successfully_online, SuperToast.Background.BLUE);
-                    }
-                    @Override
-                    public void onFailure(int code, String msg) {
-                        if (BuildConfig.DEBUG)
-                            Log.d("CoCoin Debugger", "recordManager.saveRecord: Save online " + coCoinRecord.toString() + " F");
-                        if (BuildConfig.DEBUG)
-                            Log.d("CoCoin Debugger", "recordManager.saveRecord: Save online msg: " + msg + " code " + code);
-                        CoCoinToast.getInstance()
-                                .showToast(R.string.save_failed_online, SuperToast.Background.RED);
-                    }
-                });
-            } else {
-                CoCoinToast.getInstance()
-                        .showToast(R.string.save_successfully_locale, SuperToast.Background.BLUE);
-            }
+//            if (user != null) {
+//                // already login
+//                coCoinRecord.save(CoCoinApplication.getAppContext(), new SaveListener() {
+//                    @Override
+//                    public void onSuccess() {
+//                        if (BuildConfig.DEBUG)
+//                            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.saveRecord: Save online " + coCoinRecord.toString() + " S");
+//                        coCoinRecord.setIsUploaded(true);
+//                        coCoinRecord.setLocalObjectId(coCoinRecord.getObjectId());
+//                        db.updateRecord(coCoinRecord);
+//                        CoCoinToast.getInstance()
+//                                .showToast(R.string.save_successfully_online, SuperToast.Background.BLUE);
+//                    }
+//                    @Override
+//                    public void onFailure(int code, String msg) {
+//                        if (BuildConfig.DEBUG)
+//                            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.saveRecord: Save online " + coCoinRecord.toString() + " F");
+//                        if (BuildConfig.DEBUG)
+//                            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.saveRecord: Save online msg: " + msg + " code " + code);
+//                        CoCoinToast.getInstance()
+//                                .showToast(R.string.save_failed_online, SuperToast.Background.RED);
+//                    }
+//                });
+//            } else {
+//                CoCoinToast.getInstance()
+//                        .showToast(R.string.save_successfully_locale, SuperToast.Background.BLUE);
+//            }
+            CoCoinToast.getInstance()
+                    .showToast(R.string.save_successfully_locale, SuperToast.Background.BLUE);
         }
         return insertId;
     }
@@ -185,7 +187,7 @@ public class RecordManager {
     public static int saveTag(Tag tag) {
         int insertId = -1;
         if (BuildConfig.DEBUG) {
-            Log.d("CoCoin Debugger", "recordManager.saveTag: " + tag.toString());
+            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.saveTag: " + tag.toString());
         }
         boolean duplicatedName = false;
         for (Tag t : TAGS) {
@@ -200,12 +202,12 @@ public class RecordManager {
         insertId = db.saveTag(tag);
         if (insertId == -1) {
             if (BuildConfig.DEBUG) {
-                Log.d("CoCoin Debugger", "Save the above tag FAIL!");
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "Save the above tag FAIL!");
                 return SAVE_TAG_ERROR_DATABASE_ERROR;
             }
         } else {
             if (BuildConfig.DEBUG) {
-                Log.d("CoCoin Debugger", "Save the above tag SUCCESSFULLY!");
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "Save the above tag SUCCESSFULLY!");
             }
             TAGS.add(tag);
             TAG_NAMES.put(tag.getId(), tag.getName());
@@ -219,36 +221,38 @@ public class RecordManager {
         long deletedNumber = db.deleteRecord(coCoinRecord.getId());
         if (deletedNumber > 0) {
             if (BuildConfig.DEBUG) {
-                Log.d("CoCoin Debugger",
+                if (BuildConfig.DEBUG) Log.d("CoCoin",
                         "recordManager.deleteRecord: Delete " + coCoinRecord.toString() + " S");
             }
             User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
             // if we can delete the coCoinRecord from server
-            if (user != null && coCoinRecord.getLocalObjectId() != null) {
-                coCoinRecord.delete(CoCoinApplication.getAppContext(), new DeleteListener() {
-                    @Override
-                    public void onSuccess() {
-                        if (BuildConfig.DEBUG) {
-                            Log.d("CoCoin Debugger",
-                                    "recordManager.deleteRecord: Delete online " + coCoinRecord.toString() + " S");
-                        }
-                        CoCoinToast.getInstance()
-                                .showToast(R.string.delete_successfully_online, SuperToast.Background.BLUE);
-                    }
-                    @Override
-                    public void onFailure(int code, String msg) {
-                        if (BuildConfig.DEBUG) {
-                            Log.d("CoCoin Debugger",
-                                    "recordManager.deleteRecord: Delete online " + coCoinRecord.toString() + " F");
-                        }
-                        CoCoinToast.getInstance()
-                                .showToast(R.string.delete_failed_online, SuperToast.Background.RED);
-                    }
-                });
-            } else {
-                CoCoinToast.getInstance()
-                        .showToast(R.string.delete_successfully_locale, SuperToast.Background.BLUE);
-            }
+//            if (user != null && coCoinRecord.getLocalObjectId() != null) {
+//                coCoinRecord.delete(CoCoinApplication.getAppContext(), new DeleteListener() {
+//                    @Override
+//                    public void onSuccess() {
+//                        if (BuildConfig.DEBUG) {
+//                            if (BuildConfig.DEBUG) Log.d("CoCoin",
+//                                    "recordManager.deleteRecord: Delete online " + coCoinRecord.toString() + " S");
+//                        }
+//                        CoCoinToast.getInstance()
+//                                .showToast(R.string.delete_successfully_online, SuperToast.Background.BLUE);
+//                    }
+//                    @Override
+//                    public void onFailure(int code, String msg) {
+//                        if (BuildConfig.DEBUG) {
+//                            if (BuildConfig.DEBUG) Log.d("CoCoin",
+//                                    "recordManager.deleteRecord: Delete online " + coCoinRecord.toString() + " F");
+//                        }
+//                        CoCoinToast.getInstance()
+//                                .showToast(R.string.delete_failed_online, SuperToast.Background.RED);
+//                    }
+//                });
+//            } else {
+//                CoCoinToast.getInstance()
+//                        .showToast(R.string.delete_successfully_locale, SuperToast.Background.BLUE);
+//            }
+            CoCoinToast.getInstance()
+                    .showToast(R.string.delete_successfully_locale, SuperToast.Background.BLUE);
             // update RECORDS list and SUM
             SUM -= (int) coCoinRecord.getMoney();
             if (deleteInList) {
@@ -260,7 +264,7 @@ public class RecordManager {
                 }
             }
         } else {
-            Log.d("CoCoin Debugger",
+            if (BuildConfig.DEBUG) Log.d("CoCoin",
                     "recordManager.deleteRecord: Delete " + coCoinRecord.toString() + " F");
             CoCoinToast.getInstance()
                     .showToast(R.string.delete_failed_locale, SuperToast.Background.RED);
@@ -272,7 +276,7 @@ public class RecordManager {
 
     public static int deleteTag(int id) {
         int deletedId = -1;
-        Log.d("CoCoin Debugger",
+        if (BuildConfig.DEBUG) Log.d("CoCoin",
                 "Manager: Delete tag: " + "Tag(id = " + id + ", deletedId = " + deletedId + ")");
         boolean tagReference = false;
         for (CoCoinRecord coCoinRecord : RECORDS) {
@@ -286,10 +290,10 @@ public class RecordManager {
         }
         deletedId = db.deleteTag(id);
         if (deletedId == -1) {
-            Log.d("CoCoin Debugger", "Delete the above tag FAIL!");
+            if (BuildConfig.DEBUG) Log.d("CoCoin", "Delete the above tag FAIL!");
             return DELETE_TAG_ERROR_DATABASE_ERROR;
         } else {
-            Log.d("CoCoin Debugger", "Delete the above tag SUCCESSFULLY!");
+            if (BuildConfig.DEBUG) Log.d("CoCoin", "Delete the above tag SUCCESSFULLY!");
             for (Tag tag : TAGS) {
                 if (tag.getId() == deletedId) {
                     TAGS.remove(tag);
@@ -307,12 +311,12 @@ public class RecordManager {
         long updateNumber = db.updateRecord(coCoinRecord);
         if (updateNumber <= 0) {
             if (BuildConfig.DEBUG) {
-                Log.d("CoCoin Debugger", "recordManager.updateRecord " + coCoinRecord.toString() + " F");
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateRecord " + coCoinRecord.toString() + " F");
             }
             CoCoinToast.getInstance().showToast(R.string.update_failed_locale, SuperToast.Background.RED);
         } else {
             if (BuildConfig.DEBUG) {
-                Log.d("CoCoin Debugger", "recordManager.updateRecord " + coCoinRecord.toString() + " S");
+                if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateRecord " + coCoinRecord.toString() + " S");
             }
             p = RECORDS.size() - 1;
             for (; p >= 0; p--) {
@@ -324,70 +328,72 @@ public class RecordManager {
                 }
             }
             coCoinRecord.setIsUploaded(false);
-            User user = BmobUser
-                    .getCurrentUser(CoCoinApplication.getAppContext(), User.class);
-            if (user != null) {
-                // already login
-                if (coCoinRecord.getLocalObjectId() != null) {
-                    // this coCoinRecord has been push to the server
-                    coCoinRecord.setUserId(user.getObjectId());
-                    coCoinRecord.update(CoCoinApplication.getAppContext(),
-                            coCoinRecord.getLocalObjectId(), new UpdateListener() {
-                                @Override
-                                public void onSuccess() {
-                                    if (BuildConfig.DEBUG) {
-                                        Log.d("CoCoin Debugger", "recordManager.updateRecord update online " + coCoinRecord.toString() + " S");
-                                    }
-                                    coCoinRecord.setIsUploaded(true);
-                                    RECORDS.get(p).setIsUploaded(true);
-                                    db.updateRecord(coCoinRecord);
-                                    CoCoinToast.getInstance().showToast(R.string.update_successfully_online, SuperToast.Background.BLUE);
-                                }
-
-                                @Override
-                                public void onFailure(int code, String msg) {
-                                    if (BuildConfig.DEBUG) {
-                                        Log.d("CoCoin Debugger", "recordManager.updateRecord update online " + coCoinRecord.toString() + " F");
-                                    }
-                                    if (BuildConfig.DEBUG) {
-                                        Log.d("CoCoin Debugger", "recordManager.updateRecord update online code" + code + " msg " + msg );
-                                    }
-                                    CoCoinToast.getInstance().showToast(R.string.update_failed_online, SuperToast.Background.RED);
-                                }
-                            });
-                } else {
-                    // this coCoinRecord has not been push to the server
-                    coCoinRecord.setUserId(user.getObjectId());
-                    coCoinRecord.save(CoCoinApplication.getAppContext(), new SaveListener() {
-                                @Override
-                                public void onSuccess() {
-                                    if (BuildConfig.DEBUG) {
-                                        Log.d("CoCoin Debugger", "recordManager.updateRecord save online " + coCoinRecord.toString() + " S");
-                                    }
-                                    coCoinRecord.setIsUploaded(true);
-                                    coCoinRecord.setLocalObjectId(coCoinRecord.getObjectId());
-                                    RECORDS.get(p).setIsUploaded(true);
-                                    RECORDS.get(p).setLocalObjectId(coCoinRecord.getObjectId());
-                                    db.updateRecord(coCoinRecord);
-                                    CoCoinToast.getInstance().showToast(R.string.update_successfully_online, SuperToast.Background.BLUE);
-                                }
-                                @Override
-                                public void onFailure(int code, String msg) {
-                                    if (BuildConfig.DEBUG) {
-                                        Log.d("CoCoin Debugger", "recordManager.updateRecord save online " + coCoinRecord.toString() + " F");
-                                    }
-                                    if (BuildConfig.DEBUG) {
-                                        Log.d("CoCoin Debugger", "recordManager.updateRecord save online code" + code + " msg " + msg );
-                                    }
-                                    CoCoinToast.getInstance().showToast(R.string.update_failed_online, SuperToast.Background.RED);
-                                }
-                            });
-                }
-            } else {
-                // has not login
-                db.updateRecord(coCoinRecord);
-                CoCoinToast.getInstance().showToast(R.string.update_successfully_locale, SuperToast.Background.BLUE);
-            }
+//            User user = BmobUser
+//                    .getCurrentUser(CoCoinApplication.getAppContext(), User.class);
+//            if (user != null) {
+//                // already login
+//                if (coCoinRecord.getLocalObjectId() != null) {
+//                    // this coCoinRecord has been push to the server
+//                    coCoinRecord.setUserId(user.getObjectId());
+//                    coCoinRecord.update(CoCoinApplication.getAppContext(),
+//                            coCoinRecord.getLocalObjectId(), new UpdateListener() {
+//                                @Override
+//                                public void onSuccess() {
+//                                    if (BuildConfig.DEBUG) {
+//                                        if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateRecord update online " + coCoinRecord.toString() + " S");
+//                                    }
+//                                    coCoinRecord.setIsUploaded(true);
+//                                    RECORDS.get(p).setIsUploaded(true);
+//                                    db.updateRecord(coCoinRecord);
+//                                    CoCoinToast.getInstance().showToast(R.string.update_successfully_online, SuperToast.Background.BLUE);
+//                                }
+//
+//                                @Override
+//                                public void onFailure(int code, String msg) {
+//                                    if (BuildConfig.DEBUG) {
+//                                        if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateRecord update online " + coCoinRecord.toString() + " F");
+//                                    }
+//                                    if (BuildConfig.DEBUG) {
+//                                        if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateRecord update online code" + code + " msg " + msg );
+//                                    }
+//                                    CoCoinToast.getInstance().showToast(R.string.update_failed_online, SuperToast.Background.RED);
+//                                }
+//                            });
+//                } else {
+//                    // this coCoinRecord has not been push to the server
+//                    coCoinRecord.setUserId(user.getObjectId());
+//                    coCoinRecord.save(CoCoinApplication.getAppContext(), new SaveListener() {
+//                                @Override
+//                                public void onSuccess() {
+//                                    if (BuildConfig.DEBUG) {
+//                                        if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateRecord save online " + coCoinRecord.toString() + " S");
+//                                    }
+//                                    coCoinRecord.setIsUploaded(true);
+//                                    coCoinRecord.setLocalObjectId(coCoinRecord.getObjectId());
+//                                    RECORDS.get(p).setIsUploaded(true);
+//                                    RECORDS.get(p).setLocalObjectId(coCoinRecord.getObjectId());
+//                                    db.updateRecord(coCoinRecord);
+//                                    CoCoinToast.getInstance().showToast(R.string.update_successfully_online, SuperToast.Background.BLUE);
+//                                }
+//                                @Override
+//                                public void onFailure(int code, String msg) {
+//                                    if (BuildConfig.DEBUG) {
+//                                        if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateRecord save online " + coCoinRecord.toString() + " F");
+//                                    }
+//                                    if (BuildConfig.DEBUG) {
+//                                        if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateRecord save online code" + code + " msg " + msg );
+//                                    }
+//                                    CoCoinToast.getInstance().showToast(R.string.update_failed_online, SuperToast.Background.RED);
+//                                }
+//                            });
+//                }
+//            } else {
+//                // has not login
+//                db.updateRecord(coCoinRecord);
+//                CoCoinToast.getInstance().showToast(R.string.update_successfully_locale, SuperToast.Background.BLUE);
+//            }
+            db.updateRecord(coCoinRecord);
+            CoCoinToast.getInstance().showToast(R.string.update_successfully_locale, SuperToast.Background.BLUE);
         }
         return updateNumber;
     }
@@ -414,7 +420,7 @@ public class RecordManager {
                                     @Override
                                     public void onSuccess() {
                                         if (BuildConfig.DEBUG) {
-                                            Log.d("CoCoin Debugger", "recordManager.updateOldRecordsToServer update online " + coCoinRecord.toString() + " S");
+                                            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateOldRecordsToServer update online " + coCoinRecord.toString() + " S");
                                         }
                                         coCoinRecord.setIsUploaded(true);
                                         coCoinRecord.setLocalObjectId(coCoinRecord.getObjectId());
@@ -426,10 +432,10 @@ public class RecordManager {
                                     @Override
                                     public void onFailure(int code, String msg) {
                                         if (BuildConfig.DEBUG) {
-                                            Log.d("CoCoin Debugger", "recordManager.updateOldRecordsToServer update online " + coCoinRecord.toString() + " F");
+                                            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateOldRecordsToServer update online " + coCoinRecord.toString() + " F");
                                         }
                                         if (BuildConfig.DEBUG) {
-                                            Log.d("CoCoin Debugger", "recordManager.updateOldRecordsToServer update online code" + code + " msg " + msg );
+                                            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateOldRecordsToServer update online code" + code + " msg " + msg );
                                         }
                                     }
                                 });
@@ -440,7 +446,7 @@ public class RecordManager {
                             @Override
                             public void onSuccess() {
                                 if (BuildConfig.DEBUG) {
-                                    Log.d("CoCoin Debugger", "recordManager.updateOldRecordsToServer save online " + coCoinRecord.toString() + " S");
+                                    if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateOldRecordsToServer save online " + coCoinRecord.toString() + " S");
                                 }
                                 coCoinRecord.setIsUploaded(true);
                                 coCoinRecord.setLocalObjectId(coCoinRecord.getObjectId());
@@ -452,10 +458,10 @@ public class RecordManager {
                             @Override
                             public void onFailure(int code, String msg) {
                                 if (BuildConfig.DEBUG) {
-                                    Log.d("CoCoin Debugger", "recordManager.updateOldRecordsToServer save online " + coCoinRecord.toString() + " F");
+                                    if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateOldRecordsToServer save online " + coCoinRecord.toString() + " F");
                                 }
                                 if (BuildConfig.DEBUG) {
-                                    Log.d("CoCoin Debugger", "recordManager.updateOldRecordsToServer save online code" + code + " msg " + msg );
+                                    if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateOldRecordsToServer save online code" + code + " msg " + msg );
                                 }
                             }
                         });
@@ -467,7 +473,7 @@ public class RecordManager {
         }
 
         if (BuildConfig.DEBUG) {
-            Log.d("CoCoin Debugger", "recordManager.updateOldRecordsToServer update " + counter + " records to server.");
+            if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.updateOldRecordsToServer update " + counter + " records to server.");
         }
 
         if (RECORDS.size() == 0) getRecordsFromServer();
@@ -477,13 +483,13 @@ public class RecordManager {
 
     public static long updateTag(Tag tag) {
         int updateId = -1;
-        Log.d("CoCoin Debugger",
+        if (BuildConfig.DEBUG) Log.d("CoCoin",
                 "Manager: Update tag: " + tag.toString());
         updateId = db.updateTag(tag);
         if (updateId == -1) {
-            Log.d("CoCoin Debugger", "Update the above tag FAIL!");
+            if (BuildConfig.DEBUG) Log.d("CoCoin", "Update the above tag FAIL!");
         } else {
-            Log.d("CoCoin Debugger", "Update the above tag SUCCESSFULLY!" + " - " + updateId);
+            if (BuildConfig.DEBUG) Log.d("CoCoin", "Update the above tag SUCCESSFULLY!" + " - " + updateId);
             for (Tag t : TAGS) {
                 if (t.getId() == tag.getId()) {
                     t.set(tag);
@@ -507,7 +513,7 @@ public class RecordManager {
             @Override
             public void onSuccess(List<CoCoinRecord> object) {
                 if (BuildConfig.DEBUG) {
-                    Log.d("CoCoin Debugger", "recordManager.getRecordsFromServer get " + object.size() + " records from server");
+                    if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.getRecordsFromServer get " + object.size() + " records from server");
                 }
                 updateNum = object.size();
                 for (CoCoinRecord coCoinRecord : object) {
@@ -550,13 +556,13 @@ public class RecordManager {
                 }
 
                 if (BuildConfig.DEBUG) {
-                    Log.d("CoCoin Debugger", "recordManager.getRecordsFromServer save " + RECORDS.size() + " records");
+                    if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.getRecordsFromServer save " + RECORDS.size() + " records");
                 }
             }
             @Override
             public void onError(int code, String msg) {
                 if (BuildConfig.DEBUG) {
-                    Log.d("CoCoin Debugger", "recordManager.getRecordsFromServer error " + msg);
+                    if (BuildConfig.DEBUG) Log.d("CoCoin", "recordManager.getRecordsFromServer error " + msg);
                 }
             }
         });

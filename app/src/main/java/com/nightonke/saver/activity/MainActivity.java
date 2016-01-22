@@ -230,7 +230,7 @@ public class MainActivity extends AppCompatActivity
         else
             tagAdapter = new TagChooseFragmentAdapter(getSupportFragmentManager(), RecordManager.TAGS.size() / 8 + 1);
         tagViewPager.setAdapter(tagAdapter);
-        
+
 // button grid view/////////////////////////////////////////////////////////////////////////////////
         myGridView = (MyGridView)findViewById(R.id.gridview);
         myGridViewAdapter = new ButtonGridViewAdapter(this);
@@ -395,9 +395,9 @@ public class MainActivity extends AppCompatActivity
             case SETTING_TAG:
                 if (resultCode == RESULT_OK) {
                     if (data.getBooleanExtra("IS_CHANGED", false)) {
-                        for (int i = 0; i < tagAdapter.getCount(); i++) {
-                            ((TagChooseFragment) tagAdapter.
-                                    getItem(i)).updateTags();
+                        for (int i = 0; i < tagAdapter.getCount() && i < CoCoinFragmentManager.tagChooseFragments.size(); i++) {
+                            if (CoCoinFragmentManager.tagChooseFragments.get(i) != null)
+                                CoCoinFragmentManager.tagChooseFragments.get(i).updateTags();
                         }
                     }
                 }
@@ -682,9 +682,9 @@ public class MainActivity extends AppCompatActivity
         // if the tags' order has been changed
         if (SettingManager.getInstance().getMainActivityTagShouldChange()) {
             // change the tag fragment
-            for (int i = 0; i < tagAdapter.getCount(); i++) {
-                ((TagChooseFragment) tagAdapter.
-                        getItem(i)).updateTags();
+            for (int i = 0; i < tagAdapter.getCount() && i < CoCoinFragmentManager.tagChooseFragments.size(); i++) {
+                if (CoCoinFragmentManager.tagChooseFragments.get(i) != null)
+                    CoCoinFragmentManager.tagChooseFragments.get(i).updateTags();
             }
             // and tell others that main activity has changed
             SettingManager.getInstance().setMainActivityTagShouldChange(false);
