@@ -94,7 +94,7 @@
 
     <string name="tag_sum_pie">总和饼图</string>
     <string name="tag_sum_histogram">总和直方图</string>
-    <string name="tag_meal">正餐</string>
+    <string name="tag_meal">晚餐</string>
     <string name="tag_closet">衣鞋</string>
     <string name="tag_home">家居</string>
     <string name="tag_traffic">交通</string>
@@ -121,6 +121,9 @@
     <string name="tag_pet">宠物</string>
     <string name="tag_telephone_bill">电话费</string>
     <string name="tag_travel">旅游</string>
+    <string name="tag_lunch">午餐</string>
+    <string name="tag_breakfast">早餐</string>
+    <string name="tag_midnight_snack">宵夜</string>
 
     <string name="password_tip">输入密码查阅您的账本</string>
 
@@ -334,5 +337,8 @@
     <string name="save_n">不保存</string>
 
     <string name="custom_view_help"> ● 自定义时间范围</string>
+
+    <string name="change_logo_tip">请在设置界面更改头像</string>
+    <string name="login_tip">请在设置界面登录或注册</string>
 
 </resources>

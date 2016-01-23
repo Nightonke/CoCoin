@@ -106,7 +106,7 @@
 
     <string name="tag_sum_pie">Sum Pie</string>
     <string name="tag_sum_histogram">Sum Histogram</string>
-    <string name="tag_meal">Meal</string>
+    <string name="tag_meal">Dinner</string>
     <string name="tag_closet">Clothing &amp; Footwear</string>
     <string name="tag_home">Home</string>
     <string name="tag_traffic">Traffic</string>
@@ -133,6 +133,9 @@
     <string name="tag_pet">Pet</string>
     <string name="tag_telephone_bill">Telephone Bill</string>
     <string name="tag_travel">Travel</string>
+    <string name="tag_lunch">Lunch</string>
+    <string name="tag_breakfast">Breakfast</string>
+    <string name="tag_midnight_snack">Midnight Snack</string>
 
     <string name="password_tip">Input password to account book</string>
 
@@ -345,6 +348,9 @@
     <string name="save_y">Save</string>
     <string name="save_n">Don\'t save</string>
 
-    <string name="custom_view_help"> ● Your can choose the range to show records.</string>
+    <string name="custom_view_help"> ● You can choose the range to show records.</string>
+
+    <string name="change_logo_tip">You can change your avatar in settings</string>
+    <string name="login_tip">You can sign in or up in settings</string>
 
 </resources>

@@ -58,6 +58,20 @@
         android:src="@drawable/fruit_icon"
         />
 
+    <View
+        android:id="@+id/background"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        />
+
+    <com.nightonke.saver.ui.CoCoinViewPager
+        android:id="@+id/viewpager"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        />
+
     <LinearLayout
         android:id="@+id/toolbar_layout"
         android:layout_height="wrap_content"
@@ -73,7 +87,6 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
-                app:contentInsetStart="0dp"
                 style="@style/Toolbar">
 
             </android.support.v7.widget.Toolbar>
@@ -103,14 +116,6 @@
         android:layout_height="25dp"
         android:layout_width="match_parent"
         android:background="@color/blue"
-        />
-
-    <com.nightonke.saver.ui.CoCoinViewPager
-        android:id="@+id/viewpager"
-        android:layout_height="0dp"
-        android:layout_width="match_parent"
-        android:layout_below="@id/toolbar_layout"
-        android:background="@color/white"
         />
 
     <com.nightonke.saver.ui.MyGridView

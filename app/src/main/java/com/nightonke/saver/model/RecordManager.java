@@ -46,7 +46,7 @@ public class RecordManager {
     public static List<Tag> TAGS;
     public static Map<Integer, String> TAG_NAMES;
 
-    public static boolean RANDOM_DATA = false;
+    public static boolean RANDOM_DATA = true;
     private final int RANDOM_DATA_NUMBER_ON_EACH_DAY = 3;
     private final int RANDOM_DATA_EXPENSE_ON_EACH_DAY = 30;
 
@@ -118,8 +118,8 @@ public class RecordManager {
                 if (BuildConfig.DEBUG) Log.d("CoCoin", "Load " + TAGS.size() + " tags S");
             }
 
-            TAGS.add(0, new Tag(-1, "Sum Histogram", -1));
-            TAGS.add(0, new Tag(-2, "Sum Pie", -2));
+            TAGS.add(0, new Tag(-1, "Sum Histogram", -4));
+            TAGS.add(0, new Tag(-2, "Sum Pie", -5));
 
             for (Tag tag : TAGS) TAG_NAMES.put(tag.getId(), tag.getName());
 
@@ -631,7 +631,7 @@ public class RecordManager {
     }
 
     private void createTags() {
-        saveTag(new Tag(-1, "Meal",                0));
+        saveTag(new Tag(-1, "Meal",                -1));
         saveTag(new Tag(-1, "Clothing & Footwear", 1));
         saveTag(new Tag(-1, "Home",                2));
         saveTag(new Tag(-1, "Traffic",             3));
@@ -658,6 +658,9 @@ public class RecordManager {
         saveTag(new Tag(-1, "Pet",                24));
         saveTag(new Tag(-1, "Telephone Bill",     25));
         saveTag(new Tag(-1, "Travel",             26));
+        saveTag(new Tag(-1, "Lunch",              -2));
+        saveTag(new Tag(-1, "Breakfast",          -3));
+        saveTag(new Tag(-1, "MidnightSnack",      0));
         sortTAGS();
     }
 

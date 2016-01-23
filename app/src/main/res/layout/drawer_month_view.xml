@@ -15,7 +15,6 @@
         android:layout_height="160dp"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/material_design_2"
         >
 
         <de.hdodenhof.circleimageview.CircleImageView

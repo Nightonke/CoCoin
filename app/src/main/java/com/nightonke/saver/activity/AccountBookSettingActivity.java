@@ -1307,7 +1307,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         } else {
             userName.setText("");
             userEmail.setText("");
-            loginButton.setText(getResourceString(R.string.login));
+            loginButton.setText(getResourceString(R.string.login_button));
         }
         setIconEnable(userNameIcon, loggenOn);
         setIconEnable(userEmailIcon, loggenOn);

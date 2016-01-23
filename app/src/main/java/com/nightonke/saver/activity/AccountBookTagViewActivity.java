@@ -17,18 +17,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
+import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.nightonke.saver.adapter.DrawerTagChooseGridViewAdapter;
+import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
+import com.nightonke.saver.ui.CustomSliderView;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.RecordManager;
@@ -38,6 +46,7 @@ import com.nightonke.saver.util.CoCoinUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -64,6 +73,8 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
     private TextView userEmail;
 
     private CircleImageView profileImage;
+
+    private SliderLayout mDemoSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,9 +144,9 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
             mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
                 @Override
                 public HeaderDesign getHeaderDesign(int page) {
-                    return HeaderDesign.fromColorAndDrawable(
+                    return HeaderDesign.fromColorAndUrl(
                             CoCoinUtil.GetTagColor(RecordManager.TAGS.get(page).getId()),
-                            CoCoinUtil.GetTagDrawable(RecordManager.TAGS.get(page).getId()));
+                            CoCoinUtil.GetTagUrl(RecordManager.TAGS.get(page).getId()));
                 }
             });
         } else {
@@ -169,9 +180,43 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
         });
 
         profileImage= (CircleImageView)mDrawer.findViewById(R.id.profile_image);
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (SettingManager.getInstance().getLoggenOn()) {
+                    CoCoinUtil.showToast(mContext, R.string.change_logo_tip);
+                } else {
+                    CoCoinUtil.showToast(mContext, R.string.login_tip);
+                }
+            }
+        });
+
+        mDemoSlider = (SliderLayout)findViewById(R.id.slider);
+
+        HashMap<String, Integer> urls = CoCoinUtil.GetDrawerTopUrl();
+
+        for(String name : urls.keySet()){
+            CustomSliderView customSliderView = new CustomSliderView(this);
+            // initialize a SliderLayout
+            customSliderView
+                    .image(urls.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+            mDemoSlider.addSlider(customSliderView);
+        }
+        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
+        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
+        mDemoSlider.setDuration(4000);
+        mDemoSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
 
         loadLogo();
 
+    }
+
+    @Override
+    protected void onStop() {
+        // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
+        mDemoSlider.stopAutoCycle();
+        super.onStop();
     }
 
     @Override

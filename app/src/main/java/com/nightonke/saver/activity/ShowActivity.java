@@ -9,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -17,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.dev.sacot41.scviewpager.DotsView;
 import com.dev.sacot41.scviewpager.SCPositionAnimation;
@@ -63,6 +65,8 @@ public class ShowActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private PasswordChangeFragmentAdapter passwordAdapter;
 
+    private TextView title;
+
     private SuperToast superToast;
 
     private float x1, y1, x2, y2;
@@ -77,6 +81,11 @@ public class ShowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show);
 
         mContext = this;
+
+        title = (TextView)findViewById(R.id.title);
+        CoCoinUtil.init(mContext);
+        title.setTypeface(CoCoinUtil.GetTypeface());
+        title.setText(mContext.getResources().getString(R.string.app_name));
 
         mViewPager = (SCViewPager) findViewById(R.id.viewpager_main_activity);
         mDotsView = (DotsView) findViewById(R.id.dotsview_main);
@@ -175,8 +184,9 @@ public class ShowActivity extends AppCompatActivity {
                         int height = displaymetrics.heightPixels;
                         RelativeLayout.LayoutParams viewPagerLayoutParams
                                 = new RelativeLayout.LayoutParams(viewPager.getLayoutParams().width,
-                                height - getStatusBarHeight() - toolbarLayout.getLayoutParams().height - relativeLayout.height);
-                        viewPagerLayoutParams.addRule(RelativeLayout.BELOW, R.id.toolbar_layout);
+                                800);
+                        viewPagerLayoutParams.topMargin
+                                = getStatusBarHeight() + CoCoinUtil.getToolBarHeight(mContext) / 2;
                         viewPager.setLayoutParams(viewPagerLayoutParams);
                     }
                 });
@@ -192,6 +202,12 @@ public class ShowActivity extends AppCompatActivity {
         viewpagerAnimation.startToPosition(null, -size.y);
         viewpagerAnimation.addPageAnimation(new SCPositionAnimation(this, 3, 0, size.y));
         mViewPager.addAnimation(viewpagerAnimation);
+
+        View background = findViewById(R.id.background);
+        SCViewAnimation backgroundAnimation = new SCViewAnimation(background);
+        backgroundAnimation.startToPosition(null, -size.y - 100);
+        backgroundAnimation.addPageAnimation(new SCPositionAnimation(this, 3, 0, size.y + 100));
+        mViewPager.addAnimation(backgroundAnimation);
 
     }
 

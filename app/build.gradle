@@ -61,6 +61,11 @@ dependencies {
     // the viewpager shown first time to use CoCoin
     compile "com.dev.sacot41:scviewpager:0.0.4"
 
+    // image slider
+    compile "com.android.support:support-v4:+"
+    compile 'com.squareup.picasso:picasso:2.3.2'
+    compile 'com.daimajia.slider:library:1.1.5@aar'
+
     compile 'com.balysv.materialmenu:material-menu:1.5.4'
 
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'

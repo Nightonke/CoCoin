@@ -14,15 +14,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.melnykov.fab.FloatingActionButton;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
@@ -136,7 +133,7 @@ public class CustomViewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.custom_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_custom_view, container, false);
     }
 
     @Override

@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
+import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
@@ -299,7 +300,7 @@ public class TagViewRecyclerViewAdapter
                     holder.from.setText(
                             mContext.getResources().getString(R.string.from) + " " +
                                     startYear + " " + CoCoinUtil.GetMonthShort(startMonth));
-                    holder.sum.setText((int) Sum + "");
+                    holder.sum.setText(CoCoinUtil.GetInMoney((int)Sum));
                     holder.to.setText(
                             mContext.getResources().getString(R.string.to) + " " +
                                     endYear + " " + CoCoinUtil.GetMonthShort(endMonth));
@@ -349,7 +350,7 @@ public class TagViewRecyclerViewAdapter
                             holder.date.setText(year + " ");
                         }
 
-                        holder.expanse.setText("" + (int) (double) SumList.get(position - 1));
+                        holder.expanse.setText(CoCoinUtil.GetInMoney((int) (double) SumList.get(position - 1)));
 
                         holder.iconRight.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -417,7 +418,7 @@ public class TagViewRecyclerViewAdapter
                                     new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + "");
-                            holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
+                            holder.expanse.setText(CoCoinUtil.GetInMoney((int)(double)SumList.get(position - 1)));
                         }
                         if (type.get(position - 1).equals(SHOW_IN_MONTH)) {
                             Calendar tempCal = new GregorianCalendar(year, month - 1, 1);
@@ -457,7 +458,7 @@ public class TagViewRecyclerViewAdapter
                             holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + " " + CoCoinUtil.GetMonthShort(month));
-                            holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
+                            holder.expanse.setText(CoCoinUtil.GetInMoney((int)(double)SumList.get(position - 1)));
                         }
 
                         holder.iconRight.setOnClickListener(new View.OnClickListener() {
@@ -541,7 +542,7 @@ public class TagViewRecyclerViewAdapter
                                     new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + "");
-                            holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
+                            holder.expanse.setText(CoCoinUtil.GetInMoney((int)(double)SumList.get(position - 1)));
 
                         }
                         if (type.get(position - 1).equals(SHOW_IN_MONTH)) {
@@ -590,7 +591,7 @@ public class TagViewRecyclerViewAdapter
                             holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + " " + CoCoinUtil.GetMonthShort(month));
-                            holder.expanse.setText("" + (int)(double)SumList.get(position - 1));
+                            holder.expanse.setText(CoCoinUtil.GetInMoney((int)(double)SumList.get(position - 1)));
                         }
 
                         holder.iconRight.setOnClickListener(new View.OnClickListener() {

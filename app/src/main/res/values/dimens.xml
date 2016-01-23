@@ -18,4 +18,12 @@
     <dimen name="material_viewpager_head_height">150dp</dimen>
     <dimen name="material_viewpager_logo_margin_top">80dp</dimen>
 
+    <dimen name="material_viewpager_head_height_2">200dp</dimen>
+    <dimen name="material_viewpager_logo_margin_top_2">100dp</dimen>
+
+    <dimen name="drawer_top_height">160dp</dimen>
+
+    <dimen name="view_card_top_padding">5dp</dimen>
+    <dimen name="view_card_bottom_padding">5dp</dimen>
+
 </resources>
