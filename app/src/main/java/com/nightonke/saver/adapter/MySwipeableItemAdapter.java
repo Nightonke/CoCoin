@@ -22,10 +22,13 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.utils.RecyclerViewAdapterUtils;
 import com.nightonke.saver.R;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
 public class MySwipeableItemAdapter
         extends RecyclerView.Adapter<MySwipeableItemAdapter.MyViewHolder>
@@ -40,6 +43,8 @@ public class MySwipeableItemAdapter
     private View.OnClickListener mItemViewOnClickListener;
     private View.OnClickListener mSwipeableViewContainerOnClickListener;
     private static HashMap<Integer, Boolean> pinned;
+
+    private List<CoCoinRecord> records;
 
     public interface EventListener {
         void onItemRemoved(int position);
@@ -73,12 +78,13 @@ public class MySwipeableItemAdapter
         }
     }
 
-    public MySwipeableItemAdapter(Context inContext) {
+    public MySwipeableItemAdapter(Context inContext, List<CoCoinRecord> records) {
         mContext = inContext;
+        this.records = records;
         // Todo optimize
         pinned = new HashMap<>();
-        for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-            pinned.put((int)RecordManager.RECORDS.get(i).getId(), false);
+        for (int i = records.size() - 1; i >= 0; i--) {
+            pinned.put((int)records.get(i).getId(), false);
         }
         mItemViewOnClickListener = new View.OnClickListener() {
             @Override
@@ -111,7 +117,7 @@ public class MySwipeableItemAdapter
 
     @Override
     public long getItemId(int position) {
-        return RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - position).getId();
+        return records.get(records.size() - 1 - position).getId();
     }
 
     @Override
@@ -135,18 +141,19 @@ public class MySwipeableItemAdapter
         holder.mContainer.setOnClickListener(mSwipeableViewContainerOnClickListener);
 
         // set text
-        int tPosition = RecordManager.RECORDS.size() - 1 - position;
+        int tPosition = records.size() - 1 - position;
+        CoCoinRecord record = records.get(tPosition);
         holder.tagImage.setImageResource(
-                CoCoinUtil.GetTagIcon(RecordManager.RECORDS.get(tPosition).getTag()));
-        holder.date.setText(RecordManager.RECORDS.get(tPosition).getCalendarString());
-        holder.money.setText(String.valueOf((int) RecordManager.RECORDS.get(tPosition).getMoney()));
+                CoCoinUtil.GetTagIcon(record.getTag()));
+        holder.date.setText(record.getCalendarString());
+        holder.money.setText(String.valueOf((int) record.getMoney()));
         holder.date.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.money.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.money.setTextColor(
-                CoCoinUtil.GetTagColorResource(RecordManager.RECORDS.get(tPosition).getTag()));
+                CoCoinUtil.GetTagColorResource(record.getTag()));
         holder.index.setText((position + 1) + "");
         holder.index.setTypeface(CoCoinUtil.typefaceLatoLight);
-        holder.remark.setText(RecordManager.RECORDS.get(tPosition).getRemark());
+        holder.remark.setText(record.getRemark());
         holder.remark.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         // set background resource (target view ID: container)
@@ -167,14 +174,14 @@ public class MySwipeableItemAdapter
         }
 
         holder.setSwipeItemHorizontalSlideAmount(
-                pinned.get((int) RecordManager.RECORDS.get(
-                        RecordManager.RECORDS.size() - 1 - position).getId()) ?
+                pinned.get((int) records.get(
+                        records.size() - 1 - position).getId()) ?
                         Swipeable.OUTSIDE_OF_THE_WINDOW_LEFT : 0);
     }
 
     @Override
     public int getItemCount() {
-        return RecordManager.RECORDS.size();
+        return records.size();
     }
 
     @Override
@@ -206,8 +213,7 @@ public class MySwipeableItemAdapter
         switch (result) {
             // swipe right
             case Swipeable.RESULT_SWIPED_RIGHT:
-                if (pinned.get((int)RecordManager.RECORDS.get(
-                        RecordManager.RECORDS.size() - 1 - position).getId())) {
+                if (pinned.get((int)records.get(records.size() - 1 - position).getId())) {
                     return new UnpinResultAction(this, position);
                 } else {
                     return new SwipeRightResultAction(this, position);
@@ -245,10 +251,10 @@ public class MySwipeableItemAdapter
         @Override
         protected void onPerformAction() {
             super.onPerformAction();
-            if (!pinned.get((int)RecordManager.RECORDS.get(
-                    RecordManager.RECORDS.size() - 1 - mPosition).getId())) {
-                pinned.put((int)RecordManager.RECORDS.get(
-                        RecordManager.RECORDS.size() - 1 - mPosition).getId(), true);
+            if (!pinned.get((int)RecordManager.SELECTED_RECORDS.get(
+                    RecordManager.SELECTED_RECORDS.size() - 1 - mPosition).getId())) {
+                pinned.put((int)RecordManager.SELECTED_RECORDS.get(
+                        RecordManager.SELECTED_RECORDS.size() - 1 - mPosition).getId(), true);
                 mSetPinned = true;
                 mAdapter.notifyItemChanged(mPosition);
             }
@@ -286,8 +292,8 @@ public class MySwipeableItemAdapter
             }
             CoCoinUtil.backupCoCoinRecord = null;
             CoCoinUtil.backupCoCoinRecord
-                    = RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - mPosition);
-            RecordManager.RECORDS.remove(RecordManager.RECORDS.size() - 1 - mPosition);
+                    = RecordManager.SELECTED_RECORDS.get(RecordManager.RECORDS.size() - 1 - mPosition);
+            RecordManager.SELECTED_RECORDS.remove(RecordManager.SELECTED_RECORDS.size() - 1 - mPosition);
             mAdapter.notifyItemRemoved(mPosition);
         }
 
@@ -320,10 +326,10 @@ public class MySwipeableItemAdapter
         @Override
         protected void onPerformAction() {
             super.onPerformAction();
-            if (pinned.get((int) RecordManager.RECORDS.get(
-                    RecordManager.RECORDS.size() - 1 - mPosition).getId())) {
-                pinned.put((int) RecordManager.RECORDS.get(
-                        RecordManager.RECORDS.size() - 1 - mPosition).getId(), false);
+            if (pinned.get((int) RecordManager.SELECTED_RECORDS.get(
+                    RecordManager.SELECTED_RECORDS.size() - 1 - mPosition).getId())) {
+                pinned.put((int) RecordManager.SELECTED_RECORDS.get(
+                        RecordManager.SELECTED_RECORDS.size() - 1 - mPosition).getId(), false);
                 mAdapter.notifyItemChanged(mPosition);
             }
         }
@@ -337,8 +343,8 @@ public class MySwipeableItemAdapter
     }
 
     public void setPinned(boolean inPinned, int position) {
-        pinned.put((int)RecordManager.RECORDS.get(
-                RecordManager.RECORDS.size() - 1 - position).getId(), inPinned);
+        pinned.put((int)RecordManager.SELECTED_RECORDS.get(
+                RecordManager.SELECTED_RECORDS.size() - 1 - position).getId(), inPinned);
 
     }
 }

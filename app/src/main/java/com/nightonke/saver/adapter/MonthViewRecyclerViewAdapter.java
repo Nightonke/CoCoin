@@ -275,7 +275,7 @@ public class MonthViewRecyclerViewAdapter
     public void onBindViewHolder(final viewHolder holder, final int position) {
 
         if (IS_EMPTY) {
-            holder.expanseSum.setText("0");
+            holder.expanseSum.setText("¥0");
             holder.expanseSum.setTypeface(CoCoinUtil.typefaceLatoLight);
             holder.emptyTip.setText(mContext.getResources().getString(R.string.tag_empty));
             holder.emptyTip.setTypeface(CoCoinUtil.GetTypeface());
@@ -286,7 +286,7 @@ public class MonthViewRecyclerViewAdapter
             holder.all.setVisibility(View.GONE);
         } else {
             holder.date.setText(dateStringList.get(position));
-            holder.expanseSum.setText(String.valueOf((int) (double) SumList.get(position)));
+            holder.expanseSum.setText(CoCoinUtil.GetInMoney((int) (double) SumList.get(position)));
 
             holder.date.setTypeface(CoCoinUtil.GetTypeface());
             holder.expanseSum.setTypeface(CoCoinUtil.typefaceLatoLight);

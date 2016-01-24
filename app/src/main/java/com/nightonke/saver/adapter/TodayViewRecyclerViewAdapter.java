@@ -209,13 +209,13 @@ public class TodayViewRecyclerViewAdapter
         switch (viewType) {
             case TYPE_HEADER: {
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.today_list_view_head, parent, false);
+                        .inflate(R.layout.item_today_view_head, parent, false);
                 return new viewHolder(view) {
                 };
             }
             case TYPE_BODY: {
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.today_list_view_body, parent, false);
+                        .inflate(R.layout.item_today_view_body, parent, false);
                 return new viewHolder(view) {
                 };
             }

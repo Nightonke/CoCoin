@@ -42,6 +42,22 @@
 
                 </android.support.v7.widget.Toolbar>
 
+                <com.daimajia.slider.library.SliderLayout
+                    android:id="@+id/title_slider"
+                    android:layout_width="100dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    />
+
+                <com.daimajia.slider.library.Indicators.PagerIndicator
+                    android:id="@+id/custom_indicator"
+                    android:layout_centerHorizontal="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_height="0dp"
+                    android:layout_width="0dp"
+                    android:layout_marginBottom="20dp"
+                    />
+
                 <com.miguelcatalan.materialsearchview.MaterialSearchView
                     android:id="@+id/search_view"
                     android:layout_width="match_parent"

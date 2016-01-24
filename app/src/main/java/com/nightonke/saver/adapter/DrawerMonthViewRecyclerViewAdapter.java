@@ -56,7 +56,7 @@ public class DrawerMonthViewRecyclerViewAdapter
                     expenses.add(currentMonthSum);
                     years.add(currentYear);
                     months.add(currentMonth);
-                    currentMonthSum = 0;
+                    currentMonthSum = RecordManager.RECORDS.get(i).getMoney();
                     currentYear = RecordManager.RECORDS.get(i).getCalendar().get(Calendar.YEAR);
                     currentMonth = RecordManager.RECORDS.get(i).getCalendar().get(Calendar.MONTH);
                 }
@@ -85,7 +85,7 @@ public class DrawerMonthViewRecyclerViewAdapter
         onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.draw_month_list_view_item, parent, false);
+                .inflate(R.layout.item_month_view_drawer, parent, false);
         return new viewHolder(view) {
         };
 

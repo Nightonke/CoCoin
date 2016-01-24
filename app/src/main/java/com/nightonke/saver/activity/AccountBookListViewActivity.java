@@ -1,16 +1,19 @@
 package com.nightonke.saver.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.NinePatchDrawable;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,14 +21,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
@@ -39,10 +50,14 @@ import com.koushikdutta.ion.Ion;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.MySwipeableItemAdapter;
+import com.nightonke.saver.model.CoCoin;
+import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
+import com.nightonke.saver.ui.CustomSliderView;
+import com.nightonke.saver.ui.CustomTitleSliderView;
 import com.nightonke.saver.util.CoCoinUtil;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -53,6 +68,9 @@ import com.nispok.snackbar.listeners.EventListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -89,12 +107,21 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
     private VerticalRecyclerViewFastScroller verticalRecyclerViewFastScroller;
 
-    private int originalSum;
+    private double originalSum;
 
     private CircleImageView profileImage;
+    private SliderLayout mDemoSlider;
+
+    private SliderLayout titleSlider;
 
     private TextView userName;
     private TextView userEmail;
+
+    private double LEFT_MONEY = 0;
+    private double RIGHT_MONEY = 99999;
+    private int TAG_ID = -1;
+    private Calendar LEFT_CALENDAR = null;
+    private Calendar RIGHT_CALENDAR = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,7 +235,9 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
         recyclerViewSwipeManager = new RecyclerViewSwipeManager();
 
-        mAdapter = new MySwipeableItemAdapter(mContext);
+        RecordManager.SELECTED_RECORDS = RecordManager.RECORDS;
+
+        mAdapter = new MySwipeableItemAdapter(mContext, RecordManager.SELECTED_RECORDS);
         mAdapter.setEventListener(new MySwipeableItemAdapter.EventListener() {
 
             @Override
@@ -279,20 +308,136 @@ public class AccountBookListViewActivity extends AppCompatActivity {
         }
 
         profileImage= (CircleImageView)mDrawer.findViewById(R.id.profile_image);
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (SettingManager.getInstance().getLoggenOn()) {
+                    CoCoinUtil.showToast(mContext, R.string.change_logo_tip);
+                } else {
+                    CoCoinUtil.showToast(mContext, R.string.login_tip);
+                }
+            }
+        });
+
+        mDemoSlider = (SliderLayout)findViewById(R.id.slider);
+
+        HashMap<String, Integer> urls = CoCoinUtil.GetDrawerTopUrl();
+
+        for(String name : urls.keySet()){
+            CustomSliderView customSliderView = new CustomSliderView(this);
+            // initialize a SliderLayout
+            customSliderView
+                    .image(urls.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+            mDemoSlider.addSlider(customSliderView);
+        }
+        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
+        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
+        mDemoSlider.setDuration(4000);
+        mDemoSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
+
+        titleSlider = (SliderLayout)findViewById(R.id.title_slider);
+        titleSlider.getLayoutParams().height = CoCoinUtil.getToolBarHeight(mContext);
+        titleSlider.getLayoutParams().width = CoCoinUtil.GetScreenWidth(mContext) - CoCoinUtil.dpToPx(60 * 2);
+
+        HashMap<String, Integer> urls2 = CoCoinUtil.getTransparentUrls();
+
+        CustomTitleSliderView customTitleSliderView = new CustomTitleSliderView(mContext, RecordManager.getInstance(mContext).SELECTED_RECORDS.size() + "'s");
+        customTitleSliderView
+                .image(urls2.get("0"))
+                .setScaleType(BaseSliderView.ScaleType.Fit);
+        titleSlider.addSlider(customTitleSliderView);
+
+        customTitleSliderView = new CustomTitleSliderView(mContext, CoCoinUtil.GetInMoney((int)(double)RecordManager.getInstance(mContext).SUM));
+        customTitleSliderView
+                .image(urls2.get("1"))
+                .setScaleType(BaseSliderView.ScaleType.Fit);
+        titleSlider.addSlider(customTitleSliderView);
+
+        titleSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
+        titleSlider.setCustomAnimation(new DescriptionAnimation());
+        titleSlider.setDuration(4000);
+        titleSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
 
         loadLogo();
+    }
 
+    private void selectRecords() {
+        RecordManager.getInstance(mContext).SELECTED_SUM = 0d;
+        if (RecordManager.getInstance(mContext).SELECTED_RECORDS == null) {
+            RecordManager.getInstance(mContext).SELECTED_RECORDS = new LinkedList<>();
+        } else {
+            RecordManager.getInstance(mContext).SELECTED_RECORDS.clear();
+        }
+        for (int i = RecordManager.getInstance(mContext).RECORDS.size() - 1; i >= 0; i--) {
+            CoCoinRecord record = RecordManager.getInstance(mContext).RECORDS.get(i);
+            if (inMoney(record) && inTag(record) && inTime(record)) {
+                RecordManager.getInstance(mContext).SELECTED_SUM += record.getMoney();
+                RecordManager.getInstance(mContext).SELECTED_RECORDS.add(record);
+            }
+        }
+
+        originalSum = RecordManager.getInstance(mContext).SELECTED_SUM;
+        mAdapter.notifyDataSetChanged();
+
+        titleSlider.removeAllSliders();
+
+        HashMap<String, Integer> urls2 = CoCoinUtil.getTransparentUrls();
+
+        CustomTitleSliderView customTitleSliderView = new CustomTitleSliderView(mContext, RecordManager.getInstance(mContext).SELECTED_RECORDS.size() + "'s");
+        customTitleSliderView
+                .image(urls2.get("0"))
+                .setScaleType(BaseSliderView.ScaleType.Fit);
+        titleSlider.addSlider(customTitleSliderView);
+
+        customTitleSliderView = new CustomTitleSliderView(mContext, CoCoinUtil.GetInMoney((int)(double)RecordManager.getInstance(mContext).SUM));
+        customTitleSliderView
+                .image(urls2.get("1"))
+                .setScaleType(BaseSliderView.ScaleType.Fit);
+        titleSlider.addSlider(customTitleSliderView);
+
+        titleSlider.startAutoCycle();
+    }
+
+    private boolean inMoney(CoCoinRecord record) {
+        return LEFT_MONEY <= record.getMoney() && record.getMoney() <= RIGHT_MONEY;
+    }
+
+    private boolean inTag(CoCoinRecord record) {
+        if (TAG_ID == -1) return true;
+        else return record.getTag() == TAG_ID;
+    }
+
+    private boolean inTime(CoCoinRecord record) {
+        if (LEFT_CALENDAR == null || RIGHT_CALENDAR == null) return true;
+        else return !record.getCalendar().before(LEFT_CALENDAR) && !record.getCalendar().after(RIGHT_CALENDAR);
+    }
+
+    @Override
+    protected void onStop() {
+        mDemoSlider.stopAutoCycle();
+        if (titleSlider != null) titleSlider.stopAutoCycle();
+        super.onStop();
+    }
+
+    @Override
+    public void onResume() {
+        if (mDemoSlider != null) mDemoSlider.startAutoCycle();
+        if (RecordManager.SELECTED_RECORDS == null) selectRecords();
+        else {
+            if (titleSlider != null) titleSlider.startAutoCycle();
+        }
+        super.onResume();
     }
 
     private void activityOnItemRemoved(int position) {
 
-        if (RecordManager.RECORDS.size() == 0) {
+        if (RecordManager.SELECTED_RECORDS.size() == 0) {
             emptyTip.setVisibility(View.VISIBLE);
             verticalRecyclerViewFastScroller.setVisibility(View.INVISIBLE);
         }
 
-        Log.d("Saver", "recording");
-        lastPosition = RecordManager.RECORDS.size() - position;
+        lastPosition = RecordManager.SELECTED_RECORDS.size() - position;
         undid = false;
         Snackbar snackbar =
                 Snackbar
@@ -312,7 +457,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                         .actionListener(new ActionClickListener() {
                             @Override
                             public void onActionClicked(Snackbar snackbar) {
-                                RecordManager.RECORDS.add(lastPosition, CoCoinUtil.backupCoCoinRecord);
+                                RecordManager.SELECTED_RECORDS.add(lastPosition, CoCoinUtil.backupCoCoinRecord);
                                 CoCoinUtil.backupCoCoinRecord = null;
                                 LinearLayoutManager linearLayoutManager
                                         = (LinearLayoutManager) recyclerView.getLayoutManager();
@@ -321,7 +466,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                                 int lastVisiblePosition = linearLayoutManager
                                         .findLastCompletelyVisibleItemPosition();
                                 final int insertPosition
-                                        = RecordManager.RECORDS.size() - 1 - lastPosition;
+                                        = RecordManager.SELECTED_RECORDS.size() - 1 - lastPosition;
                                 if (firstVisiblePosition < insertPosition
                                         && insertPosition <= lastVisiblePosition) {
 
@@ -331,7 +476,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
                                 mAdapter.notifyItemInserted(insertPosition);
                                 mAdapter.notifyDataSetChanged();
 
-                                if (RecordManager.RECORDS.size() != 0) {
+                                if (RecordManager.SELECTED_RECORDS.size() != 0) {
                                     emptyTip.setVisibility(View.GONE);
                                     verticalRecyclerViewFastScroller.setVisibility(View.VISIBLE);
                                 }
@@ -452,7 +597,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
 
         SettingManager.getInstance().setRecordIsUpdated(true);
 
-        if (RecordManager.SUM != originalSum) {
+        if (RecordManager.SELECTED_SUM != originalSum) {
             SettingManager.getInstance().setTodayViewMonthExpenseShouldChange(true);
         }
 

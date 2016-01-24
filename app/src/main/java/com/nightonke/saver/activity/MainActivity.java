@@ -323,7 +323,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        if (true || SettingManager.getInstance().getFirstTime()) {
+        if (SettingManager.getInstance().getFirstTime()) {
             Intent intent = new Intent(mContext, ShowActivity.class);
             startActivity(intent);
         }

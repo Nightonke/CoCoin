@@ -73,7 +73,7 @@ public class EditRecordActivity extends AppCompatActivity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             position = extras.getInt("POSITION");
-            CoCoinUtil.editRecordPosition = RecordManager.RECORDS.size() - 1 - position;
+            CoCoinUtil.editRecordPosition = RecordManager.SELECTED_RECORDS.size() - 1 - position;
         } else {
             CoCoinUtil.editRecordPosition = -1;
         }
@@ -250,7 +250,7 @@ public class EditRecordActivity extends AppCompatActivity
             showToast(NO_MONEY_TOAST);
         } else  {
             CoCoinRecord coCoinRecord = new CoCoinRecord();
-            coCoinRecord.set(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1 - position));
+            coCoinRecord.set(RecordManager.SELECTED_RECORDS.get(RecordManager.getInstance(mContext).SELECTED_RECORDS.size() - 1 - position));
             coCoinRecord.setMoney(Float.valueOf(CoCoinFragmentManager.editRecordActivityEditMoneyFragment.getNumberText().toString()));
             coCoinRecord.setTag(CoCoinFragmentManager.editRecordActivityEditMoneyFragment.getTagId());
             coCoinRecord.setRemark(CoCoinFragmentManager.editRecordActivityEditRemarkFragment.getRemark());
@@ -261,6 +261,12 @@ public class EditRecordActivity extends AppCompatActivity
                 }
             } else {
                 IS_CHANGED = true;
+                for (int i = RecordManager.getInstance(mContext).RECORDS.size() - 1; i >= 0; i--) {
+                    if (coCoinRecord.getId() == RecordManager.RECORDS.get(i).getId()) {
+                        RecordManager.RECORDS.set(i, coCoinRecord);
+                        break;
+                    }
+                }
                 onBackPressed();
             }
         }

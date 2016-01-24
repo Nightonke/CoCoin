@@ -41,6 +41,10 @@ public class RecordManager {
 
     private static DB db;
 
+    // the selected values in list activity
+    public static Double SELECTED_SUM;
+    public static List<CoCoinRecord> SELECTED_RECORDS;
+
     public static Integer SUM;
     public static List<CoCoinRecord> RECORDS;
     public static List<Tag> TAGS;

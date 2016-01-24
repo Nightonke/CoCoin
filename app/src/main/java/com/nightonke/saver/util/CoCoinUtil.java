@@ -967,6 +967,16 @@ public class CoCoinUtil {
         return drawerTopUrls;
     }
 
+    public static HashMap<String, Integer> transparentUrls = null;
+    public static HashMap<String, Integer> getTransparentUrls() {
+        if (transparentUrls == null) {
+            transparentUrls = new HashMap<>();
+            transparentUrls.put("0", R.drawable.transparent);
+            transparentUrls.put("1", R.drawable.transparent);
+        }
+        return transparentUrls;
+    }
+
     public static void showToast(Context context, String text, int color) {
         SuperToast.cancelAllSuperToasts();
         SuperToast superToast = new SuperToast(context);
