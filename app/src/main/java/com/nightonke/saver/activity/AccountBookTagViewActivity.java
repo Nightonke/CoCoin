@@ -1,9 +1,11 @@
 package com.nightonke.saver.activity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.daimajia.slider.library.Animations.DescriptionAnimation;
@@ -213,8 +216,13 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mDemoSlider.startAutoCycle();
+    }
+
+    @Override
     protected void onStop() {
-        // To prevent a memory leak on rotation, make sure to call stopAutoCycle() on the slider before activity or fragment is destroyed
         mDemoSlider.stopAutoCycle();
         super.onStop();
     }
@@ -250,6 +258,20 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
             return;
         }
         super.onBackPressed();
+    }
+
+    private MaterialDialog progressDialog;
+    public class LoadViews extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if (progressDialog != null) progressDialog.cancel();
+        }
     }
 
     private void loadLogo() {

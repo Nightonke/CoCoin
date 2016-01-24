@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -69,6 +70,9 @@ public class EditMoneyFragment extends Fragment {
         editView.setText("0");
         editView.requestFocus();
         editView.setHelperText(" ");
+        editView.setKeyListener(null);
+        editView.setOnClickListener(null);
+        editView.setOnTouchListener(null);
 
         boolean shouldChange
                 = SettingManager.getInstance().getIsMonthLimit()
@@ -82,10 +86,12 @@ public class EditMoneyFragment extends Fragment {
                 && CoCoinUtil.editRecordPosition != -1) {
             CoCoinFragmentManager.editRecordActivityEditMoneyFragment
                     .setTagImage(CoCoinUtil.GetTagIcon(
-                            (int)RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getId()));
+                            (int)RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getTag()));
             CoCoinFragmentManager.editRecordActivityEditMoneyFragment
                     .setTagName(CoCoinUtil.GetTagName(
-                            (int)RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getId()));
+                            (int)RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getTag()));
+            CoCoinFragmentManager.editRecordActivityEditMoneyFragment
+                    .setTagId(RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getTag());
             CoCoinFragmentManager.editRecordActivityEditMoneyFragment
                     .setNumberText(String.format("%.0f", RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getMoney()));
         }
@@ -103,6 +109,10 @@ public class EditMoneyFragment extends Fragment {
 
     public int getTagId() {
         return tagId;
+    }
+
+    public void setTagId(int tagId) {
+        this.tagId = tagId;
     }
 
     public void setTag(int p) {

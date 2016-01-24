@@ -44,7 +44,8 @@ import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
-import com.nightonke.saver.ui.CoCoinViewPager;
+import com.nightonke.saver.ui.CoCoinScrollableViewPager;
+import com.nightonke.saver.ui.CoCoinUnscrollableViewPager;
 import com.nightonke.saver.ui.DummyOperation;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.ui.guillotine.animation.GuillotineAnimation;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity
     private View guillotineMenu;
 
     private ViewPager tagViewPager;
-    private CoCoinViewPager editViewPager;
+    private CoCoinScrollableViewPager editViewPager;
     private FragmentPagerAdapter tagAdapter;
     private FragmentPagerAdapter editAdapter;
 
@@ -194,7 +195,7 @@ public class MainActivity extends AppCompatActivity
         toolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
 // edit viewpager///////////////////////////////////////////////////////////////////////////////////
-        editViewPager = (CoCoinViewPager) findViewById(R.id.edit_pager);
+        editViewPager = (CoCoinScrollableViewPager) findViewById(R.id.edit_pager);
         editAdapter = new EditMoneyRemarkFragmentAdapter(getSupportFragmentManager(), CoCoinFragmentManager.MAIN_ACTIVITY_FRAGMENT);
         
         editViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -646,6 +647,12 @@ public class MainActivity extends AppCompatActivity
                         if (isPassword) {
                             animation.close();
                         }
+                    }
+                } else {
+                    if (editViewPager.getCurrentItem() == 0
+                            && CoCoinUtil.isPointInsideView(x2, y2, editViewPager)
+                            && CoCoinUtil.GetScreenWidth(mContext) - x2 <= 60) {
+                        return true;
                     }
                 }
                 break;

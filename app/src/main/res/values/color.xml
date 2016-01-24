@@ -100,4 +100,7 @@
     <color name="time_picker_icon_button">#FF4081</color>
     <color name="time_picker_icon_button_press">#ff73a3</color>
 
+    <color name="normal_button">#002196F3</color>
+    <color name="normal_button_press">#92cbf9</color>
+
 </resources>

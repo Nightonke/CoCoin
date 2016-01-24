@@ -104,7 +104,7 @@ public class RecordManager {
 
 // getInstance//////////////////////////////////////////////////////////////////////////////////////
     public synchronized static RecordManager getInstance(Context context) {
-        if (RECORDS == null || TAGS == null || TAG_NAMES == null || recordManager == null) {
+        if (RECORDS == null || TAGS == null || TAG_NAMES == null || SUM == null || recordManager == null) {
             SUM = 0;
             RECORDS = new LinkedList<>();
             TAGS = new LinkedList<>();

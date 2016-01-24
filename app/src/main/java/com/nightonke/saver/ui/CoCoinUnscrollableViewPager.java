@@ -9,14 +9,14 @@ import android.view.View;
 /**
  * Created by 伟平 on 2015/11/27.
  */
-public class CoCoinViewPager extends ViewPager {
+public class CoCoinUnscrollableViewPager extends ViewPager {
 
 
-    public CoCoinViewPager(Context context) {
+    public CoCoinUnscrollableViewPager(Context context) {
         super(context);
     }
 
-    public CoCoinViewPager(Context context, AttributeSet attrs) {
+    public CoCoinUnscrollableViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 

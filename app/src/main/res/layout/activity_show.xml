@@ -65,7 +65,7 @@
         android:background="@color/white"
         />
 
-    <com.nightonke.saver.ui.CoCoinViewPager
+    <com.nightonke.saver.ui.CoCoinUnscrollableViewPager
         android:id="@+id/viewpager"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"

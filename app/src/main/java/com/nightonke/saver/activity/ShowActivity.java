@@ -84,7 +84,7 @@ public class ShowActivity extends AppCompatActivity {
 
         title = (TextView)findViewById(R.id.title);
         CoCoinUtil.init(mContext);
-        title.setTypeface(CoCoinUtil.GetTypeface());
+        title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(mContext.getResources().getString(R.string.app_name));
 
         mViewPager = (SCViewPager) findViewById(R.id.viewpager_main_activity);

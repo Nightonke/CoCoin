@@ -114,7 +114,7 @@ public class AccountBookListViewActivity extends AppCompatActivity {
             userEmail.setText(user.getEmail());
         }
 
-        originalSum = RecordManager.SUM;
+        originalSum = RecordManager.getInstance(mContext).SUM;
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

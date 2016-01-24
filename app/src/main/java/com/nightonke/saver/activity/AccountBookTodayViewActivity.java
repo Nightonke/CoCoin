@@ -18,6 +18,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.balysv.materialripple.MaterialRippleLayout;
+import com.daimajia.slider.library.Animations.DescriptionAnimation;
+import com.daimajia.slider.library.Indicators.PagerIndicator;
+import com.daimajia.slider.library.SliderLayout;
+import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
@@ -30,12 +34,14 @@ import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
+import com.nightonke.saver.ui.CustomSliderView;
 import com.nightonke.saver.ui.RiseNumberTextView;
 import com.nightonke.saver.util.CoCoinUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
@@ -73,6 +79,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
     private RiseNumberTextView monthExpense;
 
     private CircleImageView profileImage;
+    private SliderLayout mDemoSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -185,9 +192,42 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         setListeners();
 
         profileImage= (CircleImageView)mDrawer.findViewById(R.id.profile_image);
+        profileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (SettingManager.getInstance().getLoggenOn()) {
+                    CoCoinUtil.showToast(mContext, R.string.change_logo_tip);
+                } else {
+                    CoCoinUtil.showToast(mContext, R.string.login_tip);
+                }
+            }
+        });
+
+        mDemoSlider = (SliderLayout)findViewById(R.id.slider);
+
+        HashMap<String, Integer> urls = CoCoinUtil.GetDrawerTopUrl();
+
+        for(String name : urls.keySet()){
+            CustomSliderView customSliderView = new CustomSliderView(this);
+            // initialize a SliderLayout
+            customSliderView
+                    .image(urls.get(name))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+            mDemoSlider.addSlider(customSliderView);
+        }
+        mDemoSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
+        mDemoSlider.setCustomAnimation(new DescriptionAnimation());
+        mDemoSlider.setDuration(4000);
+        mDemoSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
 
         loadLogo();
 
+    }
+
+    @Override
+    protected void onStop() {
+        mDemoSlider.stopAutoCycle();
+        super.onStop();
     }
 
     @Override
@@ -254,6 +294,9 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
 
     @Override
     public void onResume() {
+
+        if (mDemoSlider != null) mDemoSlider.startAutoCycle();
+
         super.onResume();
 
         if (SettingManager.getInstance().getTodayViewPieShouldChange()) {

@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -27,7 +27,8 @@ import com.nightonke.saver.fragment.CoCoinFragmentManager;
 import com.nightonke.saver.fragment.TagChooseFragment;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.ui.CoCoinViewPager;
+import com.nightonke.saver.ui.CoCoinScrollableViewPager;
+import com.nightonke.saver.ui.CoCoinUnscrollableViewPager;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
 
@@ -44,7 +45,7 @@ public class EditRecordActivity extends AppCompatActivity
     private ViewPager tagViewPager;
     private TagChooseFragmentAdapter tagAdapter;
 
-    private ViewPager editViewPager;
+    private CoCoinScrollableViewPager editViewPager;
     private EditMoneyRemarkFragmentAdapter editAdapter;
 
     private MyGridView myGridView;
@@ -91,13 +92,12 @@ public class EditRecordActivity extends AppCompatActivity
         }
 
 // edit viewpager///////////////////////////////////////////////////////////////////////////////////
-        editViewPager = (CoCoinViewPager)findViewById(R.id.edit_pager);
+        editViewPager = (CoCoinScrollableViewPager)findViewById(R.id.edit_pager);
         editViewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         editAdapter = new EditMoneyRemarkFragmentAdapter(
                 getSupportFragmentManager(), CoCoinFragmentManager.EDIT_RECORD_ACTIVITY_FRAGMENT);
-        Log.d("CoCoin", (CoCoinFragmentManager.editRecordActivityEditMoneyFragment == null ? "null" : "not null"));
-        
+
         editViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -316,10 +316,48 @@ public class EditRecordActivity extends AppCompatActivity
 
     }
 
+    private float x1, x2, y1, y2;
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = ev.getX();
+                y1 = ev.getY();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = ev.getX();
+                y2 = ev.getY();
+                if (editViewPager.getCurrentItem() == 0
+                        && CoCoinUtil.isPointInsideView(x2, y2, editViewPager)
+                        && CoCoinUtil.GetScreenWidth(mContext) - x2 <= 60) {
+                    return true;
+                }
+                break;
+            default:
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
     @Override
     public void onDestroy() {
-        CoCoinFragmentManager.editRecordActivityEditMoneyFragment = null;
-        CoCoinFragmentManager.editRecordActivityEditRemarkFragment = null;
+        for (int i = 0; i < CoCoinFragmentManager.tagChooseFragments.size(); i++) {
+            if (CoCoinFragmentManager.tagChooseFragments.get(i) != null) {
+                CoCoinFragmentManager.tagChooseFragments.get(i).onDestroy();
+                CoCoinFragmentManager.tagChooseFragments.set(i, null);
+            }
+        }
+        if (CoCoinFragmentManager.editRecordActivityEditMoneyFragment != null) {
+            CoCoinFragmentManager.editRecordActivityEditMoneyFragment.onDestroy();
+            CoCoinFragmentManager.editRecordActivityEditMoneyFragment = null;
+        }
+        if (CoCoinFragmentManager.editRecordActivityEditRemarkFragment != null) {
+            CoCoinFragmentManager.editRecordActivityEditRemarkFragment.onDestroy();
+            CoCoinFragmentManager.editRecordActivityEditRemarkFragment = null;
+        }
         super.onDestroy();
     }
 }
