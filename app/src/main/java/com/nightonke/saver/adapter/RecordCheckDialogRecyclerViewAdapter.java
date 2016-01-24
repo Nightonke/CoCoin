@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.nightonke.saver.R;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
@@ -24,6 +25,8 @@ import butterknife.InjectView;
  */
 public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<RecordCheckDialogRecyclerViewAdapter.viewHolder> {
 
+    private OnItemClickListener onItemClickListener;
+
     private final LayoutInflater mLayoutInflater;
     private final Context mContext;
     private List<CoCoinRecord> coCoinRecords;
@@ -35,13 +38,21 @@ public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<R
         mLayoutInflater = LayoutInflater.from(context);
     }
 
+    public RecordCheckDialogRecyclerViewAdapter(Context context, List<CoCoinRecord> list, OnItemClickListener onItemClickListener) {
+        coCoinRecords = new ArrayList<>();
+        coCoinRecords = list;
+        mContext = context;
+        mLayoutInflater = LayoutInflater.from(context);
+        this.onItemClickListener = onItemClickListener;
+    }
+
     @Override
     public viewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new viewHolder(mLayoutInflater.inflate(R.layout.record_check_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(viewHolder holder, int position) {
+    public void onBindViewHolder(viewHolder holder, final int position) {
         holder.imageView.setImageResource(
                 CoCoinUtil.GetTagIcon(coCoinRecords.get(position).getTag()));
         holder.date.setText(coCoinRecords.get(position).getCalendarString());
@@ -55,6 +66,12 @@ public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<R
         holder.remark.setText(coCoinRecords.get(position).getRemark());
         holder.remark.setTypeface(CoCoinUtil.typefaceLatoLight);
 
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onItemClickListener.onItemClick(v, position);
+            }
+        });
     }
 
     @Override
@@ -65,7 +82,7 @@ public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<R
         return coCoinRecords.size();
     }
 
-    public static class viewHolder extends RecyclerView.ViewHolder {
+    public class viewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         @InjectView(R.id.image_view)
         ImageView imageView;
         @InjectView(R.id.date)
@@ -76,10 +93,21 @@ public class RecordCheckDialogRecyclerViewAdapter extends RecyclerView.Adapter<R
         TextView money;
         @InjectView(R.id.index)
         TextView index;
+        @InjectView(R.id.material_ripple_layout)
+        MaterialRippleLayout layout;
 
         viewHolder(View view) {
             super(view);
             ButterKnife.inject(this, view);
         }
+
+        @Override
+        public void onClick(View v) {
+//            onItemClickListener.onItemClick(v, getPosition());
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view , int position);
     }
 }

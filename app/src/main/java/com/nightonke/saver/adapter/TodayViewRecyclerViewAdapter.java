@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.balysv.materialripple.MaterialRippleLayout;
 import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
 import com.nightonke.saver.model.CoCoinRecord;
@@ -52,6 +54,8 @@ import lecho.lib.hellocharts.view.PieChartView;
 
 public class TodayViewRecyclerViewAdapter
         extends RecyclerView.Adapter<TodayViewRecyclerViewAdapter.viewHolder> {
+
+    private OnItemClickListener onItemClickListener;
 
     private Context mContext;
 
@@ -108,6 +112,8 @@ public class TodayViewRecyclerViewAdapter
     // the selected column in histogram
     private int timeIndex;
 
+    private MaterialDialog dialog;
+    private View dialogView;
 
     public TodayViewRecyclerViewAdapter(int start, int end, Context context, int position) {
 
@@ -226,7 +232,7 @@ public class TodayViewRecyclerViewAdapter
 
                 holder.date.setText(dateString);
                 holder.dateBottom.setText(dateString);
-                holder.expanseSum.setText(String.valueOf((int) Sum));
+                holder.expanseSum.setText(CoCoinUtil.GetInMoney((int) Sum));
 
                 holder.date.setTypeface(CoCoinUtil.GetTypeface());
                 holder.dateBottom.setTypeface(CoCoinUtil.GetTypeface());
@@ -604,6 +610,33 @@ public class TodayViewRecyclerViewAdapter
                 holder.remark.setTypeface(CoCoinUtil.typefaceLatoLight);
                 holder.index.setText(position + "");
                 holder.index.setTypeface(CoCoinUtil.typefaceLatoLight);
+                holder.layout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String subTitle;
+                        double spend = allData.get(position - 1).getMoney();
+                        int tagId = allData.get(position - 1).getTag();
+                        if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                            subTitle = CoCoinUtil.GetSpendString((int)spend) +
+                                    "于" + CoCoinUtil.GetTagName(tagId);
+                        } else {
+                            subTitle = "Spend " + (int)spend +
+                                    "in " + CoCoinUtil.GetTagName(tagId);
+                        }
+                        dialog = new MaterialDialog.Builder(mContext)
+                                .icon(CoCoinUtil.GetTagIconDrawable(allData.get(position - 1).getTag()))
+                                .limitIconToDefaultSize()
+                                .title(subTitle)
+                                .customView(R.layout.dialog_a_record, true)
+                                .positiveText(R.string.get)
+                                .show();
+                        dialogView = dialog.getCustomView();
+                        TextView remark = (TextView)dialogView.findViewById(R.id.remark);
+                        TextView date = (TextView)dialogView.findViewById(R.id.date);
+                        remark.setText(allData.get(position - 1).getRemark());
+                        date.setText(allData.get(position - 1).getCalendarString());
+                    }
+                });
 
                 break;
         }
@@ -662,11 +695,18 @@ public class TodayViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.index)
         TextView index;
+        @Optional
+        @InjectView(R.id.material_ripple_layout)
+        MaterialRippleLayout layout;
 
         viewHolder(View view) {
             super(view);
             ButterKnife.inject(this, view);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view , int position);
     }
 
 // set the listener of the check button on the snack bar of pie/////////////////////////////////////

@@ -17,90 +17,102 @@
         app:cardPreventCornerOverlap="false"
         app:contentPadding="0dp">
 
-        <FrameLayout
-            android:layout_height="match_parent"
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:id="@+id/material_ripple_layout"
             android:layout_width="match_parent"
-            >
+            android:layout_height="match_parent"
+            app:mrl_rippleAlpha="0.2"
+            app:mrl_rippleColor="@color/setting_ripple"
+            app:mrl_rippleHover="true"
+            app:mrl_rippleOverlay="false">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <FrameLayout
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 >
 
-                <ImageView
-                    android:id="@+id/image_view"
-                    android:layout_height="40dp"
-                    android:layout_width="40dp"
-                    android:layout_gravity="center|left"
-                    android:layout_marginLeft="10dp"
-                    />
-
-                <TextView
-                    android:id="@+id/money"
-                    android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:textColor="@color/my_blue"
-                    android:textSize="30sp"
-                    android:layout_gravity="center"
-                    android:paddingLeft="20dp"
-                    android:gravity="center"
-                    android:text="777777"
-                    />
-
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
                     >
 
-                    <TextView
-                        android:id="@+id/remark"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="#666666"
-                        android:textSize="10sp"
-                        android:layout_gravity="center"
-                        android:gravity="top|right"
-                        android:paddingRight="10dp"
-                        android:paddingTop="10dp"
-                        android:text="Use for a big ham"
+                    <ImageView
+                        android:id="@+id/image_view"
+                        android:layout_height="40dp"
+                        android:layout_width="40dp"
+                        android:layout_gravity="center|left"
+                        android:layout_marginLeft="10dp"
                         />
 
                     <TextView
-                        android:id="@+id/date"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:textColor="#666666"
-                        android:textSize="10sp"
+                        android:id="@+id/money"
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dp"
+                        android:textColor="@color/my_blue"
+                        android:textSize="30sp"
                         android:layout_gravity="center"
-                        android:gravity="bottom|right"
-                        android:paddingRight="10dp"
-                        android:paddingBottom="10dp"
-                        android:text="2015-12-10 10:23"
+                        android:paddingLeft="20dp"
+                        android:gravity="center"
+                        android:text="777777"
                         />
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="0dp"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        >
+
+                        <TextView
+                            android:id="@+id/remark"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:textColor="#666666"
+                            android:textSize="10sp"
+                            android:layout_gravity="center"
+                            android:gravity="top|right"
+                            android:paddingRight="10dp"
+                            android:paddingTop="10dp"
+                            android:text="Use for a big ham"
+                            />
+
+                        <TextView
+                            android:id="@+id/date"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:textColor="#666666"
+                            android:textSize="10sp"
+                            android:layout_gravity="center"
+                            android:gravity="bottom|right"
+                            android:paddingRight="10dp"
+                            android:paddingBottom="10dp"
+                            android:text="2015-12-10 10:23"
+                            />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+                <TextView
+                    android:id="@+id/index"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:paddingBottom="5dp"
+                    android:textSize="8sp"
+                    android:textColor="#666666"
+                    android:text="12"
+                    />
 
-            <TextView
-                android:id="@+id/index"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:paddingBottom="5dp"
-                android:textSize="8sp"
-                android:textColor="#666666"
-                android:text="12"
-                />
+            </FrameLayout>
 
-        </FrameLayout>
+        </com.balysv.materialripple.MaterialRippleLayout>
 
     </android.support.v7.widget.CardView>
+
 </FrameLayout>

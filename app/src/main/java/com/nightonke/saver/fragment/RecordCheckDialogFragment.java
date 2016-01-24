@@ -16,19 +16,21 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.RecordCheckDialogRecyclerViewAdapter;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.util.CoCoinUtil;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
 /**
  * Created by 伟平 on 2015/10/31.
  */
-public class RecordCheckDialogFragment extends DialogFragment {
+public class RecordCheckDialogFragment extends DialogFragment implements RecordCheckDialogRecyclerViewAdapter.OnItemClickListener {
 
-    private ViewGroup mSnackbarContainer;
     private RecyclerView recyclerView;
     private List<CoCoinRecord> list;
     private Context mContext;
@@ -53,9 +55,8 @@ public class RecordCheckDialogFragment extends DialogFragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mSnackbarContainer = (ViewGroup) view.findViewById(R.id.snackbar_container);
 
-        RecordCheckDialogRecyclerViewAdapter adapter = new RecordCheckDialogRecyclerViewAdapter(context, list);
+        RecordCheckDialogRecyclerViewAdapter adapter = new RecordCheckDialogRecyclerViewAdapter(context, list, this);
 
         recyclerView.setAdapter(adapter);
 
@@ -94,9 +95,36 @@ public class RecordCheckDialogFragment extends DialogFragment {
         super.onDismiss(dialog);
 
         recyclerView = null;
-        mSnackbarContainer = null;
         mContext = null;
         list = null;
         title = null;
+    }
+
+    private MaterialDialog dialog;
+    private View dialogView;
+    @Override
+    public void onItemClick(View view, int position) {
+        String subTitle;
+        double spend = list.get(position).getMoney();
+        int tagId = list.get(position).getTag();
+        if ("zh".equals(CoCoinUtil.GetLanguage())) {
+            subTitle = CoCoinUtil.GetSpendString((int)spend) +
+                    "于" + CoCoinUtil.GetTagName(tagId);
+        } else {
+            subTitle = "Spend " + (int)spend +
+                    "in " + CoCoinUtil.GetTagName(tagId);
+        }
+        dialog = new MaterialDialog.Builder(mContext)
+                .icon(CoCoinUtil.GetTagIconDrawable(list.get(position).getTag()))
+                .limitIconToDefaultSize()
+                .title(subTitle)
+                .customView(R.layout.dialog_a_record, true)
+                .positiveText(R.string.get)
+                .show();
+        dialogView = dialog.getCustomView();
+        TextView remark = (TextView)dialogView.findViewById(R.id.remark);
+        TextView date = (TextView)dialogView.findViewById(R.id.date);
+        remark.setText(list.get(position).getRemark());
+        date.setText(list.get(position).getCalendarString());
     }
 }

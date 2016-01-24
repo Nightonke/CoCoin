@@ -841,6 +841,11 @@ public class CoCoinUtil {
         return TAG_ICON[tagId + 2];
     }
 
+    public static Drawable GetTagIconDrawable(int tagId) {
+        return ContextCompat.getDrawable(
+                CoCoinApplication.getAppContext(), TAG_ICON[tagId + 2]);
+    }
+
     public static String GetTagName(int tagId) {
         return CoCoinApplication.getAppContext().getResources().getString(TAG_NAME[tagId + 2]);
     }
