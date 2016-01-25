@@ -1,6 +1,5 @@
 package com.nightonke.saver.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.daimajia.androidanimations.library.Techniques;
@@ -28,22 +26,20 @@ import com.daimajia.slider.library.Animations.DescriptionAnimation;
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.TextSliderView;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.DrawerTagChooseGridViewAdapter;
-import com.nightonke.saver.model.CoCoin;
+import com.nightonke.saver.adapter.TagViewFragmentAdapter;
 import com.nightonke.saver.model.Logo;
+import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.CustomSliderView;
 import com.nightonke.saver.ui.MyGridView;
-import com.nightonke.saver.R;
-import com.nightonke.saver.model.RecordManager;
-import com.nightonke.saver.adapter.TagViewFragmentAdapter;
 import com.nightonke.saver.util.CoCoinUtil;
 
 import java.io.File;

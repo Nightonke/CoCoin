@@ -5,7 +5,9 @@ package com.nightonke.saver.adapter;
  */
 
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +24,13 @@ import com.h6ah4i.android.widget.advrecyclerview.swipeable.action.SwipeResultAct
 import com.h6ah4i.android.widget.advrecyclerview.utils.AbstractSwipeableItemViewHolder;
 import com.h6ah4i.android.widget.advrecyclerview.utils.RecyclerViewAdapterUtils;
 import com.nightonke.saver.R;
+import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
+import com.nightonke.saver.ui.SwipeableItemOnClickListener;
 import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 public class MySwipeableItemAdapter
@@ -38,10 +41,11 @@ public class MySwipeableItemAdapter
     private interface Swipeable extends SwipeableItemConstants {
     }
 
+    private OnItemDeleteListener onItemDeleteListener;
+    private OnItemClickListener onItemClickListener;
+
     private Context mContext;
     private EventListener mEventListener;
-    private View.OnClickListener mItemViewOnClickListener;
-    private View.OnClickListener mSwipeableViewContainerOnClickListener;
     private static HashMap<Integer, Boolean> pinned;
 
     private List<CoCoinRecord> records;
@@ -78,26 +82,16 @@ public class MySwipeableItemAdapter
         }
     }
 
-    public MySwipeableItemAdapter(Context inContext, List<CoCoinRecord> records) {
+    public MySwipeableItemAdapter(Context inContext, List<CoCoinRecord> records, final OnItemDeleteListener onItemDeleteListener, OnItemClickListener onItemClickListener) {
         mContext = inContext;
         this.records = records;
+        this.onItemDeleteListener = onItemDeleteListener;
+        this.onItemClickListener = onItemClickListener;
         // Todo optimize
         pinned = new HashMap<>();
         for (int i = records.size() - 1; i >= 0; i--) {
             pinned.put((int)records.get(i).getId(), false);
         }
-        mItemViewOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onItemViewClick(v);
-            }
-        };
-        mSwipeableViewContainerOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSwipeableViewContainerClick(v);
-            }
-        };
 
         setHasStableIds(true);
     }
@@ -133,12 +127,23 @@ public class MySwipeableItemAdapter
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         // set listeners
         // (if the item is *not pinned*, click event comes to the itemView)
-        holder.itemView.setOnClickListener(mItemViewOnClickListener);
+        holder.itemView.setOnClickListener(new SwipeableItemOnClickListener(position) {
+            @Override
+            public void onClick(View v) {
+                onItemViewClick(v);
+            }
+        });
         // (if the item is *pinned*, click event comes to the mContainer)
-        holder.mContainer.setOnClickListener(mSwipeableViewContainerOnClickListener);
+        holder.mContainer.setOnClickListener(new SwipeableItemOnClickListener(position) {
+            @Override
+            public void onClick(View v) {
+                onSwipeableViewContainerClick(v);
+                onItemClickListener.onItemClick(position);
+            }
+        });
 
         // set text
         int tPosition = records.size() - 1 - position;
@@ -149,8 +154,7 @@ public class MySwipeableItemAdapter
         holder.money.setText(String.valueOf((int) record.getMoney()));
         holder.date.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.money.setTypeface(CoCoinUtil.typefaceLatoLight);
-        holder.money.setTextColor(
-                CoCoinUtil.GetTagColorResource(record.getTag()));
+        holder.money.setTextColor(ContextCompat.getColor(CoCoinApplication.getAppContext(), R.color.my_blue));
         holder.index.setText((position + 1) + "");
         holder.index.setTypeface(CoCoinUtil.typefaceLatoLight);
         holder.remark.setText(record.getRemark());
@@ -216,7 +220,7 @@ public class MySwipeableItemAdapter
                 if (pinned.get((int)records.get(records.size() - 1 - position).getId())) {
                     return new UnpinResultAction(this, position);
                 } else {
-                    return new SwipeRightResultAction(this, position);
+                    return new SwipeRightResultAction(this, position, onItemDeleteListener);
                 }
             case Swipeable.RESULT_SWIPED_LEFT:
                 return new SwipeLeftResultAction(this, position);
@@ -275,25 +279,30 @@ public class MySwipeableItemAdapter
         }
     }
 
-    private static class SwipeRightResultAction extends SwipeResultActionRemoveItem {
+    public static class SwipeRightResultAction extends SwipeResultActionRemoveItem {
+
+        private OnItemDeleteListener onItemDeleteListener;
         private MySwipeableItemAdapter mAdapter;
         private final int mPosition;
 
-        SwipeRightResultAction(MySwipeableItemAdapter adapter, int position) {
+        SwipeRightResultAction(MySwipeableItemAdapter adapter, int position, OnItemDeleteListener onItemDeleteListener) {
             mAdapter = adapter;
             mPosition = position;
+            this.onItemDeleteListener = onItemDeleteListener;
         }
 
         @Override
         protected void onPerformAction() {
             super.onPerformAction();
             if (CoCoinUtil.backupCoCoinRecord != null) {
-                RecordManager.deleteRecord(CoCoinUtil.backupCoCoinRecord, false);
+                RecordManager.deleteRecord(CoCoinUtil.backupCoCoinRecord, true);
             }
             CoCoinUtil.backupCoCoinRecord = null;
             CoCoinUtil.backupCoCoinRecord
-                    = RecordManager.SELECTED_RECORDS.get(RecordManager.RECORDS.size() - 1 - mPosition);
+                    = RecordManager.SELECTED_RECORDS.get(RecordManager.SELECTED_RECORDS.size() - 1 - mPosition);
             RecordManager.SELECTED_RECORDS.remove(RecordManager.SELECTED_RECORDS.size() - 1 - mPosition);
+            RecordManager.SELECTED_SUM -= CoCoinUtil.backupCoCoinRecord.getMoney();
+            onItemDeleteListener.onSelectSumChanged();
             mAdapter.notifyItemRemoved(mPosition);
         }
 
@@ -346,5 +355,13 @@ public class MySwipeableItemAdapter
         pinned.put((int)RecordManager.SELECTED_RECORDS.get(
                 RecordManager.SELECTED_RECORDS.size() - 1 - position).getId(), inPinned);
 
+    }
+
+    public interface OnItemDeleteListener {
+        void onSelectSumChanged();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 }

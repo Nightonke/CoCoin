@@ -187,7 +187,7 @@ public class CustomViewFragment extends Fragment {
                             now.get(Calendar.MONTH),
                             now.get(Calendar.DAY_OF_MONTH)
                     );
-                    dpd.setTitle(mContext.getResources().getString(R.string.to));
+                    dpd.setTitle(mContext.getResources().getString(R.string.set_right_calendar));
                     dpd.show(((Activity)mContext).getFragmentManager(), "Datepickerdialog");
                     isFrom = false;
                 } else {
@@ -231,7 +231,7 @@ public class CustomViewFragment extends Fragment {
                         now.get(Calendar.MONTH),
                         now.get(Calendar.DAY_OF_MONTH)
                 );
-                dpd.setTitle(mContext.getResources().getString(R.string.from));
+                dpd.setTitle(mContext.getResources().getString(R.string.set_left_calendar));
                 dpd.show(((Activity)mContext).getFragmentManager(), "Datepickerdialog");
                 isFrom = true;
             }

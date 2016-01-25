@@ -23,7 +23,6 @@ public class CustomTitleSliderView extends BaseSliderView {
 
     public CustomTitleSliderView(Context context, String content) {
         super(context);
-        this.context = context;
         this.content = content;
     }
 

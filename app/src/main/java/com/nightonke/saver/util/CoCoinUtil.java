@@ -954,26 +954,20 @@ public class CoCoinUtil {
         return mActionBarSize;
     }
 
-    public static HashMap<String, Integer> drawerTopUrls = null;
     public static HashMap<String, Integer> GetDrawerTopUrl() {
-        if (drawerTopUrls == null) {
-            drawerTopUrls = new HashMap<>();
-            drawerTopUrls.put("0", DRAWER_TOP_URL[0]);
-            drawerTopUrls.put("1", DRAWER_TOP_URL[1]);
-            drawerTopUrls.put("2", DRAWER_TOP_URL[2]);
-            drawerTopUrls.put("3", DRAWER_TOP_URL[3]);
-            drawerTopUrls.put("4", DRAWER_TOP_URL[4]);
-        }
+        HashMap<String, Integer> drawerTopUrls = new HashMap<>();
+        drawerTopUrls.put("0", DRAWER_TOP_URL[0]);
+        drawerTopUrls.put("1", DRAWER_TOP_URL[1]);
+        drawerTopUrls.put("2", DRAWER_TOP_URL[2]);
+        drawerTopUrls.put("3", DRAWER_TOP_URL[3]);
+        drawerTopUrls.put("4", DRAWER_TOP_URL[4]);
         return drawerTopUrls;
     }
 
-    public static HashMap<String, Integer> transparentUrls = null;
     public static HashMap<String, Integer> getTransparentUrls() {
-        if (transparentUrls == null) {
-            transparentUrls = new HashMap<>();
-            transparentUrls.put("0", R.drawable.transparent);
-            transparentUrls.put("1", R.drawable.transparent);
-        }
+        HashMap<String, Integer> transparentUrls = new HashMap<>();
+        transparentUrls.put("0", R.drawable.transparent);
+        transparentUrls.put("1", R.drawable.transparent);
         return transparentUrls;
     }
 
@@ -1060,4 +1054,7 @@ public class CoCoinUtil {
         display.getSize(size);
         return size;
     }
+
+    public static Double INPUT_MIN_EXPENSE = 0d;
+    public static Double INPUT_MAX_EXPENSE = 99999d;
 }

@@ -12,6 +12,7 @@
     >
 
     <FrameLayout
+        android:id="@+id/info_layout"
         android:layout_height="160dp"
         android:layout_width="match_parent"
         >
@@ -74,5 +75,271 @@
         </LinearLayout>
 
     </FrameLayout>
+
+    <ScrollView
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/tag_title"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/select_title"
+                android:textColor="@color/my_blue"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"
+                android:textSize="16sp"
+                />
+
+            <TextView
+                android:id="@+id/tag_title_expense"
+                android:layout_height="30dp"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/select_expense"
+                android:textColor="@color/my_blue"
+                android:paddingLeft="25dp"
+                android:textSize="13sp"
+                />
+
+            <TextView
+                android:id="@+id/left_expense"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:text="$19999"
+                android:textColor="@color/red"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:layout_height="20dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:text="~"
+                android:textColor="@color/my_blue"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/right_expense"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:text="$99999"
+                android:textColor="@color/red"
+                android:textSize="18sp"
+                />
+
+            <LinearLayout
+                android:layout_height="25dp"
+                android:layout_width="match_parent"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/select_expense"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/set_select"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="@drawable/button_select_condition"
+                    />
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="10dp"
+                    />
+
+                <TextView
+                    android:id="@+id/no_expense"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/any"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="@drawable/button_select_condition"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tag_title_time"
+                android:layout_height="30dp"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/select_time"
+                android:textColor="@color/my_blue"
+                android:paddingLeft="25dp"
+                android:textSize="13sp"
+                />
+
+            <TextView
+                android:id="@+id/left_time"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:text="Dec. 23 2015"
+                android:textColor="@color/red"
+                android:textSize="18sp"
+                />
+
+            <TextView
+                android:layout_height="20dp"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:text="~"
+                android:textColor="@color/my_blue"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:id="@+id/right_time"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:text="Dec. 23 2015"
+                android:textColor="@color/red"
+                android:textSize="18sp"
+                />
+
+            <LinearLayout
+                android:layout_height="25dp"
+                android:layout_width="match_parent"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/select_time"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/set_select"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="@drawable/button_select_condition"
+                    />
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="10dp"
+                    />
+
+                <TextView
+                    android:id="@+id/no_time"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/any"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="@drawable/button_select_condition"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tag_title_tag"
+                android:layout_height="30dp"
+                android:layout_width="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/select_tag"
+                android:textColor="@color/my_blue"
+                android:paddingLeft="25dp"
+                android:textSize="13sp"
+                />
+
+            <ImageView
+                android:id="@+id/tag_image"
+                android:layout_height="40dp"
+                android:layout_width="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/fruit_icon"
+                />
+
+            <TextView
+                android:id="@+id/tag_name"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:fontFamily="sans-serif"
+                android:textSize="12sp"
+                android:text="fruit"
+                android:textColor="@color/my_blue"
+                android:gravity="center"
+                />
+
+            <LinearLayout
+                android:layout_height="25dp"
+                android:layout_width="match_parent"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                >
+
+                <TextView
+                    android:id="@+id/select_tag"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/set_select"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="@drawable/button_select_condition"
+                    />
+
+                <TextView
+                    android:layout_height="match_parent"
+                    android:layout_width="10dp"
+                    />
+
+                <TextView
+                    android:id="@+id/no_tag"
+                    android:layout_height="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/any"
+                    android:textColor="@color/white"
+                    android:gravity="center"
+                    android:background="@drawable/button_select_condition"
+                    />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/select"
+                android:layout_height="25dp"
+                android:layout_width="match_parent"
+                android:text="@string/select"
+                android:textColor="@color/white"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:background="@drawable/button_no_condition"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

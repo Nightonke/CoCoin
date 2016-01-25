@@ -341,4 +341,25 @@
     <string name="change_logo_tip">请在设置界面更改头像</string>
     <string name="login_tip">请在设置界面登录或注册</string>
 
+    <string name="select_title"> ● 筛选条件</string>
+    <string name="select_expense"> ● 金额范围：</string>
+    <string name="select_tag"> ● 标签类型：</string>
+    <string name="select_time"> ● 时间范围：</string>
+    <string name="set_select">设置</string>
+    <string name="any">不限</string>
+    <string name="select">筛选</string>
+
+    <string name="set_expense">金额范围</string>
+    <string name="set_left_expense">设置金额下界（包含）。</string>
+    <string name="set_right_expense">设置金额上界（包含）。</string>
+
+    <string name="set_left_calendar">开始时间</string>
+    <string name="set_right_calendar">结束时间</string>
+
+    <string name="set_tag">标签</string>
+    <string name="set_tag_kind">设置标签</string>
+
+    <string name="selecting_title">筛选中</string>
+    <string name="selecting_content">正在筛选记录，请稍候……</string>
+
 </resources>

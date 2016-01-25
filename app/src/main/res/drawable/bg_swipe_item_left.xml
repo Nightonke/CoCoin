@@ -20,7 +20,7 @@
     </item>
     <item android:right="16dp">
         <bitmap
-            android:src="@drawable/pencil"
+            android:src="@drawable/edit"
             android:gravity="right|center_vertical"/>
     </item>
 </layer-list>

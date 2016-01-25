@@ -353,4 +353,25 @@
     <string name="change_logo_tip">You can change your avatar in settings</string>
     <string name="login_tip">You can sign in or up in settings</string>
 
+    <string name="select_title"> ● Conditions</string>
+    <string name="select_expense"> ● Expense Conditions:</string>
+    <string name="select_tag"> ● Tag Conditions:</string>
+    <string name="select_time"> ● Time Conditions:</string>
+    <string name="set_select">Set</string>
+    <string name="any">No limit</string>
+    <string name="select">Filter</string>
+
+    <string name="set_expense">Expense Range</string>
+    <string name="set_left_expense">Set the lower bound of expense(include).</string>
+    <string name="set_right_expense">Set the upper bound of expense(include).</string>
+
+    <string name="set_left_calendar">Start Time</string>
+    <string name="set_right_calendar">End Time</string>
+
+    <string name="set_tag">Tag</string>
+    <string name="set_tag_kind">Set the tag of the records.</string>
+
+    <string name="selecting_title">Filtering</string>
+    <string name="selecting_content">Filtering records, please wait...</string>
+
 </resources>

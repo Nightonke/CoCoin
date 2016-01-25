@@ -76,7 +76,7 @@
     <color name="bg_group_item_swiping_active_state">#ffbb99ff</color>
 
     <color name="bg_swipe_item_neutral">#ffffffff</color>
-    <color name="bg_swipe_item_pinned">#fff9930d</color>
+    <color name="bg_swipe_item_pinned">#2196F3</color>
     <color name="bg_swipe_item_dismiss">#ff2f8b2a</color>
     <color name="bg_swipe_group_item_pinned">#fff45f30</color>
     <color name="bg_swipe_group_item_dismiss">#ff295db3</color>
@@ -102,5 +102,10 @@
 
     <color name="normal_button">#002196F3</color>
     <color name="normal_button_press">#92cbf9</color>
+
+    <color name="select_condition_button">#2196F3</color>
+    <color name="select_condition_button_press">#51adf6</color>
+    <color name="no_condition_button">#FF4081</color>
+    <color name="no_condition_button_press">#ff73a3</color>
 
 </resources>

@@ -223,10 +223,8 @@ public class RecordManager {
     public static long deleteRecord(final CoCoinRecord coCoinRecord, boolean deleteInList) {
         long deletedNumber = db.deleteRecord(coCoinRecord.getId());
         if (deletedNumber > 0) {
-            if (BuildConfig.DEBUG) {
-                if (BuildConfig.DEBUG) Log.d("CoCoin",
-                        "recordManager.deleteRecord: Delete " + coCoinRecord.toString() + " S");
-            }
+            if (BuildConfig.DEBUG) Log.d("CoCoin",
+                    "recordManager.deleteRecord: Delete " + coCoinRecord.toString() + " S");
             User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
             // if we can delete the coCoinRecord from server
 //            if (user != null && coCoinRecord.getLocalObjectId() != null) {
@@ -259,9 +257,12 @@ public class RecordManager {
             // update RECORDS list and SUM
             SUM -= (int) coCoinRecord.getMoney();
             if (deleteInList) {
-                for (CoCoinRecord r : RECORDS) {
-                    if (r.getId() == coCoinRecord.getId()) {
-                        RECORDS.remove(coCoinRecord);
+                int size = RECORDS.size();
+                for (int i = 0; i < RECORDS.size(); i++) {
+                    if (RECORDS.get(i).getId() == coCoinRecord.getId()) {
+                        RECORDS.remove(i);
+                        if (BuildConfig.DEBUG) Log.d("CoCoin",
+                                "recordManager.deleteRecord: Delete in RECORD " + coCoinRecord.toString() + " S");
                         break;
                     }
                 }
