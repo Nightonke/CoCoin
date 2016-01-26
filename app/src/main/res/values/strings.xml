@@ -380,4 +380,13 @@
     <string name="loading">Loading...</string>
     <string name="loaded">Loading completed</string>
 
+    <string name="update_title">Update</string>
+    <string name="update_content_too_old">Your CoCoin version is too old to use.</string>
+    <string name="update_content">CoCoin, keep moving.</string>
+    <string name="update_never">don\'t remind</string>
+    <string name="update_cancel">cancel</string>
+    <string name="update_ok">Update</string>
+    <string name="downloading_title">Downloading apk…</string>
+    <string name="downloading_content">Downloading newest CoCoin, please wait.</string>
+
 </resources>

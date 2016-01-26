@@ -15,6 +15,8 @@ import com.squareup.leakcanary.RefWatcher;
 
 public class CoCoinApplication extends Application {
 
+    public static final int VERSION = 110;
+
     private static Context mContext;
 
     public static RefWatcher getRefWatcher(Context context) {

@@ -50,6 +50,8 @@ public class SettingManager {
     private Boolean SHOW_PICTURE;
     // whether draw a hollow pie chart
     private Boolean IS_HOLLOW;
+    // whether remind update
+    private Boolean REMIND_UPDATE;
 
     // tell the mainActivity whether the tags' order should be changed
     private Boolean MAIN_ACTIVITY_TAG_SHOULD_CHANGE = false;
@@ -113,6 +115,8 @@ public class SettingManager {
     private final Boolean DEFAULT_SHOW_PICTURE = false;
     // whether draw a hollow pie chart
     private final Boolean DEFAULT_IS_HOLLOW = true;
+    // whether remind update
+    private final Boolean DEFAULT_REMIND_UPDATE = true;
     // the profile logo store place
     private final String DEFAULT_PROFILE_IMAGE_DIR = "imageDir";
     // the profile logo name
@@ -399,6 +403,21 @@ public class SettingManager {
         editor.putBoolean("IS_HOLLOW", IS_HOLLOW);
         editor.commit();
         this.IS_HOLLOW = IS_HOLLOW;
+    }
+
+    public Boolean getRemindUpdate() {
+        REMIND_UPDATE = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getBoolean("REMIND_UPDATE", DEFAULT_REMIND_UPDATE);
+        return REMIND_UPDATE;
+    }
+
+    public void setRemindUpdate(Boolean REMIND_UPDATE) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putBoolean("REMIND_UPDATE", REMIND_UPDATE);
+        editor.commit();
+        this.REMIND_UPDATE = REMIND_UPDATE;
     }
 
     public String getProfileImageName() {

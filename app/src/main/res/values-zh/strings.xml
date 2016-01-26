@@ -367,4 +367,13 @@
     <string name="loading">加载中……</string>
     <string name="loaded">加载完成</string>
 
+    <string name="update_title">更新</string>
+    <string name="update_content_too_old">您的CoCoin版本过旧，可能无法使用。</string>
+    <string name="update_content">我们将为您带来更多的功能，您也可以在设置界面中手动更新。</string>
+    <string name="update_never">此版本不提醒</string>
+    <string name="update_cancel">取消</string>
+    <string name="update_ok">更新</string>
+    <string name="downloading_title">下载安装包……</string>
+    <string name="downloading_content">正在下载最新CoCoin安装包，请稍候。</string>
+
 </resources>
