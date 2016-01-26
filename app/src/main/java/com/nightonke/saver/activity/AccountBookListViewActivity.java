@@ -67,6 +67,7 @@ import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.CustomSliderView;
 import com.nightonke.saver.ui.CustomTitleSliderView;
 import com.nightonke.saver.ui.DoubleClickListener;
+import com.nightonke.saver.ui.DoubleSliderClickListener;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
 import com.nispok.snackbar.Snackbar;
@@ -228,28 +229,22 @@ public class AccountBookListViewActivity extends AppCompatActivity
 
         searchView = (MaterialSearchView) findViewById(R.id.search_view);
         searchView.setVoiceSearch(false);
+        searchView.setHint(mContext.getResources().getString(R.string.input_remark_to_search));
         searchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                //Do some magic
-
-                Log.d("Saver", "onQueryTextSubmit");
+                progressDialog = new MaterialDialog.Builder(mContext)
+                        .title(R.string.selecting_title)
+                        .content(R.string.selecting_content)
+                        .cancelable(false)
+                        .progress(true, 0)
+                        .show();
+                new SelectRecordsByRemark(query).execute();
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                //Do some magic
-                // Todo
-                if (newText.length() == 1) {
-                    if (CoCoinUtil.isNumber(newText.charAt(0))) {
-
-                    }
-                } else if (newText.length() == 2) {
-
-                }
-
-                Log.d("Saver", "onQueryTextChange");
                 return false;
             }
         });
@@ -395,30 +390,20 @@ public class AccountBookListViewActivity extends AppCompatActivity
         customTitleSliderView
                 .image(urls2.get("0"))
                 .setScaleType(BaseSliderView.ScaleType.Fit);
+        customTitleSliderView.setOnSliderClickListener(doubleSliderClickListener);
         titleSlider.addSlider(customTitleSliderView);
 
         customTitleSliderView = new CustomTitleSliderView(mContext, CoCoinUtil.GetInMoney((int)(double)RecordManager.getInstance(mContext).SUM));
         customTitleSliderView
                 .image(urls2.get("1"))
                 .setScaleType(BaseSliderView.ScaleType.Fit);
+        customTitleSliderView.setOnSliderClickListener(doubleSliderClickListener);
         titleSlider.addSlider(customTitleSliderView);
 
         titleSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
         titleSlider.setCustomAnimation(new DescriptionAnimation());
         titleSlider.setDuration(4000);
         titleSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
-
-        titleSlider.setOnClickListener(new DoubleClickListener() {
-            @Override
-            public void onSingleClick(View v) {
-
-            }
-
-            @Override
-            public void onDoubleClick(View v) {
-                if (recyclerView != null) recyclerView.scrollTo(0, 0);
-            }
-        });
 
         ((TextView)findViewById(R.id.tag_title)).setTypeface(CoCoinUtil.GetTypeface());
         ((TextView)findViewById(R.id.tag_title_expense)).setTypeface(CoCoinUtil.GetTypeface());
@@ -518,6 +503,7 @@ public class AccountBookListViewActivity extends AppCompatActivity
     private MaterialDialog progressDialog;
 
     private void changeTitleSlider() {
+        titleSlider.stopAutoCycle();
         titleSlider.removeAllSliders();
 
         HashMap<String, Integer> urls2 = CoCoinUtil.getTransparentUrls();
@@ -571,6 +557,70 @@ public class AccountBookListViewActivity extends AppCompatActivity
         date.setText(RecordManager.SELECTED_RECORDS.get(position).getCalendarString());
     }
 
+    public class SelectRecordsByRemark extends AsyncTask<String, Void, String> {
+
+        private String sub;
+
+        public SelectRecordsByRemark(String sub) {
+            this.sub = sub;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            RecordManager.getInstance(mContext).SELECTED_SUM = 0d;
+            if (RecordManager.getInstance(mContext).SELECTED_RECORDS == null) {
+                RecordManager.getInstance(mContext).SELECTED_RECORDS = new LinkedList<>();
+            } else {
+                RecordManager.getInstance(mContext).SELECTED_RECORDS.clear();
+            }
+            int size = RecordManager.getInstance(mContext).RECORDS.size();
+            for (int i = 0; i < size; i++) {
+                CoCoinRecord record = new CoCoinRecord();
+                record.set(RecordManager.getInstance(mContext).RECORDS.get(i));
+                if (inRemark(record, sub)) {
+                    RecordManager.getInstance(mContext).SELECTED_SUM += record.getMoney();
+                    RecordManager.getInstance(mContext).SELECTED_RECORDS.add(record);
+                }
+            }
+
+            originalSum = RecordManager.getInstance(mContext).SELECTED_SUM;
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            mAdapter.notifyDataSetChanged();
+
+            titleSlider.stopAutoCycle();
+            titleSlider.removeAllSliders();
+
+            HashMap<String, Integer> urls2 = CoCoinUtil.getTransparentUrls();
+
+            CustomTitleSliderView customTitleSliderView = new CustomTitleSliderView(mContext, RecordManager.getInstance(mContext).SELECTED_RECORDS.size() + "'s");
+            customTitleSliderView
+                    .image(urls2.get("0"))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+            titleSlider.addSlider(customTitleSliderView);
+
+            customTitleSliderView = new CustomTitleSliderView(mContext, CoCoinUtil.GetInMoney((int)(double)RecordManager.getInstance(mContext).SELECTED_SUM));
+            customTitleSliderView
+                    .image(urls2.get("1"))
+                    .setScaleType(BaseSliderView.ScaleType.Fit);
+            titleSlider.addSlider(customTitleSliderView);
+
+            titleSlider.startAutoCycle();
+
+            if (RecordManager.SELECTED_RECORDS.size() == 0) {
+                emptyTip.setVisibility(View.VISIBLE);
+                verticalRecyclerViewFastScroller.setVisibility(View.INVISIBLE);
+            } else {
+                emptyTip.setVisibility(View.GONE);
+                verticalRecyclerViewFastScroller.setVisibility(View.VISIBLE);
+            }
+
+            if (progressDialog != null) progressDialog.cancel();
+        }
+    }
+
     public class SelectRecords extends AsyncTask<String, Void, String> {
 
         @Override
@@ -586,7 +636,6 @@ public class AccountBookListViewActivity extends AppCompatActivity
                 CoCoinRecord record = new CoCoinRecord();
                 record.set(RecordManager.getInstance(mContext).RECORDS.get(i));
                 if (inMoney(record) && inTag(record) && inTime(record)) {
-                    Log.d("CoCoin", "add " + i);
                     RecordManager.getInstance(mContext).SELECTED_SUM += record.getMoney();
                     RecordManager.getInstance(mContext).SELECTED_RECORDS.add(record);
                 }
@@ -653,6 +702,10 @@ public class AccountBookListViewActivity extends AppCompatActivity
     private boolean inTime(CoCoinRecord record) {
         if (LEFT_CALENDAR == null || RIGHT_CALENDAR == null) return true;
         else return !record.getCalendar().before(LEFT_CALENDAR) && !record.getCalendar().after(RIGHT_CALENDAR);
+    }
+
+    private boolean inRemark(CoCoinRecord record, String sub) {
+        return record.getRemark().contains(sub);
     }
 
     @Override
@@ -791,7 +844,7 @@ public class AccountBookListViewActivity extends AppCompatActivity
                         @Override
                         public void run() {
                             mAdapter.setPinned(false, position);
-                            mAdapter.notifyItemChanged(position);
+                            mAdapter.notifyDataSetChanged();
                         }
                     }, 500);
                     setTitle();
@@ -884,6 +937,12 @@ public class AccountBookListViewActivity extends AppCompatActivity
         titleSlider.stopAutoCycle();
         titleSlider.removeAllSliders();
         titleSlider = null;
+
+        doubleSliderClickListener = null;
+
+        RecordManager.SELECTED_RECORDS.clear();
+        RecordManager.SELECTED_RECORDS = null;
+        RecordManager.SELECTED_SUM = 0d;
 
         super.onDestroy();
     }
@@ -1111,4 +1170,16 @@ public class AccountBookListViewActivity extends AppCompatActivity
             }
         });
     }
+
+    private DoubleSliderClickListener doubleSliderClickListener = new DoubleSliderClickListener() {
+        @Override
+        public void onSingleClick(BaseSliderView v) {
+
+        }
+
+        @Override
+        public void onDoubleClick(BaseSliderView v) {
+            if (recyclerView != null) recyclerView.scrollToPosition(0);
+        }
+    };
 }

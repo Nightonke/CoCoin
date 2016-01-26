@@ -66,7 +66,8 @@ public class EditRemarkFragment extends Fragment {
         if (getArguments().getInt("type") == CoCoinFragmentManager.EDIT_RECORD_ACTIVITY_FRAGMENT
                 && CoCoinUtil.editRecordPosition != -1) {
             CoCoinFragmentManager.editRecordActivityEditRemarkFragment
-                    .setRemark(RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getRemark());
+                    .setRemark(RecordManager.SELECTED_RECORDS.get(CoCoinUtil.editRecordPosition).getRemark());
+            CoCoinFragmentManager.editRecordActivityEditRemarkFragment.setLastSelection();
         }
 
         return mView;
@@ -102,6 +103,10 @@ public class EditRemarkFragment extends Fragment {
 
     public void setHelpText(String string) {
         editView.setHelperText(string);
+    }
+
+    public void setLastSelection() {
+        editView.setSelection(editView.getText().length());
     }
 
     public void editRequestFocus() {

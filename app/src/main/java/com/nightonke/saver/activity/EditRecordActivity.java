@@ -261,6 +261,7 @@ public class EditRecordActivity extends AppCompatActivity
                 }
             } else {
                 IS_CHANGED = true;
+                RecordManager.SELECTED_RECORDS.set(RecordManager.getInstance(mContext).SELECTED_RECORDS.size() - 1 - position, coCoinRecord);
                 for (int i = RecordManager.getInstance(mContext).RECORDS.size() - 1; i >= 0; i--) {
                     if (coCoinRecord.getId() == RecordManager.RECORDS.get(i).getId()) {
                         RecordManager.RECORDS.set(i, coCoinRecord);

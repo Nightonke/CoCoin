@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.nightonke.saver.R;
+import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.util.CoCoinUtil;
 
@@ -22,7 +23,7 @@ public class CustomTitleSliderView extends BaseSliderView {
     private String content;
 
     public CustomTitleSliderView(Context context, String content) {
-        super(context);
+        super(CoCoinApplication.getAppContext());
         this.content = content;
     }
 

@@ -86,14 +86,14 @@ public class EditMoneyFragment extends Fragment {
                 && CoCoinUtil.editRecordPosition != -1) {
             CoCoinFragmentManager.editRecordActivityEditMoneyFragment
                     .setTagImage(CoCoinUtil.GetTagIcon(
-                            (int)RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getTag()));
+                            (int)RecordManager.SELECTED_RECORDS.get(CoCoinUtil.editRecordPosition).getTag()));
             CoCoinFragmentManager.editRecordActivityEditMoneyFragment
                     .setTagName(CoCoinUtil.GetTagName(
-                            (int)RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getTag()));
+                            (int)RecordManager.SELECTED_RECORDS.get(CoCoinUtil.editRecordPosition).getTag()));
             CoCoinFragmentManager.editRecordActivityEditMoneyFragment
-                    .setTagId(RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getTag());
+                    .setTagId(RecordManager.SELECTED_RECORDS.get(CoCoinUtil.editRecordPosition).getTag());
             CoCoinFragmentManager.editRecordActivityEditMoneyFragment
-                    .setNumberText(String.format("%.0f", RecordManager.RECORDS.get(CoCoinUtil.editRecordPosition).getMoney()));
+                    .setNumberText(String.format("%.0f", RecordManager.SELECTED_RECORDS.get(CoCoinUtil.editRecordPosition).getMoney()));
         }
 
         return mView;

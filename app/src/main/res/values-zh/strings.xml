@@ -362,4 +362,6 @@
     <string name="selecting_title">筛选中</string>
     <string name="selecting_content">正在筛选记录，请稍候……</string>
 
+    <string name="input_remark_to_search">输入备注以查找</string>
+
 </resources>
