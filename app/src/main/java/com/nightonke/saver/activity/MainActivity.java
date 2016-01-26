@@ -664,6 +664,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        if (isPassword) {
+            animation.close();
+            return;
+        }
+
         if (doubleBackToExitPressedOnce) {
             super.onBackPressed();
             SuperToast.cancelAllSuperToasts();

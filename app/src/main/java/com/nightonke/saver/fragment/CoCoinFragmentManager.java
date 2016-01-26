@@ -1,5 +1,7 @@
 package com.nightonke.saver.fragment;
 
+import com.nightonke.saver.ui.CustomTitleSliderView;
+
 import java.util.ArrayList;
 
 /**
@@ -19,6 +21,10 @@ public class CoCoinFragmentManager {
 
     public static ArrayList<TagChooseFragment> tagChooseFragments = new ArrayList<>();
 
+    public static final int NUMBER_SLIDER = 0;
+    public static final int EXPENSE_SLIDER = 1;
+    public static CustomTitleSliderView numberCustomTitleSliderView = null;
+    public static CustomTitleSliderView expenseCustomTitleSliderView = null;
 
 
 

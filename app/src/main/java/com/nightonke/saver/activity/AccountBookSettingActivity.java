@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
@@ -655,6 +656,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         SettingManager.getInstance().setLoggenOn(false);
         SettingManager.getInstance().setUserName(null);
         SettingManager.getInstance().setUserEmail(null);
+        logo.setImageResource(R.drawable.default_user_logo);
         updateViews();
         showToast(8, "");
     }
@@ -711,6 +713,15 @@ public class AccountBookSettingActivity extends AppCompatActivity
 //                        RecordManager.updateOldRecordsToServer();
                         whetherSyncSettingsFromServer();
                         showToast(6, loginUserName.getText().toString());
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (loginDialog != null) loginDialog.dismiss();
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS,0);
+                            }
+                        }, 500);
                     }
                     // login fail through user name/////////////////////////////////////////////////////////////////////
                     @Override
@@ -742,6 +753,15 @@ public class AccountBookSettingActivity extends AppCompatActivity
 //                                RecordManager.updateOldRecordsToServer();
                                 whetherSyncSettingsFromServer();
                                 showToast(6, userName);
+                                final Handler handler = new Handler();
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (loginDialog != null) loginDialog.dismiss();
+                                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                        imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS,0);
+                                    }
+                                }, 500);
                             }
 // login fail through user name and email///////////////////////////////////////////////////////////
                             @Override
@@ -874,6 +894,15 @@ public class AccountBookSettingActivity extends AppCompatActivity
 // if login failed//////////////////////////////////////////////////////////////////////////////////
                             }
                         });
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (registerDialog != null) registerDialog.dismiss();
+                                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                imm.toggleSoftInput(InputMethodManager.HIDE_NOT_ALWAYS,0);
+                            }
+                        }, 500);
                     }
                     // if register failed///////////////////////////////////////////////////////////////////////////////
                     @Override

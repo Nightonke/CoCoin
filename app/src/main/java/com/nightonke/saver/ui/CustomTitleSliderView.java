@@ -1,6 +1,5 @@
 package com.nightonke.saver.ui;
 
-import android.content.Context;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +10,7 @@ import android.widget.TextView;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.model.CoCoin;
+import com.nightonke.saver.fragment.CoCoinFragmentManager;
 import com.nightonke.saver.util.CoCoinUtil;
 
 /**
@@ -19,12 +18,19 @@ import com.nightonke.saver.util.CoCoinUtil;
  */
 public class CustomTitleSliderView extends BaseSliderView {
     private static Typeface font = null;
-    private Context context ;
     private String content;
+    private int type;
+    private TextView title;
 
-    public CustomTitleSliderView(Context context, String content) {
+    public CustomTitleSliderView(String content, int type) {
         super(CoCoinApplication.getAppContext());
         this.content = content;
+        this.type = type;
+        if (type == CoCoinFragmentManager.NUMBER_SLIDER) {
+            CoCoinFragmentManager.numberCustomTitleSliderView = this;
+        } else if (type == CoCoinFragmentManager.EXPENSE_SLIDER) {
+            CoCoinFragmentManager.expenseCustomTitleSliderView = this;
+        }
     }
 
     @Override
@@ -34,12 +40,16 @@ public class CustomTitleSliderView extends BaseSliderView {
         LinearLayout description = (LinearLayout)v.findViewById(R.id.description_layout);
         description.setVisibility(View.GONE);
 
-        TextView title = (TextView)v.findViewById(R.id.title);
+        title = (TextView)v.findViewById(R.id.title);
         title.setText(content);
         title.setTypeface(CoCoinUtil.typefaceLatoLight);
 
         ImageView target = (ImageView)v.findViewById(R.id.daimajia_slider_image);
         bindEventAndShow(v, target);
         return v;
+    }
+
+    public void setTitle(String string) {
+        title.setText(string);
     }
 }

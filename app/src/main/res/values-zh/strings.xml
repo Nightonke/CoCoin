@@ -364,4 +364,7 @@
 
     <string name="input_remark_to_search">输入备注以查找</string>
 
+    <string name="loading">加载中……</string>
+    <string name="loaded">加载完成</string>
+
 </resources>

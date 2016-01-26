@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">CoCoin</string>
+    <string name="app_splash_name">CoCoin V1.1.0</string>
     <string name="app_info">
         CoCoin&#13;&#10;
         Copyright © Nightonke
@@ -375,5 +376,8 @@
     <string name="selecting_content">Filtering records, please wait...</string>
 
     <string name="input_remark_to_search">Input remarks to search</string>
+
+    <string name="loading">Loading...</string>
+    <string name="loaded">Loading completed</string>
 
 </resources>
