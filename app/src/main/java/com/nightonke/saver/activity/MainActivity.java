@@ -233,7 +233,7 @@ public class MainActivity extends AppCompatActivity
 // tag viewpager////////////////////////////////////////////////////////////////////////////////////
         tagViewPager = (ViewPager)findViewById(R.id.viewpager);
 
-        if (RecordManager.TAGS.size() % 8 == 0)
+        if (RecordManager.getInstance(mContext).TAGS.size() % 8 == 0)
             tagAdapter = new TagChooseFragmentAdapter(getSupportFragmentManager(), RecordManager.TAGS.size() / 8);
         else
             tagAdapter = new TagChooseFragmentAdapter(getSupportFragmentManager(), RecordManager.TAGS.size() / 8 + 1);

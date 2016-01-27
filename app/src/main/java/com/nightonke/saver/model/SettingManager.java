@@ -54,6 +54,8 @@ public class SettingManager {
     private Boolean REMIND_UPDATE;
     // whether this version can be updated
     private Boolean CAN_BE_UPDATED;
+    // recently sync to mobile time
+    private String RECENTLY_SYNC_TIME;
 
     // tell the mainActivity whether the tags' order should be changed
     private Boolean MAIN_ACTIVITY_TAG_SHOULD_CHANGE = false;
@@ -125,6 +127,8 @@ public class SettingManager {
     private final String DEFAULT_PROFILE_IMAGE_DIR = "imageDir";
     // the profile logo name
     private final String DEFAULT_PROFILE_IMAGE_NAME = "profile.jpg";
+    // recently sync to mobile
+    private final String DEFAULT_RECENTLY_SYNC_TIME = null;
 
     private boolean SHOW_MAIN_ACTIVITY_GUIDE = true;
 
@@ -437,6 +441,21 @@ public class SettingManager {
         editor.putBoolean("CAN_BE_UPDATED", CAN_BE_UPDATED);
         editor.commit();
         this.CAN_BE_UPDATED = CAN_BE_UPDATED;
+    }
+
+    public String getRecentlySyncTime() {
+        RECENTLY_SYNC_TIME = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getString("RECENTLY_SYNC_TIME", DEFAULT_RECENTLY_SYNC_TIME);
+        return RECENTLY_SYNC_TIME;
+    }
+
+    public void setRecentlySyncTime(String RECENTLY_SYNC_TIME) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putString("RECENTLY_SYNC_TIME", RECENTLY_SYNC_TIME);
+        editor.commit();
+        this.RECENTLY_SYNC_TIME = RECENTLY_SYNC_TIME;
     }
 
     public String getProfileImageName() {

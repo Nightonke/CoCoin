@@ -394,4 +394,43 @@
     <string name="checking_update">Checking new version…</string>
     <string name="is_newest_version">Current version is newest</string>
 
+    <string name="sync_querying_title">Sync</string>
+    <string name="sync_querying_content">Checking sync information. Please wait.</string>
+    <string name="sync_querying_fail_title">Sync Failed</string>
+    <string name="sync_querying_fail_content">Internet disconnected. Check sync information failed.</string>
+    <string name="sync_choose_title">Sync</string>
+    <string name="sync_info_cloud_record_0">You have </string>
+    <string name="sync_info_cloud_record_1"> record(s) in cloud. </string>
+    <string name="sync_info_cloud_time_0">Your recently uploading operation time is </string>
+    <string name="sync_info_cloud_time_1">. </string>
+    <string name="sync_info_cloud_time_2">You haven\'t uploaded records to cloud. </string>
+    <string name="sync_info_mobile_record_0">You have </string>
+    <string name="sync_info_mobile_record_1"> record(s) in mobile. </string>
+    <string name="sync_info_mobile_time_0">Your recently downloading operation time is </string>
+    <string name="sync_info_mobile_time_1">. </string>
+    <string name="sync_info_mobile_time_2">You haven\'t downloaded records to mobile. </string>
+    <string name="sync_choose_content">You can choose to upload the records in your mobile to cloud(the old records in cloud will be deleted) or to download the records in cloud to your mobile(the old records in mobile will be deleted).</string>
+    <string name="sync_to_mobile">From cloud to mobile</string>
+    <string name="sync_to_cloud">From mobile to cloud</string>
+    <string name="sure_to_mobile_0">Sure to sync </string>
+    <string name="sure_to_mobile_1"> record(s) from cloud to mobile? Old records in mobile will be deleted.</string>
+    <string name="sure_to_cloud_0">Sure to sync </string>
+    <string name="sure_to_cloud_1"> record(s) from mobile to cloud? Old records in cloud will be deleted.</string>
+    <string name="mobile_record_empty">There is no record in your mobile!</string>
+    <string name="cloud_record_empty">There is no record in cloud!</string>
+    <string name="syncing">Syncing</string>
+    <string name="uploading_0">Uploading No.</string>
+    <string name="uploading_1"> record. Please wait.</string>
+    <string name="downloading_0">Downloading No.</string>
+    <string name="downloading_1"> record. Please wait.</string>
+    <string name="sync_failed">Sync Failed</string>
+    <string name="uploading_fail_0">Sync failed for internet connection. </string>
+    <string name="uploading_fail_1"> record(s) has(have) been uploaded.</string>
+    <string name="downloading_fail_0">Sync failed for internet connection. </string>
+    <string name="downloading_fail_1"> record(s) has(have) been downloaded.</string>
+    <string name="sync_completely_title">Sync Completely</string>
+    <string name="sync_completely_content">Sync completely.</string>
+
+    <string name="ok_1">ok</string>
+
 </resources>

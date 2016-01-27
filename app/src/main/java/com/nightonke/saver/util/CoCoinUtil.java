@@ -25,6 +25,8 @@ import com.nightonke.saver.model.CoCoinRecord;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -1060,5 +1062,36 @@ public class CoCoinUtil {
 
     public static String GetCurrentVersion() {
         return "CoCoin V" + CoCoinApplication.VERSION / 100 + "." + CoCoinApplication.VERSION % 100 / 10 + "." + CoCoinApplication.VERSION % 10;
+    }
+
+    public static String GetString(Context context, int i) {
+        return context.getResources().getString(i);
+    }
+
+    public static String GetCalendarString(Context context, Calendar calendar) {
+        if ("en".equals(Locale.getDefault().getLanguage())) {
+            return context.getResources().getString(MONTHS_SHORT[calendar.get(Calendar.MONTH) + 1]) + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+        }
+        if ("zh".equals(Locale.getDefault().getLanguage())) {
+            return context.getResources().getString(MONTHS_SHORT[calendar.get(Calendar.MONTH) + 1]) + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+        }
+        return (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+    }
+
+    public static String GetCalendarString(Context context, String string) {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            calendar.setTime(sdf.parse(string));
+        } catch (ParseException p) {
+
+        }
+        if ("en".equals(Locale.getDefault().getLanguage())) {
+            return context.getResources().getString(MONTHS_SHORT[calendar.get(Calendar.MONTH) + 1]) + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+        }
+        if ("zh".equals(Locale.getDefault().getLanguage())) {
+            return context.getResources().getString(MONTHS_SHORT[calendar.get(Calendar.MONTH) + 1]) + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+        }
+        return (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
     }
 }

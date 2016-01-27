@@ -381,4 +381,43 @@
     <string name="checking_update">正在检测最新版本……</string>
     <string name="is_newest_version">当前已是最新版本</string>
 
+    <string name="sync_querying_title">同步</string>
+    <string name="sync_querying_content">正在检查同步信息，请稍候……</string>
+    <string name="sync_querying_fail_title">同步失败</string>
+    <string name="sync_querying_fail_content">网络中断，检查同步信息失败</string>
+    <string name="sync_choose_title">同步</string>
+    <string name="sync_info_cloud_record_0">您在云上记有</string>
+    <string name="sync_info_cloud_record_1">条消费记录。</string>
+    <string name="sync_info_cloud_time_0">您最近的上传时间是</string>
+    <string name="sync_info_cloud_time_1">。</string>
+    <string name="sync_info_cloud_time_2">您还未曾上传过。</string>
+    <string name="sync_info_mobile_record_0">您在本地记有</string>
+    <string name="sync_info_mobile_record_1">条消费记录。</string>
+    <string name="sync_info_mobile_time_0">您最近同步到本地的时间是</string>
+    <string name="sync_info_mobile_time_1">。</string>
+    <string name="sync_info_mobile_time_2">您还未曾同步到本地过。</string>
+    <string name="sync_choose_content">您可以选择将本地账本上传到云（覆盖掉原来在云上的账本），或者将云上的账本同步到本地（覆盖掉原来在本地的账本）。</string>
+    <string name="sync_to_mobile">云上账本同步到本地</string>
+    <string name="sync_to_cloud">本地账本上传到云上</string>
+    <string name="sure_to_mobile_0">确定将</string>
+    <string name="sure_to_mobile_1">条消费记录从云上同步到本地账本？本地账本将被覆盖。</string>
+    <string name="sure_to_cloud_0">确定将</string>
+    <string name="sure_to_cloud_1">条消费记录从本地上传到云上账本？云上账本将被覆盖。</string>
+    <string name="mobile_record_empty">您的手机里没有消费记录，不能上传。</string>
+    <string name="cloud_record_empty">您在云上账本里没有消费记录，不能同步到本地。</string>
+    <string name="syncing">正在同步</string>
+    <string name="uploading_0">正在上传第</string>
+    <string name="uploading_1">条消费记录到云，请耐心等候。</string>
+    <string name="downloading_0">正在同步第</string>
+    <string name="downloading_1">条消费记录到本地，请耐心等候。</string>
+    <string name="sync_failed">同步失败</string>
+    <string name="uploading_fail_0">网络中断，上传失败。</string>
+    <string name="uploading_fail_1">条消费记录已上传到云上账本。</string>
+    <string name="downloading_fail_0">网络中断，同步失败。</string>
+    <string name="downloading_fail_1">条消费记录已同步到本地账本。</string>
+    <string name="sync_completely_title">同步完成</string>
+    <string name="sync_completely_content">同步完成。</string>
+
+    <string name="ok_1">确认</string>
+
 </resources>
