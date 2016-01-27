@@ -376,4 +376,9 @@
     <string name="downloading_title">下载安装包……</string>
     <string name="downloading_content">正在下载最新CoCoin安装包，请稍候。</string>
 
+    <string name="current_version">当前版本：</string>
+    <string name="can_update">可更新</string>
+    <string name="checking_update">正在检测最新版本……</string>
+    <string name="is_newest_version">当前已是最新版本</string>
+
 </resources>

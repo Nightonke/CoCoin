@@ -36,6 +36,7 @@ import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.nightonke.saver.BuildConfig;
 import com.nightonke.saver.R;
+import com.nightonke.saver.model.AppUpdateManager;
 import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
@@ -149,6 +150,10 @@ public class AccountBookSettingActivity extends AppCompatActivity
     private MaterialIconView hollowIcon;
     private Switch hollowSB;
     private TextView hollowTV;
+
+    private MaterialRippleLayout updateLayout;
+    private TextView currentVersionTV;
+    private TextView canBeUpdatedTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -1325,6 +1330,24 @@ public class AccountBookSettingActivity extends AppCompatActivity
         hollowSB.setOnCheckedChangeListener(this);
         hollowTV = (TextView)findViewById(R.id.whether_show_circle_text);
         hollowTV.setTypeface(CoCoinUtil.GetTypeface());
+
+        updateLayout = (MaterialRippleLayout)findViewById(R.id.update_layout);
+        updateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CoCoinUtil.showToast(mContext, mContext.getResources().getString(R.string.checking_update), SuperToast.Background.BLUE);
+                AppUpdateManager appUpdateManager = new AppUpdateManager(mContext);
+                appUpdateManager.checkUpdateInfo(true);
+            }
+        });
+        currentVersionTV = (TextView)findViewById(R.id.update_text);
+        currentVersionTV.setText(mContext.getResources().getString(R.string.current_version) + CoCoinUtil.GetCurrentVersion());
+        canBeUpdatedTV = (TextView)findViewById(R.id.update_tag);
+        if (SettingManager.getInstance().getCanBeUpdated()) {
+            canBeUpdatedTV.setVisibility(View.VISIBLE);
+        } else {
+            canBeUpdatedTV.setVisibility(View.GONE);
+        }
 
         boolean loggenOn = SettingManager.getInstance().getLoggenOn();
         if (loggenOn) {

@@ -38,6 +38,8 @@ import com.nightonke.saver.ui.CustomSliderView;
 import com.nightonke.saver.ui.RiseNumberTextView;
 import com.nightonke.saver.util.CoCoinUtil;
 
+import net.steamcrafted.materialiconlib.MaterialIconView;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -69,6 +71,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
     private MaterialRippleLayout sync;
     private MaterialRippleLayout settings;
     private MaterialRippleLayout help;
+
+    private MaterialIconView syncIcon;
 
     private TextView userName;
     private TextView userEmail;
@@ -123,6 +127,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         sync = (MaterialRippleLayout)mDrawer.findViewById(R.id.sync_layout);
         settings = (MaterialRippleLayout)mDrawer.findViewById(R.id.settings_layout);
         help = (MaterialRippleLayout)mDrawer.findViewById(R.id.help_layout);
+        syncIcon = (MaterialIconView)mDrawer.findViewById(R.id.sync_icon);
+        setIconEnable(syncIcon, SettingManager.getInstance().getLoggenOn());
         monthExpenseTip = (TextView)mDrawer.findViewById(R.id.month_expense_tip);
         monthExpenseTip.setTypeface(CoCoinUtil.GetTypeface());
         monthExpense = (RiseNumberTextView)mDrawer.findViewById(R.id.month_expense);
@@ -283,6 +289,14 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
 
     }
 
+    private void sync() {
+        if (!SettingManager.getInstance().getLoggenOn()) {
+            CoCoinUtil.showToast(mContext, R.string.login_tip);
+        } else {
+
+        }
+    }
+
     private void loadSettings() {
 
         Log.d("Saver", "SETTINGS");
@@ -410,6 +424,12 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
                 loadListMode();
             }
         });
+        sync.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sync();
+            }
+        });
         help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -465,5 +485,10 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             // use the default logo
             profileImage.setImageResource(R.drawable.default_user_logo);
         }
+    }
+
+    private void setIconEnable(MaterialIconView icon, boolean enable) {
+        if (enable) icon.setColor(mContext.getResources().getColor(R.color.my_blue));
+        else icon.setColor(mContext.getResources().getColor(R.color.my_gray));
     }
 }

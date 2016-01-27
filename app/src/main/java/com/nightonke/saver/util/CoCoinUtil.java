@@ -1057,4 +1057,8 @@ public class CoCoinUtil {
 
     public static Double INPUT_MIN_EXPENSE = 0d;
     public static Double INPUT_MAX_EXPENSE = 99999d;
+
+    public static String GetCurrentVersion() {
+        return "CoCoin V" + CoCoinApplication.VERSION / 100 + "." + CoCoinApplication.VERSION % 100 / 10 + "." + CoCoinApplication.VERSION % 10;
+    }
 }

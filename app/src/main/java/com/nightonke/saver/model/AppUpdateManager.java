@@ -12,8 +12,10 @@ import android.widget.ProgressBar;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
+import com.nightonke.saver.util.CoCoinUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -31,7 +33,7 @@ import cn.bmob.v3.listener.FindListener;
  *
  * notice that the version must be written in the form "X.X.X"
  * but not "X.X.XX"
- *  _______________________________________
+ *  _____________________________________
  * |      |      |         |             |
  * | name | file | version |   too_old   |
  * |______|______|_________|_____________|
@@ -85,17 +87,20 @@ public class AppUpdateManager {
     /**
      * 检测应用更新信息
      */
-    public void checkUpdateInfo() {
+    public void checkUpdateInfo(final Boolean showInfo) {
         BmobQuery<APK> query = new BmobQuery<>();
         query.addWhereGreaterThan("version", CoCoinApplication.VERSION);
         query.setLimit(Integer.MAX_VALUE);
-        query.findObjects(context, new FindListener<APK>() {
+        query.findObjects(CoCoinApplication.getAppContext(), new FindListener<APK>() {
             @Override
             public void onSuccess(final List<APK> object) {
+                if (object.size() == 0 && showInfo) {
+                    CoCoinUtil.showToast(context, context.getResources().getString(R.string.is_newest_version), SuperToast.Background.BLUE);
+                }
                 BmobQuery<APK> tooOldQuery = new BmobQuery<>();
                 tooOldQuery.addWhereEqualTo("version", CoCoinApplication.VERSION);
                 tooOldQuery.setLimit(1);
-                tooOldQuery.findObjects(context, new FindListener<APK>() {
+                tooOldQuery.findObjects(CoCoinApplication.getAppContext(), new FindListener<APK>() {
                     @Override
                     public void onSuccess(List<APK> objectTooOld) {
                         if (objectTooOld.get(0).getTooOld()) {
@@ -103,14 +108,34 @@ public class AppUpdateManager {
                         } else {
                             mustUpdate = false;
                         }
-                        updateContent = object.get(0).getInfo();
-                        showNoticeDialog();
+                        int max = -1;
+                        int maxPosition = 0;
+                        for (int i = 0; i < object.size(); i++) {
+                            if (object.get(i).getVersion() > max) {
+                                max = object.get(i).getVersion();
+                                maxPosition = i;
+                            }
+                        }
+                        spec = object.get(maxPosition).getFileUrl();
+                        updateContent = object.get(maxPosition).getInfo();
+                        SettingManager.getInstance().setCanBeUpdated(true);
+                        if (SettingManager.getInstance().getRemindUpdate()) showNoticeDialog();
                     }
                     @Override
                     public void onError(int code, String msg) {
                         mustUpdate = false;
-                        updateContent = object.get(0).getInfo();
-                        showNoticeDialog();
+                        int max = -1;
+                        int maxPosition = 0;
+                        for (int i = 0; i < object.size(); i++) {
+                            if (object.get(i).getVersion() > max) {
+                                max = object.get(i).getVersion();
+                                maxPosition = i;
+                            }
+                        }
+                        spec = object.get(maxPosition).getFileUrl();
+                        updateContent = object.get(maxPosition).getInfo();
+                        SettingManager.getInstance().setCanBeUpdated(true);
+                        if (SettingManager.getInstance().getRemindUpdate()) showNoticeDialog();
                     }
                 });
             }
@@ -118,7 +143,6 @@ public class AppUpdateManager {
             public void onError(int code, String msg) {
             }
         });
-        showNoticeDialog();
     }
 
     private void showNoticeDialog() {
@@ -163,7 +187,8 @@ public class AppUpdateManager {
     }
 
     private String getContent() {
-        updateContent.replaceAll("\\$\\$\\$", "\n");
+        if (updateContent == null) updateContent = "";
+        updateContent = updateContent.replaceAll("\\$\\$\\$", "\n");
         return context.getResources().getString(R.string.update_content) + "\n" + updateContent;
     }
 

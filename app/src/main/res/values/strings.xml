@@ -389,4 +389,9 @@
     <string name="downloading_title">Downloading apk…</string>
     <string name="downloading_content">Downloading newest CoCoin, please wait.</string>
 
+    <string name="current_version">Current version: </string>
+    <string name="can_update">new</string>
+    <string name="checking_update">Checking new version…</string>
+    <string name="is_newest_version">Current version is newest</string>
+
 </resources>

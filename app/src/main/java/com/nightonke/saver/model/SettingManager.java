@@ -52,6 +52,8 @@ public class SettingManager {
     private Boolean IS_HOLLOW;
     // whether remind update
     private Boolean REMIND_UPDATE;
+    // whether this version can be updated
+    private Boolean CAN_BE_UPDATED;
 
     // tell the mainActivity whether the tags' order should be changed
     private Boolean MAIN_ACTIVITY_TAG_SHOULD_CHANGE = false;
@@ -117,6 +119,8 @@ public class SettingManager {
     private final Boolean DEFAULT_IS_HOLLOW = true;
     // whether remind update
     private final Boolean DEFAULT_REMIND_UPDATE = true;
+    // whether this version can be updated
+    private final Boolean DEFAULT_CAN_BE_UPDATED = false;
     // the profile logo store place
     private final String DEFAULT_PROFILE_IMAGE_DIR = "imageDir";
     // the profile logo name
@@ -418,6 +422,21 @@ public class SettingManager {
         editor.putBoolean("REMIND_UPDATE", REMIND_UPDATE);
         editor.commit();
         this.REMIND_UPDATE = REMIND_UPDATE;
+    }
+
+    public Boolean getCanBeUpdated() {
+        CAN_BE_UPDATED = PreferenceManager.
+                getDefaultSharedPreferences(CoCoinApplication.getAppContext())
+                .getBoolean("CAN_BE_UPDATED", DEFAULT_CAN_BE_UPDATED);
+        return CAN_BE_UPDATED;
+    }
+
+    public void setCanBeUpdated(Boolean CAN_BE_UPDATED) {
+        SharedPreferences.Editor editor = PreferenceManager
+                .getDefaultSharedPreferences(CoCoinApplication.getAppContext()).edit();
+        editor.putBoolean("CAN_BE_UPDATED", CAN_BE_UPDATED);
+        editor.commit();
+        this.CAN_BE_UPDATED = CAN_BE_UPDATED;
     }
 
     public String getProfileImageName() {

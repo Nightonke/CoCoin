@@ -40,6 +40,8 @@ import com.nightonke.saver.adapter.EditMoneyRemarkFragmentAdapter;
 import com.nightonke.saver.adapter.TagChooseFragmentAdapter;
 import com.nightonke.saver.fragment.CoCoinFragmentManager;
 import com.nightonke.saver.fragment.TagChooseFragment;
+import com.nightonke.saver.model.AppUpdateManager;
+import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
@@ -59,6 +61,7 @@ import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
@@ -128,6 +131,8 @@ public class MainActivity extends AppCompatActivity
 
     private Toolbar guillotineToolBar;
 
+    private AppUpdateManager appUpdateManager;
+
     @InjectView(R.id.toolbar)
     Toolbar toolbar;
     @InjectView(R.id.root)
@@ -145,7 +150,13 @@ public class MainActivity extends AppCompatActivity
 
         mContext = this;
 
-        CrashReport.initCrashReport(mContext, "900016815", false);
+//        Bmob.initialize(CoCoinApplication.getAppContext(), CoCoin.APPLICATION_ID);
+//        CrashReport.initCrashReport(CoCoinApplication.getAppContext(), "900016815", false);
+//        RecordManager.getInstance(CoCoinApplication.getAppContext());
+//        CoCoinUtil.init(CoCoinApplication.getAppContext());
+
+        appUpdateManager = new AppUpdateManager(mContext);
+        appUpdateManager.checkUpdateInfo(false);
 
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
@@ -171,10 +182,6 @@ public class MainActivity extends AppCompatActivity
         } else{
             // do something for phones running an SDK before lollipop
         }
-
-        CoCoinUtil.init(this.getApplicationContext());
-
-        RecordManager recordManager = RecordManager.getInstance(this.getApplicationContext());
 
         User user = BmobUser.getCurrentUser(CoCoinApplication.getAppContext(), User.class);
         if (user != null) {

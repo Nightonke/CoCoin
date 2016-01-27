@@ -10,17 +10,17 @@ import cn.bmob.v3.BmobObject;
 public class APK extends BmobObject {
 
     private String name;
-    private File file;
+    private String fileUrl;
     private Integer version;
     private Boolean tooOld;
     private String info;
 
-    public File getFile() {
-        return file;
+    public String getFileUrl() {
+        return fileUrl;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setFileUrl(String fileUrl) {
+        this.fileUrl = fileUrl;
     }
 
     public String getName() {
