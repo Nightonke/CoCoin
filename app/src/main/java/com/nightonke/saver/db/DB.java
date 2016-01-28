@@ -21,7 +21,7 @@ import java.util.LinkedList;
 
 public class DB {
 
-    public static final String DB_NAME_STRING = "CoCoin Database";
+    public static final String DB_NAME_STRING = "CoCoin Database.db";
     public static final String RECORD_DB_NAME_STRING = "Record";
     public static final String TAG_DB_NAME_STRING = "Tag";
 

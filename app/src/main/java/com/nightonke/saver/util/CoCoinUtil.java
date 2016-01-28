@@ -3,6 +3,7 @@ package com.nightonke.saver.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -19,12 +20,16 @@ import android.widget.EditText;
 
 import com.daimajia.androidanimations.library.BaseViewAnimator;
 import com.github.johnpersano.supertoasts.SuperToast;
+import com.nightonke.saver.BuildConfig;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
+import com.nightonke.saver.db.DB;
+import com.nightonke.saver.db.DBHelper;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -1093,5 +1098,33 @@ public class CoCoinUtil {
             return context.getResources().getString(MONTHS_SHORT[calendar.get(Calendar.MONTH) + 1]) + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
         }
         return (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+    }
+
+    public static String GetRecordDatabasePath(Context context) {
+        String databasePath = "";
+        if (android.os.Build.VERSION.SDK_INT >= 17) {
+            databasePath = context.getApplicationInfo().dataDir + "/databases/";
+        } else {
+            databasePath = "/data/data/" + context.getPackageName() + "/databases/";
+        }
+        databasePath += DB.DB_NAME_STRING;
+        if (BuildConfig.DEBUG) Log.d("CoCoin", "Get record database path " + databasePath);
+        return databasePath;
+    }
+
+    // if the uploaded file's size and name is the same, the BmobProFile.upload will not upload in fact
+    public static void deleteBmobUploadCach(Context context) {
+        DBHelper dbHelper = new DBHelper(context, "bmob", null, 1);
+        SQLiteDatabase sqliteDatabase = dbHelper.getWritableDatabase();
+        sqliteDatabase.delete("upload", "_id>?", new String[]{"0"});
+//        String databasePath = "";
+//        if (android.os.Build.VERSION.SDK_INT >= 17) {
+//            databasePath = context.getApplicationInfo().dataDir + "/databases/";
+//        } else {
+//            databasePath = "/data/data/" + context.getPackageName() + "/databases/";
+//        }
+//        databasePath += "bmob";
+//        File file = new File(databasePath);
+//        if (file.exists()) file.delete();
     }
 }

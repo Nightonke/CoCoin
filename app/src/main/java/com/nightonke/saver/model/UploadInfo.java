@@ -9,8 +9,9 @@ import cn.bmob.v3.datatype.BmobDate;
 public class UploadInfo extends BmobObject {
 
     private String userId;
-    private BmobDate time;
     private Integer recordNumber;
+    private String databaseUrl;
+    private String fileName;
 
     public Integer getRecordNumber() {
         return recordNumber;
@@ -20,19 +21,27 @@ public class UploadInfo extends BmobObject {
         this.recordNumber = recordNumber;
     }
 
-    public BmobDate getTime() {
-        return time;
-    }
-
-    public void setTime(BmobDate time) {
-        this.time = time;
-    }
-
     public String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getDatabaseUrl() {
+        return databaseUrl;
+    }
+
+    public void setDatabaseUrl(String databaseUrl) {
+        this.databaseUrl = databaseUrl;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

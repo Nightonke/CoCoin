@@ -48,7 +48,7 @@ import cn.bmob.v3.listener.FindListener;
 
 public class AppUpdateManager {
     private static final String FILE_SEPARATOR = "/";
-    private static final String FILE_PATH = Environment.getExternalStorageDirectory() + FILE_SEPARATOR +"CoCoin_Update" + FILE_SEPARATOR;
+    private static final String FILE_PATH = Environment.getExternalStorageDirectory() + FILE_SEPARATOR +"CoCoin" + FILE_SEPARATOR;
     private static final String FILE_NAME = FILE_PATH + "CoCoin.apk";
     private static final int UPDARE_TOKEN = 0x29;
     private static final int INSTALL_TOKEN = 0x31;
