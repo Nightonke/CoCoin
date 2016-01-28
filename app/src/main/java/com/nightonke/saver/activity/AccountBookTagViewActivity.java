@@ -31,6 +31,7 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
+import com.nightonke.saver.BuildConfig;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.DrawerTagChooseGridViewAdapter;
 import com.nightonke.saver.adapter.TagViewFragmentAdapter;
@@ -275,39 +276,39 @@ public class AccountBookTagViewActivity extends AppCompatActivity {
         if (user != null) {
             try {
                 File logoFile = new File(CoCoinApplication.getAppContext().getFilesDir() + CoCoinUtil.LOGO_NAME);
-                Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
-                if (b == null) {
+                if (!logoFile.exists()) {
                     // the local logo file is missed
                     // try to get from the server
                     BmobQuery<Logo> bmobQuery = new BmobQuery();
                     bmobQuery.addWhereEqualTo("objectId", user.getLogoObjectId());
                     bmobQuery.findObjects(CoCoinApplication.getAppContext()
                             , new FindListener<Logo>() {
-                        @Override
-                        public void onSuccess(List<Logo> object) {
-                            // there has been an old logo in the server/////////////////////////////////////////////////////////
-                            Log.d("Saver", "There is an old logo");
-                            String url = object.get(0).getFile().getUrl();
-                            Ion.with(CoCoinApplication.getAppContext()).load(url)
-                                    .write(new File(CoCoinApplication.getAppContext().getFilesDir()
-                                            + CoCoinUtil.LOGO_NAME))
-                                    .setCallback(new FutureCallback<File>() {
-                                        @Override
-                                        public void onCompleted(Exception e, File file) {
-                                            profileImage.setImageBitmap(BitmapFactory.decodeFile(
-                                                    CoCoinApplication.getAppContext().getFilesDir()
-                                                            + CoCoinUtil.LOGO_NAME));
-                                        }
-                                    });
-                        }
-                        @Override
-                        public void onError(int code, String msg) {
-                            // the picture is lost
-                            Log.d("Saver", "Can't find the old logo in server.");
-                        }
-                    });
+                                @Override
+                                public void onSuccess(List<Logo> object) {
+                                    // there has been an old logo in the server/////////////////////////////////////////////////////////
+                                    String url = object.get(0).getFile().getFileUrl(CoCoinApplication.getAppContext());
+                                    if (BuildConfig.DEBUG) Log.d("CoCoin", "Logo in server: " + url);
+                                    Ion.with(CoCoinApplication.getAppContext()).load(url)
+                                            .write(new File(CoCoinApplication.getAppContext().getFilesDir()
+                                                    + CoCoinUtil.LOGO_NAME))
+                                            .setCallback(new FutureCallback<File>() {
+                                                @Override
+                                                public void onCompleted(Exception e, File file) {
+                                                    profileImage.setImageBitmap(BitmapFactory.decodeFile(
+                                                            CoCoinApplication.getAppContext().getFilesDir()
+                                                                    + CoCoinUtil.LOGO_NAME));
+                                                }
+                                            });
+                                }
+                                @Override
+                                public void onError(int code, String msg) {
+                                    // the picture is lost
+                                    if (BuildConfig.DEBUG) Log.d("CoCoin", "Can't find the old logo in server.");
+                                }
+                            });
                 } else {
                     // the user logo is in the storage
+                    Bitmap b = BitmapFactory.decodeStream(new FileInputStream(logoFile));
                     profileImage.setImageBitmap(b);
                 }
             } catch (FileNotFoundException e) {
