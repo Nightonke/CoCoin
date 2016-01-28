@@ -55,14 +55,12 @@ import com.nightonke.saver.BuildConfig;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.DialogTagChooseGridViewAdapter;
 import com.nightonke.saver.adapter.MySwipeableItemAdapter;
-import com.nightonke.saver.fragment.CoCoinFragmentManager;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.CustomSliderView;
-import com.nightonke.saver.ui.CustomTitleSliderView;
 import com.nightonke.saver.ui.DoubleSliderClickListener;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
@@ -126,6 +124,8 @@ public class AccountBookListViewActivity extends AppCompatActivity
     private SliderLayout mDemoSlider;
     private FrameLayout infoLayout;
 
+    private TextView titleExpense;
+    private TextView titleSum;
     private SliderLayout titleSlider;
 
     private TextView userName;
@@ -173,18 +173,18 @@ public class AccountBookListViewActivity extends AppCompatActivity
             userEmail.setText(user.getEmail());
         }
 
-        int size = RecordManager.getInstance(mContext).RECORDS.size();
-        if (RecordManager.getInstance(mContext).SELECTED_RECORDS == null) {
-            RecordManager.getInstance(mContext).SELECTED_RECORDS = new LinkedList<>();
+        int size = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.size();
+        if (RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_RECORDS == null) {
+            RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_RECORDS = new LinkedList<>();
         }
-        RecordManager.getInstance(mContext).SELECTED_RECORDS.clear();
+        RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_RECORDS.clear();
         for (int i = 0; i < size; i++) {
             CoCoinRecord record = new CoCoinRecord();
             record.set(RecordManager.RECORDS.get(i));
-            RecordManager.getInstance(mContext).SELECTED_RECORDS.add(record);
+            RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_RECORDS.add(record);
         }
-        RecordManager.getInstance(mContext).SELECTED_SUM = Double.valueOf(RecordManager.getInstance(mContext).SUM);
-        originalSum = RecordManager.getInstance(mContext).SELECTED_SUM;
+        RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_SUM = Double.valueOf(RecordManager.getInstance(CoCoinApplication.getAppContext()).SUM);
+        originalSum = RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_SUM;
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -376,28 +376,36 @@ public class AccountBookListViewActivity extends AppCompatActivity
         mDemoSlider.setDuration(4000);
         mDemoSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
 
-        titleSlider = (SliderLayout)findViewById(R.id.title_slider);
-        titleSlider.getLayoutParams().height = CoCoinUtil.getToolBarHeight(mContext);
-        titleSlider.getLayoutParams().width = CoCoinUtil.GetScreenWidth(mContext) - CoCoinUtil.dpToPx(60 * 2);
+        titleExpense = (TextView)findViewById(R.id.title_expense);
+        titleExpense.setTypeface(CoCoinUtil.typefaceLatoLight);
+        titleExpense.setText(CoCoinUtil.GetInMoney((int)(double)RecordManager.getInstance(mContext).SELECTED_SUM));
 
-        HashMap<String, Integer> urls2 = CoCoinUtil.getTransparentUrls();
+        titleSum = (TextView)findViewById(R.id.title_sum);
+        titleSum.setTypeface(CoCoinUtil.typefaceLatoLight);
+        titleSum.setText(RecordManager.getInstance(mContext).SELECTED_RECORDS.size() + "'s");
 
-        CustomTitleSliderView customTitleSliderView = new CustomTitleSliderView(RecordManager.SELECTED_RECORDS.size() + "'s", CoCoinFragmentManager.NUMBER_SLIDER);
-        customTitleSliderView
-                .image(urls2.get("0"))
-                .setScaleType(BaseSliderView.ScaleType.Fit);
-        titleSlider.addSlider(customTitleSliderView);
-
-        customTitleSliderView = new CustomTitleSliderView(CoCoinUtil.GetInMoney((int)(double)RecordManager.SELECTED_SUM), CoCoinFragmentManager.EXPENSE_SLIDER);
-        customTitleSliderView
-                .image(urls2.get("1"))
-                .setScaleType(BaseSliderView.ScaleType.Fit);
-        titleSlider.addSlider(customTitleSliderView);
-
-        titleSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
-        titleSlider.setCustomAnimation(new DescriptionAnimation());
-        titleSlider.setDuration(4000);
-        titleSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
+//        titleSlider = (SliderLayout)findViewById(R.id.title_slider);
+//        titleSlider.getLayoutParams().height = 48;
+//        titleSlider.getLayoutParams().width = 400 - CoCoinUtil.dpToPx(60 * 2);
+//
+//        HashMap<String, Integer> urls2 = CoCoinUtil.getTransparentUrls();
+//
+//        CustomTitleSliderView customTitleSliderView = new CustomTitleSliderView(0 + "'s", CoCoinFragmentManager.NUMBER_SLIDER);
+//        customTitleSliderView
+//                .image(urls2.get("0"))
+//                .setScaleType(BaseSliderView.ScaleType.Fit);
+//        titleSlider.addSlider(customTitleSliderView);
+//
+//        customTitleSliderView = new CustomTitleSliderView(CoCoinUtil.GetInMoney(0), CoCoinFragmentManager.EXPENSE_SLIDER);
+//        customTitleSliderView
+//                .image(urls2.get("1"))
+//                .setScaleType(BaseSliderView.ScaleType.Fit);
+//        titleSlider.addSlider(customTitleSliderView);
+//
+//        titleSlider.setPresetTransformer(SliderLayout.Transformer.ZoomOut);
+//        titleSlider.setCustomAnimation(new DescriptionAnimation());
+//        titleSlider.setDuration(3000);
+//        titleSlider.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
 
         ((TextView)findViewById(R.id.tag_title)).setTypeface(CoCoinUtil.GetTypeface());
         ((TextView)findViewById(R.id.tag_title_expense)).setTypeface(CoCoinUtil.GetTypeface());
@@ -474,14 +482,20 @@ public class AccountBookListViewActivity extends AppCompatActivity
     }
 
     private void changeTitleSlider() {
-        titleSlider.stopAutoCycle();
+        titleExpense = (TextView)findViewById(R.id.title_expense);
+        titleExpense.setText(CoCoinUtil.GetInMoney((int)(double)RecordManager.getInstance(mContext).SELECTED_SUM));
 
-        if (CoCoinFragmentManager.numberCustomTitleSliderView != null)
-            CoCoinFragmentManager.numberCustomTitleSliderView.setTitle(RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_RECORDS.size() + "'s");
-        if (CoCoinFragmentManager.expenseCustomTitleSliderView != null)
-            CoCoinFragmentManager.expenseCustomTitleSliderView.setTitle(CoCoinUtil.GetInMoney((int)(double)RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_SUM));
+        titleSum = (TextView)findViewById(R.id.title_sum);
+        titleSum.setText(RecordManager.getInstance(mContext).SELECTED_RECORDS.size() + "'s");
 
-        titleSlider.startAutoCycle();
+//        titleSlider.stopAutoCycle();
+//
+//        if (CoCoinFragmentManager.numberCustomTitleSliderView != null)
+//            CoCoinFragmentManager.numberCustomTitleSliderView.setTitle(RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_RECORDS.size() + "'s");
+//        if (CoCoinFragmentManager.expenseCustomTitleSliderView != null)
+//            CoCoinFragmentManager.expenseCustomTitleSliderView.setTitle(CoCoinUtil.GetInMoney((int)(double)RecordManager.getInstance(CoCoinApplication.getAppContext()).SELECTED_SUM));
+//
+//        titleSlider.startAutoCycle();
     }
 
     private MaterialDialog progressDialog;
@@ -639,7 +653,7 @@ public class AccountBookListViewActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         mDemoSlider.stopAutoCycle();
-        titleSlider.stopAutoCycle();
+//        titleSlider.stopAutoCycle();
         super.onStop();
     }
 
@@ -648,7 +662,7 @@ public class AccountBookListViewActivity extends AppCompatActivity
         if (mDemoSlider != null) mDemoSlider.startAutoCycle();
         if (RecordManager.SELECTED_RECORDS == null) selectRecords();
         else {
-            if (titleSlider != null) titleSlider.startAutoCycle();
+//            if (titleSlider != null) titleSlider.startAutoCycle();
         }
         super.onResume();
     }
@@ -862,12 +876,13 @@ public class AccountBookListViewActivity extends AppCompatActivity
 
         SuperToast.cancelAllSuperToasts();
 
-        titleSlider.stopAutoCycle();
-        titleSlider.removeAllSliders();
-        titleSlider = null;
+//        titleSlider.stopAutoCycle();
+//        titleSlider.removeAllSliders();
+//        titleSlider.destroyDrawingCache();
+//        titleSlider = null;
 
-        CoCoinFragmentManager.numberCustomTitleSliderView = null;
-        CoCoinFragmentManager.expenseCustomTitleSliderView = null;
+//        CoCoinFragmentManager.numberCustomTitleSliderView = null;
+//        CoCoinFragmentManager.expenseCustomTitleSliderView = null;
 
         doubleSliderClickListener = null;
 

@@ -42,21 +42,45 @@
 
                 </android.support.v7.widget.Toolbar>
 
-                <com.daimajia.slider.library.SliderLayout
-                    android:id="@+id/title_slider"
-                    android:layout_width="100dp"
-                    android:layout_height="40dp"
+                <LinearLayout
+                    android:id="@+id/title_ly"
+                    android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_gravity="center"
-                    />
+                    >
 
-                <com.daimajia.slider.library.Indicators.PagerIndicator
-                    android:id="@+id/custom_indicator"
-                    android:layout_centerHorizontal="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_height="0dp"
-                    android:layout_width="0dp"
-                    android:layout_marginBottom="20dp"
-                    />
+                    <TextView
+                        android:id="@+id/title_expense"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:text="¥18890"
+                        android:textSize="20sp"
+                        android:textColor="@color/white"
+                        android:gravity="top|right"
+                        />
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:text="/"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/title_sum"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:text="198's"
+                        android:layout_marginLeft="-3dp"
+                        android:textSize="12sp"
+                        android:textColor="@color/white"
+                        android:gravity="bottom|left"
+                        />
+
+                </LinearLayout>
 
                 <com.miguelcatalan.materialsearchview.MaterialSearchView
                     android:id="@+id/search_view"
