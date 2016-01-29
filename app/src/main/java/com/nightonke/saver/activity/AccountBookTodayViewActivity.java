@@ -152,7 +152,6 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         months = (MaterialRippleLayout)mDrawer.findViewById(R.id.month_layout);
         list = (MaterialRippleLayout)mDrawer.findViewById(R.id.list_layout);
         report = (MaterialRippleLayout)mDrawer.findViewById(R.id.report_layout);
-        report.setVisibility(View.GONE);
         sync = (MaterialRippleLayout)mDrawer.findViewById(R.id.sync_layout);
         settings = (MaterialRippleLayout)mDrawer.findViewById(R.id.settings_layout);
         help = (MaterialRippleLayout)mDrawer.findViewById(R.id.help_layout);
@@ -891,6 +890,12 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadListMode();
+            }
+        });
+        report.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, AccountBookReportViewActivity.class));
             }
         });
         sync.setOnClickListener(new View.OnClickListener() {

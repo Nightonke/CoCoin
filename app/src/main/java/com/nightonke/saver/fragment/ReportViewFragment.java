@@ -3,26 +3,34 @@ package com.nightonke.saver.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.melnykov.fab.FloatingActionButton;
+import com.nightonke.saver.BuildConfig;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
+import com.nightonke.saver.adapter.DialogMonthSelectGridViewAdapter;
+import com.nightonke.saver.adapter.DialogSelectListDataAdapter;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
@@ -52,7 +60,7 @@ import lecho.lib.hellocharts.view.PieChartView;
  * Created by 伟平 on 2015/10/20.
  */
 
-public class CustomViewFragment extends Fragment {
+public class ReportViewFragment extends Fragment {
 
     private DatePickerDialog.OnDateSetListener onDateSetListener;
 
@@ -112,8 +120,12 @@ public class CustomViewFragment extends Fragment {
     // the selected tag in pie
     private int tagId = -1;
 
-    public static CustomViewFragment newInstance() {
-        CustomViewFragment fragment = new CustomViewFragment();
+    // select list
+    // year, month(-1 means the whole year), records, expenses
+    private ArrayList<double[]> selectListData = null;
+
+    public static ReportViewFragment newInstance() {
+        ReportViewFragment fragment = new ReportViewFragment();
         return fragment;
     }
 
@@ -136,6 +148,10 @@ public class CustomViewFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_custom_view, container, false);
     }
 
+    private MaterialDialog dialog;
+    private View dialogView;
+    private MyGridView myGridView;
+    private DialogMonthSelectGridViewAdapter dialogMonthSelectGridViewAdapter;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -224,18 +240,32 @@ public class CustomViewFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar now = Calendar.getInstance();
-                DatePickerDialog dpd = DatePickerDialog.newInstance(
-                        onDateSetListener,
-                        now.get(Calendar.YEAR),
-                        now.get(Calendar.MONTH),
-                        now.get(Calendar.DAY_OF_MONTH)
-                );
-                dpd.setTitle(mContext.getResources().getString(R.string.set_left_calendar));
-                dpd.show(((Activity)mContext).getFragmentManager(), "Datepickerdialog");
-                isFrom = true;
+                if (selectListData == null) new GetSelectListData(true).execute();
+                else showSelectListDataDialog();
+//                dialog = new MaterialDialog.Builder(mContext)
+//                        .customView(R.layout.dialog_select_month, false)
+//                        .negativeText(R.string.cancel)
+//                        .show();
+//                dialogView = dialog.getCustomView();
+//                myGridView = (MyGridView)dialogView.findViewById(R.id.grid_view);
+//                dialogMonthSelectGridViewAdapter = new DialogMonthSelectGridViewAdapter(mContext);
+//                myGridView.setAdapter(dialogMonthSelectGridViewAdapter);
+//
+//                myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+//                        dialog.dismiss();
+//                        String content = "";
+//                        if (((position - 1) % 16 == 0) || ((position - 2) % 16 == 0) || ((position - 3) % 16 == 0)) content = "";
+//                        else if (position % 16 == 0) content = (dialogMonthSelectGridViewAdapter.getMinYear() + (position / 16)) + "";
+//                        else content = CoCoinUtil.getInstance().GetMonthShort(position % 16 - 3);
+//                        if (!"".equals(content)) CoCoinUtil.getInstance().showToast(mContext, content);
+//                    }
+//                });
             }
         });
+
+        new GetSelectListData(false).execute();
 
     }
 
@@ -499,5 +529,87 @@ public class CustomViewFragment extends Fragment {
                             mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
                     .commit();
         }
+    }
+
+    // get select list for dialog
+    private MaterialDialog progressDialog;
+    public class GetSelectListData extends AsyncTask<String, Void, String> {
+
+        private boolean openDialog;
+
+        public GetSelectListData(boolean openDialog) {
+            this.openDialog = openDialog;
+            progressDialog = new MaterialDialog.Builder(mContext)
+                    .title(R.string.report_loading_select_list_title)
+                    .content(R.string.report_loading_select_list_content)
+                    .cancelable(false)
+                    .progress(true, 0)
+                    .show();
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            selectListData = new ArrayList<>();
+            int size = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.size();
+            int currentYearSelectListPosition = -1;
+            int currentMonthSelectListPosition = -1;
+            int currentYear = -1;
+            int currentMonth = -1;
+            for (int i = size - 1; i >= 0; i--) {
+                CoCoinRecord record = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.get(i);
+                if (record.getCalendar().get(Calendar.YEAR) != currentYear) {
+                    double[] newYearSelectList = {record.getCalendar().get(Calendar.YEAR), -1, 1, record.getMoney()};
+                    selectListData.add(newYearSelectList);
+                    currentYearSelectListPosition = selectListData.size() - 1;
+                    currentYear = record.getCalendar().get(Calendar.YEAR);
+                    // if the year is different, we have to add new year and month
+                    double[] newMonthSelectList = {record.getCalendar().get(Calendar.YEAR), record.getCalendar().get(Calendar.MONTH) + 1, 1, record.getMoney()};
+                    selectListData.add(newMonthSelectList);
+                    currentMonthSelectListPosition = selectListData.size() - 1;
+                    currentMonth = record.getCalendar().get(Calendar.MONTH);
+                } else {
+                    if (record.getCalendar().get(Calendar.MONTH) != currentMonth) {
+                        double[] newMonthSelectList = {record.getCalendar().get(Calendar.YEAR), record.getCalendar().get(Calendar.MONTH) + 1, 1, record.getMoney()};
+                        selectListData.add(newMonthSelectList);
+                        currentMonth = record.getCalendar().get(Calendar.MONTH);
+                    } else {
+                        selectListData.get(currentYearSelectListPosition)[2]++;
+                        selectListData.get(currentYearSelectListPosition)[3] += record.getMoney();
+                        selectListData.get(currentMonthSelectListPosition)[2]++;
+                        selectListData.get(currentMonthSelectListPosition)[3] += record.getMoney();
+                    }
+                }
+            }
+            if (BuildConfig.DEBUG) {
+                for (int i = 0; i < selectListData.size(); i++) {
+                    Log.d("CoCoin", "Select List Data: " + selectListData.get(i)[0] + " " + selectListData.get(i)[1] + " " + selectListData.get(i)[2] + " " + selectListData.get(i)[3]);
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            if (progressDialog != null) progressDialog.cancel();
+            if (openDialog) showSelectListDataDialog();
+        }
+    }
+
+    private void showSelectListDataDialog() {
+        new MaterialDialog.Builder(mContext)
+                .title(R.string.report_select_list_title)
+                .cancelable(false)
+                .negativeText(R.string.cancel)
+                .adapter(new DialogSelectListDataAdapter(selectListData),
+                        new MaterialDialog.ListCallback() {
+                            @Override
+                            public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
+                                dialog.dismiss();
+                                makeReport(which);
+                            }
+                        })
+                .show();
+    }
+
+    private void makeReport(int p) {
+        CoCoinUtil.getInstance().showToast(mContext, "Select List Data: " + selectListData.get(p)[0] + " " + selectListData.get(p)[1] + " " + selectListData.get(p)[2] + " " + selectListData.get(p)[3]);
     }
 }

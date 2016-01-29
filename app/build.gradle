@@ -66,6 +66,9 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.daimajia.slider:library:1.1.5@aar'
 
+    // text drawable
+    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
     compile 'com.balysv.materialmenu:material-menu:1.5.4'
 
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'

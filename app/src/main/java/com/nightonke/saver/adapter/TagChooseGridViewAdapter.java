@@ -1,7 +1,6 @@
 package com.nightonke.saver.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,7 +53,7 @@ public class TagChooseGridViewAdapter extends BaseAdapter {
         ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = this.inflater.inflate(R.layout.tag_choose_item, null);
+            convertView = this.inflater.inflate(R.layout.item_tag_choose, null);
             holder.tagName = (TextView)convertView.findViewById(R.id.tag_name);
             holder.tagImage = (ImageView)convertView.findViewById(R.id.tag_image);
             convertView.setTag(holder);

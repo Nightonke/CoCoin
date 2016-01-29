@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/month"
+        android:layout_width="50dp"
+        android:layout_height="30dp"
+        android:textColor="@color/my_blue"
+        android:textSize="18sp"
+        android:layout_gravity="center_vertical|right"
+        android:gravity="center_vertical|right"
+        android:text="12月"
+        />
+
+    <TextView
+        android:id="@+id/year"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:textColor="@color/my_blue"
+        android:textSize="13sp"
+        android:layout_gravity="center_vertical|right"
+        android:gravity="center_vertical|left"
+        android:paddingTop="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="10dp"
+        android:text="2015"
+        />
+
+    <LinearLayout
+        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/expense"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:text="¥18890"
+            android:textSize="20sp"
+            android:textColor="@color/red"
+            android:gravity="top|right"
+            />
+
+        <TextView
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:text="/"
+            android:textColor="@color/red"
+            android:gravity="center"
+            android:layout_gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/sum"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:text="198's"
+            android:layout_marginLeft="-3dp"
+            android:layout_marginRight="15dp"
+            android:textSize="12sp"
+            android:textColor="@color/red"
+            android:gravity="bottom|left"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>

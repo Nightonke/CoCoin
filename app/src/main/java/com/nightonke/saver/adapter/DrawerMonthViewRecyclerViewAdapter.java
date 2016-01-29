@@ -95,16 +95,16 @@ public class DrawerMonthViewRecyclerViewAdapter
     public void onBindViewHolder(final viewHolder holder, final int position) {
 
         holder.month.setText(CoCoinUtil.GetMonthShort(months.get(position) + 1));
-        holder.month.setTypeface(CoCoinUtil.GetTypeface());
+        holder.month.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
         holder.year.setText(years.get(position) + "");
-        holder.year.setTypeface(CoCoinUtil.GetTypeface());
+        holder.year.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
         if ("zh".equals(CoCoinUtil.GetLanguage()))
             holder.money.setText("¥" + (int) (double) (expenses.get(position)));
         else
             holder.money.setText("$" + (int)(double)(expenses.get(position)));
-        holder.money.setTypeface(CoCoinUtil.GetTypeface());
+        holder.money.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
     }
 

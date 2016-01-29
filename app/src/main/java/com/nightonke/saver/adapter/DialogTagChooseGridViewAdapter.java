@@ -46,7 +46,7 @@ public class DialogTagChooseGridViewAdapter extends BaseAdapter {
         final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
-            convertView = this.inflater.inflate(R.layout.tag_choose_item, null);
+            convertView = this.inflater.inflate(R.layout.item_tag_choose, null);
             holder.tagImage = (ImageView) convertView.findViewById(R.id.tag_image);
             holder.tagName = (TextView) convertView.findViewById(R.id.tag_name);
             convertView.setTag(holder);

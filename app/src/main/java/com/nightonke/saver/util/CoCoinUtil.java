@@ -25,6 +25,7 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.db.DB;
 import com.nightonke.saver.db.DBHelper;
+import com.nightonke.saver.fragment.CoCoinFragmentManager;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -411,10 +412,6 @@ public class CoCoinUtil {
     public static Typeface typefaceLatoRegular = null;
     public static Typeface typefaceLatoHairline = null;
     public static Typeface typefaceLatoLight = null;
-
-    private CoCoinUtil() {
-        Log.d("Saver", "CoCoinUtil create");
-    }
 
     public static void init(Context context) {
 
@@ -1126,5 +1123,16 @@ public class CoCoinUtil {
 //        databasePath += "bmob";
 //        File file = new File(databasePath);
 //        if (file.exists()) file.delete();
+    }
+
+    private static CoCoinUtil ourInstance = new CoCoinUtil();
+
+    public static CoCoinUtil getInstance() {
+        if (ourInstance == null || typefaceLatoLight == null || typefaceLatoHairline == null)
+            ourInstance = new CoCoinUtil();
+        return ourInstance;
+    }
+
+    private CoCoinUtil() {
     }
 }

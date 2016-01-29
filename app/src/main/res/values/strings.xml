@@ -433,4 +433,9 @@
 
     <string name="ok_1">ok</string>
 
+    <string name="report_loading_select_list_title">Loading</string>
+    <string name="report_loading_select_list_content">Loading data. Please wait.</string>
+
+    <string name="report_select_list_title">Report Time</string>
+
 </resources>

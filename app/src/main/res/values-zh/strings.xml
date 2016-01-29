@@ -420,4 +420,9 @@
 
     <string name="ok_1">确认</string>
 
+    <string name="report_loading_select_list_title">加载中</string>
+    <string name="report_loading_select_list_content">正在加载数据，请稍候。</string>
+
+    <string name="report_select_list_title">报表时间段</string>
+
 </resources>

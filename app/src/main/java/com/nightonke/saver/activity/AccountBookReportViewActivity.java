@@ -14,17 +14,17 @@ import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.R;
-import com.nightonke.saver.adapter.CustomViewFragmentAdapter;
+import com.nightonke.saver.adapter.ReportViewFragmentAdapter;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.CoCoinUtil;
 
-public class AccountBookCustomViewActivity extends AppCompatActivity {
+public class AccountBookReportViewActivity extends AppCompatActivity {
 
     private MaterialViewPager mViewPager;
 
     private Toolbar toolbar;
 
-    private CustomViewFragmentAdapter customViewFragmentAdapter = null;
+    private ReportViewFragmentAdapter reportViewFragmentAdapter = null;
 
     private Context mContext;
 
@@ -33,13 +33,13 @@ public class AccountBookCustomViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mContext = this;
-        setContentView(R.layout.activity_account_book_custom_view);
+        setContentView(R.layout.activity_account_book_report_view);
 
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
 
         View view = mViewPager.getRootView();
         TextView title = (TextView)view.findViewById(R.id.logo_white);
-        title.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+        title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(SettingManager.getInstance().getAccountBookName());
 
         mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.GetTypeface(), Typeface.NORMAL);
@@ -72,9 +72,9 @@ public class AccountBookCustomViewActivity extends AppCompatActivity {
             });
         }
 
-        customViewFragmentAdapter = new CustomViewFragmentAdapter(getSupportFragmentManager());
+        reportViewFragmentAdapter = new ReportViewFragmentAdapter(getSupportFragmentManager());
         mViewPager.getViewPager().setOffscreenPageLimit(1);
-        mViewPager.getViewPager().setAdapter(customViewFragmentAdapter);
+        mViewPager.getViewPager().setAdapter(reportViewFragmentAdapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
@@ -87,11 +87,6 @@ public class AccountBookCustomViewActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
