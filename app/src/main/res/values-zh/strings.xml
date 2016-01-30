@@ -425,4 +425,6 @@
 
     <string name="report_select_list_title">报表时间段</string>
 
+    <string name="report_view_help"> ● 支出报表</string>
+
 </resources>

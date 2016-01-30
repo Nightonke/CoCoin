@@ -438,4 +438,6 @@
 
     <string name="report_select_list_title">Report Time</string>
 
+    <string name="report_view_help"> ● You can choose the time to show report.</string>
+
 </resources>

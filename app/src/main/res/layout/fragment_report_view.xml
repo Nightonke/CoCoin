@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:fab="http://schemas.android.com/tools">
+
+    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:clickable="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/material_view_pager_placeholder"/>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/cardMarginVertical"
+                android:layout_marginLeft="@dimen/cardMarginHorizontal"
+                android:layout_marginRight="@dimen/cardMarginHorizontal"
+                android:layout_marginTop="@dimen/cardMarginVertical"
+                android:background="@android:color/white"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="400dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_gravity="center_vertical|left"
+                        android:textColor="@color/my_blue"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:text="@string/custom_view_help"
+                        />
+
+                    <TextView
+                        android:id="@+id/expense"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:textColor="@color/my_blue"
+                        android:textSize="30sp"
+                        android:padding="10dp"
+                        android:text="¥123"
+                        />
+
+                    <TextView
+                        android:id="@+id/tags"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="right|center_vertical"
+                        android:layout_gravity="center_vertical|left"
+                        android:textColor="@color/my_blue"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:text="234 records of 12 tags"
+                        />
+
+                    <TextView
+                        android:id="@+id/empty_tip"
+                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:text="@string/last_month_empty"
+                        android:textSize="15sp"
+                        android:textColor="@color/my_blue"
+                        />
+
+                    <FrameLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        >
+
+                        <lecho.lib.hellocharts.view.PieChartView
+                            android:id="@+id/chart_pie"
+                            android:layout_width="match_parent"
+                            android:layout_height="320dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:paddingTop="10dp"
+                            android:paddingBottom="10dp"
+                            >
+                        </lecho.lib.hellocharts.view.PieChartView>
+
+                        <LinearLayout
+                            android:layout_height="wrap_content"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            android:layout_gravity="bottom"
+                            >
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_gravity="center"
+                                android:padding="10dp"
+                                />
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_gravity="center|right"
+                                app:materialIcon="chevron_left"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:paddingLeft="5dp"
+                                android:scaleType="center"
+                                android:background="@color/transparent"
+                                android:id="@+id/icon_left"
+                                />
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                xmlns:app="http://schemas.android.com/apk/res-auto"
+                                android:layout_width="48dp"
+                                android:layout_height="48dp"
+                                android:layout_gravity="center|right"
+                                app:materialIcon="chevron_right"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:paddingRight="5dp"
+                                android:scaleType="center"
+                                android:background="@color/transparent"
+                                android:id="@+id/icon_right"
+                                />
+
+                        </LinearLayout>
+
+                    </FrameLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal"
+                        android:paddingLeft="20dp"
+                        android:paddingRight="20dp"
+                        >
+
+                        <FrameLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="50dp"
+                            >
+
+                            <View
+                                android:layout_width="3dp"
+                                android:layout_height="25dp"
+                                android:layout_gravity="center_horizontal|bottom"
+                                android:background="@color/my_blue"
+                                />
+
+                            <ImageView
+                                android:id="@+id/highest_tag_icon"
+                                android:layout_height="40dp"
+                                android:layout_width="40dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/fruit_icon"
+                                />
+
+                        </FrameLayout>
+
+                        <TextView
+                            android:id="@+id/highest_tag_text"
+                            android:layout_height="match_parent"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|left"
+                            android:text="Expense most in housing loan."
+                            android:textColor="@color/my_blue"
+                            android:maxLines="2"
+                            android:paddingRight="5dp"
+                            />
+
+                        <LinearLayout
+                            android:layout_height="30dp"
+                            android:layout_width="wrap_content"
+                            android:orientation="horizontal"
+                            android:layout_gravity="center"
+                            >
+
+                            <TextView
+                                android:id="@+id/highest_tag_expense"
+                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:text="¥18890"
+                                android:textSize="20sp"
+                                android:textColor="@color/red"
+                                android:gravity="top|right"
+                                />
+
+                            <TextView
+                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:text="/"
+                                android:textColor="@color/red"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView
+                                android:id="@+id/highest_tag_sum"
+                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:text="198's"
+                                android:layout_marginLeft="-3dp"
+                                android:textSize="12sp"
+                                android:textColor="@color/red"
+                                android:gravity="bottom|left"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <com.github.aakira.expandablelayout.ExpandableRelativeLayout
+                        android:id="@+id/expand_highest_tag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:ael_expanded="true"
+                        app:ael_duration="400"
+                        app:ael_orientation="vertical"
+                        android:background="@android:color/white"
+                        >
+
+                        <com.nightonke.saver.ui.ExpandedListView
+                            android:id="@+id/highest_tags"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:divider="@android:color/transparent"
+                            android:dividerHeight="0dp"
+                            android:scrollbars="none"
+                            />
+
+                    </com.github.aakira.expandablelayout.ExpandableRelativeLayout>
+
+                    <TextView
+                        android:layout_height="60dp"
+                        android:layout_width="match_parent"
+                        />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
+
+    </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+    <com.melnykov.fab.FloatingActionButton
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="16dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/time_picker_icon"
+        fab:fab_colorNormal="@color/time_picker_icon_button"
+        fab:fab_colorPressed="@color/time_picker_icon_button_press"
+        fab:fab_colorRipple="@color/ripple" />
+
+</FrameLayout>

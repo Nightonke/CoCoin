@@ -1125,6 +1125,65 @@ public class CoCoinUtil {
 //        if (file.exists()) file.delete();
     }
 
+    // the tagId is clothes, food, house and traffic
+    public static int IsCFHT(int tagId) {
+        if (tagId == 2) {
+            return 0;
+        } else if (tagId == -3 || tagId == -2 || tagId == -1 || tagId == 0 || tagId == 15 || tagId == 19 || tagId == 20) {
+            return 1;
+        } else if (tagId == 3 || tagId == 24) {
+            return 2;
+        } else if (tagId == 4 || tagId == 5) {
+            return 3;
+        }
+        return -1;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     private static CoCoinUtil ourInstance = new CoCoinUtil();
 
     public static CoCoinUtil getInstance() {

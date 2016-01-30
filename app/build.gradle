@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'bugly'
 
 repositories {
+    jcenter()
     maven { url "https://jitpack.io" }
 }
 
@@ -68,6 +69,9 @@ dependencies {
 
     // text drawable
     compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
+
+    // expandable layout
+    compile 'com.github.aakira:expandable-layout:1.4.1@aar'
 
     compile 'com.balysv.materialmenu:material-menu:1.5.4'
 

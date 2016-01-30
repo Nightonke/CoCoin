@@ -50,7 +50,7 @@ public class RecordManager {
     public static List<Tag> TAGS;
     public static Map<Integer, String> TAG_NAMES;
 
-    public static boolean RANDOM_DATA = false;
+    public static boolean RANDOM_DATA = true;
     private final int RANDOM_DATA_NUMBER_ON_EACH_DAY = 3;
     private final int RANDOM_DATA_EXPENSE_ON_EACH_DAY = 30;
 
@@ -90,13 +90,7 @@ public class RecordManager {
                 return;
             }
 
-            Toast.makeText(
-                    context, "Creating test data, please wait.", Toast.LENGTH_LONG).show();
-
             randomDataCreater();
-
-            Toast.makeText(
-                    context, "Finish, thanks for testing.", Toast.LENGTH_LONG).show();
 
             SharedPreferences.Editor editor =
                     context.getSharedPreferences("Values", Context.MODE_PRIVATE).edit();
