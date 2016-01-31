@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
@@ -53,6 +55,20 @@ public class AccountBookReportViewActivity extends AppCompatActivity
         mViewPager.getPagerTitleStrip().setIndicatorColor(Color.parseColor("#00000000"));
         mViewPager.getPagerTitleStrip().setUnderlineHeight(0);
         mViewPager.getPagerTitleStrip().setIndicatorHeight(0);
+
+        mViewPager.getPagerTitleStrip().setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
+            @Override
+            public void onTabReselected(int position) {
+                Log.d("CoCoin", "reselected");
+                ((ReportViewFragment)reportViewFragmentAdapter.getItem(0)).showDataDialog();
+            }
+        });
+        mViewPager.getPagerTitleStrip().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("CoCoin", "click");
+            }
+        });
 
         setTitle("");
 

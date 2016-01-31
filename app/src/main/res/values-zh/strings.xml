@@ -431,5 +431,8 @@
     <string name="report_view_highest_tag"> ● 支出最多的标签</string>
     <string name="report_view_highest_tag_show_more">显示更多</string>
     <string name="report_view_highest_tag_show_less">隐藏</string>
+    <string name="report_view_lowest_tag"> ● 支出最少的标签</string>
+    <string name="report_view_lowest_tag_show_more">显示更多</string>
+    <string name="report_view_lowest_tag_show_less">隐藏</string>
 
 </resources>

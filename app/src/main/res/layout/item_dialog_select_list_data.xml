@@ -3,44 +3,60 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="60dp">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_weight="3"
+        android:orientation="horizontal"
+        >
+
+        <View
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/month"
+            android:layout_width="50dp"
+            android:layout_height="30dp"
+            android:textColor="@color/my_blue"
+            android:textSize="18sp"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical|right"
+            android:text="12月"
+            />
+
+        <TextView
+            android:id="@+id/year"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:textColor="@color/my_blue"
+            android:textSize="13sp"
+            android:layout_gravity="center_vertical|right"
+            android:gravity="center_vertical|left"
+            android:paddingTop="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="10dp"
+            android:text="2015"
+            />
+
+    </LinearLayout>
 
     <View
-        android:layout_height="match_parent"
+        android:layout_height="30dp"
         android:layout_width="0dp"
         android:layout_weight="1"
         />
 
-    <TextView
-        android:id="@+id/month"
-        android:layout_width="50dp"
-        android:layout_height="30dp"
-        android:textColor="@color/my_blue"
-        android:textSize="18sp"
-        android:layout_gravity="center_vertical|right"
-        android:gravity="center_vertical|right"
-        android:text="12月"
-        />
-
-    <TextView
-        android:id="@+id/year"
-        android:layout_width="80dp"
-        android:layout_height="60dp"
-        android:textColor="@color/my_blue"
-        android:textSize="13sp"
-        android:layout_gravity="center_vertical|right"
-        android:gravity="center_vertical|left"
-        android:paddingTop="5dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="10dp"
-        android:text="2015"
-        />
-
     <LinearLayout
         android:layout_height="30dp"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:orientation="horizontal"
-        android:layout_gravity="center"
+        android:layout_weight="3"
+        android:layout_gravity="center_vertical"
         >
 
         <TextView
@@ -75,11 +91,5 @@
             />
 
     </LinearLayout>
-
-    <View
-        android:layout_height="match_parent"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        />
 
 </LinearLayout>

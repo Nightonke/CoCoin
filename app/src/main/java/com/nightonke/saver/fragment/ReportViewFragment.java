@@ -12,6 +12,7 @@ import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -94,7 +95,10 @@ import lecho.lib.hellocharts.view.PieChartView;
  * the average value of expense of a day
  */
 
-public class ReportViewFragment extends Fragment implements View.OnClickListener {
+public class ReportViewFragment extends Fragment
+        implements
+        View.OnClickListener,
+        AdapterView.OnItemClickListener {
 
     public static String REPORT_TITLE = "";
 
@@ -153,6 +157,7 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
 
     // highest tag list
     private LinearLayout highestTagLayout;
+    private LinearLayout highestFirst;
     private ImageView highestTagIcon;
     private TextView highestTagText;
     private TextView highestTagExpenseTV;
@@ -162,6 +167,18 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
     private ExpandableRelativeLayout highestTagsLayout;
     private LinearLayout highestTagMore;
     private TextView highestTagMoreText;
+
+    // lowest tag list
+    private LinearLayout lowestTagLayout;
+    private ImageView lowestTagIcon;
+    private TextView lowestTagText;
+    private TextView lowestTagExpenseTV;
+    private TextView lowestTagRecord;
+    private ExpandedListView lowestTags;
+    private ReportTagAdapter lowestTagsAdapter;
+    private ExpandableRelativeLayout lowestTagsLayout;
+    private LinearLayout lowestTagMore;
+    private TextView lowestTagMoreText;
 
     public static ReportViewFragment newInstance() {
         ReportViewFragment fragment = new ReportViewFragment();
@@ -235,9 +252,11 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
 
         highestTagLayout = (LinearLayout)view.findViewById(R.id.highest_tag_layout);
         highestTagLayout.setVisibility(View.GONE);
+        highestFirst = (LinearLayout)view.findViewById(R.id.highest_first);
+        highestFirst.setOnClickListener(this);
         highestTagIcon = (ImageView)view.findViewById(R.id.highest_tag_icon);
         highestTagText = (TextView)view.findViewById(R.id.highest_tag_text);
-        highestTagText.setTypeface(CoCoinUtil.getInstance().GetTypeface());
+        highestTagText.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         highestTagExpenseTV = (TextView)view.findViewById(R.id.highest_tag_expense);
         highestTagExpenseTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         highestTagRecord = (TextView)view.findViewById(R.id.highest_tag_sum);
@@ -248,42 +267,38 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
         highestTagMore.setOnClickListener(this);
         highestTagMoreText = (TextView)view.findViewById(R.id.highest_tag_more_text);
         highestTagMoreText.setTypeface(CoCoinUtil.getInstance().GetTypeface());
+        highestTags.setOnItemClickListener(this);
+
+        lowestTagLayout = (LinearLayout)view.findViewById(R.id.lowest_tag_layout);
+        lowestTagLayout.setVisibility(View.GONE);
+        lowestTagIcon = (ImageView)view.findViewById(R.id.lowest_tag_icon);
+        lowestTagText = (TextView)view.findViewById(R.id.lowest_tag_text);
+        lowestTagText.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+        lowestTagExpenseTV = (TextView)view.findViewById(R.id.lowest_tag_expense);
+        lowestTagExpenseTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+        lowestTagRecord = (TextView)view.findViewById(R.id.lowest_tag_sum);
+        lowestTagRecord.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+        lowestTags = (ExpandedListView)view.findViewById(R.id.lowest_tags);
+        lowestTagsLayout = (ExpandableRelativeLayout) view.findViewById(R.id.expand_lowest_tag);
+        lowestTagMore = (LinearLayout)view.findViewById(R.id.lowest_tag_more);
+        lowestTagMore.setOnClickListener(this);
+        lowestTagMoreText = (TextView)view.findViewById(R.id.lowest_tag_more_text);
+        lowestTagMoreText.setTypeface(CoCoinUtil.getInstance().GetTypeface());
 
         if (IS_EMPTY) {
             emptyTip.setVisibility(View.GONE);
         }
 
         button = (FloatingActionButton) view.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (selectListData == null) new GetSelectListData(true).execute();
-                else showSelectListDataDialog();
-//                dialog = new MaterialDialog.Builder(mContext)
-//                        .customView(R.layout.dialog_select_month, false)
-//                        .negativeText(R.string.cancel)
-//                        .show();
-//                dialogView = dialog.getCustomView();
-//                myGridView = (MyGridView)dialogView.findViewById(R.id.grid_view);
-//                dialogMonthSelectGridViewAdapter = new DialogMonthSelectGridViewAdapter(mContext);
-//                myGridView.setAdapter(dialogMonthSelectGridViewAdapter);
-//
-//                myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//                        dialog.dismiss();
-//                        String content = "";
-//                        if (((position - 1) % 16 == 0) || ((position - 2) % 16 == 0) || ((position - 3) % 16 == 0)) content = "";
-//                        else if (position % 16 == 0) content = (dialogMonthSelectGridViewAdapter.getMinYear() + (position / 16)) + "";
-//                        else content = CoCoinUtil.getInstance().GetMonthShort(position % 16 - 3);
-//                        if (!"".equals(content)) CoCoinUtil.getInstance().showToast(mContext, content);
-//                    }
-//                });
-            }
-        });
+        button.setOnClickListener(this);
 
         new GetSelectListData(false).execute();
 
+    }
+
+    public void showDataDialog() {
+        if (selectListData == null) new GetSelectListData(true).execute();
+        else showSelectListDataDialog();
     }
 
     @Override
@@ -311,6 +326,9 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.highest_first:
+                onItemClick(highestTags, highestTags.getChildAt(0), -1, -1);
+                break;
             case R.id.highest_tag_more:
                 if (highestTagsLayout != null) {
                     if (highestTagsLayout.isExpanded()) {
@@ -321,6 +339,54 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
                         highestTagMoreText.setText(CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_highest_tag_show_less));
                     }
                 }
+                break;
+            case R.id.lowest_tag_more:
+                if (lowestTagsLayout != null) {
+                    if (lowestTagsLayout.isExpanded()) {
+                        lowestTagsLayout.collapse();
+                        lowestTagMoreText.setText(CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_lowest_tag_show_more));
+                    } else {
+                        lowestTagsLayout.expand();
+                        lowestTagMoreText.setText(CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_lowest_tag_show_less));
+                    }
+                }
+                break;
+            case R.id.button:
+                showSelectListDataDialog();
+                break;
+        }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String dialogTitle = "";
+        int sum;
+        int tagId;
+        switch (parent.getId()) {
+            case R.id.highest_tags:
+                if (gettingData) return;
+                tagId = (int)highestTagExpense.get(position + 1)[2];
+                sum = (int)highestTagExpense.get(position + 1)[0];
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    if (selectYear) {
+                        dialogTitle = from.get(Calendar.YEAR) + "年" + "\n" +
+                                CoCoinUtil.GetSpendString(sum) +
+                                "于" + CoCoinUtil.GetTagName(tagId);
+                    } else {
+                        dialogTitle = from.get(Calendar.YEAR) + "年" + (from.get(Calendar.MONTH) + 1) + "月" + "\n" +
+                                CoCoinUtil.GetSpendString(sum) +
+                                "于" + CoCoinUtil.GetTagName(tagId);
+                    }
+                } else {
+                    if (selectYear) {
+                        dialogTitle = CoCoinUtil.GetSpendString(sum) + " in " + from.get(Calendar.YEAR) + "\n" +
+                                "on " + CoCoinUtil.GetTagName(tagId);
+                    } else {
+                        dialogTitle = CoCoinUtil.GetSpendString(sum) + " in " + CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " + from.get(Calendar.YEAR) + "\n" +
+                                "on " + CoCoinUtil.GetTagName(tagId);
+                    }
+                }
+                new GetData(from, to, tagId, dialogTitle).execute();
                 break;
         }
     }
@@ -402,12 +468,16 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    private DialogSelectListDataAdapter selectListDataAdapter = null;
     private void showSelectListDataDialog() {
+        if (selectListDataAdapter == null) {
+            selectListDataAdapter = new DialogSelectListDataAdapter(selectListData);
+        }
         new MaterialDialog.Builder(mContext)
                 .title(R.string.report_select_list_title)
                 .cancelable(false)
                 .negativeText(R.string.cancel)
-                .adapter(new DialogSelectListDataAdapter(selectListData),
+                .adapter(selectListDataAdapter,
                         new MaterialDialog.ListCallback() {
                             @Override
                             public void onSelection(MaterialDialog dialog, View itemView, int which, CharSequence text) {
@@ -418,9 +488,17 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
                 .show();
     }
 
+    private boolean selectYear = false;
     private void makeReport(int p) {
+        progressDialog = new MaterialDialog.Builder(mContext)
+                .title(R.string.report_loading_select_list_title)
+                .content(R.string.report_loading_select_list_content)
+                .cancelable(false)
+                .progress(true, 0)
+                .show();
         if (selectListData.get(p)[1] == -1) {
             // select year
+            selectYear = true;
             from.set((int)selectListData.get(p)[0], 0, 1, 0, 0, 0);
             from.add(Calendar.SECOND, 0);
             to.set((int)selectListData.get(p)[0], 11, 31, 23, 59, 59);
@@ -428,11 +506,12 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
             new GetReport(from, to, true).execute();
         } else {
             // select month
+            selectYear = false;
             from.set((int)selectListData.get(p)[0], (int)selectListData.get(p)[1] - 1, 1, 0, 0, 0);
             from.add(Calendar.SECOND, 0);
             to.set((int)selectListData.get(p)[0], (int)selectListData.get(p)[1] - 1, from.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
             to.add(Calendar.SECOND, 0);
-            new GetReport(from, to, true).execute();
+            new GetReport(from, to, false).execute();
         }
     }
 
@@ -468,12 +547,6 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
             this.from = from;
             this.to = to;
             this.isYear = isYear;
-            progressDialog = new MaterialDialog.Builder(mContext)
-                    .title(R.string.report_loading_select_list_title)
-                    .content(R.string.report_loading_select_list_content)
-                    .cancelable(false)
-                    .progress(true, 0)
-                    .show();
         }
         @Override
         protected String doInBackground(String... params) {
@@ -722,10 +795,12 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
         }
         @Override
         protected void onPostExecute(String result) {
-            if (progressDialog != null) progressDialog.cancel();
+            if (progressDialog != null) progressDialog.dismiss();
 
             // for title
-            REPORT_TITLE = reportYear + " - " + reportMonth;
+            if (isYear) REPORT_TITLE = reportYear + "";
+            else REPORT_TITLE = reportYear + " - " + reportMonth;
+
             try {
                 ((OnTitleChangedListener)activity)
                         .onTitleChanged();
@@ -733,7 +808,7 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
                 cce.printStackTrace();
             }
 
-            // for basic infomation
+            // for basic information
             expenseTV.setText(CoCoinUtil.getInstance().GetInMoney((int)expense));
             tagsTV.setText(records + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_records) + tags + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_tags));
 
@@ -745,6 +820,70 @@ public class ReportViewFragment extends Fragment implements View.OnClickListener
             highestTagRecord.setText(CoCoinUtil.GetInRecords((int)highestTagExpense.get(0)[3]));
             highestTagsAdapter = new ReportTagAdapter(highestTagExpense);
             highestTags.setAdapter(highestTagsAdapter);
+
+            // for lowest tag expense
+            lowestTagLayout.setVisibility(View.VISIBLE);
+            lowestTagIcon.setImageDrawable(CoCoinUtil.GetTagIconDrawable((int)lowestTagExpense.get(0)[2]));
+            lowestTagText.setText(CoCoinUtil.GetTagName((int)lowestTagExpense.get(0)[2]) + CoCoinUtil.getInstance().GetPurePercentString(lowestTagExpense.get(0)[1] * 100));
+            lowestTagExpenseTV.setText(CoCoinUtil.GetInMoney((int)lowestTagExpense.get(0)[0]));
+            lowestTagRecord.setText(CoCoinUtil.GetInRecords((int)lowestTagExpense.get(0)[3]));
+            lowestTagsAdapter = new ReportTagAdapter(lowestTagExpense);
+            lowestTags.setAdapter(lowestTagsAdapter);
+        }
+    }
+
+    private ArrayList<CoCoinRecord> selectedRecord;
+    private boolean gettingData = false;
+    public class GetData extends AsyncTask<String, Void, String> {
+
+        private Calendar fromDate;
+        private Calendar toDate;
+        private int tagId;
+        private String dialogTitle;
+
+        public GetData(Calendar fromDate, Calendar toDate, int tagId, String dialogTitle) {
+            gettingData = true;
+            this.fromDate = fromDate;
+            this.tagId = tagId;
+            this.toDate = toDate;
+            this.dialogTitle = dialogTitle;
+            progressDialog = new MaterialDialog.Builder(mContext)
+                    .title(R.string.report_loading_select_list_title)
+                    .content(R.string.report_loading_select_list_content)
+                    .cancelable(false)
+                    .progress(true, 0)
+                    .show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            selectedRecord = new ArrayList<>();
+            int size = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.size();
+            for (int i = size - 1; i >= 0; i--) {
+                CoCoinRecord record = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.get(i);
+                if (record.getCalendar().before(fromDate)) break;
+                if (!record.getCalendar().after(toDate)) {
+                    for (int j = i; j >= 0; j--) {
+                        CoCoinRecord r = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.get(j);
+                        if (r.getCalendar().before(fromDate)) {
+                            break;
+                        }
+                        if (r.getTag() == tagId) selectedRecord.add(r);
+                    }
+                    break;
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            gettingData = false;
+            if (progressDialog != null) progressDialog.dismiss();
+            ((FragmentActivity)mContext).getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(new RecordCheckDialogFragment(
+                            mContext, selectedRecord, dialogTitle), "MyDialog")
+                    .commit();
         }
     }
 

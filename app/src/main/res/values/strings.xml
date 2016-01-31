@@ -443,5 +443,9 @@
     <string name="report_view_tags"> tags</string>
     <string name="report_view_highest_tag"> ● Highest expense on tags</string>
     <string name="report_view_highest_tag_show_more">Click for more</string>
+    <string name="report_view_highest_tag_show_less">Click to hide</string>
+    <string name="report_view_lowest_tag"> ● Lowest expense on tags</string>
+    <string name="report_view_lowest_tag_show_more">Click for more</string>
+    <string name="report_view_lowest_tag_show_less">Click to hide</string>
 
 </resources>
