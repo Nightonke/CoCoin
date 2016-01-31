@@ -30,6 +30,6 @@ public class ReportViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return "";
+        return ReportViewFragment.REPORT_TITLE;
     }
 }

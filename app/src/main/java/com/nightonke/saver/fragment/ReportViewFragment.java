@@ -1,5 +1,6 @@
 package com.nightonke.saver.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -8,11 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.util.Pair;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -22,7 +23,6 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.melnykov.fab.FloatingActionButton;
-import com.nightonke.saver.BuildConfig;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.adapter.DialogMonthSelectGridViewAdapter;
@@ -94,9 +94,12 @@ import lecho.lib.hellocharts.view.PieChartView;
  * the average value of expense of a day
  */
 
-public class ReportViewFragment extends Fragment {
+public class ReportViewFragment extends Fragment implements View.OnClickListener {
 
-    private final int MAX_DAY_EXPENSE = 10;
+    public static String REPORT_TITLE = "";
+
+    public static final int MAX_TAG_EXPENSE = 8;
+    public static final int MAX_DAY_EXPENSE = 10;
 
     private Context mContext;
 
@@ -106,6 +109,7 @@ public class ReportViewFragment extends Fragment {
     private TextView fromDate;
     private TextView expenseTV;
     private TextView emptyTip;
+    private TextView tagsTV;
 
     private Calendar from = Calendar.getInstance();
     private Calendar to = Calendar.getInstance();
@@ -148,6 +152,7 @@ public class ReportViewFragment extends Fragment {
     private ArrayList<double[]> selectListData = null;
 
     // highest tag list
+    private LinearLayout highestTagLayout;
     private ImageView highestTagIcon;
     private TextView highestTagText;
     private TextView highestTagExpenseTV;
@@ -155,10 +160,23 @@ public class ReportViewFragment extends Fragment {
     private ExpandedListView highestTags;
     private ReportTagAdapter highestTagsAdapter;
     private ExpandableRelativeLayout highestTagsLayout;
+    private LinearLayout highestTagMore;
+    private TextView highestTagMoreText;
 
     public static ReportViewFragment newInstance() {
         ReportViewFragment fragment = new ReportViewFragment();
         return fragment;
+    }
+
+    private Activity activity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof Activity){
+            activity = (Activity)context;
+        }
     }
 
     @Override
@@ -194,12 +212,12 @@ public class ReportViewFragment extends Fragment {
 
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
-//        fromDate = (TextView)view.findViewById(R.id.from_date);
-//        fromDate.setTypeface(CoCoinUtil.GetTypeface());
-
         expenseTV = (TextView)view.findViewById(R.id.expense);
-        expenseTV.setTypeface(CoCoinUtil.typefaceLatoLight);
+        expenseTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         expenseTV.setText(CoCoinUtil.GetInMoney(0));
+        tagsTV = (TextView)view.findViewById(R.id.tags);
+        tagsTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+        tagsTV.setText("");
 
         pie = (PieChartView)view.findViewById(R.id.chart_pie);
         pie.setVisibility(View.INVISIBLE);
@@ -215,22 +233,21 @@ public class ReportViewFragment extends Fragment {
         emptyTip = (TextView)view.findViewById(R.id.empty_tip);
         emptyTip.setTypeface(CoCoinUtil.GetTypeface());
 
+        highestTagLayout = (LinearLayout)view.findViewById(R.id.highest_tag_layout);
+        highestTagLayout.setVisibility(View.GONE);
         highestTagIcon = (ImageView)view.findViewById(R.id.highest_tag_icon);
-        highestTagIcon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (highestTagsLayout.isExpanded()) {
-                    highestTagsLayout.collapse();
-                } else {
-                    highestTagsLayout.expand();
-                }
-            }
-        });
         highestTagText = (TextView)view.findViewById(R.id.highest_tag_text);
+        highestTagText.setTypeface(CoCoinUtil.getInstance().GetTypeface());
         highestTagExpenseTV = (TextView)view.findViewById(R.id.highest_tag_expense);
+        highestTagExpenseTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         highestTagRecord = (TextView)view.findViewById(R.id.highest_tag_sum);
+        highestTagRecord.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         highestTags = (ExpandedListView)view.findViewById(R.id.highest_tags);
         highestTagsLayout = (ExpandableRelativeLayout) view.findViewById(R.id.expand_highest_tag);
+        highestTagMore = (LinearLayout)view.findViewById(R.id.highest_tag_more);
+        highestTagMore.setOnClickListener(this);
+        highestTagMoreText = (TextView)view.findViewById(R.id.highest_tag_more_text);
+        highestTagMoreText.setTypeface(CoCoinUtil.getInstance().GetTypeface());
 
         if (IS_EMPTY) {
             emptyTip.setVisibility(View.GONE);
@@ -291,6 +308,23 @@ public class ReportViewFragment extends Fragment {
         return new Pair<>(displayOptions != 0 ? Boolean.TRUE : Boolean.FALSE, options);
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.highest_tag_more:
+                if (highestTagsLayout != null) {
+                    if (highestTagsLayout.isExpanded()) {
+                        highestTagsLayout.collapse();
+                        highestTagMoreText.setText(CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_highest_tag_show_more));
+                    } else {
+                        highestTagsLayout.expand();
+                        highestTagMoreText.setText(CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_highest_tag_show_less));
+                    }
+                }
+                break;
+        }
+    }
+
     private class mActionClickListenerForPie implements ActionClickListener {
         @Override
         public void onActionClicked(Snackbar snackbar) {
@@ -340,8 +374,11 @@ public class ReportViewFragment extends Fragment {
                     currentMonth = record.getCalendar().get(Calendar.MONTH);
                 } else {
                     if (record.getCalendar().get(Calendar.MONTH) != currentMonth) {
+                        selectListData.get(currentYearSelectListPosition)[2]++;
+                        selectListData.get(currentYearSelectListPosition)[3] += record.getMoney();
                         double[] newMonthSelectList = {record.getCalendar().get(Calendar.YEAR), record.getCalendar().get(Calendar.MONTH) + 1, 1, record.getMoney()};
                         selectListData.add(newMonthSelectList);
+                        currentMonthSelectListPosition = selectListData.size() - 1;
                         currentMonth = record.getCalendar().get(Calendar.MONTH);
                     } else {
                         selectListData.get(currentYearSelectListPosition)[2]++;
@@ -351,11 +388,11 @@ public class ReportViewFragment extends Fragment {
                     }
                 }
             }
-            if (BuildConfig.DEBUG) {
-                for (int i = 0; i < selectListData.size(); i++) {
-                    Log.d("CoCoin", "Select List Data: " + selectListData.get(i)[0] + " " + selectListData.get(i)[1] + " " + selectListData.get(i)[2] + " " + selectListData.get(i)[3]);
-                }
-            }
+//            if (BuildConfig.DEBUG) {
+//                for (int i = 0; i < selectListData.size(); i++) {
+//                    Log.d("CoCoin", "Select List Data: " + selectListData.get(i)[0] + " " + selectListData.get(i)[1] + " " + selectListData.get(i)[2] + " " + selectListData.get(i)[3]);
+//                }
+//            }
             return null;
         }
         @Override
@@ -391,9 +428,9 @@ public class ReportViewFragment extends Fragment {
             new GetReport(from, to, true).execute();
         } else {
             // select month
-            from.set((int)selectListData.get(p)[0], (int)selectListData.get(p)[1], 1, 0, 0, 0);
+            from.set((int)selectListData.get(p)[0], (int)selectListData.get(p)[1] - 1, 1, 0, 0, 0);
             from.add(Calendar.SECOND, 0);
-            to.set((int)selectListData.get(p)[0], (int)selectListData.get(p)[1], from.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+            to.set((int)selectListData.get(p)[0], (int)selectListData.get(p)[1] - 1, from.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
             to.add(Calendar.SECOND, 0);
             new GetReport(from, to, true).execute();
         }
@@ -486,8 +523,10 @@ public class ReportViewFragment extends Fragment {
                 if (record.getCalendar().before(from)) break;
                 if (!record.getCalendar().after(to)) {
                     for (int j = i; j >= 0; j--) {
-                        CoCoinRecord r = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.get(i);
-                        if (r.getCalendar().before(from)) break;
+                        CoCoinRecord r = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.get(j);
+                        if (r.getCalendar().before(from)) {
+                            break;
+                        }
                         // here is the record we need
                         expense += r.getMoney();
                         records++;
@@ -500,6 +539,7 @@ public class ReportViewFragment extends Fragment {
                             dayExpense[r.getCalendar().get(Calendar.MONTH)][r.getCalendar().get(Calendar.DAY_OF_MONTH)] += r.getMoney();
                         }
                     }
+                    break;
                 }
             }
 
@@ -519,13 +559,13 @@ public class ReportViewFragment extends Fragment {
             Collections.sort(highestTagExpense, new Comparator<double[]>() {
                 @Override
                 public int compare(double[] lhs, double[] rhs) {
-                    return Double.compare(lhs[0], rhs[1]);
+                    return Double.compare(rhs[0], lhs[0]);
                 }
             });
             Collections.sort(lowestTagExpense, new Comparator<double[]>() {
                 @Override
                 public int compare(double[] lhs, double[] rhs) {
-                    return Double.compare(rhs[0], lhs[1]);
+                    return Double.compare(lhs[0], rhs[0]);
                 }
             });
             // use tag expense values to generate pie data
@@ -683,237 +723,32 @@ public class ReportViewFragment extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             if (progressDialog != null) progressDialog.cancel();
+
+            // for title
+            REPORT_TITLE = reportYear + " - " + reportMonth;
+            try {
+                ((OnTitleChangedListener)activity)
+                        .onTitleChanged();
+            } catch (ClassCastException cce){
+                cce.printStackTrace();
+            }
+
+            // for basic infomation
+            expenseTV.setText(CoCoinUtil.getInstance().GetInMoney((int)expense));
+            tagsTV.setText(records + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_records) + tags + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_tags));
+
+            // for highest tag expense
+            highestTagLayout.setVisibility(View.VISIBLE);
+            highestTagIcon.setImageDrawable(CoCoinUtil.GetTagIconDrawable((int)highestTagExpense.get(0)[2]));
+            highestTagText.setText(CoCoinUtil.GetTagName((int)highestTagExpense.get(0)[2]) + CoCoinUtil.getInstance().GetPurePercentString(highestTagExpense.get(0)[1] * 100));
+            highestTagExpenseTV.setText(CoCoinUtil.GetInMoney((int)highestTagExpense.get(0)[0]));
+            highestTagRecord.setText(CoCoinUtil.GetInRecords((int)highestTagExpense.get(0)[3]));
             highestTagsAdapter = new ReportTagAdapter(highestTagExpense);
             highestTags.setAdapter(highestTagsAdapter);
         }
     }
 
-//    private void select() {
-//
-//        if (RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS == null
-//                || RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.size() == 0) {
-//            return;
-//        }
-//
-//        start = -1;
-//        end = 0;
-//        Sum = 0;
-//        lastPieSelectedPosition = -1;
-//
-//        if (from.after(RecordManager.RECORDS.get(RecordManager.RECORDS.size() - 1).getCalendar())) {
-//            return;
-//        }
-//        if (to.before(RecordManager.RECORDS.get(0).getCalendar())) {
-//            return;
-//        }
-//
-//        for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
-//            if (RecordManager.RECORDS.get(i).getCalendar().before(from)) {
-//                end = i + 1;
-//                break;
-//            } else if (RecordManager.RECORDS.get(i).getCalendar().before(to)) {
-//                if (start == -1) {
-//                    start = i;
-//                }
-//            }
-//        }
-//
-//        startDayCalendar = (Calendar)from.clone();
-//        startDayCalendar.set(Calendar.HOUR_OF_DAY, 0);
-//        startDayCalendar.set(Calendar.MINUTE, 0);
-//        startDayCalendar.set(Calendar.SECOND, 0);
-//        final long startDay = TimeUnit.MILLISECONDS.toDays(startDayCalendar.getTimeInMillis());
-//        final long days = TimeUnit.MILLISECONDS.toDays(to.getTimeInMillis()) - startDay + 1;
-//
-//        TagExpanse = new TreeMap<>();
-//        Expanse = new HashMap<>();
-//        originalTargets = new float[(int)days];
-//
-//        int size = RecordManager.TAGS.size();
-//        for (int j = 2; j < size; j++) {
-//            TagExpanse.put(RecordManager.TAGS.get(j).getId(), Double.valueOf(0));
-//            Expanse.put(RecordManager.TAGS.get(j).getId(), new ArrayList<CoCoinRecord>());
-//        }
-//
-//        for (int i = start; i >= end; i--) {
-//            CoCoinRecord coCoinRecord = RecordManager.RECORDS.get(i);
-//            TagExpanse.put(coCoinRecord.getTag(),
-//                    TagExpanse.get(coCoinRecord.getTag()) + Double.valueOf(coCoinRecord.getMoney()));
-//            Expanse.get(coCoinRecord.getTag()).add(coCoinRecord);
-//            Sum += coCoinRecord.getMoney();
-//            originalTargets[(int)(TimeUnit.MILLISECONDS.toDays(
-//                    coCoinRecord.getCalendar().getTimeInMillis()) - startDay)] += coCoinRecord.getMoney();
-//        }
-//
-//        expense.setText(CoCoinUtil.GetInMoney(Sum));
-//        emptyTip.setVisibility(View.GONE);
-//
-//        TagExpanse = CoCoinUtil.SortTreeMapByValues(TagExpanse);
-//
-//        final ArrayList<SliceValue> sliceValues = new ArrayList<>();
-//
-//        for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
-//            if (entry.getValue() >= 1) {
-//                SliceValue sliceValue = new SliceValue(
-//                        (float)(double)entry.getValue(),
-//                        CoCoinUtil.GetTagColor(entry.getKey()));
-//                sliceValue.setLabel(String.valueOf(entry.getKey()));
-//                sliceValues.add(sliceValue);
-//            }
-//        }
-//
-//        final PieChartData pieChartData = new PieChartData(sliceValues);
-//
-//        pieChartData.setHasLabels(false);
-//        pieChartData.setHasLabelsOnlyForSelected(false);
-//        pieChartData.setHasLabelsOutside(false);
-//        pieChartData.setHasCenterCircle(SettingManager.getInstance().getIsHollow());
-//
-//        pie.setPieChartData(pieChartData);
-//        pie.setChartRotationEnabled(false);
-//
-//        pie.setVisibility(View.VISIBLE);
-//
-//        iconRight.setVisibility(View.VISIBLE);
-//        iconRight.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (lastPieSelectedPosition != -1) {
-//                    pieSelectedPosition = lastPieSelectedPosition;
-//                }
-//                pieSelectedPosition
-//                        = (pieSelectedPosition - 1 + sliceValues.size())
-//                        % sliceValues.size();
-//                SelectedValue selectedValue =
-//                        new SelectedValue(
-//                                pieSelectedPosition,
-//                                0,
-//                                SelectedValue.SelectedValueType.NONE);
-//                pie.selectValue(selectedValue);
-//            }
-//        });
-//        iconLeft.setVisibility(View.VISIBLE);
-//        iconLeft.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (lastPieSelectedPosition != -1) {
-//                    pieSelectedPosition = lastPieSelectedPosition;
-//                }
-//                pieSelectedPosition
-//                        = (pieSelectedPosition + 1)
-//                        % sliceValues.size();
-//                SelectedValue selectedValue =
-//                        new SelectedValue(
-//                                pieSelectedPosition,
-//                                0,
-//                                SelectedValue.SelectedValueType.NONE);
-//                pie.selectValue(selectedValue);
-//            }
-//        });
-//
-//// set value touch listener of pie//////////////////////////////////////////////////////////////////
-//
-//        dateShownString = mContext.getResources().getString(R.string.from) + " " +
-//                CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
-//                from.get(Calendar.DAY_OF_MONTH) + " " +
-//                from.get(Calendar.YEAR) + " " +
-//                mContext.getResources().getString(R.string.to) + " " +
-//                CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
-//                to.get(Calendar.DAY_OF_MONTH) + " " +
-//                to.get(Calendar.YEAR);
-//
-//        pie.setOnValueTouchListener(new PieChartOnValueSelectListener() {
-//            @Override
-//            public void onValueSelected(int p, SliceValue sliceValue) {
-//                // snack bar
-//                String text;
-//                tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
-//                double percent = sliceValue.getValue() / Sum * 100;
-//                if ("zh".equals(CoCoinUtil.GetLanguage())) {
-//                    text = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
-//                            CoCoinUtil.GetPercentString(percent) + "\n" +
-//                            "于" + CoCoinUtil.GetTagName(tagId);
-//                } else {
-//                    text = CoCoinUtil.GetSpendString((int) sliceValue.getValue())
-//                            + " (takes " + String.format("%.2f", percent) + "%)\n"
-//                            + "in " + CoCoinUtil.GetTagName(tagId);
-//                }
-//                if ("zh".equals(CoCoinUtil.GetLanguage())) {
-//                    dialogTitle = dateShownString + "\n" +
-//                            CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + " " +
-//                            "于" + CoCoinUtil.GetTagName(tagId);
-//                } else {
-//                    dialogTitle = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + " " +
-//                            mContext.getResources().getString(R.string.from) + " " +
-//                            CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
-//                            from.get(Calendar.DAY_OF_MONTH) + " " +
-//                            from.get(Calendar.YEAR) + "\n" +
-//                            mContext.getResources().getString(R.string.to) + " " +
-//                            CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
-//                            to.get(Calendar.DAY_OF_MONTH) + " " +
-//                            to.get(Calendar.YEAR) + " " +
-//                            "in " + CoCoinUtil.GetTagName(tagId);
-//                }
-//                Snackbar snackbar =
-//                        Snackbar
-//                                .with(mContext)
-//                                .type(SnackbarType.MULTI_LINE)
-//                                .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
-//                                .position(Snackbar.SnackbarPosition.BOTTOM)
-//                                .margin(15, 15)
-//                                .backgroundDrawable(CoCoinUtil.GetSnackBarBackground(-3))
-//                                .text(text)
-//                                .textTypeface(CoCoinUtil.GetTypeface())
-//                                .textColor(Color.WHITE)
-//                                .actionLabelTypeface(CoCoinUtil.GetTypeface())
-//                                .actionLabel(mContext.getResources()
-//                                        .getString(R.string.check))
-//                                .actionColor(Color.WHITE)
-//                                .actionListener(new mActionClickListenerForPie());
-//                SnackbarManager.show(snackbar);
-//
-//                if (p == lastPieSelectedPosition) {
-//                    return;
-//                } else {
-//                    lastPieSelectedPosition = p;
-//                }
-//            }
-//
-//            @Override
-//            public void onValueDeselected() {
-//
-//            }
-//        });
-//
-//        all.setVisibility(View.VISIBLE);
-//        all.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                List<CoCoinRecord> data = new LinkedList<CoCoinRecord>();
-//                for (int i = start; i >= end; i--) data.add(RecordManager.RECORDS.get(i));
-//                if ("zh".equals(CoCoinUtil.GetLanguage())) {
-//                    dialogTitle = dateShownString + "\n" +
-//                            CoCoinUtil.GetSpendString(Sum) +
-//                            "于" + CoCoinUtil.GetTagName(tagId);
-//                } else {
-//                    dialogTitle = CoCoinUtil.GetSpendString(Sum) + " "
-//                            + mContext.getResources().getString(R.string.from) + " " +
-//                            CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " +
-//                            from.get(Calendar.DAY_OF_MONTH) + " " +
-//                            from.get(Calendar.YEAR) + "\n" +
-//                            mContext.getResources().getString(R.string.to) + " " +
-//                            CoCoinUtil.GetMonthShort(to.get(Calendar.MONTH) + 1) + " " +
-//                            to.get(Calendar.DAY_OF_MONTH) + " " +
-//                            to.get(Calendar.YEAR) + " " +
-//                            "in " + CoCoinUtil.GetTagName(tagId);
-//                }
-//                ((FragmentActivity)mContext).getSupportFragmentManager()
-//                        .beginTransaction()
-//                        .add(new RecordCheckDialogFragment(
-//                                mContext, data, dialogTitle), "MyDialog")
-//                        .commit();
-//            }
-//        });
-//    }
-
+    public interface OnTitleChangedListener {
+        void onTitleChanged();
+    }
 }

@@ -6,11 +6,12 @@
     android:orientation="horizontal"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
+    android:background="@color/report_card"
     >
 
     <FrameLayout
-        android:layout_height="match_parent"
-        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_width="50dp"
         >
 
         <View
@@ -32,7 +33,7 @@
 
     <TextView
         android:id="@+id/tag_name"
-        android:layout_height="match_parent"
+        android:layout_height="40dp"
         android:layout_width="0dp"
         android:layout_weight="1"
         android:gravity="center_vertical|left"

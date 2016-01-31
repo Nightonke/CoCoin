@@ -1,11 +1,13 @@
 package com.nightonke.saver.activity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -15,10 +17,13 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.ReportViewFragmentAdapter;
+import com.nightonke.saver.fragment.ReportViewFragment;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.CoCoinUtil;
 
-public class AccountBookReportViewActivity extends AppCompatActivity {
+public class AccountBookReportViewActivity extends AppCompatActivity
+        implements
+        ReportViewFragment.OnTitleChangedListener {
 
     private MaterialViewPager mViewPager;
 
@@ -42,8 +47,12 @@ public class AccountBookReportViewActivity extends AppCompatActivity {
         title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(SettingManager.getInstance().getAccountBookName());
 
-        mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.GetTypeface(), Typeface.NORMAL);
-        mViewPager.getPagerTitleStrip().setVisibility(View.INVISIBLE);
+        mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.getInstance().typefaceLatoLight, Typeface.NORMAL);
+        mViewPager.getPagerTitleStrip().setTextSize(45);
+        mViewPager.getPagerTitleStrip().setUnderlineColor(Color.parseColor("#00000000"));
+        mViewPager.getPagerTitleStrip().setIndicatorColor(Color.parseColor("#00000000"));
+        mViewPager.getPagerTitleStrip().setUnderlineHeight(0);
+        mViewPager.getPagerTitleStrip().setIndicatorHeight(0);
 
         setTitle("");
 
@@ -76,6 +85,8 @@ public class AccountBookReportViewActivity extends AppCompatActivity {
         mViewPager.getViewPager().setOffscreenPageLimit(1);
         mViewPager.getViewPager().setAdapter(reportViewFragmentAdapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+
+        mViewPager.getPagerTitleStrip().invalidate();
 
         mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
             @Override
@@ -117,4 +128,9 @@ public class AccountBookReportViewActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    @Override
+    public void onTitleChanged() {
+        mViewPager.getPagerTitleStrip().notifyDataSetChanged();
+        mViewPager.getPagerTitleStrip().invalidate();
+    }
 }

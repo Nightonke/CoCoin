@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.nightonke.saver.R;
+import com.nightonke.saver.fragment.ReportViewFragment;
 import com.nightonke.saver.util.CoCoinUtil;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class ReportTagAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return tagExpense.size() - 1;
+        return min(tagExpense.size() - 1, ReportViewFragment.MAX_TAG_EXPENSE);
     }
 
     @Override
@@ -52,11 +53,15 @@ public class ReportTagAdapter extends BaseAdapter {
         expense.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         records.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
-        icon.setImageDrawable(CoCoinUtil.getInstance().GetTagIconDrawable((int)tagExpense.get(position - 1)[2]));
-        name.setText(CoCoinUtil.getInstance().GetTagName((int)tagExpense.get(position - 1)[2]));
-        expense.setText(CoCoinUtil.getInstance().GetInMoney((int)tagExpense.get(position - 1)[0]));
-        records.setText((int)tagExpense.get(position - 1)[3] + "'s");
+        icon.setImageDrawable(CoCoinUtil.getInstance().GetTagIconDrawable((int)tagExpense.get(position + 1)[2]));
+        name.setText(CoCoinUtil.getInstance().GetTagName((int)tagExpense.get(position + 1)[2]) + CoCoinUtil.getInstance().GetPurePercentString(tagExpense.get(position + 1)[1] * 100));
+        expense.setText(CoCoinUtil.getInstance().GetInMoney((int)tagExpense.get(position + 1)[0]));
+        records.setText(CoCoinUtil.getInstance().GetInRecords((int)tagExpense.get(position + 1)[3]));
 
-        return null;
+        return convertView;
+    }
+
+    private int min(int a, int b) {
+        return (a < b ? a : b);
     }
 }

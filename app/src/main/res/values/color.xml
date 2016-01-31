@@ -108,4 +108,6 @@
     <color name="no_condition_button">#FF4081</color>
     <color name="no_condition_button_press">#ff73a3</color>
 
+    <color name="report_card">#FAFAFA</color>
+
 </resources>

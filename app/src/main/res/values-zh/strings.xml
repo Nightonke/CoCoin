@@ -426,5 +426,10 @@
     <string name="report_select_list_title">报表时间段</string>
 
     <string name="report_view_help"> ● 支出报表</string>
+    <string name="report_view_records">条支出记录，</string>
+    <string name="report_view_tags">个标签</string>
+    <string name="report_view_highest_tag"> ● 支出最多的标签</string>
+    <string name="report_view_highest_tag_show_more">显示更多</string>
+    <string name="report_view_highest_tag_show_less">隐藏</string>
 
 </resources>

@@ -438,6 +438,10 @@
 
     <string name="report_select_list_title">Report Time</string>
 
-    <string name="report_view_help"> ● You can choose the time to show report.</string>
+    <string name="report_view_help"> ● Expense Report</string>
+    <string name="report_view_records"> records of </string>
+    <string name="report_view_tags"> tags</string>
+    <string name="report_view_highest_tag"> ● Highest expense on tags</string>
+    <string name="report_view_highest_tag_show_more">Click for more</string>
 
 </resources>

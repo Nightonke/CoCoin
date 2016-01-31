@@ -469,6 +469,10 @@ public class CoCoinUtil {
             return "$" + money + " ";
     }
 
+    public static String GetInRecords(int records) {
+        return records + "'s";
+    }
+
     public static String GetSpendString(int money) {
         if ("zh".equals(Locale.getDefault().getLanguage()))
             return "消费 ¥" + money;
@@ -481,6 +485,13 @@ public class CoCoinUtil {
             return " (占" + String.format("%.2f", percent) + "%)";
         else
             return " (takes " + String.format("%.2f", percent) + "%)";
+    }
+
+    public static String GetPurePercentString(double percent) {
+        if ("zh".equals(Locale.getDefault().getLanguage()))
+            return " " + String.format("%.2f", percent) + "%";
+        else
+            return " " + String.format("%.2f", percent) + "%";
     }
 
     public static String GetTodayViewTitle(int fragmentPosition) {

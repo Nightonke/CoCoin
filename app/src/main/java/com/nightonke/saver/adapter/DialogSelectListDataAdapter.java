@@ -63,8 +63,8 @@ public class DialogSelectListDataAdapter extends BaseAdapter {
             month.setText(CoCoinUtil.getInstance().GetMonthShort((int)data.get(position)[1]));
             year.setText((int)data.get(position)[0] + "");
         }
-        expense.setText(CoCoinUtil.GetInMoney((int)data.get(position)[2]));
-        sum.setText((int)data.get(position)[3] + "'s");
+        expense.setText(CoCoinUtil.GetInMoney((int)data.get(position)[3]));
+        sum.setText((int)data.get(position)[2] + "'s");
 
         return convertView;
     }
