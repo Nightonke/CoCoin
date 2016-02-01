@@ -19,6 +19,7 @@ import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.ReportViewFragmentAdapter;
+import com.nightonke.saver.fragment.CoCoinFragmentManager;
 import com.nightonke.saver.fragment.ReportViewFragment;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.CoCoinUtil;
@@ -59,14 +60,8 @@ public class AccountBookReportViewActivity extends AppCompatActivity
         mViewPager.getPagerTitleStrip().setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
             @Override
             public void onTabReselected(int position) {
-                Log.d("CoCoin", "reselected");
-                ((ReportViewFragment)reportViewFragmentAdapter.getItem(0)).showDataDialog();
-            }
-        });
-        mViewPager.getPagerTitleStrip().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("CoCoin", "click");
+                if (CoCoinFragmentManager.reportViewFragment != null)
+                    CoCoinFragmentManager.reportViewFragment.showDataDialog();
             }
         });
 
@@ -125,6 +120,9 @@ public class AccountBookReportViewActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
 
+        if (CoCoinFragmentManager.reportViewFragment != null)
+            CoCoinFragmentManager.reportViewFragment.onDestroy();
+        CoCoinFragmentManager.reportViewFragment = null;
         MaterialViewPagerHelper.unregister(this);
     }
 

@@ -450,5 +450,7 @@
     <string name="report_view_please_select_data">Please select time</string>
     <string name="report_view_no_data">You don\'t have records!</string>
     <string name="report_view_pie"> ● Tag pie chart</string>
+    <string name="report_view_line"> ● Time line chart</string>
+    <string name="report_view_highest_month"> ● Sort of months</string>
 
 </resources>

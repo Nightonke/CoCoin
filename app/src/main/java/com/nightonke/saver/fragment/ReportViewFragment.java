@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,7 +51,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import lecho.lib.hellocharts.gesture.ZoomType;
+import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
+import lecho.lib.hellocharts.model.Axis;
+import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PieChartData;
@@ -125,12 +130,6 @@ public class ReportViewFragment extends Fragment
 
     private SuperToast superToast;
 
-    private LineChartView line;
-
-    private MaterialIconView iconRight;
-    private MaterialIconView iconLeft;
-    private MaterialIconView all;
-
     private boolean IS_EMPTY = false;
 
     // store the sum of expenses of each tag
@@ -159,6 +158,8 @@ public class ReportViewFragment extends Fragment
     private PieChartView pie;
     private int pieSelectedPosition = 0;  // the selected position of one part of the pie
     private int lastPieSelectedPosition = -1;  // the last selected position of one part of the pie
+    private MaterialIconView iconRight;
+    private MaterialIconView iconLeft;
 
     // highest tag list
     private LinearLayout highestTagLayout;
@@ -175,6 +176,7 @@ public class ReportViewFragment extends Fragment
 
     // lowest tag list
     private LinearLayout lowestTagLayout;
+    private LinearLayout lowestFirst;
     private ImageView lowestTagIcon;
     private TextView lowestTagText;
     private TextView lowestTagExpenseTV;
@@ -184,6 +186,14 @@ public class ReportViewFragment extends Fragment
     private ExpandableRelativeLayout lowestTagsLayout;
     private LinearLayout lowestTagMore;
     private TextView lowestTagMoreText;
+
+    // line
+    private LinearLayout lineLayout;
+    private LineChartView line;
+    private int lineSelectedPosition = 0;  // the selected position of one part of the line
+    private int lastLineSelectedPosition = -1;  // the last selected position of one part of the line
+    private MaterialIconView iconRightLine;
+    private MaterialIconView iconLeftLine;
 
     public static ReportViewFragment newInstance() {
         ReportViewFragment fragment = new ReportViewFragment();
@@ -204,6 +214,7 @@ public class ReportViewFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CoCoinFragmentManager.reportViewFragment = this;
         mContext = getContext();
         superToast = new SuperToast(mContext);
         superToast.setAnimations(SuperToast.Animations.POPUP);
@@ -320,9 +331,6 @@ public class ReportViewFragment extends Fragment
         iconLeft = (MaterialIconView)view.findViewById(R.id.icon_left);
         iconLeft.setOnClickListener(this);
 
-//        all = (MaterialIconView)view.findViewById(R.id.all);
-//        all.setVisibility(View.INVISIBLE);
-
         emptyTip = (TextView)view.findViewById(R.id.empty_tip);
         emptyTip.setTypeface(CoCoinUtil.GetTypeface());
         if (RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.size() != 0) {
@@ -353,6 +361,8 @@ public class ReportViewFragment extends Fragment
 
         lowestTagLayout = (LinearLayout)view.findViewById(R.id.lowest_tag_layout);
         lowestTagLayout.setVisibility(View.GONE);
+        lowestFirst = (LinearLayout)view.findViewById(R.id.lowest_first);
+        lowestFirst.setOnClickListener(this);
         lowestTagIcon = (ImageView)view.findViewById(R.id.lowest_tag_icon);
         lowestTagText = (TextView)view.findViewById(R.id.lowest_tag_text);
         lowestTagText.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
@@ -366,6 +376,113 @@ public class ReportViewFragment extends Fragment
         lowestTagMore.setOnClickListener(this);
         lowestTagMoreText = (TextView)view.findViewById(R.id.lowest_tag_more_text);
         lowestTagMoreText.setTypeface(CoCoinUtil.getInstance().GetTypeface());
+        lowestTags.setOnItemClickListener(this);
+
+        lineLayout = (LinearLayout)view.findViewById(R.id.line_layout);
+        lineLayout.setVisibility(View.GONE);
+        line = (LineChartView) view.findViewById(R.id.chart_line);
+        line.setZoomEnabled(false);
+        line.setOnValueTouchListener(new LineChartOnValueSelectListener() {
+            @Override
+            public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
+                // snack bar
+                String text;
+                double percent = value.getY() / expense * 100;
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    if (selectYear) {
+                        text = "在" + reportYear + " " + CoCoinUtil.getInstance().GetMonthShort((int)value.getX() + 1) + "\n" +
+                                CoCoinUtil.GetSpendString((int) value.getY()) +
+                                CoCoinUtil.GetPercentString(percent);
+                    } else {
+                        text = "在" + CoCoinUtil.getInstance().GetMonthShort(reportMonth) + " " + ((int)value.getX() + 1) + CoCoinUtil.getInstance().GetWhetherFuck() + "\n" +
+                                CoCoinUtil.GetSpendString((int) value.getY()) +
+                                CoCoinUtil.GetPercentString(percent);
+                    }
+                } else {
+                    if (selectYear) {
+                        text = CoCoinUtil.GetSpendString((int) value.getY()) +
+                                CoCoinUtil.GetPercentString(percent) + "\n" +
+                                "in " + reportYear + " " + CoCoinUtil.getInstance().GetMonthShort((int)value.getX() + 1);
+                    } else {
+                        text = CoCoinUtil.GetSpendString((int) value.getY()) +
+                                CoCoinUtil.GetPercentString(percent) + "\n" +
+                                "on " + CoCoinUtil.getInstance().GetMonthShort(reportMonth) + " " + ((int)value.getX() + 1) + CoCoinUtil.getInstance().GetWhetherFuck();
+                    }
+                }
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    if (selectYear) {
+                        dialogTitle = "在" + reportYear + " " + CoCoinUtil.getInstance().GetMonthShort((int)value.getX() + 1) + "\n" +
+                                CoCoinUtil.GetSpendString((int) value.getY()) +
+                                CoCoinUtil.GetPercentString(percent);
+                    } else {
+                        dialogTitle = "在" + CoCoinUtil.getInstance().GetMonthShort(reportMonth) + " " + ((int)value.getX() + 1) + CoCoinUtil.getInstance().GetWhetherFuck() + "\n" +
+                                CoCoinUtil.GetSpendString((int) value.getY()) +
+                                CoCoinUtil.GetPercentString(percent);
+                    }
+                } else {
+                    if (selectYear) {
+                        dialogTitle = CoCoinUtil.GetSpendString((int) value.getY()) +
+                                CoCoinUtil.GetPercentString(percent) + "\n" +
+                                "in " + reportYear + " " + CoCoinUtil.getInstance().GetMonthShort((int)value.getX() + 1);
+                    } else {
+                        dialogTitle = CoCoinUtil.GetSpendString((int) value.getY()) +
+                                CoCoinUtil.GetPercentString(percent) + "\n" +
+                                "on " + CoCoinUtil.getInstance().GetMonthShort(reportMonth) + " " + ((int)value.getX() + 1) + CoCoinUtil.getInstance().GetWhetherFuck();
+                    }
+                }
+                final Calendar tempFrom = Calendar.getInstance();
+                final Calendar tempTo = Calendar.getInstance();
+                if (selectYear) {
+                    tempFrom.set(reportYear, (int)value.getX(), 1, 0, 0, 0);
+                    tempFrom.add(Calendar.SECOND, 0);
+                    tempTo.set(reportYear, (int)value.getX(), tempFrom.getActualMaximum(Calendar.DAY_OF_MONTH), 23, 59, 59);
+                    tempTo.add(Calendar.SECOND, 0);
+                } else {
+                    tempFrom.set(reportYear, reportMonth - 1, (int)value.getX() + 1, 0, 0, 0);
+                    tempFrom.add(Calendar.SECOND, 0);
+                    tempTo.set(reportYear, reportMonth - 1, (int)value.getX() + 1, 23, 59, 59);
+                    tempTo.add(Calendar.SECOND, 0);
+                }
+                Snackbar snackbar =
+                        Snackbar
+                                .with(mContext)
+                                .type(SnackbarType.MULTI_LINE)
+                                .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                                .position(Snackbar.SnackbarPosition.BOTTOM)
+                                .margin(15, 15)
+                                .backgroundDrawable(CoCoinUtil.GetSnackBarBackground(-3))
+                                .text(text)
+                                .textTypeface(CoCoinUtil.GetTypeface())
+                                .textColor(Color.WHITE)
+                                .actionLabelTypeface(CoCoinUtil.GetTypeface())
+                                .actionLabel(mContext.getResources()
+                                        .getString(R.string.check))
+                                .actionColor(Color.WHITE)
+                                .actionListener(new ActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(Snackbar snackbar) {
+                                        new GetData(tempFrom, tempTo, Integer.MIN_VALUE, dialogTitle).execute();
+                                    }
+                                });
+                SnackbarManager.show(snackbar);
+
+                if (pointIndex == lastLineSelectedPosition) {
+                    return;
+                } else {
+                    lastLineSelectedPosition = pointIndex;
+                }
+            }
+
+            @Override
+            public void onValueDeselected() {
+
+            }
+        });
+        iconRightLine = (MaterialIconView)view.findViewById(R.id.icon_right_line);
+        iconRightLine.setOnClickListener(this);
+        iconLeftLine = (MaterialIconView)view.findViewById(R.id.icon_left_line);
+        iconLeftLine.setOnClickListener(this);
+
 
         if (IS_EMPTY) {
             emptyTip.setVisibility(View.GONE);
@@ -451,6 +568,9 @@ public class ReportViewFragment extends Fragment
                     }
                 }
                 break;
+            case R.id.lowest_first:
+                onItemClick(lowestTags, lowestTags.getChildAt(0), -1, -1);
+                break;
             case R.id.lowest_tag_more:
                 if (lowestTagsLayout != null) {
                     if (lowestTagsLayout.isExpanded()) {
@@ -461,6 +581,34 @@ public class ReportViewFragment extends Fragment
                         lowestTagMoreText.setText(CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_lowest_tag_show_less));
                     }
                 }
+                break;
+            case R.id.icon_left_line:
+                if (lastLineSelectedPosition != -1) {
+                    lineSelectedPosition = lastLineSelectedPosition;
+                }
+                lineSelectedPosition
+                        = (lineSelectedPosition - 1 + lineChartData.getLines().get(0).getValues().size())
+                        % lineChartData.getLines().get(0).getValues().size();
+                selectedValue =
+                        new SelectedValue(
+                                0,
+                                lineSelectedPosition,
+                                SelectedValue.SelectedValueType.NONE);
+                line.selectValue(selectedValue);
+                break;
+            case R.id.icon_right_line:
+                if (lastLineSelectedPosition != -1) {
+                    lineSelectedPosition = lastLineSelectedPosition;
+                }
+                lineSelectedPosition
+                        = (lineSelectedPosition + 1)
+                        % lineChartData.getLines().get(0).getValues().size();
+                selectedValue =
+                        new SelectedValue(
+                                0,
+                                lineSelectedPosition,
+                                SelectedValue.SelectedValueType.NONE);
+                line.selectValue(selectedValue);
                 break;
             case R.id.button:
                 if (!isEmpty) showSelectListDataDialog();
@@ -478,6 +626,31 @@ public class ReportViewFragment extends Fragment
                 if (gettingData) return;
                 tagId = (int)highestTagExpense.get(position + 1)[2];
                 sum = (int)highestTagExpense.get(position + 1)[0];
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    if (selectYear) {
+                        dialogTitle = from.get(Calendar.YEAR) + "年" + "\n" +
+                                CoCoinUtil.GetSpendString(sum) +
+                                "于" + CoCoinUtil.GetTagName(tagId);
+                    } else {
+                        dialogTitle = from.get(Calendar.YEAR) + "年" + (from.get(Calendar.MONTH) + 1) + "月" + "\n" +
+                                CoCoinUtil.GetSpendString(sum) +
+                                "于" + CoCoinUtil.GetTagName(tagId);
+                    }
+                } else {
+                    if (selectYear) {
+                        dialogTitle = CoCoinUtil.GetSpendString(sum) + " in " + from.get(Calendar.YEAR) + "\n" +
+                                "on " + CoCoinUtil.GetTagName(tagId);
+                    } else {
+                        dialogTitle = CoCoinUtil.GetSpendString(sum) + " in " + CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " + from.get(Calendar.YEAR) + "\n" +
+                                "on " + CoCoinUtil.GetTagName(tagId);
+                    }
+                }
+                new GetData(from, to, tagId, dialogTitle).execute();
+                break;
+            case R.id.lowest_tags:
+                if (gettingData) return;
+                tagId = (int)lowestTagExpense.get(position + 1)[2];
+                sum = (int)lowestTagExpense.get(position + 1)[0];
                 if ("zh".equals(CoCoinUtil.GetLanguage())) {
                     if (selectYear) {
                         dialogTitle = from.get(Calendar.YEAR) + "年" + "\n" +
@@ -846,11 +1019,16 @@ public class ReportViewFragment extends Fragment
 
                     List<PointValue> values = new ArrayList<>();
                     for (int j = 0; j < 12; ++j) {
-                        values.add(new PointValue(j, (float)monthExpense.get(j)[1]));
+                        for (int k = 0; k < 12; k++) {
+                            if (monthExpense.get(k)[0] == j) {
+                                values.add(new PointValue(j, (float)monthExpense.get(k)[1]));
+                                break;
+                            }
+                        }
                     }
 
                     Line line = new Line(values);
-                    line.setColor(ChartUtils.COLORS[i]);
+                    line.setColor(ContextCompat.getColor(CoCoinApplication.getAppContext(), R.color.red));
                     line.setShape(ValueShape.CIRCLE);
                     line.setCubic(false);
                     line.setFilled(false);
@@ -862,6 +1040,20 @@ public class ReportViewFragment extends Fragment
                 }
 
                 lineChartData = new LineChartData(lines);
+
+                Axis axisX = new Axis();
+                Axis axisY = new Axis().setHasLines(true);
+                axisX.setName(reportYear + "");
+                lineChartData.setAxisXBottom(axisX);
+                lineChartData.setAxisYLeft(axisY);
+
+                ArrayList<AxisValue> axisValues = new ArrayList<>();
+                for (int i = 0; i < 12; i++) {
+                    AxisValue axisValue = new AxisValue(i);
+                    axisValue.setLabel((i + 1) + "");
+                    axisValues.add(axisValue);
+                }
+                lineChartData.getAxisXBottom().setValues(axisValues);
             } else {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(reportYear, reportMonth - 1, 1, 0, 0, 0);
@@ -871,12 +1063,12 @@ public class ReportViewFragment extends Fragment
                 for (int i = 0; i < 1; ++i) {
 
                     List<PointValue> values = new ArrayList<>();
-                    for (int j = 1; j <= days; ++j) {
-                        values.add(new PointValue(j, (float)dayExpense[reportMonth - 1][j]));
+                    for (int j = 0; j < days; ++j) {
+                        values.add(new PointValue(j, (float)dayExpense[reportMonth - 1][j + 1]));
                     }
 
                     Line line = new Line(values);
-                    line.setColor(ChartUtils.COLORS[i]);
+                    line.setColor(ContextCompat.getColor(CoCoinApplication.getAppContext(), R.color.red));
                     line.setShape(ValueShape.CIRCLE);
                     line.setCubic(false);
                     line.setFilled(false);
@@ -888,6 +1080,20 @@ public class ReportViewFragment extends Fragment
                 }
 
                 lineChartData = new LineChartData(lines);
+
+                Axis axisX = new Axis();
+                Axis axisY = new Axis().setHasLines(true);
+                axisX.setName(reportYear + " " + CoCoinUtil.GetMonthShort(reportMonth));
+                lineChartData.setAxisXBottom(axisX);
+                lineChartData.setAxisYLeft(axisY);
+
+                ArrayList<AxisValue> axisValues = new ArrayList<>();
+                for (int i = 0; i < days; i++) {
+                    AxisValue axisValue = new AxisValue(i);
+                    axisValue.setLabel((i + 1) + "");
+                    axisValues.add(axisValue);
+                }
+                lineChartData.getAxisXBottom().setValues(axisValues);
             }
 
             return null;
@@ -934,6 +1140,11 @@ public class ReportViewFragment extends Fragment
             lowestTagRecord.setText(CoCoinUtil.GetInRecords((int)lowestTagExpense.get(0)[3]));
             lowestTagsAdapter = new ReportTagAdapter(lowestTagExpense);
             lowestTags.setAdapter(lowestTagsAdapter);
+
+            // for line
+            lineLayout.setVisibility(View.VISIBLE);
+            line.setVisibility(View.VISIBLE);
+            line.setLineChartData(lineChartData);
         }
     }
 
@@ -973,7 +1184,7 @@ public class ReportViewFragment extends Fragment
                         if (r.getCalendar().before(fromDate)) {
                             break;
                         }
-                        if (r.getTag() == tagId) selectedRecord.add(r);
+                        if (tagId == Integer.MIN_VALUE || r.getTag() == tagId) selectedRecord.add(r);
                     }
                     break;
                 }

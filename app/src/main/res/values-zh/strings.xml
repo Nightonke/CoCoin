@@ -437,5 +437,7 @@
     <string name="report_view_please_select_data">请选择时间段</string>
     <string name="report_view_no_data">您尚未有记录，去记一笔吧！</string>
     <string name="report_view_pie"> ● 标签饼图</string>
+    <string name="report_view_line"> ● 时间折线图</string>
+    <string name="report_view_highest_month"> ● 每月支出排序</string>
 
 </resources>
