@@ -447,5 +447,8 @@
     <string name="report_view_lowest_tag"> ● Lowest expense on tags</string>
     <string name="report_view_lowest_tag_show_more">Click for more</string>
     <string name="report_view_lowest_tag_show_less">Click to hide</string>
+    <string name="report_view_please_select_data">Please select time</string>
+    <string name="report_view_no_data">You don\'t have records!</string>
+    <string name="report_view_pie"> ● Tag pie chart</string>
 
 </resources>

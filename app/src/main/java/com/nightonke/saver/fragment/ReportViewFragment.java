@@ -36,6 +36,8 @@ import com.nightonke.saver.ui.ExpandedListView;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
 import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
+import com.nispok.snackbar.enums.SnackbarType;
 import com.nispok.snackbar.listeners.ActionClickListener;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -48,10 +50,12 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Line;
 import lecho.lib.hellocharts.model.LineChartData;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.PointValue;
+import lecho.lib.hellocharts.model.SelectedValue;
 import lecho.lib.hellocharts.model.SliceValue;
 import lecho.lib.hellocharts.model.ValueShape;
 import lecho.lib.hellocharts.util.ChartUtils;
@@ -112,6 +116,7 @@ public class ReportViewFragment extends Fragment
 
     private TextView fromDate;
     private TextView expenseTV;
+    private boolean isEmpty = false;
     private TextView emptyTip;
     private TextView tagsTV;
 
@@ -120,7 +125,6 @@ public class ReportViewFragment extends Fragment
 
     private SuperToast superToast;
 
-    private PieChartView pie;
     private LineChartView line;
 
     private MaterialIconView iconRight;
@@ -136,11 +140,6 @@ public class ReportViewFragment extends Fragment
     // the original target value of the whole pie
     private float[] originalTargets;
 
-    // the selected position of one part of the pie
-    private int pieSelectedPosition = 0;
-    // the last selected position of one part of the pie
-    private int lastPieSelectedPosition = -1;
-
     // the date string on the footer and header
     private String dateString;
     // the date string shown in the dialog
@@ -154,6 +153,12 @@ public class ReportViewFragment extends Fragment
     // select list
     // year, month(-1 means the whole year), records, expenses
     private ArrayList<double[]> selectListData = null;
+
+    // pie
+    private LinearLayout pieLayout;
+    private PieChartView pie;
+    private int pieSelectedPosition = 0;  // the selected position of one part of the pie
+    private int lastPieSelectedPosition = -1;  // the last selected position of one part of the pie
 
     // highest tag list
     private LinearLayout highestTagLayout;
@@ -236,19 +241,96 @@ public class ReportViewFragment extends Fragment
         tagsTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         tagsTV.setText("");
 
+        pieLayout = (LinearLayout)view.findViewById(R.id.pie_layout);
+        pieLayout.setVisibility(View.GONE);
         pie = (PieChartView)view.findViewById(R.id.chart_pie);
-        pie.setVisibility(View.INVISIBLE);
+        pie.setChartRotationEnabled(false);
+        pie.setOnValueTouchListener(new PieChartOnValueSelectListener() {
+            @Override
+            public void onValueSelected(int p, SliceValue sliceValue) {
+                // snack bar
+                String text;
+                tagId = Integer.valueOf(String.valueOf(sliceValue.getLabelAsChars()));
+                double percent = sliceValue.getValue() / expense * 100;
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    text = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
+                            CoCoinUtil.GetPercentString(percent) + "\n" +
+                            "于" + CoCoinUtil.GetTagName(tagId);
+                } else {
+                    text = CoCoinUtil.GetSpendString((int) sliceValue.getValue())
+                            + " (takes " + String.format("%.2f", percent) + "%)\n"
+                            + "in " + CoCoinUtil.GetTagName(tagId);
+                }
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    if (selectYear) {
+                        dialogTitle = from.get(Calendar.YEAR) + "年" + "\n" +
+                                CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
+                                "于" + CoCoinUtil.GetTagName(tagId);
+                    } else {
+                        dialogTitle = from.get(Calendar.YEAR) + "年" + (from.get(Calendar.MONTH) + 1) + "月" + "\n" +
+                                CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
+                                "于" + CoCoinUtil.GetTagName(tagId);
+                    }
+                } else {
+                    if (selectYear) {
+                        dialogTitle = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + " in " + from.get(Calendar.YEAR) + "\n" +
+                                "on " + CoCoinUtil.GetTagName(tagId);
+                    } else {
+                        dialogTitle = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + " in " + CoCoinUtil.GetMonthShort(from.get(Calendar.MONTH) + 1) + " " + from.get(Calendar.YEAR) + "\n" +
+                                "on " + CoCoinUtil.GetTagName(tagId);
+                    }
+                }
+                Snackbar snackbar =
+                        Snackbar
+                                .with(mContext)
+                                .type(SnackbarType.MULTI_LINE)
+                                .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                                .position(Snackbar.SnackbarPosition.BOTTOM)
+                                .margin(15, 15)
+                                .backgroundDrawable(CoCoinUtil.GetSnackBarBackground(-3))
+                                .text(text)
+                                .textTypeface(CoCoinUtil.GetTypeface())
+                                .textColor(Color.WHITE)
+                                .actionLabelTypeface(CoCoinUtil.GetTypeface())
+                                .actionLabel(mContext.getResources()
+                                        .getString(R.string.check))
+                                .actionColor(Color.WHITE)
+                                .actionListener(new ActionClickListener() {
+                                    @Override
+                                    public void onActionClicked(Snackbar snackbar) {
+                                        new GetData(from, to, tagId, dialogTitle).execute();
+                                    }
+                                });
+                SnackbarManager.show(snackbar);
 
+                if (p == lastPieSelectedPosition) {
+                    return;
+                } else {
+                    lastPieSelectedPosition = p;
+                }
+            }
+
+            @Override
+            public void onValueDeselected() {
+
+            }
+        });
         iconRight = (MaterialIconView)view.findViewById(R.id.icon_right);
+        iconRight.setOnClickListener(this);
         iconLeft = (MaterialIconView)view.findViewById(R.id.icon_left);
-        iconRight.setVisibility(View.INVISIBLE);
-        iconLeft.setVisibility(View.INVISIBLE);
+        iconLeft.setOnClickListener(this);
 
 //        all = (MaterialIconView)view.findViewById(R.id.all);
 //        all.setVisibility(View.INVISIBLE);
 
         emptyTip = (TextView)view.findViewById(R.id.empty_tip);
         emptyTip.setTypeface(CoCoinUtil.GetTypeface());
+        if (RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.size() != 0) {
+            emptyTip.setText(mContext.getResources().getString(R.string.report_view_please_select_data));
+        } else {
+            emptyTip.setText(mContext.getResources().getString(R.string.report_view_no_data));
+            isEmpty = true;
+        }
 
         highestTagLayout = (LinearLayout)view.findViewById(R.id.highest_tag_layout);
         highestTagLayout.setVisibility(View.GONE);
@@ -325,7 +407,36 @@ public class ReportViewFragment extends Fragment
 
     @Override
     public void onClick(View v) {
+        SelectedValue selectedValue = null;
         switch (v.getId()) {
+            case R.id.icon_right:
+                if (lastPieSelectedPosition != -1) {
+                    pieSelectedPosition = lastPieSelectedPosition;
+                }
+                pieSelectedPosition
+                        = (pieSelectedPosition - 1 + pieChartData.getValues().size())
+                        % pieChartData.getValues().size();
+                selectedValue =
+                        new SelectedValue(
+                                pieSelectedPosition,
+                                0,
+                                SelectedValue.SelectedValueType.NONE);
+                pie.selectValue(selectedValue);
+                break;
+            case R.id.icon_left:
+                if (lastPieSelectedPosition != -1) {
+                    pieSelectedPosition = lastPieSelectedPosition;
+                }
+                pieSelectedPosition
+                        = (pieSelectedPosition + 1)
+                        % pieChartData.getValues().size();
+                selectedValue =
+                        new SelectedValue(
+                                pieSelectedPosition,
+                                0,
+                                SelectedValue.SelectedValueType.NONE);
+                pie.selectValue(selectedValue);
+                break;
             case R.id.highest_first:
                 onItemClick(highestTags, highestTags.getChildAt(0), -1, -1);
                 break;
@@ -352,7 +463,7 @@ public class ReportViewFragment extends Fragment
                 }
                 break;
             case R.id.button:
-                showSelectListDataDialog();
+                if (!isEmpty) showSelectListDataDialog();
                 break;
         }
     }
@@ -388,18 +499,6 @@ public class ReportViewFragment extends Fragment
                 }
                 new GetData(from, to, tagId, dialogTitle).execute();
                 break;
-        }
-    }
-
-    private class mActionClickListenerForPie implements ActionClickListener {
-        @Override
-        public void onActionClicked(Snackbar snackbar) {
-            List<CoCoinRecord> shownCoCoinRecords = Expanse.get(tagId);
-            ((FragmentActivity)mContext).getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(new RecordCheckDialogFragment(
-                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
-                    .commit();
         }
     }
 
@@ -643,10 +742,10 @@ public class ReportViewFragment extends Fragment
             });
             // use tag expense values to generate pie data
             ArrayList<SliceValue> sliceValues = new ArrayList<>();
-            for (int i = 0; i < highestTagExpense.size(); i++) {
+            for (int i = 0; i < lowestTagExpense.size(); i++) {
                 SliceValue sliceValue = new SliceValue(
-                        (float)(double)highestTagExpense.get(i)[0], CoCoinUtil.GetTagColor((int)highestTagExpense.get(i)[2]));
-                sliceValue.setLabel(String.valueOf((int)highestTagExpense.get(i)[2]));
+                        (float)(double)lowestTagExpense.get(i)[0], CoCoinUtil.GetTagColor((int)lowestTagExpense.get(i)[2]));
+                sliceValue.setLabel(String.valueOf((int)lowestTagExpense.get(i)[2]));
                 sliceValues.add(sliceValue);
             }
             pieChartData = new PieChartData(sliceValues);
@@ -811,6 +910,12 @@ public class ReportViewFragment extends Fragment
             // for basic information
             expenseTV.setText(CoCoinUtil.getInstance().GetInMoney((int)expense));
             tagsTV.setText(records + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_records) + tags + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_tags));
+            emptyTip.setVisibility(View.GONE);
+
+            // for pie
+            pieLayout.setVisibility(View.VISIBLE);
+            pie.setVisibility(View.VISIBLE);
+            pie.setPieChartData(pieChartData);
 
             // for highest tag expense
             highestTagLayout.setVisibility(View.VISIBLE);

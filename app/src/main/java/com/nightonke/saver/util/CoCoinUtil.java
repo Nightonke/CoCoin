@@ -480,6 +480,13 @@ public class CoCoinUtil {
             return "Spend $" + money + " ";
     }
 
+    public static String GetSpendString(double money) {
+        if ("zh".equals(Locale.getDefault().getLanguage()))
+            return "消费 ¥" + (int)money;
+        else
+            return "Spend $" + (int)money + " ";
+    }
+
     public static String GetPercentString(double percent) {
         if ("zh".equals(Locale.getDefault().getLanguage()))
             return " (占" + String.format("%.2f", percent) + "%)";
