@@ -1096,6 +1096,26 @@ public class CoCoinUtil {
         return (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
     }
 
+    public static String GetCalendarStringRecordCheckDialog(Context context, Calendar calendar) {
+        if ("en".equals(Locale.getDefault().getLanguage())) {
+            return context.getResources().getString(MONTHS_SHORT[calendar.get(Calendar.MONTH) + 1]) + " " + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+        }
+        if ("zh".equals(Locale.getDefault().getLanguage())) {
+            return context.getResources().getString(MONTHS_SHORT[calendar.get(Calendar.MONTH) + 1]) + calendar.get(Calendar.DAY_OF_MONTH) + GetWhetherFuck() + " " + calendar.get(Calendar.YEAR);
+        }
+        return context.getResources().getString(MONTHS_SHORT[calendar.get(Calendar.MONTH) + 1]) + " " + calendar.get(Calendar.DAY_OF_MONTH) + " " + calendar.get(Calendar.YEAR);
+    }
+
+    public static String GetCalendarStringDayExpenseSort(Context context, int year, int month, int day) {
+        if ("en".equals(Locale.getDefault().getLanguage())) {
+            return context.getResources().getString(MONTHS_SHORT[month]) + " " + day + " " + year;
+        }
+        if ("zh".equals(Locale.getDefault().getLanguage())) {
+            return context.getResources().getString(MONTHS_SHORT[month]) + day + GetWhetherFuck() + " " + year;
+        }
+        return context.getResources().getString(MONTHS_SHORT[month]) + " " + day + " " + year;
+    }
+
     public static String GetCalendarString(Context context, String string) {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

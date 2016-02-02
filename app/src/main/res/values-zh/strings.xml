@@ -439,5 +439,15 @@
     <string name="report_view_pie"> ● 标签饼图</string>
     <string name="report_view_line"> ● 时间折线图</string>
     <string name="report_view_highest_month"> ● 每月支出排序</string>
+    <string name="report_view_highest_month_show_more">显示更多</string>
+    <string name="report_view_highest_month_show_less">隐藏</string>
+    <string name="report_view_highest_day"> ● 支出最多的日期</string>
+    <string name="report_view_highest_day_show_more">显示更多</string>
+    <string name="report_view_highest_day_show_less">隐藏</string>
+    <string name="report_view_lowest_day"> ● 支出最少的日期</string>
+    <string name="report_view_lowest_day_show_more">显示更多</string>
+    <string name="report_view_lowest_day_show_less">隐藏</string>
+    <string name="report_view_average_day"> ● 平均每日</string>
+    <string name="report_view_average_month"> ● 平均每月</string>
 
 </resources>

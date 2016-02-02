@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.balysv.materialripple.MaterialRippleLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/whether_show_circle_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:mrl_rippleAlpha="0.2"
+    app:mrl_rippleColor="@color/setting_ripple"
+    app:mrl_rippleHover="true"
+    app:mrl_rippleOverlay="false">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+
+        <FrameLayout
+            android:layout_height="40dp"
+            android:layout_width="50dp"
+            >
+
+            <View
+                android:layout_width="3dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:background="@color/my_blue"
+                />
+
+            <TextView
+                android:id="@+id/month"
+                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:background="@drawable/bg_month_icon_small_0"
+                android:textColor="@color/white"
+                android:text="12"
+                />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/month_name"
+            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|left"
+            android:text="Jan. 2015"
+            android:textColor="@color/my_blue"
+            android:maxLines="2"
+            android:paddingRight="5dp"
+            />
+
+        <LinearLayout
+            android:layout_height="30dp"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            >
+
+            <TextView
+                android:id="@+id/month_expense"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:text="¥18890"
+                android:textSize="20sp"
+                android:textColor="@color/red"
+                android:gravity="top|right"
+                />
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:text="/"
+                android:textColor="@color/red"
+                android:gravity="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/month_sum"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:text="198's"
+                android:layout_marginLeft="-3dp"
+                android:textSize="12sp"
+                android:textColor="@color/red"
+                android:gravity="bottom|left"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.balysv.materialripple.MaterialRippleLayout>

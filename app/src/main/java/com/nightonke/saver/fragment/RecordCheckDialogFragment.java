@@ -125,6 +125,6 @@ public class RecordCheckDialogFragment extends DialogFragment implements RecordC
         TextView remark = (TextView)dialogView.findViewById(R.id.remark);
         TextView date = (TextView)dialogView.findViewById(R.id.date);
         remark.setText(list.get(position).getRemark());
-        date.setText(list.get(position).getCalendarString());
+        date.setText(CoCoinUtil.GetCalendarStringRecordCheckDialog(mContext, list.get(position).getCalendar()));
     }
 }

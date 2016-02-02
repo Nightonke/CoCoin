@@ -60,8 +60,8 @@ public class AccountBookReportViewActivity extends AppCompatActivity
         mViewPager.getPagerTitleStrip().setOnTabReselectedListener(new PagerSlidingTabStrip.OnTabReselectedListener() {
             @Override
             public void onTabReselected(int position) {
-                if (CoCoinFragmentManager.reportViewFragment != null)
-                    CoCoinFragmentManager.reportViewFragment.showDataDialog();
+//                if (CoCoinFragmentManager.reportViewFragment != null)
+//                    CoCoinFragmentManager.reportViewFragment.showDataDialog();
             }
         });
 

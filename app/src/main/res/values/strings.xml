@@ -452,5 +452,15 @@
     <string name="report_view_pie"> ● Tag pie chart</string>
     <string name="report_view_line"> ● Time line chart</string>
     <string name="report_view_highest_month"> ● Sort of months</string>
+    <string name="report_view_highest_month_show_more">Click for more</string>
+    <string name="report_view_highest_month_show_less">Click to hide</string>
+    <string name="report_view_highest_day"> ● Highest expense on days</string>
+    <string name="report_view_highest_day_show_more">Click for more</string>
+    <string name="report_view_highest_day_show_less">Click to hide</string>
+    <string name="report_view_lowest_day"> ● Lowest expense on days</string>
+    <string name="report_view_lowest_day_show_more">Click for more</string>
+    <string name="report_view_lowest_day_show_less">Click to hide</string>
+    <string name="report_view_average_day"> ● Day average</string>
+    <string name="report_view_average_month"> ● Month average</string>
 
 </resources>
