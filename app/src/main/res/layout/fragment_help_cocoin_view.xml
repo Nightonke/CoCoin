@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:clickable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/material_view_pager_placeholder"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="@dimen/cardMarginVertical"
+                android:layout_marginLeft="@dimen/cardMarginHorizontal"
+                android:layout_marginRight="@dimen/cardMarginHorizontal"
+                android:layout_marginTop="@dimen/cardMarginVertical"
+                app:cardPreventCornerOverlap="false"
+                app:cardBackgroundColor="@color/white"
+                app:contentPadding="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_gravity="center_vertical|left"
+                        android:textColor="@color/my_blue"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:text="@string/help_cocoin_content_1"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="200dp"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_2"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_3"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_4"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_5"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_6"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_6"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_7"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_8"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_9"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <ImageView
+                            android:id="@+id/help_cocoin_image_9"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/help_cocoin_content_10"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="center_vertical|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:layout_marginLeft="10dp"
+                            android:text="@string/help_cocoin_content_10"
+                            />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/foot"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_gravity="center_vertical|left"
+                        android:textColor="@color/my_blue"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:text="@string/help_cocoin_content_11"
+                        />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+</FrameLayout>

@@ -390,7 +390,7 @@
     <string name="downloading_content">Downloading newest CoCoin, please wait.</string>
 
     <string name="current_version">Current version: </string>
-    <string name="can_update">new</string>
+    <string name="can_update">NEW</string>
     <string name="checking_update">Checking new version…</string>
     <string name="is_newest_version">Current version is newest</string>
 
@@ -399,23 +399,23 @@
     <string name="sync_querying_fail_title">Sync Failed</string>
     <string name="sync_querying_fail_content">Internet disconnected. Check sync information failed.</string>
     <string name="sync_choose_title">Sync</string>
-    <string name="sync_info_cloud_record_0">You have </string>
-    <string name="sync_info_cloud_record_1"> record(s) in cloud. </string>
-    <string name="sync_info_cloud_time_0">Your recently uploading operation time is </string>
-    <string name="sync_info_cloud_time_1">. </string>
-    <string name="sync_info_cloud_time_2">You haven\'t uploaded records to cloud. </string>
-    <string name="sync_info_mobile_record_0">You have </string>
-    <string name="sync_info_mobile_record_1"> record(s) in mobile. </string>
-    <string name="sync_info_mobile_time_0">Your recently downloading operation time is </string>
-    <string name="sync_info_mobile_time_1">. </string>
-    <string name="sync_info_mobile_time_2">You haven\'t downloaded records to mobile. </string>
+    <string name="sync_info_cloud_record_0">You have&#160;</string>
+    <string name="sync_info_cloud_record_1">&#160;record(s) in cloud.&#160;</string>
+    <string name="sync_info_cloud_time_0">Your recently uploading operation time is&#160;</string>
+    <string name="sync_info_cloud_time_1">.&#160;</string>
+    <string name="sync_info_cloud_time_2">You haven\'t uploaded records to cloud.&#160;</string>
+    <string name="sync_info_mobile_record_0">You have&#160;</string>
+    <string name="sync_info_mobile_record_1">&#160;record(s) in mobile.&#160;</string>
+    <string name="sync_info_mobile_time_0">Your recently downloading operation time is&#160;</string>
+    <string name="sync_info_mobile_time_1">.&#160;</string>
+    <string name="sync_info_mobile_time_2">You haven\'t downloaded records to mobile.&#160;</string>
     <string name="sync_choose_content">You can choose to upload the records in your mobile to cloud(the old records in cloud will be deleted) or to download the records in cloud to your mobile(the old records in mobile will be deleted).</string>
     <string name="sync_to_mobile">From cloud to mobile</string>
     <string name="sync_to_cloud">From mobile to cloud</string>
-    <string name="sure_to_mobile_0">Sure to sync </string>
-    <string name="sure_to_mobile_1"> record(s) from cloud to mobile? Old records in mobile will be deleted.</string>
+    <string name="sure_to_mobile_0">Sure to sync&#160;</string>
+    <string name="sure_to_mobile_1">&#160;record(s) from cloud to mobile? Old records in mobile will be deleted.</string>
     <string name="sure_to_cloud_0">Sure to sync </string>
-    <string name="sure_to_cloud_1"> record(s) from mobile to cloud? Old records in cloud will be deleted.</string>
+    <string name="sure_to_cloud_1">&#160;record(s) from mobile to cloud? Old records in cloud will be deleted.</string>
     <string name="mobile_record_empty">There is no record in your mobile!</string>
     <string name="cloud_record_empty">There is no record in cloud!</string>
     <string name="syncing">Syncing</string>
@@ -424,9 +424,9 @@
     <string name="downloading_0">Downloading No.</string>
     <string name="downloading_1"> record. Please wait.</string>
     <string name="sync_failed">Sync Failed</string>
-    <string name="uploading_fail_0">Sync failed for internet connection. </string>
+    <string name="uploading_fail_0">Sync failed for internet connection.&#160;</string>
     <string name="uploading_fail_1"> record(s) has(have) been uploaded.</string>
-    <string name="downloading_fail_0">Sync failed for internet connection. </string>
+    <string name="downloading_fail_0">Sync failed for internet connection.&#160;</string>
     <string name="downloading_fail_1"> record(s) has(have) been downloaded.</string>
     <string name="sync_completely_title">Sync Completely</string>
     <string name="sync_completely_content">Sync completely.</string>
@@ -439,8 +439,8 @@
     <string name="report_select_list_title">Report Time</string>
 
     <string name="report_view_help"> ● Expense Report</string>
-    <string name="report_view_records"> records of </string>
-    <string name="report_view_tags"> tags</string>
+    <string name="report_view_records">records of</string>
+    <string name="report_view_tags">tags</string>
     <string name="report_view_highest_tag"> ● Highest expense on tags</string>
     <string name="report_view_highest_tag_show_more">Click for more</string>
     <string name="report_view_highest_tag_show_less">Click to hide</string>
@@ -462,5 +462,57 @@
     <string name="report_view_lowest_day_show_less">Click to hide</string>
     <string name="report_view_average_day"> ● Day average</string>
     <string name="report_view_average_month"> ● Month average</string>
+    <string name="report_view_foot">&#160;Expense Report</string>
+
+    <string name="help_cocoin_title">CoCoin</string>
+    <string name="help_feedback_title">Feedback</string>
+    <string name="help_open_library_title">Open Library</string>
+    <string name="help_me_title">Me</string>
+
+    <string name="help_cocoin_content_1"> ● CoCoin, Multi-view Accounting Application</string>
+    <string name="help_cocoin_content_2">
+        ● You can do the accounting job easily and use a password to protect your account book.
+        Your account book\'s password will be set the first time you use CoCoin.
+        Swipe the numerical part to left to add some remarks for your records.
+        To check your account book, you can swipe down or click the menu icon in the top left corner.
+    </string>
+    <string name="help_cocoin_content_3">
+        ● In the account book, you can find out a pie chart for your expenses today, yesterday, this week, last week, this month, last month, this year and last year.
+        Try to click the blocks of the pie chart or the bars of histogram for details.
+        All the charts in CoCoin can be clicked for details and there are some buttons near the charts to select a certain part(that\'s to small for click) in charts.
+        If you wanna get more views, just open the left drawer menu.
+    </string>
+    <string name="help_cocoin_content_4">
+        ● In custom time view, you can check all the expenses in a special time span.
+        Click the button in the bottom right corner to set the time span.
+    </string>
+    <string name="help_cocoin_content_5">
+        ● In the tag view, you can check all the expenses for different tags.
+        Open the left drawer menu and you can see all the tags in your account book.
+        Click a tag to jump to the expenses analyse for that tag.
+    </string>
+    <string name="help_cocoin_content_6">
+        ● In the month view, you can check all the expenses in every month.
+        Let\'s check how much you spent and how many records you accounted.
+        Open the left drawer menu, there is a simple list for every month\'s expenses.
+        And just as in the tag view, you can click to jump to a certain month.
+    </string>
+    <string name="help_cocoin_content_7">
+        ● In the list view, you can do some update and query job here.
+        Swipe a record left to edit and right to delete.
+        Open the left drawer to set some query conditions or click the search button in the top right corner to query according to remarks.
+    </string>
+    <string name="help_cocoin_content_8">
+        ● In the report view, you can generate your month or year report here.
+    </string>
+    <string name="help_cocoin_content_9">
+        ● After signing in, you can sync your records to CoCoin\'s server.
+    </string>
+    <string name="help_cocoin_content_10">
+        ● You can change some default settings.
+        For instance, the name of your account book, the order of tags, whether remind you the limit of the month expense.
+        If you enable the color remind function, after you account a record which made the expenses of this month is large that warning value, the color of interface will change.
+    </string>
+    <string name="help_cocoin_content_11"> ● Thanks for using CoCoin</string>
 
 </resources>

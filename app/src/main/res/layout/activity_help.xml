@@ -1,145 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="20dp"
-    android:paddingTop="20dp"
-    android:orientation="vertical"
-    android:background="@color/my_blue"
-    tools:context="com.nightonke.saver.activity.HelpActivity">
+    >
 
-    <android.support.v7.widget.CardView
-        android:id="@+id/card1"
+    <com.github.florent37.materialviewpager.MaterialViewPager
+        android:id="@+id/materialViewPager"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        >
+        android:layout_height="match_parent"
+        app:viewpager_logo="@layout/header_logo_2"
+        app:viewpager_pagerTitleStrip="@layout/material_view_pager_pagertitlestrip_newstand"
+        app:viewpager_logoMarginTop="@dimen/material_viewpager_logo_margin_top_3"
+        app:viewpager_color="@color/colorPrimary"
+        app:viewpager_headerHeight="@dimen/material_viewpager_head_height_3"
+        app:viewpager_headerAlpha="1.0"
+        app:viewpager_imageHeaderDarkLayerAlpha="0.2"
+        app:viewpager_hideLogoWithFade="true"
+        app:viewpager_hideToolbarAndTitle="true"
+        app:viewpager_enableToolbarElevation="true"
+        app:viewpager_parallaxHeaderFactor="1.5"
+        app:viewpager_headerAdditionalHeight="20dp"
+        app:viewpager_displayToolbarWhenSwipe="false"
+        app:viewpager_transparentToolbar="true"
+        app:viewpager_animatedHeaderImage="true"
+        />
 
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/hey"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp"
-            />
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card2"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        >
-
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/thank"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp"
-            />
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card3"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        >
-
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/me"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp"
-            />
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card4"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        >
-
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/github"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp"
-            />
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card5"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        >
-
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/blog"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp"
-            />
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card6"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        >
-
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/email"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp"
-            />
-
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card7"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_margin="10dp"
-        >
-
-        <TextView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/thank_again"
-            android:layout_marginLeft="10dp"
-            android:padding="5dp"
-            />
-
-    </android.support.v7.widget.CardView>
-
-</LinearLayout>
+</FrameLayout>

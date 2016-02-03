@@ -449,5 +449,11 @@
     <string name="report_view_lowest_day_show_less">隐藏</string>
     <string name="report_view_average_day"> ● 平均每日</string>
     <string name="report_view_average_month"> ● 平均每月</string>
+    <string name="report_view_foot">支出报表</string>
+
+    <string name="help_cocoin_title">CoCoin</string>
+    <string name="help_feedback_title">反馈</string>
+    <string name="help_open_library_title">开源库</string>
+    <string name="help_me_title">我</string>
 
 </resources>

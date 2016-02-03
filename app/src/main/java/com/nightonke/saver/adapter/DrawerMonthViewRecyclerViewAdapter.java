@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nightonke.saver.R;
+import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.util.CoCoinUtil;
 
@@ -26,6 +27,7 @@ public class DrawerMonthViewRecyclerViewAdapter
         extends RecyclerView.Adapter<DrawerMonthViewRecyclerViewAdapter.viewHolder> {
 
     private ArrayList<Double> expenses;
+    private ArrayList<Integer> records;
     private ArrayList<Integer> months;
     private ArrayList<Integer> years;
 
@@ -36,32 +38,38 @@ public class DrawerMonthViewRecyclerViewAdapter
     public DrawerMonthViewRecyclerViewAdapter(Context context) {
         mContext = context;
         expenses = new ArrayList<>();
+        records = new ArrayList<>();
         months = new ArrayList<>();
         years = new ArrayList<>();
 
-        if (RecordManager.RECORDS.size() != 0) {
+        if (RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.size() != 0) {
 
             int currentYear = RecordManager.RECORDS.
                     get(RecordManager.RECORDS.size() - 1).getCalendar().get(Calendar.YEAR);
             int currentMonth = RecordManager.RECORDS.
                     get(RecordManager.RECORDS.size() - 1).getCalendar().get(Calendar.MONTH);
             double currentMonthSum = 0;
+            int currentMonthRecord = 0;
 
             for (int i = RecordManager.RECORDS.size() - 1; i >= 0; i--) {
                 if (RecordManager.RECORDS.get(i).getCalendar().get(Calendar.YEAR) == currentYear
                         && RecordManager.RECORDS.get(i).
                         getCalendar().get(Calendar.MONTH) == currentMonth) {
                     currentMonthSum += RecordManager.RECORDS.get(i).getMoney();
+                    currentMonthRecord++;
                 } else {
                     expenses.add(currentMonthSum);
+                    records.add(currentMonthRecord);
                     years.add(currentYear);
                     months.add(currentMonth);
                     currentMonthSum = RecordManager.RECORDS.get(i).getMoney();
+                    currentMonthRecord = 1;
                     currentYear = RecordManager.RECORDS.get(i).getCalendar().get(Calendar.YEAR);
                     currentMonth = RecordManager.RECORDS.get(i).getCalendar().get(Calendar.MONTH);
                 }
             }
             expenses.add(currentMonthSum);
+            records.add(currentMonthRecord);
             years.add(currentYear);
             months.add(currentMonth);
 
@@ -93,19 +101,17 @@ public class DrawerMonthViewRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(final viewHolder holder, final int position) {
-
         holder.month.setText(CoCoinUtil.GetMonthShort(months.get(position) + 1));
         holder.month.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
         holder.year.setText(years.get(position) + "");
         holder.year.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
-        if ("zh".equals(CoCoinUtil.GetLanguage()))
-            holder.money.setText("¥" + (int) (double) (expenses.get(position)));
-        else
-            holder.money.setText("$" + (int)(double)(expenses.get(position)));
-        holder.money.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+        holder.sum.setText(CoCoinUtil.getInstance().GetInRecords(records.get(position)));
+        holder.sum.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
+        holder.money.setText(CoCoinUtil.getInstance().GetInMoney((int) (double) (expenses.get(position))));
+        holder.money.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
     }
 
     public class viewHolder extends RecyclerView.ViewHolder
@@ -119,6 +125,9 @@ public class DrawerMonthViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.money)
         TextView money;
+        @Optional
+        @InjectView(R.id.sum)
+        TextView sum;
 
         viewHolder(View view) {
             super(view);

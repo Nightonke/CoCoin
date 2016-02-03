@@ -120,9 +120,9 @@ public class AccountBookReportViewActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
 
-        if (CoCoinFragmentManager.reportViewFragment != null)
-            CoCoinFragmentManager.reportViewFragment.onDestroy();
-        CoCoinFragmentManager.reportViewFragment = null;
+//        if (CoCoinFragmentManager.reportViewFragment != null)
+//            CoCoinFragmentManager.reportViewFragment.onDestroy();
+//        CoCoinFragmentManager.reportViewFragment = null;
         MaterialViewPagerHelper.unregister(this);
     }
 

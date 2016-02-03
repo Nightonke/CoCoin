@@ -155,8 +155,12 @@ public class ReportViewFragment extends Fragment
     // year, month(-1 means the whole year), records, expenses
     private ArrayList<double[]> selectListData = null;
 
+    // title
+    private TextView title;
+
     // pie
     private LinearLayout pieLayout;
+    private TextView pieTitle;
     private PieChartView pie;
     private int pieSelectedPosition = 0;  // the selected position of one part of the pie
     private int lastPieSelectedPosition = -1;  // the last selected position of one part of the pie
@@ -165,6 +169,7 @@ public class ReportViewFragment extends Fragment
 
     // highest tag list
     private LinearLayout highestTagLayout;
+    private TextView highestTagTitle;
     private LinearLayout highestFirst;
     private ImageView highestTagIcon;
     private TextView highestTagText;
@@ -178,6 +183,7 @@ public class ReportViewFragment extends Fragment
 
     // lowest tag list
     private LinearLayout lowestTagLayout;
+    private TextView lowestTagTitle;
     private LinearLayout lowestFirst;
     private ImageView lowestTagIcon;
     private TextView lowestTagText;
@@ -191,6 +197,7 @@ public class ReportViewFragment extends Fragment
 
     // line
     private LinearLayout lineLayout;
+    private TextView lineTitle;
     private LineChartView line;
     private int lineSelectedPosition = 0;  // the selected position of one part of the line
     private int lastLineSelectedPosition = -1;  // the last selected position of one part of the line
@@ -199,6 +206,7 @@ public class ReportViewFragment extends Fragment
     
     // month
     private LinearLayout highestMonthLayout;
+    private TextView monthTitle;
     private LinearLayout highestFirstMonth;
     private TextView highestFirstIcon;
     private TextView highestFirstText;
@@ -222,6 +230,7 @@ public class ReportViewFragment extends Fragment
     
     // highest day
     private LinearLayout highestDayLayout;
+    private TextView highestDayTitle;
     private LinearLayout highestFirstDay;
     private TextView highestDayIcon;
     private TextView highestDayText;
@@ -235,6 +244,7 @@ public class ReportViewFragment extends Fragment
     
     // lowest day
     private LinearLayout lowestDayLayout;
+    private TextView lowestDayTitle;
     private LinearLayout lowestFirstDay;
     private TextView lowestDayIcon;
     private TextView lowestDayText;
@@ -250,6 +260,9 @@ public class ReportViewFragment extends Fragment
     private TextView averageDayText;
     private TextView averageDayExpenseTV;
     private TextView averageDayRecordTV;
+
+    // foot
+    private TextView foot;
 
     public static ReportViewFragment newInstance() {
         ReportViewFragment fragment = new ReportViewFragment();
@@ -270,7 +283,7 @@ public class ReportViewFragment extends Fragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        CoCoinFragmentManager.reportViewFragment = this;
+//        CoCoinFragmentManager.reportViewFragment = this;
         mContext = getContext();
         superToast = new SuperToast(mContext);
         superToast.setAnimations(SuperToast.Animations.POPUP);
@@ -298,7 +311,6 @@ public class ReportViewFragment extends Fragment
         IS_EMPTY = RecordManager.getInstance(CoCoinApplication.getAppContext()).RECORDS.isEmpty();
 
         mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
-
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
         expenseTV = (TextView)view.findViewById(R.id.expense);
@@ -308,8 +320,13 @@ public class ReportViewFragment extends Fragment
         tagsTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         tagsTV.setText("");
 
+        title = (TextView)view.findViewById(R.id.title);
+        title.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+
         pieLayout = (LinearLayout)view.findViewById(R.id.pie_layout);
         pieLayout.setVisibility(View.GONE);
+        pieTitle = (TextView)view.findViewById(R.id.pie_title);
+        pieTitle.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         pie = (PieChartView)view.findViewById(R.id.chart_pie);
         pie.setChartRotationEnabled(false);
         pie.setOnValueTouchListener(new PieChartOnValueSelectListener() {
@@ -398,6 +415,8 @@ public class ReportViewFragment extends Fragment
 
         highestTagLayout = (LinearLayout)view.findViewById(R.id.highest_tag_layout);
         highestTagLayout.setVisibility(View.GONE);
+        highestTagTitle = (TextView)view.findViewById(R.id.highest_tag_title);
+        highestTagTitle.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         highestFirst = (LinearLayout)view.findViewById(R.id.highest_first);
         highestFirst.setOnClickListener(this);
         highestTagIcon = (ImageView)view.findViewById(R.id.highest_tag_icon);
@@ -417,6 +436,8 @@ public class ReportViewFragment extends Fragment
 
         lowestTagLayout = (LinearLayout)view.findViewById(R.id.lowest_tag_layout);
         lowestTagLayout.setVisibility(View.GONE);
+        lowestTagTitle = (TextView)view.findViewById(R.id.lowest_tag_title);
+        lowestTagTitle.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         lowestFirst = (LinearLayout)view.findViewById(R.id.lowest_first);
         lowestFirst.setOnClickListener(this);
         lowestTagIcon = (ImageView)view.findViewById(R.id.lowest_tag_icon);
@@ -436,6 +457,8 @@ public class ReportViewFragment extends Fragment
 
         lineLayout = (LinearLayout)view.findViewById(R.id.line_layout);
         lineLayout.setVisibility(View.GONE);
+        lineTitle = (TextView)view.findViewById(R.id.line_title);
+        lineTitle.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         line = (LineChartView) view.findViewById(R.id.chart_line);
         line.setZoomEnabled(false);
         line.setOnValueTouchListener(new LineChartOnValueSelectListener() {
@@ -541,6 +564,8 @@ public class ReportViewFragment extends Fragment
 
         highestMonthLayout = (LinearLayout) view.findViewById(R.id.highest_month_layout);
         highestMonthLayout.setVisibility(View.GONE);
+        monthTitle = (TextView)view.findViewById(R.id.month_title);
+        monthTitle.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         highestFirstMonth = (LinearLayout)view.findViewById(R.id.highest_first_month);
         highestFirstMonth.setOnClickListener(this);
         highestFirstIcon = (TextView) view.findViewById(R.id.highest_month_icon);
@@ -578,6 +603,8 @@ public class ReportViewFragment extends Fragment
         
         highestDayLayout = (LinearLayout)view.findViewById(R.id.highest_day_layout);
         highestDayLayout.setVisibility(View.GONE);
+        highestDayTitle = (TextView)view.findViewById(R.id.highest_day_title);
+        highestDayTitle.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         highestFirstDay = (LinearLayout)view.findViewById(R.id.highest_first_day);
         highestFirstDay.setOnClickListener(this);
         highestDayIcon = (TextView) view.findViewById(R.id.highest_day_icon);
@@ -598,6 +625,8 @@ public class ReportViewFragment extends Fragment
 
         lowestDayLayout = (LinearLayout)view.findViewById(R.id.lowest_day_layout);
         lowestDayLayout.setVisibility(View.GONE);
+        lowestDayTitle = (TextView)view.findViewById(R.id.lowest_day_title);
+        lowestDayTitle.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         lowestFirstDay = (LinearLayout)view.findViewById(R.id.lowest_first_day);
         lowestFirstDay.setOnClickListener(this);
         lowestDayIcon = (TextView) view.findViewById(R.id.lowest_day_icon);
@@ -622,6 +651,10 @@ public class ReportViewFragment extends Fragment
         averageDayExpenseTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         averageDayRecordTV = (TextView)view.findViewById(R.id.average_day_sum);
         averageDayRecordTV.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+
+        foot = (TextView)view.findViewById(R.id.foot);
+        foot.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
+        foot.setVisibility(View.GONE);
 
         if (IS_EMPTY) {
             emptyTip.setVisibility(View.GONE);
@@ -1370,9 +1403,28 @@ public class ReportViewFragment extends Fragment
                 cce.printStackTrace();
             }
 
+            // for title
+            if (selectYear) {
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    title.setText(" ● " + reportYear + "年" + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_foot));
+                } else {
+                    title.setText(" ● " + reportYear + " " + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_foot));
+                }
+            } else {
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    title.setText(" ● " + reportYear + "年" + CoCoinUtil.getInstance().GetMonthShort(reportMonth) + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_foot));
+                } else {
+                    title.setText(" ● " + reportYear + " " + CoCoinUtil.getInstance().GetMonthShort(reportMonth) + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_foot));
+                }
+            }
+
             // for basic information
             expenseTV.setText(CoCoinUtil.getInstance().GetInMoney((int)expense));
-            tagsTV.setText(records + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_records) + tags + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_tags));
+            if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                tagsTV.setText(records + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_records) + tags + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_tags));
+            } else {
+                tagsTV.setText(records + " " + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_records) + " " + tags + " " + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_tags));
+            }
             emptyTip.setVisibility(View.GONE);
 
             // for pie
@@ -1449,6 +1501,22 @@ public class ReportViewFragment extends Fragment
             // for average day expense
             averageDayExpenseTV.setText(CoCoinUtil.getInstance().GetInMoney((int)averageDayExpense));
             averageDayRecordTV.setText(CoCoinUtil.getInstance().GetInRecords(averageDayRecord));
+
+            // for foot
+            foot.setVisibility(View.VISIBLE);
+            if (selectYear) {
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    foot.setText(" ● " + reportYear + "年" + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_foot));
+                } else {
+                    foot.setText(" ● " + reportYear + " " + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_foot));
+                }
+            } else {
+                if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                    foot.setText(" ● " + reportYear + "年" + CoCoinUtil.getInstance().GetMonthShort(reportMonth) + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_foot));
+                } else {
+                    foot.setText(" ● " + reportYear + " " + CoCoinUtil.getInstance().GetMonthShort(reportMonth) + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_foot));
+                }
+            }
 
             if (progressDialog != null) progressDialog.dismiss();
         }

@@ -1341,8 +1341,10 @@ public class AccountBookSettingActivity extends AppCompatActivity
             }
         });
         currentVersionTV = (TextView)findViewById(R.id.update_text);
+        currentVersionTV.setTypeface(CoCoinUtil.GetTypeface());
         currentVersionTV.setText(mContext.getResources().getString(R.string.current_version) + CoCoinUtil.GetCurrentVersion());
         canBeUpdatedTV = (TextView)findViewById(R.id.update_tag);
+        canBeUpdatedTV.setTypeface(CoCoinUtil.GetTypeface());
         if (SettingManager.getInstance().getCanBeUpdated()) {
             canBeUpdatedTV.setVisibility(View.VISIBLE);
         } else {

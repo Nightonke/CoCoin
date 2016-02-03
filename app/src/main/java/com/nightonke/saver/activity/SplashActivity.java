@@ -42,19 +42,14 @@ public class SplashActivity extends Activity {
     private LinearLayout ly;
 
     private ImageView image;
+    private TextView appName;
     private TextView loadingText;
 
     private boolean loadDataCompleted = false;
     private boolean showAnimationCompleted = false;
     private boolean activityStarted = false;
 
-    private int now_animation_time = 0;
-
-    private final int ALL_ANIMATION_TIME = 3000;
-    private final int PER_ANIMATION_TIME = 1000;
-    private final int PRE_ANIMATION_TIME_MIL = 1000000;
     private final int NUMBER_OF_LINES = 1;
-    private final int NUMBER_OF_POINTS = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +86,10 @@ public class SplashActivity extends Activity {
         chart.setLineChartData(data);
 
         image = (ImageView)findViewById(R.id.image);
+        appName = (TextView)findViewById(R.id.app_name);
+        appName.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
         loadingText = (TextView)findViewById(R.id.loading_text);
+        loadingText.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
         reveal = (RevealFrameLayout)findViewById(R.id.reveal);
         ly = (LinearLayout)findViewById(R.id.ly);

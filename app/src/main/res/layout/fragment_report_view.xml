@@ -93,6 +93,7 @@
                         >
 
                         <TextView
+                            android:id="@+id/pie_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -178,6 +179,7 @@
                         >
 
                         <TextView
+                            android:id="@+id/highest_tag_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -393,6 +395,7 @@
                         >
 
                         <TextView
+                            android:id="@+id/lowest_tag_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -609,6 +612,7 @@
                         >
 
                         <TextView
+                            android:id="@+id/line_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -687,6 +691,7 @@
                         >
 
                         <TextView
+                            android:id="@+id/month_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -1075,6 +1080,7 @@
                         >
 
                         <TextView
+                            android:id="@+id/highest_day_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -1293,6 +1299,7 @@
                         >
 
                         <TextView
+                            android:id="@+id/lowest_day_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="left"
@@ -1576,10 +1583,25 @@
 
                     </LinearLayout>
                     
-                    <TextView
+                    <FrameLayout
                         android:layout_height="60dp"
                         android:layout_width="match_parent"
-                        />
+                        >
+
+                        <TextView
+                            android:id="@+id/foot"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:layout_gravity="bottom|left"
+                            android:textColor="@color/my_blue"
+                            android:textSize="15sp"
+                            android:padding="10dp"
+                            android:maxLines="2"
+                            android:text="@string/report_view_help"
+                            />
+
+                    </FrameLayout>
 
                 </LinearLayout>
 

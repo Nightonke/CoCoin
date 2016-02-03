@@ -1223,8 +1223,10 @@ public class CoCoinUtil {
     private static CoCoinUtil ourInstance = new CoCoinUtil();
 
     public static CoCoinUtil getInstance() {
-        if (ourInstance == null || typefaceLatoLight == null || typefaceLatoHairline == null)
+        if (ourInstance == null || typefaceLatoLight == null || typefaceLatoHairline == null) {
             ourInstance = new CoCoinUtil();
+            init(CoCoinApplication.getAppContext());
+        }
         return ourInstance;
     }
 

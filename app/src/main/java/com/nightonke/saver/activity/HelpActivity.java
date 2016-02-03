@@ -1,90 +1,111 @@
 package com.nightonke.saver.activity;
 
-import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
+import com.astuetz.PagerSlidingTabStrip;
+import com.github.florent37.materialviewpager.MaterialViewPager;
+import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
+import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.nightonke.saver.R;
-import com.nineoldandroids.animation.Animator;
+import com.nightonke.saver.adapter.HelpFragmentAdapter;
+import com.nightonke.saver.adapter.ReportViewFragmentAdapter;
+import com.nightonke.saver.model.SettingManager;
+import com.nightonke.saver.util.CoCoinUtil;
 
-public class HelpActivity extends Activity {
+public class HelpActivity extends AppCompatActivity {
 
-    private CardView card1;
-    private CardView card2;
-    private CardView card3;
-    private CardView card4;
-    private CardView card5;
-    private CardView card6;
-    private CardView card7;
+    private MaterialViewPager mViewPager;
+
+    private Toolbar toolbar;
+
+    private HelpFragmentAdapter adapter = null;
+
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mContext = this;
         setContentView(R.layout.activity_help);
 
-        card1 = (CardView)findViewById(R.id.card1);
-        card2 = (CardView)findViewById(R.id.card2);
-        card3 = (CardView)findViewById(R.id.card3);
-        card4 = (CardView)findViewById(R.id.card4);
-        card5 = (CardView)findViewById(R.id.card5);
-        card6 = (CardView)findViewById(R.id.card6);
-        card7 = (CardView)findViewById(R.id.card7);
+        mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
 
-        int t = 700;
-        int delay = 700;
-        int duration = 700;
+        mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.getInstance().typefaceLatoLight, Typeface.NORMAL);
 
-        YoYo.with(Techniques.Shake).delay(t).duration(duration)
-                .withListener(new ShowListener(card1)).playOn(card1);
-        t += delay;
-        YoYo.with(Techniques.Shake).delay(t).duration(duration)
-                .withListener(new ShowListener(card2)).playOn(card2);
-        t += delay;
-        YoYo.with(Techniques.Shake).delay(t).duration(duration)
-                .withListener(new ShowListener(card3)).playOn(card3);
-        t += delay;
-        YoYo.with(Techniques.Shake).delay(t).duration(duration)
-                .withListener(new ShowListener(card4)).playOn(card4);
-        t += delay;
-        YoYo.with(Techniques.Shake).delay(t).duration(duration)
-                .withListener(new ShowListener(card5)).playOn(card5);
-        t += delay;
-        YoYo.with(Techniques.Shake).delay(t).duration(duration)
-                .withListener(new ShowListener(card6)).playOn(card6);
-        t += delay;
-        YoYo.with(Techniques.Shake).delay(t).duration(duration)
-                .withListener(new ShowListener(card7)).playOn(card7);
+        setTitle("");
+
+        toolbar = mViewPager.getToolbar();
+
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+
+            final ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setDisplayShowHomeEnabled(true);
+                actionBar.setDisplayShowTitleEnabled(true);
+                actionBar.setDisplayUseLogoEnabled(false);
+                actionBar.setHomeButtonEnabled(true);
+            }
+        }
+
+        View logo = findViewById(R.id.logo_white);
+        if (logo != null) {
+            logo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mViewPager.notifyHeaderChanged();
+                }
+            });
+        }
+
+        adapter = new HelpFragmentAdapter(getSupportFragmentManager());
+        mViewPager.getViewPager().setAdapter(adapter);
+        mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
+
+        mViewPager.getPagerTitleStrip().invalidate();
+
+        mViewPager.setMaterialViewPagerListener(new MaterialViewPager.Listener() {
+            @Override
+            public HeaderDesign getHeaderDesign(int page) {
+                return HeaderDesign.fromColorAndDrawable(
+                        ContextCompat.getColor(CoCoinApplication.getAppContext(), R.color.my_blue),
+                        ContextCompat.getDrawable(
+                                CoCoinApplication.getAppContext(), R.drawable.cocoin_blue_bg));
+            }
+        });
+
     }
 
-    class ShowListener implements Animator.AnimatorListener {
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
 
-        private View view;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MaterialViewPagerHelper.unregister(this);
+    }
 
-        public ShowListener(View view) {
-            this.view = view;
-        }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+    }
 
-        @Override
-        public void onAnimationStart(Animator animation) {
-            view.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        public void onAnimationEnd(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationCancel(Animator animation) {
-
-        }
-
-        @Override
-        public void onAnimationRepeat(Animator animation) {
-
-        }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
     }
 }

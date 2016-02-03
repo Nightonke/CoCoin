@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.nightonke.saver.R;
+import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
@@ -61,6 +62,8 @@ public class MonthViewRecyclerViewAdapter
     private ArrayList<Map<Integer, ArrayList<CoCoinRecord>>> ExpanseList;
     private ArrayList<PieChartData> pieChartDataList;
     private ArrayList<Double> SumList;
+    private int records;
+    private int tags;
     private ArrayList<Integer> selectedPositionList;
     private ArrayList<String> dateStringList;
 
@@ -128,11 +131,13 @@ public class MonthViewRecyclerViewAdapter
                             TagExpanse.get(coCoinRecord.getTag()) + Double.valueOf(coCoinRecord.getMoney()));
                     Expanse.get(coCoinRecord.getTag()).add(coCoinRecord);
                     Sum += coCoinRecord.getMoney();
+                    records++;
                 }
             }
 
             TagExpanse = CoCoinUtil.SortTreeMapByValues(TagExpanse);
 
+            tags = 0;
             for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
                 if (entry.getValue() >= 1) {
                     // Todo optimize the GetTagColorResource
@@ -142,6 +147,7 @@ public class MonthViewRecyclerViewAdapter
                                     getColor(CoCoinUtil.GetTagColorResource(entry.getKey())));
                     sliceValue.setLabel(String.valueOf(entry.getKey()));
                     sliceValues.add(sliceValue);
+                    tags++;
                 }
             }
             sliceValuesList.add(sliceValues);
@@ -256,13 +262,13 @@ public class MonthViewRecyclerViewAdapter
         switch (viewType) {
             case TYPE_HEADER: {
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.month_list_view_item, parent, false);
+                        .inflate(R.layout.item_month_list_view, parent, false);
                 return new viewHolder(view) {
                 };
             }
             case TYPE_CELL: {
                 view = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.month_list_view_item, parent, false);
+                        .inflate(R.layout.item_month_list_view, parent, false);
                 return new viewHolder(view) {
                 };
             }
@@ -279,6 +285,7 @@ public class MonthViewRecyclerViewAdapter
             holder.expanseSum.setTypeface(CoCoinUtil.typefaceLatoLight);
             holder.emptyTip.setText(mContext.getResources().getString(R.string.tag_empty));
             holder.emptyTip.setTypeface(CoCoinUtil.GetTypeface());
+            holder.tags.setVisibility(View.GONE);
             holder.date.setVisibility(View.INVISIBLE);
             holder.pie.setVisibility(View.INVISIBLE);
             holder.iconLeft.setVisibility(View.INVISIBLE);
@@ -290,6 +297,13 @@ public class MonthViewRecyclerViewAdapter
 
             holder.date.setTypeface(CoCoinUtil.GetTypeface());
             holder.expanseSum.setTypeface(CoCoinUtil.typefaceLatoLight);
+
+            holder.tags.setTypeface(CoCoinUtil.typefaceLatoLight);
+            if ("zh".equals(CoCoinUtil.GetLanguage())) {
+                holder.tags.setText(" ● " + records + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_records) + tags + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_tags));
+            } else {
+                holder.tags.setText(" ● " + records + " " + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_records) + " " + tags + " " + CoCoinApplication.getAppContext().getResources().getString(R.string.report_view_tags));
+            }
 
             if (SumList.get(position).equals(Double.valueOf(0))) {
                 holder.emptyTip.setVisibility(View.VISIBLE);
@@ -370,6 +384,9 @@ public class MonthViewRecyclerViewAdapter
         @Optional
         @InjectView(R.id.expanse)
         TextView expanseSum;
+        @Optional
+        @InjectView(R.id.tags)
+        TextView tags;
         @Optional
         @InjectView(R.id.empty_tip)
         TextView emptyTip;

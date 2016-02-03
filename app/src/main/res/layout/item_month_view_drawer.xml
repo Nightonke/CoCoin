@@ -17,23 +17,52 @@
         android:orientation="horizontal"
         >
 
-        <TextView
-            android:id="@+id/money"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|left"
-            android:gravity="center_vertical|left"
-            android:paddingLeft="20dp"
-            android:textSize="20sp"
-            android:textColor="@color/my_blue"
-            android:text="$12"
-            />
+        <LinearLayout
+            android:layout_height="30dp"
+            android:layout_width="0dp"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="10dp"
+            >
+
+            <TextView
+                android:id="@+id/money"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:text="¥18890"
+                android:textSize="20sp"
+                android:textColor="@color/red"
+                android:gravity="top|right"
+                />
+
+            <TextView
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:text="/"
+                android:textColor="@color/red"
+                android:gravity="center"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/sum"
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:text="198's"
+                android:layout_marginLeft="-3dp"
+                android:layout_marginRight="15dp"
+                android:textSize="12sp"
+                android:textColor="@color/red"
+                android:gravity="bottom|left"
+                />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/month"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="60dp"
-            android:layout_weight="1"
             android:textColor="@color/my_blue"
             android:textSize="18sp"
             android:layout_gravity="center_vertical|right"
