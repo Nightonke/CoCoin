@@ -1,6 +1,7 @@
 package com.nightonke.saver.util;
 
 import android.app.Activity;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.database.sqlite.SQLiteDatabase;
@@ -1187,7 +1188,11 @@ public class CoCoinUtil {
         return counter;
     }
 
-
+    public static void copyToClipboard(String content, Context context)
+    {
+        ClipboardManager cmb = (ClipboardManager)context.getSystemService(Context.CLIPBOARD_SERVICE);
+        cmb.setText(content.trim());
+    }
 
 
 

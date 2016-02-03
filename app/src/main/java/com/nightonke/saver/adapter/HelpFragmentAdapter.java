@@ -43,7 +43,7 @@ public class HelpFragmentAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        switch (position) {
+        switch (this.position) {
             case 0: return CoCoinApplication.getAppContext().getResources().getString(R.string.app_name);
             case 1: return CoCoinApplication.getAppContext().getResources().getString(R.string.feedback);
             case 2: return CoCoinApplication.getAppContext().getResources().getString(R.string.about);

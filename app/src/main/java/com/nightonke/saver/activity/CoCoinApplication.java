@@ -4,8 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.provider.Settings;
 
-import com.github.mmin18.layoutcast.LayoutCast;
-import com.nightonke.saver.BuildConfig;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
@@ -28,10 +26,6 @@ public class CoCoinApplication extends Application {
 
     @Override public void onCreate() {
         super.onCreate();
-
-        if (BuildConfig.DEBUG) {
-            LayoutCast.init(this);
-        }
 
         refWatcher = LeakCanary.install(this);
         CoCoinApplication.mContext = getApplicationContext();

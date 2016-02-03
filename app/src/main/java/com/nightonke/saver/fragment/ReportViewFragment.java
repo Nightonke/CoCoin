@@ -9,8 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.util.Pair;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
 import com.github.aakira.expandablelayout.ExpandableRelativeLayout;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.johnpersano.supertoasts.SuperToast;
@@ -28,7 +25,6 @@ import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
 import com.melnykov.fab.FloatingActionButton;
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
-import com.nightonke.saver.adapter.DialogMonthSelectGridViewAdapter;
 import com.nightonke.saver.adapter.DialogSelectListDataAdapter;
 import com.nightonke.saver.adapter.ReportDayAdapter;
 import com.nightonke.saver.adapter.ReportMonthAdapter;
@@ -303,7 +299,6 @@ public class ReportViewFragment extends Fragment
     private MaterialDialog dialog;
     private View dialogView;
     private MyGridView myGridView;
-    private DialogMonthSelectGridViewAdapter dialogMonthSelectGridViewAdapter;
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -679,19 +674,6 @@ public class ReportViewFragment extends Fragment
 
         RefWatcher refWatcher = CoCoinApplication.getRefWatcher(getActivity());
         refWatcher.watch(this);
-    }
-
-    Pair<Boolean, SublimeOptions> getOptions() {
-        SublimeOptions options = new SublimeOptions();
-        int displayOptions = 0;
-
-        displayOptions |= SublimeOptions.ACTIVATE_DATE_PICKER;
-
-        options.setPickerToShow(SublimeOptions.Picker.DATE_PICKER);
-
-        options.setDisplayOptions(displayOptions);
-
-        return new Pair<>(displayOptions != 0 ? Boolean.TRUE : Boolean.FALSE, options);
     }
 
     @Override

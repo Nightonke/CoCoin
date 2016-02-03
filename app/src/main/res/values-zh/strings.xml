@@ -458,53 +458,103 @@
     <string name="help_open_library_title">开源库</string>
     <string name="help_me_title">我</string>
 
-    <string name="help_cocoin_content_1"> ● CoCoin, Multi-view Accounting Application</string>
+    <string name="help_cocoin_content_1"> ● CoCoin，一款多视图记账APP</string>
     <string name="help_cocoin_content_2">
-        ● You can do the accounting job easily and use a password to protect your account book.
-        Your account book\'s password will be set the first time you use CoCoin.
-        Swipe the numerical part to left to add some remarks for your records.
-        To check your account book, you can swipe down or click the menu icon in the top left corner.
+        ● 您可以使用CoCoin轻松记账，并使用密码来保护您的账本。
+        账本密码会在您第一次使用CoCoin的时候被设置。
+        在记账的时候，您可以通过左滑显示数字框来为您的记录增加备注。
+        如果您需要查阅账本，可以通过下滑或点击标题栏来进入账本页面。
     </string>
     <string name="help_cocoin_content_3">
-        ● In the account book, you can find out a pie chart for your expenses today, yesterday, this week, last week, this month, last month, this year and last year.
-        Try to click the blocks of the pie chart or the bars of histogram for details.
-        All the charts in CoCoin can be clicked for details and there are some buttons near the charts to select a certain part(that\'s to small for click) in charts.
-        If you wanna get more views, just open the left drawer menu.
+        ● 在账本中，有对今天、昨天、这周、上周、这个月、上个月、今年和去年的记录。
+        您可以通过点击饼状图的饼块或者柱状图的柱形来查看详细支出信息。
+        CoCoin的所有图表都可以通过点击来获取详细信息，您也可以通过点击图表旁的选择按钮来对某些不易点击得到的地方进行查阅。
+        点击或选择图表中的某一部分会有弹窗提示相关信息，点击查看可以在弹出的对话框中看到列表，列表中即为每条记录的信息。
+        通过点击列表中的某一条记录，您可以看到更为详细的情况。
+        如果您希望通过更多的视图来查阅自己的支出情况，右滑打开菜单即可。
     </string>
     <string name="help_cocoin_content_4">
-        ● In custom time view, you can check all the expenses in a special time span.
-        Click the button in the bottom right corner to set the time span.
+        ● 在自定义时间范围视图中，您可以查阅到某一时间段内的所有支出情况。
+        点击右下角的按钮即可设定时间范围。
     </string>
     <string name="help_cocoin_content_5">
-        ● In the tag view, you can check all the expenses for different tags.
-        Open the left drawer menu and you can see all the tags in your account book.
-        Click a tag to jump to the expenses analyse for that tag.
+        ● 在标签视图中，您可以查阅到自己在不同标签上的支出情况。
+        右滑打开菜单，您可以看到CoCoin的所有标签，点击标签可以跳到该标签的支出情况。
     </string>
     <string name="help_cocoin_content_6">
-        ● In the month view, you can check all the expenses in every month.
-        Let\'s check how much you spent and how many records you accounted.
-        Open the left drawer menu, there is a simple list for every month\'s expenses.
-        And just as in the tag view, you can click to jump to a certain month.
+        ● 在月视图中，您可以查阅到自己在不同月份的支出情况。
+        您可以直观看到自己在某一月份的总支出、总记录数、在不同标签上的支出和占比、具体支出的详细信息。
+        右滑打开菜单，您可以看到自己每月的支出概况，同样的，点击某一月份将会跳到该月份的详细信息。
     </string>
     <string name="help_cocoin_content_7">
-        ● In the list view, you can do some update and query job here.
-        Swipe a record left to edit and right to delete.
-        Open the left drawer to set some query conditions or click the search button in the top right corner to query according to remarks.
+        ● 在列表视图中，您可以进行筛选、查询、更改、删除记录的操作。
+        左滑某一记录进行编辑，右滑进行删除。
+        右滑打开菜单，您可以设置支出范围、时间范围、标签来筛选特定的支出记录。
+        点击右上角的搜索按钮，可以通过备注来搜索特定的记录。
     </string>
     <string name="help_cocoin_content_8">
-        ● In the report view, you can generate your month or year report here.
+        ● 在报表视图中，您可以生成自己的年度支出报表或月支出报告。
+        通过点击右下角按钮即可以选择报表的时间范围。
     </string>
     <string name="help_cocoin_content_9">
-        ● After signing in, you can sync your records to CoCoin\'s server.
+        ● 当您登录了CoCoin之后，您可以通过同步功能进行记录的备份。
     </string>
     <string name="help_cocoin_content_10">
-        ● You can change some default settings.
-        For instance, the name of your account book, the order of tags, whether remind you the limit of the month expense.
-        If you enable the color remind function, after you account a record which made the expenses of this month is large that warning value, the color of interface will change.
+        ● 您可以对自己的账本进行个性化设置。
+        比如，您可以更改账本的名字、对标签进行排序、设置是否提醒每月支出的限额，如果您选择颜色提醒，当每月支出总和达到警告值时，记录的界面将会变色以示提醒。
     </string>
-    <string name="help_cocoin_content_11"> ● Thanks for using CoCoin</string>
+    <string name="help_cocoin_content_11"> ● 感谢您使用CoCoin</string>
 
+    <string name="help_feedback_content_1"> ● 很高兴能收到您的反馈，如果您有非文本内容，可以发到我的电子邮箱：Nightonke@outlook.com.</string>
+    <string name="help_feedback_content_2">让CoCoin变得更好</string>
+    <string name="help_feedback_hint">您可以在此处编辑反馈</string>
     <string name="help_feedback_edit">编辑</string>
     <string name="help_feedback_send">发送</string>
+    <string name="help_feedback_dialog_title">字数不合法</string>
+    <string name="help_feedback_dialog_content">您输入的反馈字数过多或过少(1~400).</string>
+    <string name="help_feedback_sent">正在发送反馈</string>
+    <string name="help_feedback_sent_fail">发送反馈失败！</string>
+    <string name="help_feedback_sent_successfully">成功发送，谢谢您的反馈</string>
+    <string name="help_feedback_dialog_title_1">发送反馈</string>
+    <string name="help_feedback_dialog_content_1">您已经编辑了反馈但是并未发送，请问是否发送？</string>
+    <string name="help_feedback_dialog_send">发送</string>
+    <string name="help_feedback_dialog_dont_send">不发送</string>
+
+    <string name="help_about_content_0"> ● 关于我</string>
+    <string name="help_about_content_1">Nightonke</string>
+    <string name="help_about_content_2">github.com/Nightonke/CoCoin</string>
+    <string name="help_about_content_3">blog.csdn.net/u012925008</string>
+    <string name="help_about_content_4">Nightonke@outlook.com</string>
+    <string name="help_about_content_5"> ● 所用到的开源库</string>
+    <string name="help_about_content_6">daimajia.androidanimations</string>
+    <string name="help_about_content_7">balysv:material-ripple</string>
+    <string name="help_about_content_8">rengwuxian.materialedittext</string>
+    <string name="help_about_content_9">jakewharton:butterknife</string>
+    <string name="help_about_content_10">florent37:materialviewpager</string>
+    <string name="help_about_content_11">dmytrodanylyk.circular-progress-button</string>
+    <string name="help_about_content_12">wdullaer:materialdatetimepicker</string>
+    <string name="help_about_content_13">melnykov:floatingactionbutton</string>
+    <string name="help_about_content_14">sacot41:scviewpager</string>
+    <string name="help_about_content_15">daimajia.slider</string>
+    <string name="help_about_content_16">aakira:expandable-layout</string>
+    <string name="help_about_content_17">Yalantis:GuillotineMenu-Android</string>
+    <string name="help_about_content_18">lecho:hellocharts</string>
+    <string name="help_about_content_19">nispok:snackbar</string>
+    <string name="help_about_content_20">steamcrafted:materialiconlib</string>
+    <string name="help_about_content_21">johnpersano:supertoasts</string>
+    <string name="help_about_content_22">squareup.leakcanary</string>
+    <string name="help_about_content_23">h6ah4i.android.widget.advrecyclerview:advrecyclerview</string>
+    <string name="help_about_content_24">hdodenhof:circleimageview</string>
+    <string name="help_about_content_25">miguelcatalan:materialsearchview</string>
+    <string name="help_about_content_26">wnafee:vector-compat</string>
+    <string name="help_about_content_27">danoz:recyclerviewfastscroller</string>
+    <string name="help_about_content_28">afollestad.material-dialogs</string>
+    <string name="help_about_content_29">rey5137:material</string>
+    <string name="help_about_content_30">bmob.android</string>
+    <string name="help_about_content_31">koushikdutta.ion</string>
+    <string name="help_about_content_32">tencent.bugly</string>
+    <string name="help_about_content_33">ozodrukh:CircularReveal</string>
+
+    <string name="copy_to_clipboard">已将e-mail复制到剪切板</string>
 
 </resources>

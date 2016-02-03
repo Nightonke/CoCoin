@@ -922,6 +922,12 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
                 startActivity(new Intent(mContext, FeedbackActivity.class));
             }
         });
+        about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, AboutActivity.class));
+            }
+        });
     }
 
     private void loadLogo() {

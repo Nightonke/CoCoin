@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
 import com.github.florent37.materialviewpager.MaterialViewPagerHelper;
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.github.ksoichiro.android.observablescrollview.ObservableScrollView;
@@ -474,19 +472,6 @@ public class CustomViewFragment extends Fragment {
                         .commit();
             }
         });
-    }
-
-    Pair<Boolean, SublimeOptions> getOptions() {
-        SublimeOptions options = new SublimeOptions();
-        int displayOptions = 0;
-
-        displayOptions |= SublimeOptions.ACTIVATE_DATE_PICKER;
-
-        options.setPickerToShow(SublimeOptions.Picker.DATE_PICKER);
-
-        options.setDisplayOptions(displayOptions);
-
-        return new Pair<>(displayOptions != 0 ? Boolean.TRUE : Boolean.FALSE, options);
     }
 
     private class mActionClickListenerForPie implements ActionClickListener {

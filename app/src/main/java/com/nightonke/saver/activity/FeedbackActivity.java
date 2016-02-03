@@ -38,7 +38,7 @@ public class FeedbackActivity extends AppCompatActivity implements HelpFeedbackF
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
 
         mViewPager.getPagerTitleStrip().setTypeface(CoCoinUtil.getInstance().typefaceLatoLight, Typeface.NORMAL);
-        mViewPager.getPagerTitleStrip().setTextSize(45);
+        mViewPager.getPagerTitleStrip().setAllCaps(false);
         mViewPager.getPagerTitleStrip().setUnderlineColor(Color.parseColor("#00000000"));
         mViewPager.getPagerTitleStrip().setIndicatorColor(Color.parseColor("#00000000"));
         mViewPager.getPagerTitleStrip().setUnderlineHeight(0);

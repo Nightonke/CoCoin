@@ -532,4 +532,41 @@
     <string name="help_feedback_dialog_send">send</string>
     <string name="help_feedback_dialog_dont_send">don\'t send</string>
 
+    <string name="help_about_content_0"> ● About Me</string>
+    <string name="help_about_content_1">Nightonke</string>
+    <string name="help_about_content_2">github.com/Nightonke/CoCoin</string>
+    <string name="help_about_content_3">blog.csdn.net/u012925008</string>
+    <string name="help_about_content_4">Nightonke@outlook.com</string>
+    <string name="help_about_content_5"> ● Open Source Lib</string>
+    <string name="help_about_content_6">daimajia.androidanimations</string>
+    <string name="help_about_content_7">balysv:material-ripple</string>
+    <string name="help_about_content_8">rengwuxian.materialedittext</string>
+    <string name="help_about_content_9">jakewharton:butterknife</string>
+    <string name="help_about_content_10">florent37:materialviewpager</string>
+    <string name="help_about_content_11">dmytrodanylyk.circular-progress-button</string>
+    <string name="help_about_content_12">wdullaer:materialdatetimepicker</string>
+    <string name="help_about_content_13">melnykov:floatingactionbutton</string>
+    <string name="help_about_content_14">sacot41:scviewpager</string>
+    <string name="help_about_content_15">daimajia.slider</string>
+    <string name="help_about_content_16">aakira:expandable-layout</string>
+    <string name="help_about_content_17">Yalantis:GuillotineMenu-Android</string>
+    <string name="help_about_content_18">lecho:hellocharts</string>
+    <string name="help_about_content_19">nispok:snackbar</string>
+    <string name="help_about_content_20">steamcrafted:materialiconlib</string>
+    <string name="help_about_content_21">johnpersano:supertoasts</string>
+    <string name="help_about_content_22">squareup.leakcanary</string>
+    <string name="help_about_content_23">h6ah4i.android.widget.advrecyclerview:advrecyclerview</string>
+    <string name="help_about_content_24">hdodenhof:circleimageview</string>
+    <string name="help_about_content_25">miguelcatalan:materialsearchview</string>
+    <string name="help_about_content_26">wnafee:vector-compat</string>
+    <string name="help_about_content_27">danoz:recyclerviewfastscroller</string>
+    <string name="help_about_content_28">afollestad.material-dialogs</string>
+    <string name="help_about_content_29">rey5137:material</string>
+    <string name="help_about_content_30">bmob.android</string>
+    <string name="help_about_content_31">koushikdutta.ion</string>
+    <string name="help_about_content_32">tencent.bugly</string>
+    <string name="help_about_content_33">ozodrukh:CircularReveal</string>
+
+    <string name="copy_to_clipboard">Copied e-mail to clipboard</string>
+
 </resources>

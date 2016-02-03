@@ -43,6 +43,8 @@ dependencies {
 
     // material edittext
     compile 'com.rengwuxian.materialedittext:library:2.1.4'
+
+    // butterknife
     compile 'com.jakewharton:butterknife:6.1.0'
 
     // material viewpager
@@ -67,9 +69,6 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.3.2'
     compile 'com.daimajia.slider:library:1.1.5@aar'
 
-    // text drawable
-    compile 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
-
     // expandable layout
     compile 'com.github.aakira:expandable-layout:1.4.1@aar'
 
@@ -83,7 +82,7 @@ dependencies {
     compile 'com.nispok:snackbar:2.11.+'
 
     // icons
-    compile 'net.steamcrafted:materialiconlib:1.0.5'
+    compile 'net.steamcrafted:materialiconlib:1.0.8'
 
     // toasts
     compile 'com.github.johnpersano:supertoasts:1.3.4@aar'
@@ -107,9 +106,6 @@ dependencies {
 
     // fast scroller
     compile 'xyz.danoz:recyclerviewfastscroller:0.1.3'
-
-    // time picker
-    compile 'com.appeaser.sublimepickerlibrary:sublimepickerlibrary:1.0.0'
 
     // dialogs
     compile('com.github.afollestad.material-dialogs:commons:0.8.5.1@aar') {

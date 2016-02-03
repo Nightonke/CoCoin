@@ -1,0 +1,1446 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.github.ksoichiro.android.observablescrollview.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:clickable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/material_view_pager_placeholder"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="@dimen/cardMarginVertical"
+                android:layout_marginLeft="@dimen/cardMarginHorizontal"
+                android:layout_marginRight="@dimen/cardMarginHorizontal"
+                android:layout_marginTop="@dimen/cardMarginVertical"
+                app:cardPreventCornerOverlap="false"
+                app:cardBackgroundColor="@color/white"
+                app:contentPadding="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/content_0"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_gravity="center_vertical|left"
+                        android:textColor="@color/my_blue"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:text="@string/help_about_content_0"
+                        />
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="account"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/help_about_content_1"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="github_circle"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/help_about_content_2"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="package_variant"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/help_about_content_3"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="email"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_4"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:text="@string/help_about_content_4"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <TextView
+                        android:id="@+id/content_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_gravity="center_vertical|left"
+                        android:textColor="@color/my_blue"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:text="@string/help_about_content_5"
+                        />
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="motorbike"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_6"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_6"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_7"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="water"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_7"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_7"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="pencil_box_outline"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_8"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_8"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_9"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="arrow_up"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_9"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_9"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_10"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="layers"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_10"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_10"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_11"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="hexagon"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_11"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_11"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_12"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="calendar"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_12"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_12"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_13"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="checkbox_blank_circle"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_13"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_13"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_14"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="checkbox_multiple_blank"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_14"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_14"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_15"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="checkerboard"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_15"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_15"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_16"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="crop_portrait"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_16"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_16"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_17"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="menu"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_17"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_17"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_18"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="chart_arc"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_18"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_18"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_19"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="comment_alert_outline"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_19"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_19"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_20"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="emoticon"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_20"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_20"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_21"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="message_processing"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_21"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_21"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_22"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="bug"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_22"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_22"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_23"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="playlist_minus"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_23"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_23"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_24"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="account_circle"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_24"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_24"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_25"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="magnify"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_25"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_25"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_26"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="check"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_26"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_26"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_27"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="swap_vertical"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_27"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_27"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_28"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="comment_alert_outline"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_28"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_28"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_29"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="arrange_bring_forward"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_29"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_29"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_30"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="database"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_30"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_30"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_31"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="account_circle"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_31"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_31"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_32"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="bug"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_32"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_32"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                    <com.balysv.materialripple.MaterialRippleLayout
+                        android:id="@+id/layout_33"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="5dp"
+                        app:mrl_rippleAlpha="0.2"
+                        app:mrl_rippleColor="#0000ff"
+                        app:mrl_rippleHover="true"
+                        app:mrl_rippleOverlay="false">
+
+                        <LinearLayout
+                            android:layout_height="match_parent"
+                            android:layout_width="match_parent"
+                            android:orientation="horizontal"
+                            >
+
+                            <net.steamcrafted.materialiconlib.MaterialIconView
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                app:materialIcon="water"
+                                app:materialIconColor="@color/my_blue"
+                                app:materialIconSize="24dp"
+                                android:scaleType="center"
+                                android:layout_gravity="center_vertical"
+                                android:layout_marginLeft="10dp"
+                                />
+
+                            <TextView
+                                android:id="@+id/content_33"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="left|center_vertical"
+                                android:layout_marginLeft="10dp"
+                                android:layout_marginRight="10dp"
+                                android:text="@string/help_about_content_33"
+                                android:textColor="@color/my_blue"
+                                />
+
+                        </LinearLayout>
+
+                    </com.balysv.materialripple.MaterialRippleLayout>
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
+
+</FrameLayout>

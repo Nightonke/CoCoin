@@ -178,27 +178,6 @@
         <item name="android:windowAnimationStyle">@null</item>
     </style>
 
-    <style name="ShowSingleMonthPerPosition">
-        <item name="sublimePickerStyle">@style/SPSingleMonthPerPosition</item>
-    </style>
-
-    <style name="SPSingleMonthPerPosition" parent="SPDefaultImpl">
-        <item name="spMonthViewStyle">@style/MVSingleMonthPerPositionImpl</item>
-    </style>
-
-    <style name="MVSingleMonthPerPositionImpl" parent="MonthViewStyle">
-        <item name="showSingleMonthPerPosition">true</item>
-    </style>
-
-    <style name="SPDefaultImpl" parent="SublimePickerStyleLight">
-        <item name="colorAccent">@color/my_blue</item>
-        <item name="colorPrimaryDark">#141414</item>
-        <item name="colorPrimary">#212121</item>
-        <item name="android:textColorPrimary">#212121</item>
-        <item name="android:textColorSecondary">#727272</item>
-        <item name="android:textColorPrimaryInverse">#FFFFFF</item>
-    </style>
-
     <style name="settings_switch">
         <item name="sw_trackSize">15dp</item>
         <item name="sw_trackCap">round</item>
