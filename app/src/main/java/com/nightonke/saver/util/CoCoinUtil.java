@@ -1175,7 +1175,17 @@ public class CoCoinUtil {
         return -1;
     }
 
-
+    public static int textCounter(String s) {
+        int counter = 0;
+        for (char c : s.toCharArray()) {
+            if (c < 128) {
+                counter++;
+            } else {
+                counter += 2;
+            }
+        }
+        return counter;
+    }
 
 
 

@@ -71,6 +71,8 @@
             android:theme="@style/CoCoinSettingActivityStyle" />
         <activity android:name="com.github.mmin18.layoutcast.ResetActivity" />
         <activity android:name=".activity.HelpActivity" />
+        <activity android:name=".activity.FeedbackActivity" />
+        <activity android:name=".activity.AboutActivity" />
         <activity android:name=".activity.ShowActivity" />
     </application>
 

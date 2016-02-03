@@ -16,12 +16,12 @@ import com.nightonke.saver.R;
 /**
  * Created by Weiping on 2016/2/2.
  */
-public class HelpMeFragment extends Fragment {
+public class HelpAboutFragment extends Fragment {
 
     private ObservableScrollView mScrollView;
 
-    public static HelpMeFragment newInstance() {
-        HelpMeFragment fragment = new HelpMeFragment();
+    public static HelpAboutFragment newInstance() {
+        HelpAboutFragment fragment = new HelpAboutFragment();
         return fragment;
     }
 
@@ -45,7 +45,7 @@ public class HelpMeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_help_me_view, container, false);
+        return inflater.inflate(R.layout.fragment_help_cocoin_view, container, false);
     }
 
     @Override

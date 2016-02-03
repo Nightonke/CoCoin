@@ -22,7 +22,9 @@
     <string name="expense_report">Expense report</string>
     <string name="sync">Sync to server</string>
     <string name="settings">Settings</string>
-    <string name="help">Help &amp; feedback</string>
+    <string name="help">Help</string>
+    <string name="feedback">Feedback</string>
+    <string name="about">About</string>
 
     <string name="today_empty">New day!</string>
     <string name="yesterday_empty">No records.</string>
@@ -514,5 +516,20 @@
         If you enable the color remind function, after you account a record which made the expenses of this month is large that warning value, the color of interface will change.
     </string>
     <string name="help_cocoin_content_11"> ● Thanks for using CoCoin</string>
+
+    <string name="help_feedback_content_1"> ● It\'s so nice to hear from you. If you wanna send me some images or other non-text feedback, my e-mail is Nightonke@outlook.com.</string>
+    <string name="help_feedback_content_2">Let\'s improve CoCoin</string>
+    <string name="help_feedback_hint">Write feedback here</string>
+    <string name="help_feedback_edit">Edit</string>
+    <string name="help_feedback_send">Send</string>
+    <string name="help_feedback_dialog_title">Words Invalid</string>
+    <string name="help_feedback_dialog_content">The number of words is invalid(1~400).</string>
+    <string name="help_feedback_sent">Sending feedback...</string>
+    <string name="help_feedback_sent_fail">Send feedback failed!</string>
+    <string name="help_feedback_sent_successfully">Send feedback successfully</string>
+    <string name="help_feedback_dialog_title_1">Send Feedback</string>
+    <string name="help_feedback_dialog_content_1">You have edited feedback but haven\'t sent. Would you like to send it?</string>
+    <string name="help_feedback_dialog_send">send</string>
+    <string name="help_feedback_dialog_dont_send">don\'t send</string>
 
 </resources>

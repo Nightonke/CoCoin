@@ -41,13 +41,11 @@ import com.nightonke.saver.adapter.TagChooseFragmentAdapter;
 import com.nightonke.saver.fragment.CoCoinFragmentManager;
 import com.nightonke.saver.fragment.TagChooseFragment;
 import com.nightonke.saver.model.AppUpdateManager;
-import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.CoCoinScrollableViewPager;
-import com.nightonke.saver.ui.CoCoinUnscrollableViewPager;
 import com.nightonke.saver.ui.DummyOperation;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.ui.guillotine.animation.GuillotineAnimation;
@@ -55,13 +53,11 @@ import com.nightonke.saver.ui.guillotine.interfaces.GuillotineListener;
 import com.nightonke.saver.util.CoCoinToast;
 import com.nightonke.saver.util.CoCoinUtil;
 import com.rey.material.widget.RadioButton;
-import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
@@ -602,7 +598,7 @@ public class MainActivity extends AppCompatActivity
 
             if (shouldChange) {
                 window.setStatusBarColor(
-                        CoCoinUtil.getDeeperColor(SettingManager.getInstance().getRemindColor()));
+                        CoCoinUtil.getInstance().getDeeperColor(SettingManager.getInstance().getRemindColor()));
             } else {
                 window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
             }
@@ -618,11 +614,11 @@ public class MainActivity extends AppCompatActivity
             guillotineColorLy.setBackgroundColor(SettingManager.getInstance().getRemindColor());
             guillotineToolBar.setBackgroundColor(SettingManager.getInstance().getRemindColor());
         } else {
-            root.setBackgroundColor(CoCoinUtil.MY_BLUE);
-            toolbar.setBackgroundColor(CoCoinUtil.MY_BLUE);
-            guillotineBackground.setBackgroundColor(CoCoinUtil.MY_BLUE);
-            guillotineColorLy.setBackgroundColor(CoCoinUtil.MY_BLUE);
-            guillotineToolBar.setBackgroundColor(CoCoinUtil.MY_BLUE);
+            root.setBackgroundColor(CoCoinUtil.getInstance().MY_BLUE);
+            toolbar.setBackgroundColor(CoCoinUtil.getInstance().MY_BLUE);
+            guillotineBackground.setBackgroundColor(CoCoinUtil.getInstance().MY_BLUE);
+            guillotineColorLy.setBackgroundColor(CoCoinUtil.getInstance().MY_BLUE);
+            guillotineToolBar.setBackgroundColor(CoCoinUtil.getInstance().MY_BLUE);
         }
         if (CoCoinFragmentManager.mainActivityEditMoneyFragment != null)
             CoCoinFragmentManager.mainActivityEditMoneyFragment.setEditColor(shouldChange);

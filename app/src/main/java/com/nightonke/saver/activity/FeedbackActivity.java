@@ -19,7 +19,7 @@ import com.nightonke.saver.adapter.HelpFragmentAdapter;
 import com.nightonke.saver.fragment.HelpFeedbackFragment;
 import com.nightonke.saver.util.CoCoinUtil;
 
-public class HelpActivity extends AppCompatActivity implements HelpFeedbackFragment.OnTextChangeListener {
+public class FeedbackActivity extends AppCompatActivity implements HelpFeedbackFragment.OnTextChangeListener {
 
     private MaterialViewPager mViewPager;
 
@@ -71,7 +71,7 @@ public class HelpActivity extends AppCompatActivity implements HelpFeedbackFragm
             });
         }
 
-        adapter = new HelpFragmentAdapter(getSupportFragmentManager(), 0);
+        adapter = new HelpFragmentAdapter(getSupportFragmentManager(), 1);
         mViewPager.getViewPager().setAdapter(adapter);
         mViewPager.getPagerTitleStrip().setViewPager(mViewPager.getViewPager());
 

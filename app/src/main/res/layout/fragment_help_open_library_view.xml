@@ -2,7 +2,8 @@
 
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.github.ksoichiro.android.observablescrollview.ObservableScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/scrollView"
@@ -10,6 +11,109 @@
         android:layout_height="match_parent"
         android:scrollbars="none"
         android:clickable="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/material_view_pager_placeholder"/>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/card_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="2dp"
+                android:layout_marginBottom="@dimen/cardMarginVertical"
+                android:layout_marginLeft="@dimen/cardMarginHorizontal"
+                android:layout_marginRight="@dimen/cardMarginHorizontal"
+                android:layout_marginTop="@dimen/cardMarginVertical"
+                app:cardPreventCornerOverlap="false"
+                app:cardBackgroundColor="@color/white"
+                app:contentPadding="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="1200dp"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left"
+                        android:layout_gravity="center_vertical|left"
+                        android:textColor="@color/my_blue"
+                        android:textSize="15sp"
+                        android:padding="10dp"
+                        android:text="@string/help_feedback_content_1"
+                        />
+
+                    <EditText
+                        android:id="@+id/edittext"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:textColor="@color/my_blue"
+                        android:text=""
+                        android:inputType="textMultiLine"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:paddingTop="20dp"
+                        android:paddingBottom="20dp"
+                        android:background="@null"
+                        android:minLines="3"
+                        android:gravity="left|top"
+                        android:hint="@string/help_feedback_hint"
+                        />
+
+                    <LinearLayout
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:orientation="horizontal"
+                        >
+
+                        <TextView
+                            android:id="@+id/helper"
+                            android:layout_height="wrap_content"
+                            android:layout_width="wrap_content"
+                            android:text="@string/help_feedback_content_2"
+                            android:gravity="left|center_vertical"
+                            android:textColor="@color/my_blue"
+                            android:paddingLeft="15dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/number"
+                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:text="123/400"
+                            android:gravity="right|center_vertical"
+                            android:textColor="@color/my_blue"
+                            android:paddingRight="15dp"
+                            />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/send"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/help_feedback_send"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/button_feedback"
+                        />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
 
     </com.github.ksoichiro.android.observablescrollview.ObservableScrollView>
 

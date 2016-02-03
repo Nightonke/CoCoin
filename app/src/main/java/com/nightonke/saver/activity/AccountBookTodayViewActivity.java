@@ -100,6 +100,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
     private MaterialRippleLayout sync;
     private MaterialRippleLayout settings;
     private MaterialRippleLayout help;
+    private MaterialRippleLayout feedback;
+    private MaterialRippleLayout about;
 
     private MaterialIconView syncIcon;
 
@@ -155,6 +157,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         sync = (MaterialRippleLayout)mDrawer.findViewById(R.id.sync_layout);
         settings = (MaterialRippleLayout)mDrawer.findViewById(R.id.settings_layout);
         help = (MaterialRippleLayout)mDrawer.findViewById(R.id.help_layout);
+        feedback = (MaterialRippleLayout)mDrawer.findViewById(R.id.feedback_layout);
+        about = (MaterialRippleLayout)mDrawer.findViewById(R.id.about_layout);
         syncIcon = (MaterialIconView)mDrawer.findViewById(R.id.sync_icon);
         setIconEnable(syncIcon, SettingManager.getInstance().getLoggenOn());
         monthExpenseTip = (TextView)mDrawer.findViewById(R.id.month_expense_tip);
@@ -859,6 +863,8 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.sync_text)).setTypeface(CoCoinUtil.GetTypeface());
         ((TextView)findViewById(R.id.settings_text)).setTypeface(CoCoinUtil.GetTypeface());
         ((TextView)findViewById(R.id.help_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.feedback_text)).setTypeface(CoCoinUtil.GetTypeface());
+        ((TextView)findViewById(R.id.about_text)).setTypeface(CoCoinUtil.GetTypeface());
     }
 
     private void setListeners() {
@@ -908,6 +914,12 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(mContext, HelpActivity.class));
+            }
+        });
+        feedback.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(mContext, FeedbackActivity.class));
             }
         });
     }

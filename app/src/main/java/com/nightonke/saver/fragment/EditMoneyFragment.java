@@ -150,9 +150,9 @@ public class EditMoneyFragment extends Fragment {
             editView.setPrimaryColor(SettingManager.getInstance().getRemindColor());
             editView.setHelperTextColor(SettingManager.getInstance().getRemindColor());
         } else {
-            editView.setTextColor(CoCoinUtil.MY_BLUE);
-            editView.setPrimaryColor(CoCoinUtil.MY_BLUE);
-            editView.setHelperTextColor(CoCoinUtil.MY_BLUE);
+            editView.setTextColor(CoCoinUtil.getInstance().MY_BLUE);
+            editView.setPrimaryColor(CoCoinUtil.getInstance().MY_BLUE);
+            editView.setHelperTextColor(CoCoinUtil.getInstance().MY_BLUE);
         }
     }
 
