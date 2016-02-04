@@ -3,12 +3,12 @@
 CoCoin, Multi-view Accounting Application
 
 #中文文档
-编辑中
+[README-ZH.md](https://github.com/Nightonke/CoCoin/blob/master/README-ZH.md)
 
 #Download
-[APK from Github](https://github.com/Nightonke/CoCoin/blob/master/APK/CoCoin%20V1.2.0.apk)
-QR code:
-![这里写图片描述](https://github.com/Nightonke/CoCoin/blob/master/APK/CoCoin%20V1.2.0.png)
+[APK from Github](https://github.com/Nightonke/CoCoin/blob/master/APK/CoCoin%20V1.2.0.apk)  
+QR code:  
+![CoCoin](https://github.com/Nightonke/CoCoin/blob/master/APK/CoCoin%20V1.2.0.png)
 
 #Note
 There are some old gifs in the GIF directory.
