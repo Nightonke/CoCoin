@@ -508,7 +508,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
         final User user = getCurrentUser();
 // if login/////////////////////////////////////////////////////////////////////////////////////////
         if (user != null) {
-            if (user.getLogoObjectId() != null) {
+            if (user.getLogoObjectId() != "") {
 // if the logo id is not null, then there must be a logo and a logo file in the server//////////////
 // judge whether there is an old logo of the same user//////////////////////////////////////////////
                 BmobQuery<Logo> bmobQuery = new BmobQuery();
@@ -872,7 +872,7 @@ public class AccountBookSettingActivity extends AppCompatActivity
                 // Todo store tag order
                 user.setShowPicture(SettingManager.getInstance().getShowPicture());
                 user.setIsHollow(SettingManager.getInstance().getIsHollow());
-                user.setLogoObjectId(null);
+                user.setLogoObjectId("");
                 user.signUp(CoCoinApplication.getAppContext(), new SaveListener() {
                     @Override
                     public void onSuccess() {

@@ -108,34 +108,42 @@ public class AppUpdateManager {
                         } else {
                             mustUpdate = false;
                         }
-                        int max = -1;
-                        int maxPosition = 0;
-                        for (int i = 0; i < object.size(); i++) {
-                            if (object.get(i).getVersion() > max) {
-                                max = object.get(i).getVersion();
-                                maxPosition = i;
+                        if (object.size() > 0) {
+                            int max = -1;
+                            int maxPosition = 0;
+                            for (int i = 0; i < object.size(); i++) {
+                                if (object.get(i).getVersion() > max) {
+                                    max = object.get(i).getVersion();
+                                    maxPosition = i;
+                                }
                             }
+                            spec = object.get(maxPosition).getFileUrl();
+                            updateContent = object.get(maxPosition).getInfo();
+                            SettingManager.getInstance().setCanBeUpdated(true);
+                            if (SettingManager.getInstance().getRemindUpdate()) showNoticeDialog();
+                        } else {
+                            SettingManager.getInstance().setCanBeUpdated(false);
                         }
-                        spec = object.get(maxPosition).getFileUrl();
-                        updateContent = object.get(maxPosition).getInfo();
-                        SettingManager.getInstance().setCanBeUpdated(true);
-                        if (SettingManager.getInstance().getRemindUpdate()) showNoticeDialog();
                     }
                     @Override
                     public void onError(int code, String msg) {
                         mustUpdate = false;
-                        int max = -1;
-                        int maxPosition = 0;
-                        for (int i = 0; i < object.size(); i++) {
-                            if (object.get(i).getVersion() > max) {
-                                max = object.get(i).getVersion();
-                                maxPosition = i;
+                        if (object.size() > 0) {
+                            int max = -1;
+                            int maxPosition = 0;
+                            for (int i = 0; i < object.size(); i++) {
+                                if (object.get(i).getVersion() > max) {
+                                    max = object.get(i).getVersion();
+                                    maxPosition = i;
+                                }
                             }
+                            spec = object.get(maxPosition).getFileUrl();
+                            updateContent = object.get(maxPosition).getInfo();
+                            SettingManager.getInstance().setCanBeUpdated(true);
+                            if (SettingManager.getInstance().getRemindUpdate()) showNoticeDialog();
+                        } else {
+                            SettingManager.getInstance().setCanBeUpdated(false);
                         }
-                        spec = object.get(maxPosition).getFileUrl();
-                        updateContent = object.get(maxPosition).getInfo();
-                        SettingManager.getInstance().setCanBeUpdated(true);
-                        if (SettingManager.getInstance().getRemindUpdate()) showNoticeDialog();
                     }
                 });
             }

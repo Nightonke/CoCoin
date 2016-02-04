@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">CoCoin</string>
-    <string name="app_splash_name">CoCoin V1.1.0</string>
+    <string name="app_splash_name">CoCoin V1.2.0</string>
     <string name="app_info">
         CoCoin&#13;&#10;
         Copyright © Nightonke
@@ -568,5 +568,10 @@
     <string name="help_about_content_33">ozodrukh:CircularReveal</string>
 
     <string name="copy_to_clipboard">Copied e-mail to clipboard</string>
+
+    <string name="show_text_0">30 Tags</string>
+    <string name="show_text_1">Multi Charts</string>
+    <string name="show_text_2">Cloud Sync</string>
+    <string name="show_text_3">Intelligent Reminder</string>
 
 </resources>

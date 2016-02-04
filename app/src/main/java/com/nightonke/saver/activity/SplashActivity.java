@@ -158,7 +158,7 @@ public class SplashActivity extends Activity {
         @Override
         protected String doInBackground(String... params) {
             Bmob.initialize(CoCoinApplication.getAppContext(), CoCoin.APPLICATION_ID);
-            CrashReport.initCrashReport(CoCoinApplication.getAppContext(), "900016815", false);
+            CrashReport.initCrashReport(CoCoinApplication.getAppContext(), "900018935", false);
             RecordManager.getInstance(CoCoinApplication.getAppContext());
             CoCoinUtil.init(CoCoinApplication.getAppContext());
             return null;

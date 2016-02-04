@@ -557,4 +557,9 @@
 
     <string name="copy_to_clipboard">已将e-mail复制到剪切板</string>
 
+    <string name="show_text_0">30个标签</string>
+    <string name="show_text_1">多种视图</string>
+    <string name="show_text_2">云同步</string>
+    <string name="show_text_3">智能提醒</string>
+
 </resources>

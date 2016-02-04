@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.nightonke.saver.activity.ShowActivity">
 
     <com.dev.sacot41.scviewpager.SCViewPager
@@ -23,39 +22,140 @@
         />
 
     <ImageView
-        android:id="@+id/example1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/fruit_icon"
+        android:id="@+id/icon_4"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:src="@drawable/breakfast_icon"
         />
 
     <ImageView
-        android:id="@+id/example2"
-        android:layout_width="wrap_content"
+        android:id="@+id/icon_11"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:src="@drawable/hobby_icon"
+        />
+
+    <TextView
+        android:id="@+id/text_0"
         android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:text="@string/show_text_0"
+        android:textColor="@color/white"
+        android:textSize="18sp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/fruit_icon"
         />
 
     <ImageView
-        android:id="@+id/example3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/fruit_icon"
+        android:id="@+id/icon_12"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:src="@drawable/insurance_icon"
         />
 
     <ImageView
-        android:id="@+id/example4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/icon_19"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center"
+        android:src="@drawable/partner_icon"
+        />
+
+    <lecho.lib.hellocharts.view.PieChartView
+        android:id="@+id/pie"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        >
+    </lecho.lib.hellocharts.view.PieChartView>
+
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/fruit_icon"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
+    </lecho.lib.hellocharts.view.LineChartView>
+
+    <lecho.lib.hellocharts.view.ColumnChartView
+        android:id="@+id/histogram"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        >
+    </lecho.lib.hellocharts.view.ColumnChartView>
+
+    <TextView
+        android:id="@+id/text_1"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:text="@string/show_text_1"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
+    <ImageView
+        android:id="@+id/cloud"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/cloud"
+        />
+
+    <ImageView
+        android:id="@+id/mobile"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/mobile"
+        />
+
+    <TextView
+        android:id="@+id/text_2"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:text="@string/show_text_2"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        />
+
+    <ImageView
+        android:id="@+id/remind_1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/cocoin_splash_1"
+        />
+
+    <ImageView
+        android:id="@+id/remind_2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/cocoin_splash_2"
+        />
+
+    <TextView
+        android:id="@+id/text_3"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:gravity="center"
+        android:text="@string/show_text_3"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
         />
 
     <View

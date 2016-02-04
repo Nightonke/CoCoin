@@ -939,6 +939,7 @@ public class AccountBookTodayViewActivity extends AppCompatActivity {
                     // the local logo file is missed
                     // try to get from the server
                     BmobQuery<Logo> bmobQuery = new BmobQuery();
+                    Log.d("CoCoin", user.getLogoObjectId());
                     bmobQuery.addWhereEqualTo("objectId", user.getLogoObjectId());
                     bmobQuery.findObjects(CoCoinApplication.getAppContext()
                             , new FindListener<Logo>() {

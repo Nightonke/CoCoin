@@ -16,7 +16,7 @@ public class User extends BmobUser {
     private String androidId;
 
     // the user's logo
-    private String logoObjectId;
+    private String logoObjectId = "";
 
     // the user's setting for month limit
     private Boolean isMonthLimit;
