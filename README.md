@@ -11,8 +11,9 @@ QR code:
 ![CoCoin](https://github.com/Nightonke/CoCoin/blob/master/APK/CoCoin%20V1.2.0.png)
 
 #Note
-There are some old gifs in the GIF directory.
-If you have install V1.1.0, maybe you should uninstall it first and then install the V1.2.0. For V1.1.0 is not beta version.
+1. There are some old gifs in the GIF directory.  
+2. If you have install V1.1.0, maybe you should uninstall it first and then install the V1.2.0. For V1.1.0 is not beta version.  
+3. [Why there isn't CoCoin.java in Model package?](https://github.com/Nightonke/CoCoin/issues/7)  
 
 #Intro
 ###Basic
