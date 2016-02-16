@@ -11,7 +11,9 @@ CoCoin，一款多视图记账APP
 ![CoCoin](https://github.com/Nightonke/CoCoin/blob/master/APK/CoCoin%20V1.2.0.png)
 
 #备注
-在GIF文件夹里有一些相关的gif。如果您之前安装了V1.1.0版本，建议先卸载V1.1.0版本再安装V1.2.0，因为V1.1.0并不是正式版。
+1. 在GIF文件夹里有一些相关的gif。
+2. 如果您之前安装了V1.1.0版本，建议先卸载V1.1.0版本再安装V1.2.0，因为V1.1.0并不是正式版。
+3. [在Model包里找不到CoCoin.java？](https://github.com/Nightonke/CoCoin/issues/7)  
 
 #介绍
 ###概况
