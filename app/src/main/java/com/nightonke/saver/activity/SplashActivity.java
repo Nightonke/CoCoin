@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
@@ -157,6 +158,7 @@ public class SplashActivity extends Activity {
 
         @Override
         protected String doInBackground(String... params) {
+            Looper.prepare();
             Bmob.initialize(CoCoinApplication.getAppContext(), CoCoin.APPLICATION_ID);
             CrashReport.initCrashReport(CoCoinApplication.getAppContext(), "900018935", false);
             RecordManager.getInstance(CoCoinApplication.getAppContext());
