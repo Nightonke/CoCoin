@@ -17,6 +17,7 @@ import java.util.Calendar;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Optional;
 
 
 /**
@@ -122,7 +123,6 @@ public class DrawerMonthViewRecyclerViewAdapter
 
     public class viewHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
-
         @BindView(R.id.month)
         TextView month;
 

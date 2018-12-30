@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -843,58 +844,58 @@ public class TodayViewRecyclerViewAdapter
 
     // view holder class////////////////////////////////////////////////////////////////////////////////
     public static class viewHolder extends RecyclerView.ViewHolder {
-
+        @Nullable
         @BindView(R.id.date)
         TextView date;
-
+        @Nullable
         @BindView(R.id.date_bottom)
         TextView dateBottom;
-
+        @Nullable
         @BindView(R.id.expanse)
         TextView expanseSum;
-
+        @Nullable
         @BindView(R.id.empty_tip)
         TextView emptyTip;
-
+        @Nullable
         @BindView(R.id.chart_pie)
         PieChartView pie;
-
+        @Nullable
         @BindView(R.id.histogram)
         ColumnChartView histogram;
-
+        @Nullable
         @BindView(R.id.icon_left)
         MaterialIconView iconLeft;
-
+        @Nullable
         @BindView(R.id.icon_right)
         MaterialIconView iconRight;
-
+        @Nullable
         @BindView(R.id.histogram_icon_left)
         MaterialIconView histogram_icon_left;
-
+        @Nullable
         @BindView(R.id.histogram_icon_right)
         MaterialIconView histogram_icon_right;
-
+        @Nullable
         @BindView(R.id.icon_reset)
         MaterialIconView reset;
-
+        @Nullable
         @BindView(R.id.all)
         MaterialIconView all;
-
+        @Nullable
         @BindView(R.id.tag_image)
         ImageView tagImage;
-
+        @Nullable
         @BindView(R.id.money)
         TextView money;
-
+        @Nullable
         @BindView(R.id.cell_date)
         TextView cell_date;
-
+        @Nullable
         @BindView(R.id.remark)
         TextView remark;
-
+        @Nullable
         @BindView(R.id.index)
         TextView index;
-
+        @Nullable
         @BindView(R.id.material_ripple_layout)
         MaterialRippleLayout layout;
 

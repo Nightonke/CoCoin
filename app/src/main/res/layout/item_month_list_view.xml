@@ -4,7 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.CardView
+
+
+
+    <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -166,5 +169,9 @@
 
         </LinearLayout>
 
-    </androidx.appcompat.widget.CardView>
+
+    </androidx.cardview.widget.CardView>
+
+
+
 </FrameLayout>
