@@ -61,7 +61,7 @@
                 android:id="@+id/icon_left"
                 />
 
-            <android.support.v7.widget.CardView
+            <androidx.appcompat.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="2dp"
@@ -173,11 +173,11 @@
 
                 </com.balysv.materialripple.MaterialRippleLayout>
 
-            </android.support.v7.widget.CardView>
+            </androidx.appcompat.widget.CardView>
 
         </FrameLayout>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="100dp"
             app:cardCornerRadius="2dp"
@@ -281,9 +281,9 @@
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="360dp"
             app:cardCornerRadius="2dp"
@@ -593,9 +593,9 @@
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:cardCornerRadius="2dp"
@@ -665,9 +665,9 @@
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:cardCornerRadius="2dp"
@@ -722,9 +722,9 @@
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:cardCornerRadius="2dp"
@@ -779,9 +779,9 @@
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:cardCornerRadius="2dp"
@@ -847,9 +847,9 @@
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:cardCornerRadius="2dp"
@@ -915,9 +915,9 @@
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
-        <android.support.v7.widget.CardView
+        <androidx.appcompat.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:cardCornerRadius="2dp"
@@ -986,7 +986,7 @@
 
             </com.balysv.materialripple.MaterialRippleLayout>
 
-        </android.support.v7.widget.CardView>
+        </androidx.appcompat.widget.CardView>
 
     </LinearLayout>
 

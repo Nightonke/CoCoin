@@ -1,7 +1,8 @@
 package com.nightonke.saver.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.nightonke.saver.fragment.MonthViewFragment;
 import com.nightonke.saver.model.RecordManager;
@@ -30,7 +31,7 @@ public class MonthViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     public boolean IS_EMPTY = false;
 
-    public MonthViewFragmentAdapter(android.support.v4.app.FragmentManager fm) {
+    public MonthViewFragmentAdapter(FragmentManager fm) {
         super(fm);
 
         list = new ArrayList<>();

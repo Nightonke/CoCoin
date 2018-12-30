@@ -2,8 +2,6 @@ package com.nightonke.saver.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.Optional;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SelectedValue;
@@ -48,13 +47,10 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class MonthViewRecyclerViewAdapter
         extends RecyclerView.Adapter<MonthViewRecyclerViewAdapter.viewHolder> {
 
-    private Context mContext;
-
-    private List<CoCoinRecord> list;
-
     static final int TYPE_HEADER = 0;
     static final int TYPE_CELL = 1;
-
+    private Context mContext;
+    private List<CoCoinRecord> list;
     private int fragmentPosition;
 
     private ArrayList<List<SliceValue>> sliceValuesList;
@@ -378,34 +374,34 @@ public class MonthViewRecyclerViewAdapter
     }
 
     public static class viewHolder extends RecyclerView.ViewHolder {
-        @Optional
-        @InjectView(R.id.date)
+
+        @BindView(R.id.date)
         TextView date;
-        @Optional
-        @InjectView(R.id.expanse)
+
+        @BindView(R.id.expanse)
         TextView expanseSum;
-        @Optional
-        @InjectView(R.id.tags)
+
+        @BindView(R.id.tags)
         TextView tags;
-        @Optional
-        @InjectView(R.id.empty_tip)
+
+        @BindView(R.id.empty_tip)
         TextView emptyTip;
-        @Optional
-        @InjectView(R.id.chart_pie)
+
+        @BindView(R.id.chart_pie)
         PieChartView pie;
-        @Optional
-        @InjectView(R.id.icon_left)
+
+        @BindView(R.id.icon_left)
         MaterialIconView iconLeft;
-        @Optional
-        @InjectView(R.id.icon_right)
+
+        @BindView(R.id.icon_right)
         MaterialIconView iconRight;
-        @Optional
-        @InjectView(R.id.all)
+
+        @BindView(R.id.all)
         MaterialIconView all;
 
         viewHolder(View view) {
             super(view);
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
     }
 

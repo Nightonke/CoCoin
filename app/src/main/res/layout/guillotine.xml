@@ -8,7 +8,7 @@
     android:background="#00ffffff"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/Toolbar"
         app:contentInsetStart="0dp">
@@ -32,7 +32,7 @@
             android:textSize="25sp"
             />
 
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
         android:layout_width="match_parent"

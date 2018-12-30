@@ -3,15 +3,11 @@ package com.nightonke.saver.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -23,6 +19,9 @@ import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.Feedback;
 import com.nightonke.saver.util.CoCoinUtil;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import cn.bmob.v3.listener.SaveListener;
 
 /**
@@ -42,21 +41,20 @@ public class HelpFeedbackFragment extends Fragment {
     private boolean exceed = false;
 
     private ObservableScrollView mScrollView;
+    private Activity activity;
+    private Context mContext;
 
     public static HelpFeedbackFragment newInstance() {
         HelpFeedbackFragment fragment = new HelpFeedbackFragment();
         return fragment;
     }
 
-    private Activity activity;
-    private Context mContext;
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        if (context instanceof Activity){
-            activity = (Activity)context;
+        if (context instanceof Activity) {
+            activity = (Activity) context;
         }
     }
 
@@ -78,15 +76,15 @@ public class HelpFeedbackFragment extends Fragment {
         mScrollView = (ObservableScrollView) view.findViewById(R.id.scrollView);
         MaterialViewPagerHelper.registerScrollView(getActivity(), mScrollView, null);
 
-        title = (TextView)view.findViewById(R.id.title);
+        title = (TextView) view.findViewById(R.id.title);
         title.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
-        input = (EditText)view.findViewById(R.id.edittext);
+        input = (EditText) view.findViewById(R.id.edittext);
         input.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
-        help = (TextView)view.findViewById(R.id.helper);
+        help = (TextView) view.findViewById(R.id.helper);
         help.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
-        number = (TextView)view.findViewById(R.id.number);
+        number = (TextView) view.findViewById(R.id.number);
         number.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
-        send = (TextView)view.findViewById(R.id.send);
+        send = (TextView) view.findViewById(R.id.send);
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,9 +123,9 @@ public class HelpFeedbackFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 setNumberText();
                 try {
-                    ((OnTextChangeListener)activity)
+                    ((OnTextChangeListener) activity)
                             .onTextChange(input.getText().toString(), exceed);
-                } catch (ClassCastException cce){
+                } catch (ClassCastException cce) {
                     cce.printStackTrace();
                 }
             }
@@ -148,7 +146,7 @@ public class HelpFeedbackFragment extends Fragment {
         if (chineseIsDoubleCount) {
             count = CoCoinUtil.getInstance().textCounter(input.getText().toString());
         } else {
-            count =input.getText().toString().length();
+            count = input.getText().toString().length();
         }
         number.setText(count + "/" + min + "-" + max);
         if (min <= count && count <= max) {

@@ -6,15 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,10 +21,10 @@ import com.github.florent37.materialviewpager.header.HeaderDesign;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
 import com.nightonke.saver.BuildConfig;
+import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.DrawerMonthViewRecyclerViewAdapter;
 import com.nightonke.saver.adapter.DrawerMonthViewRecyclerViewAdapter.OnItemClickListener;
 import com.nightonke.saver.adapter.MonthViewFragmentAdapter;
-import com.nightonke.saver.R;
 import com.nightonke.saver.model.Logo;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
@@ -47,6 +38,15 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.listener.FindListener;
@@ -80,8 +80,8 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
         mContext = this;
         setContentView(R.layout.activity_account_book_month_view);
 
-        userName = (TextView)findViewById(R.id.user_name);
-        userEmail = (TextView)findViewById(R.id.user_email);
+        userName = (TextView) findViewById(R.id.user_name);
+        userEmail = (TextView) findViewById(R.id.user_email);
         userName.setTypeface(CoCoinUtil.typefaceLatoRegular);
         userEmail.setTypeface(CoCoinUtil.typefaceLatoLight);
 
@@ -94,7 +94,7 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
         mViewPager = (MaterialViewPager) findViewById(R.id.materialViewPager);
 
         View view = mViewPager.getRootView();
-        TextView title = (TextView)view.findViewById(R.id.logo_white);
+        TextView title = (TextView) view.findViewById(R.id.logo_white);
         title.setTypeface(CoCoinUtil.typefaceLatoLight);
         title.setText(SettingManager.getInstance().getAccountBookName());
 
@@ -149,7 +149,7 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView = (RecyclerView)mDrawer.findViewById(R.id.recycler_view);
+        recyclerView = (RecyclerView) mDrawer.findViewById(R.id.recycler_view);
         drawerMonthViewRecyclerViewAdapter = new DrawerMonthViewRecyclerViewAdapter(mContext);
         recyclerView.setAdapter(drawerMonthViewRecyclerViewAdapter);
         recyclerView.setHasFixedSize(true);
@@ -169,7 +169,7 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
             }
         });
 
-        profileImage= (CircleImageView)mDrawer.findViewById(R.id.profile_image);
+        profileImage = (CircleImageView) mDrawer.findViewById(R.id.profile_image);
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,11 +181,11 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
             }
         });
 
-        mDemoSlider = (SliderLayout)findViewById(R.id.slider);
+        mDemoSlider = (SliderLayout) findViewById(R.id.slider);
 
         HashMap<String, Integer> urls = CoCoinUtil.GetDrawerTopUrl();
 
-        for(String name : urls.keySet()){
+        for (String name : urls.keySet()) {
             CustomSliderView customSliderView = new CustomSliderView(this);
             // initialize a SliderLayout
             customSliderView
@@ -265,7 +265,8 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
                                 public void onSuccess(List<Logo> object) {
                                     // there has been an old logo in the server/////////////////////////////////////////////////////////
                                     String url = object.get(0).getFile().getFileUrl(CoCoinApplication.getAppContext());
-                                    if (BuildConfig.DEBUG) Log.d("CoCoin", "Logo in server: " + url);
+                                    if (BuildConfig.DEBUG)
+                                        Log.d("CoCoin", "Logo in server: " + url);
                                     Ion.with(CoCoinApplication.getAppContext()).load(url)
                                             .write(new File(CoCoinApplication.getAppContext().getFilesDir()
                                                     + CoCoinUtil.LOGO_NAME))
@@ -278,10 +279,12 @@ public class AccountBookMonthViewActivity extends AppCompatActivity {
                                                 }
                                             });
                                 }
+
                                 @Override
                                 public void onError(int code, String msg) {
                                     // the picture is lost
-                                    if (BuildConfig.DEBUG) Log.d("CoCoin", "Can't find the old logo in server.");
+                                    if (BuildConfig.DEBUG)
+                                        Log.d("CoCoin", "Can't find the old logo in server.");
                                 }
                             });
                 } else {

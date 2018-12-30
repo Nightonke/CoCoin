@@ -9,7 +9,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
+import androidx.core.content.ContextCompat;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.RelativeSizeSpan;
 import android.util.DisplayMetrics;
@@ -27,7 +27,8 @@ import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.db.DB;
 import com.nightonke.saver.db.DBHelper;
 import com.nightonke.saver.model.CoCoinRecord;
-import com.nineoldandroids.animation.ObjectAnimator;
+import android.animation.ObjectAnimator;
+
 import com.rengwuxian.materialedittext.MaterialEditText;
 
 import java.text.ParseException;
