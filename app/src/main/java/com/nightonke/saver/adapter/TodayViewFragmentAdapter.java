@@ -1,7 +1,8 @@
 package com.nightonke.saver.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.nightonke.saver.fragment.TodayViewFragment;
 import com.nightonke.saver.util.CoCoinUtil;
@@ -14,7 +15,7 @@ public class TodayViewFragmentAdapter extends FragmentStatePagerAdapter {
 
     private static int TODAY_VIEW_FRAGMENT_NUMBER = 8;
 
-    public TodayViewFragmentAdapter(android.support.v4.app.FragmentManager fm) {
+    public TodayViewFragmentAdapter(FragmentManager fm) {
         super(fm);
     }
 

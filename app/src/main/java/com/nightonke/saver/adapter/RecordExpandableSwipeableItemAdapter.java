@@ -4,8 +4,9 @@ package com.nightonke.saver.adapter;
  * Created by 伟平 on 2015/11/12.
  */
 
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

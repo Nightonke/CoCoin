@@ -3,9 +3,12 @@
 buildscript {
     repositories {
         jcenter()
+        google()
+
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.3.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
+
         classpath 'com.tencent.bugly:symtabfileuploader:1.3.7'
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -16,6 +19,11 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://raw.github.com/bmob/bmob-android-sdk/master" }
+        maven { url 'https://www.jitpack.io' }
+
+        maven {
+            url "https://raw.github.com/bmob/bmob-android-sdk/master"
+        }
+        google()
     }
 }

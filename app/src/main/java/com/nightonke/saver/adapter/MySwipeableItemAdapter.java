@@ -5,9 +5,6 @@ package com.nightonke.saver.adapter;
  */
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,54 +30,20 @@ import com.nightonke.saver.util.CoCoinUtil;
 import java.util.HashMap;
 import java.util.List;
 
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class MySwipeableItemAdapter
         extends RecyclerView.Adapter<MySwipeableItemAdapter.MyViewHolder>
         implements SwipeableItemAdapter<MySwipeableItemAdapter.MyViewHolder> {
 
-    // NOTE: Make accessible with short name
-    private interface Swipeable extends SwipeableItemConstants {
-    }
-
+    private static HashMap<Integer, Boolean> pinned;
     private OnItemDeleteListener onItemDeleteListener;
     private OnItemClickListener onItemClickListener;
 
     private Context mContext;
     private EventListener mEventListener;
-    private static HashMap<Integer, Boolean> pinned;
-
     private List<CoCoinRecord> records;
-
-    public interface EventListener {
-        void onItemRemoved(int position);
-
-        void onItemPinned(int position);
-
-        void onItemViewClicked(View v, boolean pinned);
-    }
-
-    public static class MyViewHolder extends AbstractSwipeableItemViewHolder {
-        public FrameLayout mContainer;
-        public TextView money;
-        public TextView remark;
-        public TextView date;
-        public ImageView tagImage;
-        public TextView index;
-
-        public MyViewHolder(View v) {
-            super(v);
-            mContainer = (FrameLayout) v.findViewById(R.id.container);
-            money = (TextView) v.findViewById(R.id.money);
-            remark = (TextView) v.findViewById(R.id.remark);
-            date = (TextView) v.findViewById(R.id.date);
-            tagImage = (ImageView) v.findViewById(R.id.image_view);
-            index = (TextView)v.findViewById(R.id.index);
-        }
-
-        @Override
-        public View getSwipeableContainerView() {
-            return mContainer;
-        }
-    }
 
     public MySwipeableItemAdapter(Context inContext, List<CoCoinRecord> records, final OnItemDeleteListener onItemDeleteListener, OnItemClickListener onItemClickListener) {
         mContext = inContext;
@@ -90,7 +53,7 @@ public class MySwipeableItemAdapter
         // Todo optimize
         pinned = new HashMap<>();
         for (int i = records.size() - 1; i >= 0; i--) {
-            pinned.put((int)records.get(i).getId(), false);
+            pinned.put((int) records.get(i).getId(), false);
         }
 
         setHasStableIds(true);
@@ -217,7 +180,7 @@ public class MySwipeableItemAdapter
         switch (result) {
             // swipe right
             case Swipeable.RESULT_SWIPED_RIGHT:
-                if (pinned.get((int)records.get(records.size() - 1 - position).getId())) {
+                if (pinned.get((int) records.get(records.size() - 1 - position).getId())) {
                     return new UnpinResultAction(this, position);
                 } else {
                     return new SwipeRightResultAction(this, position, onItemDeleteListener);
@@ -242,9 +205,59 @@ public class MySwipeableItemAdapter
         mEventListener = eventListener;
     }
 
+    public void setPinned(boolean inPinned, int position) {
+        pinned.put((int) RecordManager.SELECTED_RECORDS.get(
+                RecordManager.SELECTED_RECORDS.size() - 1 - position).getId(), inPinned);
+
+    }
+
+    // NOTE: Make accessible with short name
+    private interface Swipeable extends SwipeableItemConstants {
+    }
+
+    public interface EventListener {
+        void onItemRemoved(int position);
+
+        void onItemPinned(int position);
+
+        void onItemViewClicked(View v, boolean pinned);
+    }
+
+    public interface OnItemDeleteListener {
+        void onSelectSumChanged();
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+    }
+
+    public static class MyViewHolder extends AbstractSwipeableItemViewHolder {
+        public FrameLayout mContainer;
+        public TextView money;
+        public TextView remark;
+        public TextView date;
+        public ImageView tagImage;
+        public TextView index;
+
+        public MyViewHolder(View v) {
+            super(v);
+            mContainer = (FrameLayout) v.findViewById(R.id.container);
+            money = (TextView) v.findViewById(R.id.money);
+            remark = (TextView) v.findViewById(R.id.remark);
+            date = (TextView) v.findViewById(R.id.date);
+            tagImage = (ImageView) v.findViewById(R.id.image_view);
+            index = (TextView) v.findViewById(R.id.index);
+        }
+
+        @Override
+        public View getSwipeableContainerView() {
+            return mContainer;
+        }
+    }
+
     private static class SwipeLeftResultAction extends SwipeResultActionMoveToSwipedDirection {
-        private MySwipeableItemAdapter mAdapter;
         private final int mPosition;
+        private MySwipeableItemAdapter mAdapter;
         private boolean mSetPinned;
 
         SwipeLeftResultAction(MySwipeableItemAdapter adapter, int position) {
@@ -255,9 +268,9 @@ public class MySwipeableItemAdapter
         @Override
         protected void onPerformAction() {
             super.onPerformAction();
-            if (!pinned.get((int)RecordManager.SELECTED_RECORDS.get(
+            if (!pinned.get((int) RecordManager.SELECTED_RECORDS.get(
                     RecordManager.SELECTED_RECORDS.size() - 1 - mPosition).getId())) {
-                pinned.put((int)RecordManager.SELECTED_RECORDS.get(
+                pinned.put((int) RecordManager.SELECTED_RECORDS.get(
                         RecordManager.SELECTED_RECORDS.size() - 1 - mPosition).getId(), true);
                 mSetPinned = true;
                 mAdapter.notifyItemChanged(mPosition);
@@ -281,9 +294,9 @@ public class MySwipeableItemAdapter
 
     public static class SwipeRightResultAction extends SwipeResultActionRemoveItem {
 
+        private final int mPosition;
         private OnItemDeleteListener onItemDeleteListener;
         private MySwipeableItemAdapter mAdapter;
-        private final int mPosition;
 
         SwipeRightResultAction(MySwipeableItemAdapter adapter, int position, OnItemDeleteListener onItemDeleteListener) {
             mAdapter = adapter;
@@ -324,8 +337,8 @@ public class MySwipeableItemAdapter
     }
 
     private static class UnpinResultAction extends SwipeResultActionDefault {
-        private MySwipeableItemAdapter mAdapter;
         private final int mPosition;
+        private MySwipeableItemAdapter mAdapter;
 
         UnpinResultAction(MySwipeableItemAdapter adapter, int position) {
             mAdapter = adapter;
@@ -349,19 +362,5 @@ public class MySwipeableItemAdapter
             // clear the references
             mAdapter = null;
         }
-    }
-
-    public void setPinned(boolean inPinned, int position) {
-        pinned.put((int)RecordManager.SELECTED_RECORDS.get(
-                RecordManager.SELECTED_RECORDS.size() - 1 - position).getId(), inPinned);
-
-    }
-
-    public interface OnItemDeleteListener {
-        void onSelectSumChanged();
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(int position);
     }
 }

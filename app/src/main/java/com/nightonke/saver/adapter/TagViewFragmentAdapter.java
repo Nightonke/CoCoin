@@ -1,7 +1,8 @@
 package com.nightonke.saver.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.fragment.TagViewFragment;
@@ -13,7 +14,7 @@ import com.nightonke.saver.util.CoCoinUtil;
  */
 public class TagViewFragmentAdapter extends FragmentStatePagerAdapter {
 
-    public TagViewFragmentAdapter(android.support.v4.app.FragmentManager fm) {
+    public TagViewFragmentAdapter(FragmentManager fm) {
         super(fm);
     }
 

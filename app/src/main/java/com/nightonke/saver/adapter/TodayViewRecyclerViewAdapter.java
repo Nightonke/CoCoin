@@ -2,8 +2,6 @@ package com.nightonke.saver.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,9 +30,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.Optional;
 import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
@@ -55,13 +54,8 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class TodayViewRecyclerViewAdapter
         extends RecyclerView.Adapter<TodayViewRecyclerViewAdapter.viewHolder> {
 
-    private OnItemClickListener onItemClickListener;
-
-    private Context mContext;
-
     static final int TYPE_HEADER = 0;
     static final int TYPE_BODY = 1;
-
     static final int TODAY = 0;
     static final int YESTERDAY = 1;
     static final int THIS_WEEK = 2;
@@ -70,7 +64,8 @@ public class TodayViewRecyclerViewAdapter
     static final int LAST_MONTH = 5;
     static final int THIS_YEAR = 6;
     static final int LAST_YEAR = 7;
-
+    private OnItemClickListener onItemClickListener;
+    private Context mContext;
     private int fragmentPosition;
 
     // the data of this fragment
@@ -172,7 +167,7 @@ public class TodayViewRecyclerViewAdapter
                         originalTargets[coCoinRecord.getCalendar().get(axis_date) - 1]
                                 += coCoinRecord.getMoney();
                     else originalTargets[(coCoinRecord.getCalendar().get(axis_date) + 5) % 7]
-                                += coCoinRecord.getMoney();
+                            += coCoinRecord.getMoney();
                 } else if (axis_date == Calendar.DAY_OF_MONTH) {
                     originalTargets[coCoinRecord.getCalendar().get(axis_date) - 1]
                             += coCoinRecord.getMoney();
@@ -262,7 +257,7 @@ public class TodayViewRecyclerViewAdapter
                     for (Map.Entry<Integer, Double> entry : TagExpanse.entrySet()) {
                         if (entry.getValue() >= 1) {
                             SliceValue sliceValue = new SliceValue(
-                                    (float)(double)entry.getValue(),
+                                    (float) (double) entry.getValue(),
                                     mContext.getApplicationContext().getResources().
                                             getColor(CoCoinUtil.GetTagColorResource(entry.getKey())));
                             sliceValue.setLabel(String.valueOf(entry.getKey()));
@@ -420,7 +415,7 @@ public class TodayViewRecyclerViewAdapter
                                         CoCoinUtil.GetPercentString(percent) + "\n" +
                                         "于" + CoCoinUtil.GetTagName(tagId);
                             } else {
-                                text = "Spend " + (int)sliceValue.getValue()
+                                text = "Spend " + (int) sliceValue.getValue()
                                         + " (takes " + String.format("%.2f", percent) + "%)\n"
                                         + "in " + CoCoinUtil.GetTagName(tagId);
                             }
@@ -429,7 +424,7 @@ public class TodayViewRecyclerViewAdapter
                                         CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + "\n" +
                                         "于" + CoCoinUtil.GetTagName(tagId);
                             } else {
-                                dialogTitle = "Spend " + (int)sliceValue.getValue()
+                                dialogTitle = "Spend " + (int) sliceValue.getValue()
                                         + dateShownString + "\n" +
                                         "in " + CoCoinUtil.GetTagName(tagId);
                             }
@@ -506,58 +501,58 @@ public class TodayViewRecyclerViewAdapter
 // set value touch listener of histogram////////////////////////////////////////////////////////////
                         holder.histogram.setOnValueTouchListener(
                                 new ColumnChartOnValueSelectListener() {
-                            @Override
-                            public void onValueSelected(int columnIndex,
-                                                        int subcolumnIndex, SubcolumnValue value) {
-                                lastHistogramSelectedPosition = columnIndex;
-                                timeIndex = columnIndex;
-                                // snack bar
-                                RecordManager recordManager
-                                        = RecordManager.getInstance(mContext.getApplicationContext());
+                                    @Override
+                                    public void onValueSelected(int columnIndex,
+                                                                int subcolumnIndex, SubcolumnValue value) {
+                                        lastHistogramSelectedPosition = columnIndex;
+                                        timeIndex = columnIndex;
+                                        // snack bar
+                                        RecordManager recordManager
+                                                = RecordManager.getInstance(mContext.getApplicationContext());
 
-                                String text = CoCoinUtil.GetSpendString((int) value.getValue());
-                                if (tagId != -1)
-                                    // belongs a tag
-                                    if ("zh".equals(CoCoinUtil.GetLanguage()))
-                                        text = getSnackBarDateString() + text + "\n" +
-                                                "于" + CoCoinUtil.GetTagName(tagId);
-                                    else
-                                        text += getSnackBarDateString() + "\n"
-                                                + "in " + CoCoinUtil.GetTagName(tagId);
-                                else
-                                    // don't belong to any tag
-                                    if ("zh".equals(CoCoinUtil.GetLanguage()))
-                                        text = getSnackBarDateString() + "\n" + text;
-                                    else
-                                        text += "\n" + getSnackBarDateString();
+                                        String text = CoCoinUtil.GetSpendString((int) value.getValue());
+                                        if (tagId != -1)
+                                            // belongs a tag
+                                            if ("zh".equals(CoCoinUtil.GetLanguage()))
+                                                text = getSnackBarDateString() + text + "\n" +
+                                                        "于" + CoCoinUtil.GetTagName(tagId);
+                                            else
+                                                text += getSnackBarDateString() + "\n"
+                                                        + "in " + CoCoinUtil.GetTagName(tagId);
+                                        else
+                                            // don't belong to any tag
+                                            if ("zh".equals(CoCoinUtil.GetLanguage()))
+                                                text = getSnackBarDateString() + "\n" + text;
+                                            else
+                                                text += "\n" + getSnackBarDateString();
 
 // setting the snack bar and dialog title of histogram//////////////////////////////////////////////
-                                dialogTitle = text;
-                                Snackbar snackbar =
-                                        Snackbar
-                                                .with(mContext)
-                                                .type(SnackbarType.MULTI_LINE)
-                                                .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
-                                                .position(Snackbar.SnackbarPosition.BOTTOM)
-                                                .margin(15, 15)
-                                                .backgroundDrawable(CoCoinUtil.GetSnackBarBackground(
-                                                        fragmentPosition - 2))
-                                                .text(text)
-                                                .textTypeface(CoCoinUtil.GetTypeface())
-                                                .textColor(Color.WHITE)
-                                                .actionLabelTypeface(CoCoinUtil.GetTypeface())
-                                                .actionLabel(mContext.getResources()
-                                                        .getString(R.string.check))
-                                                .actionColor(Color.WHITE)
-                                                .actionListener(new mActionClickListenerForHistogram());
-                                SnackbarManager.show(snackbar);
-                            }
+                                        dialogTitle = text;
+                                        Snackbar snackbar =
+                                                Snackbar
+                                                        .with(mContext)
+                                                        .type(SnackbarType.MULTI_LINE)
+                                                        .duration(Snackbar.SnackbarDuration.LENGTH_SHORT)
+                                                        .position(Snackbar.SnackbarPosition.BOTTOM)
+                                                        .margin(15, 15)
+                                                        .backgroundDrawable(CoCoinUtil.GetSnackBarBackground(
+                                                                fragmentPosition - 2))
+                                                        .text(text)
+                                                        .textTypeface(CoCoinUtil.GetTypeface())
+                                                        .textColor(Color.WHITE)
+                                                        .actionLabelTypeface(CoCoinUtil.GetTypeface())
+                                                        .actionLabel(mContext.getResources()
+                                                                .getString(R.string.check))
+                                                        .actionColor(Color.WHITE)
+                                                        .actionListener(new mActionClickListenerForHistogram());
+                                        SnackbarManager.show(snackbar);
+                                    }
 
-                            @Override
-                            public void onValueDeselected() {
+                                    @Override
+                                    public void onValueDeselected() {
 
-                            }
-                        });
+                                    }
+                                });
                     }
 
 // set the listener of the reset button/////////////////////////////////////////////////////////////
@@ -586,7 +581,7 @@ public class TodayViewRecyclerViewAdapter
                     holder.all.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            ((FragmentActivity)mContext).getSupportFragmentManager()
+                            ((FragmentActivity) mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
                                             mContext, allData, getAllDataDialogTitle()), "MyDialog")
@@ -617,10 +612,10 @@ public class TodayViewRecyclerViewAdapter
                         double spend = allData.get(position - 1).getMoney();
                         int tagId = allData.get(position - 1).getTag();
                         if ("zh".equals(CoCoinUtil.GetLanguage())) {
-                            subTitle = CoCoinUtil.GetSpendString((int)spend) +
+                            subTitle = CoCoinUtil.GetSpendString((int) spend) +
                                     "于" + CoCoinUtil.GetTagName(tagId);
                         } else {
-                            subTitle = "Spend " + (int)spend +
+                            subTitle = "Spend " + (int) spend +
                                     "in " + CoCoinUtil.GetTagName(tagId);
                         }
                         dialog = new MaterialDialog.Builder(mContext)
@@ -631,8 +626,8 @@ public class TodayViewRecyclerViewAdapter
                                 .positiveText(R.string.get)
                                 .show();
                         dialogView = dialog.getCustomView();
-                        TextView remark = (TextView)dialogView.findViewById(R.id.remark);
-                        TextView date = (TextView)dialogView.findViewById(R.id.date);
+                        TextView remark = (TextView) dialogView.findViewById(R.id.remark);
+                        TextView date = (TextView) dialogView.findViewById(R.id.date);
                         remark.setText(allData.get(position - 1).getRemark());
                         date.setText(allData.get(position - 1).getCalendarString());
                     }
@@ -642,117 +637,7 @@ public class TodayViewRecyclerViewAdapter
         }
     }
 
-// view holder class////////////////////////////////////////////////////////////////////////////////
-    public static class viewHolder extends RecyclerView.ViewHolder {
-        @Optional
-        @InjectView(R.id.date)
-        TextView date;
-        @Optional
-        @InjectView(R.id.date_bottom)
-        TextView dateBottom;
-        @Optional
-        @InjectView(R.id.expanse)
-        TextView expanseSum;
-        @Optional
-        @InjectView(R.id.empty_tip)
-        TextView emptyTip;
-        @Optional
-        @InjectView(R.id.chart_pie)
-        PieChartView pie;
-        @Optional
-        @InjectView(R.id.histogram)
-        ColumnChartView histogram;
-        @Optional
-        @InjectView(R.id.icon_left)
-        MaterialIconView iconLeft;
-        @Optional
-        @InjectView(R.id.icon_right)
-        MaterialIconView iconRight;
-        @Optional
-        @InjectView(R.id.histogram_icon_left)
-        MaterialIconView histogram_icon_left;
-        @Optional
-        @InjectView(R.id.histogram_icon_right)
-        MaterialIconView histogram_icon_right;
-        @Optional
-        @InjectView(R.id.icon_reset)
-        MaterialIconView reset;
-        @Optional
-        @InjectView(R.id.all)
-        MaterialIconView all;
-        @Optional
-        @InjectView(R.id.tag_image)
-        ImageView tagImage;
-        @Optional
-        @InjectView(R.id.money)
-        TextView money;
-        @Optional
-        @InjectView(R.id.cell_date)
-        TextView cell_date;
-        @Optional
-        @InjectView(R.id.remark)
-        TextView remark;
-        @Optional
-        @InjectView(R.id.index)
-        TextView index;
-        @Optional
-        @InjectView(R.id.material_ripple_layout)
-        MaterialRippleLayout layout;
-
-        viewHolder(View view) {
-            super(view);
-            ButterKnife.inject(this, view);
-        }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view , int position);
-    }
-
-// set the listener of the check button on the snack bar of pie/////////////////////////////////////
-    private class mActionClickListenerForPie implements ActionClickListener {
-        @Override
-        public void onActionClicked(Snackbar snackbar) {
-            List<CoCoinRecord> shownCoCoinRecords = Expanse.get(tagId);
-            ((FragmentActivity)mContext).getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(new RecordCheckDialogFragment(
-                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
-                    .commit();
-        }
-    }
-
-// set the listener of the check button on the snack bar of histogram///////////////////////////////
-    private class mActionClickListenerForHistogram implements ActionClickListener {
-        @Override
-        public void onActionClicked(Snackbar snackbar) {
-            ArrayList<CoCoinRecord> shownCoCoinRecords = new ArrayList<>();
-            int index = timeIndex;
-            if (axis_date == Calendar.DAY_OF_WEEK) {
-                if (CoCoinUtil.WEEK_START_WITH_SUNDAY) index++;
-                else
-                    if (index == 6) index = 1;
-                    else index += 2;
-            }
-            if (fragmentPosition == THIS_MONTH || fragmentPosition == LAST_MONTH) index++;
-            if (tagId != -1) {
-                for (int i = 0; i < Expanse.get(tagId).size(); i++)
-                    if (Expanse.get(tagId).get(i).getCalendar().get(axis_date) == index)
-                        shownCoCoinRecords.add(Expanse.get(tagId).get(i));
-            } else {
-                for (int i = 0; i < allData.size(); i++)
-                    if (allData.get(i).getCalendar().get(axis_date) == index)
-                        shownCoCoinRecords.add(allData.get(i));
-            }
-            ((FragmentActivity)mContext).getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(new RecordCheckDialogFragment(
-                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
-                    .commit();
-        }
-    }
-
-// set the dateString shown in snack bar in this fragment///////////////////////////////////////////
+    // set the dateString shown in snack bar in this fragment///////////////////////////////////////////
     private String getSnackBarDateString() {
         switch (fragmentPosition) {
             case TODAY:
@@ -831,7 +716,7 @@ public class TodayViewRecyclerViewAdapter
         }
     }
 
-// set the dateString of this fragment//////////////////////////////////////////////////////////////
+    // set the dateString of this fragment//////////////////////////////////////////////////////////////
     private void setDateString() {
         String basicTodayDateString;
         String basicYesterdayDateString;
@@ -917,9 +802,9 @@ public class TodayViewRecyclerViewAdapter
         String postfix;
         if ("zh".equals(CoCoinUtil.GetLanguage())) {
             prefix = mContext.getResources().getString(R.string.on);
-            postfix = CoCoinUtil.GetSpendString((int)Sum);
+            postfix = CoCoinUtil.GetSpendString((int) Sum);
         } else {
-            prefix = CoCoinUtil.GetSpendString((int)Sum);
+            prefix = CoCoinUtil.GetSpendString((int) Sum);
             postfix = "";
         }
         switch (fragmentPosition) {
@@ -949,6 +834,115 @@ public class TodayViewRecyclerViewAdapter
                         getString(R.string.last_year_date_string) + postfix;
             default:
                 return "";
+        }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
+    // view holder class////////////////////////////////////////////////////////////////////////////////
+    public static class viewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.date)
+        TextView date;
+
+        @BindView(R.id.date_bottom)
+        TextView dateBottom;
+
+        @BindView(R.id.expanse)
+        TextView expanseSum;
+
+        @BindView(R.id.empty_tip)
+        TextView emptyTip;
+
+        @BindView(R.id.chart_pie)
+        PieChartView pie;
+
+        @BindView(R.id.histogram)
+        ColumnChartView histogram;
+
+        @BindView(R.id.icon_left)
+        MaterialIconView iconLeft;
+
+        @BindView(R.id.icon_right)
+        MaterialIconView iconRight;
+
+        @BindView(R.id.histogram_icon_left)
+        MaterialIconView histogram_icon_left;
+
+        @BindView(R.id.histogram_icon_right)
+        MaterialIconView histogram_icon_right;
+
+        @BindView(R.id.icon_reset)
+        MaterialIconView reset;
+
+        @BindView(R.id.all)
+        MaterialIconView all;
+
+        @BindView(R.id.tag_image)
+        ImageView tagImage;
+
+        @BindView(R.id.money)
+        TextView money;
+
+        @BindView(R.id.cell_date)
+        TextView cell_date;
+
+        @BindView(R.id.remark)
+        TextView remark;
+
+        @BindView(R.id.index)
+        TextView index;
+
+        @BindView(R.id.material_ripple_layout)
+        MaterialRippleLayout layout;
+
+        viewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
+    }
+
+    // set the listener of the check button on the snack bar of pie/////////////////////////////////////
+    private class mActionClickListenerForPie implements ActionClickListener {
+        @Override
+        public void onActionClicked(Snackbar snackbar) {
+            List<CoCoinRecord> shownCoCoinRecords = Expanse.get(tagId);
+            ((FragmentActivity) mContext).getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(new RecordCheckDialogFragment(
+                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
+                    .commit();
+        }
+    }
+
+    // set the listener of the check button on the snack bar of histogram///////////////////////////////
+    private class mActionClickListenerForHistogram implements ActionClickListener {
+        @Override
+        public void onActionClicked(Snackbar snackbar) {
+            ArrayList<CoCoinRecord> shownCoCoinRecords = new ArrayList<>();
+            int index = timeIndex;
+            if (axis_date == Calendar.DAY_OF_WEEK) {
+                if (CoCoinUtil.WEEK_START_WITH_SUNDAY) index++;
+                else if (index == 6) index = 1;
+                else index += 2;
+            }
+            if (fragmentPosition == THIS_MONTH || fragmentPosition == LAST_MONTH) index++;
+            if (tagId != -1) {
+                for (int i = 0; i < Expanse.get(tagId).size(); i++)
+                    if (Expanse.get(tagId).get(i).getCalendar().get(axis_date) == index)
+                        shownCoCoinRecords.add(Expanse.get(tagId).get(i));
+            } else {
+                for (int i = 0; i < allData.size(); i++)
+                    if (allData.get(i).getCalendar().get(axis_date) == index)
+                        shownCoCoinRecords.add(allData.get(i));
+            }
+            ((FragmentActivity) mContext).getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(new RecordCheckDialogFragment(
+                            mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
+                    .commit();
         }
     }
 

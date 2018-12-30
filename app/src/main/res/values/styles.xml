@@ -1,7 +1,7 @@
 <resources
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme. -->
+     Base application theme.
     <style name="AppThemeMain" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
     </style>
@@ -15,9 +15,6 @@
 
     <style name="AppTheme" parent="AppBaseTheme">
 
-        <item name="md_medium_font">LatoLatin-Light.ttf</item>
-        <item name="md_regular_font">LatoLatin-Light.ttf</item>
-        <item name="md_dark_theme">false</item>
 
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
