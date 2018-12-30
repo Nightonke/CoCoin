@@ -34,23 +34,19 @@ import lecho.lib.hellocharts.view.LineChartView;
 
 public class SplashActivity extends Activity {
 
+    private final int NUMBER_OF_LINES = 1;
     private Context mContext;
-
     private LineChartView chart;
     private LineChartData data;
-
     private RevealFrameLayout reveal;
     private LinearLayout ly;
-
     private ImageView image;
     private TextView appName;
     private TextView loadingText;
-
     private boolean loadDataCompleted = false;
     private boolean showAnimationCompleted = false;
     private boolean activityStarted = false;
-
-    private final int NUMBER_OF_LINES = 1;
+    private boolean hasAnimationStarted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,14 +82,14 @@ public class SplashActivity extends Activity {
         data.setBaseValue(Float.NEGATIVE_INFINITY);
         chart.setLineChartData(data);
 
-        image = (ImageView)findViewById(R.id.image);
-        appName = (TextView)findViewById(R.id.app_name);
+        image = (ImageView) findViewById(R.id.image);
+        appName = (TextView) findViewById(R.id.app_name);
         appName.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
-        loadingText = (TextView)findViewById(R.id.loading_text);
+        loadingText = (TextView) findViewById(R.id.loading_text);
         loadingText.setTypeface(CoCoinUtil.getInstance().typefaceLatoLight);
 
-        reveal = (RevealFrameLayout)findViewById(R.id.reveal);
-        ly = (LinearLayout)findViewById(R.id.ly);
+        reveal = (RevealFrameLayout) findViewById(R.id.reveal);
+        ly = (LinearLayout) findViewById(R.id.ly);
 
         new InitData().execute();
     }
@@ -145,7 +141,6 @@ public class SplashActivity extends Activity {
         hasAnimationStarted = true;
     }
 
-    private boolean hasAnimationStarted;
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -165,6 +160,7 @@ public class SplashActivity extends Activity {
             CoCoinUtil.init(CoCoinApplication.getAppContext());
             return null;
         }
+
         @Override
         protected void onPostExecute(String result) {
             Log.d("CoCoin", "Loading Data completed");

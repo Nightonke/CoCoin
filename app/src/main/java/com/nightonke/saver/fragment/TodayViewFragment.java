@@ -2,10 +2,6 @@ package com.nightonke.saver.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,23 +20,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by 伟平 on 2015/10/20.
  */
 
 public class TodayViewFragment extends Fragment {
-
-    private int position;
-
-    private List<CoCoinRecord> list = new ArrayList<>();
-
-    private Context mContext;
-
-    private RecyclerView mRecyclerView;
-    private RecyclerViewMaterialAdapter mAdapter;
-    private RecyclerView.Adapter adapter;
-
-    private RecyclerView.LayoutManager layoutManager;
 
     static final int TODAY = 0;
     static final int YESTERDAY = 1;
@@ -50,6 +39,13 @@ public class TodayViewFragment extends Fragment {
     static final int LAST_MONTH = 5;
     static final int THIS_YEAR = 6;
     static final int LAST_YEAR = 7;
+    private int position;
+    private List<CoCoinRecord> list = new ArrayList<>();
+    private Context mContext;
+    private RecyclerView mRecyclerView;
+    private RecyclerViewMaterialAdapter mAdapter;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     public static TodayViewFragment newInstance(int position) {
         TodayViewFragment fragment = new TodayViewFragment();

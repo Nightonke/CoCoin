@@ -24,12 +24,12 @@
             android:layout_width="match_parent"
             >
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 app:contentInsetStart="0dp"
                 style="@style/Toolbar">
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <TextView
                 android:id="@+id/title"
@@ -81,7 +81,7 @@
                 android:background="#ffffff"
                 >
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"

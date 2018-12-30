@@ -1,7 +1,8 @@
 package com.nightonke.saver.adapter;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.activity.CoCoinApplication;
@@ -17,11 +18,11 @@ public class HelpFragmentAdapter extends FragmentStatePagerAdapter {
 
     private int position = 0;
 
-    public HelpFragmentAdapter(android.support.v4.app.FragmentManager fm) {
+    public HelpFragmentAdapter(FragmentManager fm) {
         super(fm);
     }
 
-    public HelpFragmentAdapter(android.support.v4.app.FragmentManager fm, int position) {
+    public HelpFragmentAdapter(FragmentManager fm, int position) {
         super(fm);
         this.position = position;
     }

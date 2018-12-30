@@ -9,11 +9,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -56,64 +51,21 @@ import com.rey.material.widget.RadioButton;
 
 import java.util.Calendar;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends AppCompatActivity
         implements
         TagChooseFragment.OnTagItemSelectedListener {
 
+    private static final float SHAKE_ACCELERATED_SPEED = 15;
     private final int SETTING_TAG = 0;
-
-    private Context mContext;
-
-    private View guillotineBackground;
-
-    private TextView toolBarTitle;
-    private TextView menuToolBarTitle;
-
-    private TextView passwordTip;
-
-    private SuperToast superToast;
-    private SuperActivityToast superActivityToast;
-
-    private MyGridView myGridView;
-    private ButtonGridViewAdapter myGridViewAdapter;
-
-    private LinearLayout transparentLy;
-    private LinearLayout guillotineColorLy;
-
-    private boolean isPassword = false;
-
-    private long RIPPLE_DURATION = 250;
-
-    private GuillotineAnimation animation;
-
-    private String inputPassword = "";
-
-    private float x1, y1, x2, y2;
-
-    private RadioButton radioButton0;
-    private RadioButton radioButton1;
-    private RadioButton radioButton2;
-    private RadioButton radioButton3;
-
-    private MaterialMenuView statusButton;
-
-    private LinearLayout radioButtonLy;
-
-    private View guillotineMenu;
-
-    private ViewPager tagViewPager;
-    private CoCoinScrollableViewPager editViewPager;
-    private FragmentPagerAdapter tagAdapter;
-    private FragmentPagerAdapter editAdapter;
-
-    private boolean isLoading;
-
-    private DummyOperation dummyOperation;
-
     private final int NO_TAG_TOAST = 0;
     private final int NO_MONEY_TOAST = 1;
     private final int PASSWORD_WRONG_TOAST = 2;
@@ -122,21 +74,92 @@ public class MainActivity extends AppCompatActivity
     private final int SAVE_FAILED_TOAST = 5;
     private final int PRESS_AGAIN_TO_EXIT = 6;
     private final int WELCOME_BACK = 7;
-
     boolean doubleBackToExitPressedOnce = false;
-
-    private Toolbar guillotineToolBar;
-
-    private AppUpdateManager appUpdateManager;
-
-    @InjectView(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @InjectView(R.id.root)
+    @BindView(R.id.root)
     FrameLayout root;
-    @InjectView(R.id.content_hamburger)
+    @BindView(R.id.content_hamburger)
     View contentHamburger;
-
+    private Context mContext;
+    private View guillotineBackground;
+    private TextView toolBarTitle;
+    private TextView menuToolBarTitle;
+    private TextView passwordTip;
+    private SuperToast superToast;
+    private SuperActivityToast superActivityToast;
+    private MyGridView myGridView;
+    private ButtonGridViewAdapter myGridViewAdapter;
+    private LinearLayout transparentLy;
+    private LinearLayout guillotineColorLy;
+    private boolean isPassword = false;
+    private long RIPPLE_DURATION = 250;
+    private GuillotineAnimation animation;
+    private String inputPassword = "";
+    private float x1, y1, x2, y2;
+    private RadioButton radioButton0;
+    private RadioButton radioButton1;
+    private RadioButton radioButton2;
+    private RadioButton radioButton3;
+    private MaterialMenuView statusButton;
+    private LinearLayout radioButtonLy;
+    private View guillotineMenu;
+    private ViewPager tagViewPager;
+    private CoCoinScrollableViewPager editViewPager;
+    private FragmentPagerAdapter tagAdapter;
+    private FragmentPagerAdapter editAdapter;
+    private boolean isLoading;
+    private DummyOperation dummyOperation;
+    private Toolbar guillotineToolBar;
+    private AppUpdateManager appUpdateManager;
     private SensorManager sensorManager;
+    private AdapterView.OnItemLongClickListener gridViewLongClickListener
+            = new AdapterView.OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+            if (!isLoading) {
+                buttonClickOperation(true, position);
+            }
+            return true;
+        }
+    };
+    private View.OnClickListener statusButtonOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            animation.close();
+        }
+    };
+    private AdapterView.OnItemClickListener gridViewClickListener
+            = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            if (!isLoading) {
+                buttonClickOperation(false, position);
+            }
+        }
+    };
+    private SensorEventListener listener = new SensorEventListener() {
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                if ((Math.abs(event.values[0]) > SHAKE_ACCELERATED_SPEED
+                        || Math.abs(event.values[1]) > SHAKE_ACCELERATED_SPEED
+                        || Math.abs(event.values[2]) > SHAKE_ACCELERATED_SPEED)) {
+                    if (!isPassword) {
+                        animation.open();
+                    } else {
+                        animation.close();
+                    }
+                }
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,15 +169,17 @@ public class MainActivity extends AppCompatActivity
 
         mContext = this;
 
+
 //        Bmob.initialize(CoCoinApplication.getAppContext(), CoCoin.APPLICATION_ID);
-//        CrashReport.initCrashReport(CoCoinApplication.getAppContext(), "900016815", false);
+//        CrashReport.initCrashReport
+// (CoCoinApplication.getAppContext(), "900016815", false);
 //        RecordManager.getInstance(CoCoinApplication.getAppContext());
 //        CoCoinUtil.init(CoCoinApplication.getAppContext());
 
         appUpdateManager = new AppUpdateManager(mContext);
         appUpdateManager.checkUpdateInfo(false);
 
-        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
         Sensor magneticSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         Sensor accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -175,7 +200,7 @@ public class MainActivity extends AppCompatActivity
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
-        } else{
+        } else {
             // do something for phones running an SDK before lollipop
         }
 
@@ -193,14 +218,14 @@ public class MainActivity extends AppCompatActivity
 
         guillotineBackground = findViewById(R.id.guillotine_background);
 
-        toolBarTitle = (TextView)findViewById(R.id.guillotine_title);
+        toolBarTitle = (TextView) findViewById(R.id.guillotine_title);
         toolBarTitle.setTypeface(CoCoinUtil.typefaceLatoLight);
         toolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
 // edit viewpager///////////////////////////////////////////////////////////////////////////////////
         editViewPager = (CoCoinScrollableViewPager) findViewById(R.id.edit_pager);
         editAdapter = new EditMoneyRemarkFragmentAdapter(getSupportFragmentManager(), CoCoinFragmentManager.MAIN_ACTIVITY_FRAGMENT);
-        
+
         editViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -227,7 +252,7 @@ public class MainActivity extends AppCompatActivity
         editViewPager.setAdapter(editAdapter);
 
 // tag viewpager////////////////////////////////////////////////////////////////////////////////////
-        tagViewPager = (ViewPager)findViewById(R.id.viewpager);
+        tagViewPager = (ViewPager) findViewById(R.id.viewpager);
 
         if (RecordManager.getInstance(mContext).TAGS.size() % 8 == 0)
             tagAdapter = new TagChooseFragmentAdapter(getSupportFragmentManager(), RecordManager.TAGS.size() / 8);
@@ -236,7 +261,7 @@ public class MainActivity extends AppCompatActivity
         tagViewPager.setAdapter(tagAdapter);
 
 // button grid view/////////////////////////////////////////////////////////////////////////////////
-        myGridView = (MyGridView)findViewById(R.id.gridview);
+        myGridView = (MyGridView) findViewById(R.id.gridview);
         myGridViewAdapter = new ButtonGridViewAdapter(this);
         myGridView.setAdapter(myGridViewAdapter);
 
@@ -258,7 +283,7 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
 
-        ButterKnife.inject(this);
+        ButterKnife.bind(this);
 
         if (toolbar != null) {
             setSupportActionBar(toolbar);
@@ -270,32 +295,32 @@ public class MainActivity extends AppCompatActivity
         guillotineMenu = LayoutInflater.from(this).inflate(R.layout.guillotine, null);
         root.addView(guillotineMenu);
 
-        transparentLy = (LinearLayout)guillotineMenu.findViewById(R.id.transparent_ly);
-        guillotineColorLy = (LinearLayout)guillotineMenu.findViewById(R.id.guillotine_color_ly);
-        guillotineToolBar = (Toolbar)guillotineMenu.findViewById(R.id.toolbar);
+        transparentLy = (LinearLayout) guillotineMenu.findViewById(R.id.transparent_ly);
+        guillotineColorLy = (LinearLayout) guillotineMenu.findViewById(R.id.guillotine_color_ly);
+        guillotineToolBar = (Toolbar) guillotineMenu.findViewById(R.id.toolbar);
 
-        menuToolBarTitle = (TextView)guillotineMenu.findViewById(R.id.guillotine_title);
+        menuToolBarTitle = (TextView) guillotineMenu.findViewById(R.id.guillotine_title);
         menuToolBarTitle.setTypeface(CoCoinUtil.typefaceLatoLight);
         menuToolBarTitle.setText(SettingManager.getInstance().getAccountBookName());
 
-        radioButton0 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_0);
-        radioButton1 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_1);
-        radioButton2 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_2);
-        radioButton3 = (RadioButton)guillotineMenu.findViewById(R.id.radio_button_3);
+        radioButton0 = (RadioButton) guillotineMenu.findViewById(R.id.radio_button_0);
+        radioButton1 = (RadioButton) guillotineMenu.findViewById(R.id.radio_button_1);
+        radioButton2 = (RadioButton) guillotineMenu.findViewById(R.id.radio_button_2);
+        radioButton3 = (RadioButton) guillotineMenu.findViewById(R.id.radio_button_3);
 
-        passwordTip = (TextView)guillotineMenu.findViewById(R.id.password_tip);
+        passwordTip = (TextView) guillotineMenu.findViewById(R.id.password_tip);
         passwordTip.setText(mContext.getResources().getString(R.string.password_tip));
         passwordTip.setTypeface(CoCoinUtil.typefaceLatoLight);
 
-        radioButtonLy = (LinearLayout)guillotineMenu.findViewById(R.id.radio_button_ly);
+        radioButtonLy = (LinearLayout) guillotineMenu.findViewById(R.id.radio_button_ly);
 
-        statusButton = (MaterialMenuView)guillotineMenu.findViewById(R.id.status_button);
+        statusButton = (MaterialMenuView) guillotineMenu.findViewById(R.id.status_button);
         statusButton.setState(MaterialMenuDrawable.IconState.ARROW);
 
         statusButton.setOnClickListener(statusButtonOnClickListener);
 
         animation = new GuillotineAnimation.GuillotineBuilder(guillotineMenu,
-                        guillotineMenu.findViewById(R.id.guillotine_hamburger), contentHamburger)
+                guillotineMenu.findViewById(R.id.guillotine_hamburger), contentHamburger)
                 .setStartDelay(RIPPLE_DURATION)
                 .setActionBarViewForAnimation(toolbar)
                 .setClosedOnStart(true)
@@ -342,18 +367,6 @@ public class MainActivity extends AppCompatActivity
             SettingManager.getInstance().setShowMainActivityGuide(false);
         }
     }
-
-    private AdapterView.OnItemLongClickListener gridViewLongClickListener
-            = new AdapterView.OnItemLongClickListener() {
-        @Override
-        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-            if (!isLoading) {
-                buttonClickOperation(true, position);
-            }
-            return true;
-        }
-    };
-
 
     private void checkPassword() {
         if (inputPassword.length() != 4) {
@@ -411,23 +424,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    private View.OnClickListener statusButtonOnClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            animation.close();
-        }
-    };
-
-    private AdapterView.OnItemClickListener gridViewClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            if (!isLoading) {
-                buttonClickOperation(false, position);
-            }
-        }
-    };
-
     private void buttonClickOperation(boolean longClick, int position) {
         if (editViewPager.getCurrentItem() == 1) return;
         if (!isPassword) {
@@ -449,8 +445,8 @@ public class MainActivity extends AppCompatActivity
                     } else {
                         CoCoinFragmentManager.mainActivityEditMoneyFragment.setNumberText(
                                 CoCoinFragmentManager.mainActivityEditMoneyFragment.getNumberText().toString()
-                                .substring(0, CoCoinFragmentManager.mainActivityEditMoneyFragment
-                                        .getNumberText().toString().length() - 1));
+                                        .substring(0, CoCoinFragmentManager.mainActivityEditMoneyFragment
+                                                .getNumberText().toString().length() - 1));
                         if (CoCoinFragmentManager.mainActivityEditMoneyFragment
                                 .getNumberText().toString().length() == 0) {
                             CoCoinFragmentManager.mainActivityEditMoneyFragment.setNumberText("0");
@@ -499,6 +495,7 @@ public class MainActivity extends AppCompatActivity
                 }
                 if (inputPassword.length() == 0) {
                     radioButton0.setChecked(true);
+
                     YoYo.with(Techniques.Bounce).delay(0).duration(1000).playOn(radioButton0);
                 } else if (inputPassword.length() == 1) {
                     radioButton1.setChecked(true);
@@ -522,7 +519,7 @@ public class MainActivity extends AppCompatActivity
             showToast(NO_TAG_TOAST);
         } else if (CoCoinFragmentManager.mainActivityEditMoneyFragment.getNumberText().toString().equals("0")) {
             showToast(NO_MONEY_TOAST);
-        } else  {
+        } else {
             Calendar calendar = Calendar.getInstance();
             CoCoinRecord coCoinRecord = new CoCoinRecord(
                     -1,
@@ -603,7 +600,7 @@ public class MainActivity extends AppCompatActivity
                 window.setStatusBarColor(ContextCompat.getColor(mContext, R.color.statusBarColor));
             }
 
-        } else{
+        } else {
             // do something for phones running an SDK before lollipop
         }
 
@@ -742,29 +739,5 @@ public class MainActivity extends AppCompatActivity
     public void onAnimationStart(int id) {
         // Todo add animation for changing tag
     }
-
-    private static final float SHAKE_ACCELERATED_SPEED = 15;
-    private SensorEventListener listener = new SensorEventListener() {
-
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                if ((Math.abs(event.values[0]) > SHAKE_ACCELERATED_SPEED
-                        || Math.abs(event.values[1]) > SHAKE_ACCELERATED_SPEED
-                        || Math.abs(event.values[2]) > SHAKE_ACCELERATED_SPEED)) {
-                    if (!isPassword) {
-                        animation.open();
-                    } else {
-                        animation.close();
-                    }
-                }
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
 
 }

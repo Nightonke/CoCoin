@@ -1,13 +1,12 @@
 package com.nightonke.saver.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
@@ -16,6 +15,9 @@ import com.nightonke.saver.activity.CoCoinApplication;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.util.CoCoinUtil;
 import com.rey.material.widget.RadioButton;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 
 /**
@@ -48,14 +50,14 @@ public class PasswordChangeFragment extends Fragment {
         View view = inflater.inflate(R.layout.password_state_fragment, container, false);
 
         fragmentPosition = getArguments().getInt("position");
-        CoCoinFragmentManager.passwordChangeFragment[fragmentPosition] = this ;
+        CoCoinFragmentManager.passwordChangeFragment[fragmentPosition] = this;
 
-        button0 = (RadioButton)view.findViewById(R.id.button0);
-        button1 = (RadioButton)view.findViewById(R.id.button1);
-        button2 = (RadioButton)view.findViewById(R.id.button2);
-        button3 = (RadioButton)view.findViewById(R.id.button3);
-        ly = (LinearLayout)view.findViewById(R.id.buttonLy);
-        passwordTip = (TextView)view.findViewById(R.id.password_tip);
+        button0 = (RadioButton) view.findViewById(R.id.button0);
+        button1 = (RadioButton) view.findViewById(R.id.button1);
+        button2 = (RadioButton) view.findViewById(R.id.button2);
+        button3 = (RadioButton) view.findViewById(R.id.button3);
+        ly = (LinearLayout) view.findViewById(R.id.buttonLy);
+        passwordTip = (TextView) view.findViewById(R.id.password_tip);
         passwordTip.setTypeface(CoCoinUtil.GetTypeface());
         switch (fragmentPosition) {
             case 0:

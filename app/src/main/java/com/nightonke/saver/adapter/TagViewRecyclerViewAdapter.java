@@ -2,8 +2,6 @@ package com.nightonke.saver.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +10,6 @@ import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.fragment.RecordCheckDialogFragment;
-import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.model.SettingManager;
@@ -34,9 +31,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.InjectView;
-import butterknife.Optional;
 import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
 import lecho.lib.hellocharts.listener.PieChartOnValueSelectListener;
 import lecho.lib.hellocharts.model.Axis;
@@ -275,8 +273,8 @@ public class TagViewRecyclerViewAdapter
                         return new viewHolder(view) {
                         };
                     case SUM_HISTOGRAM:
-                    view = LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.tag_list_view_histogram_body, parent, false);
+                        view = LayoutInflater.from(parent.getContext())
+                                .inflate(R.layout.tag_list_view_histogram_body, parent, false);
                         return new viewHolder(view) {
                         };
                 }
@@ -300,7 +298,7 @@ public class TagViewRecyclerViewAdapter
                     holder.from.setText(
                             mContext.getResources().getString(R.string.from) + " " +
                                     startYear + " " + CoCoinUtil.GetMonthShort(startMonth));
-                    holder.sum.setText(CoCoinUtil.GetInMoney((int)Sum));
+                    holder.sum.setText(CoCoinUtil.GetInMoney((int) Sum));
                     holder.to.setText(
                             mContext.getResources().getString(R.string.to) + " " +
                                     endYear + " " + CoCoinUtil.GetMonthShort(endMonth));
@@ -326,7 +324,7 @@ public class TagViewRecyclerViewAdapter
                                 AllTagExpanse.get(position - 1).entrySet()) {
                             if (entry.getValue() >= 1) {
                                 SliceValue sliceValue = new SliceValue(
-                                        (float)(double)entry.getValue(),
+                                        (float) (double) entry.getValue(),
                                         mContext.getResources().
                                                 getColor(CoCoinUtil.GetTagColorResource(entry.getKey())));
                                 sliceValue.setLabel(String.valueOf(entry.getKey()));
@@ -418,7 +416,7 @@ public class TagViewRecyclerViewAdapter
                                     new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + "");
-                            holder.expanse.setText(CoCoinUtil.GetInMoney((int)(double)SumList.get(position - 1)));
+                            holder.expanse.setText(CoCoinUtil.GetInMoney((int) (double) SumList.get(position - 1)));
                         }
                         if (type.get(position - 1).equals(SHOW_IN_MONTH)) {
                             Calendar tempCal = new GregorianCalendar(year, month - 1, 1);
@@ -458,7 +456,7 @@ public class TagViewRecyclerViewAdapter
                             holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + " " + CoCoinUtil.GetMonthShort(month));
-                            holder.expanse.setText(CoCoinUtil.GetInMoney((int)(double)SumList.get(position - 1)));
+                            holder.expanse.setText(CoCoinUtil.GetInMoney((int) (double) SumList.get(position - 1)));
                         }
 
                         holder.iconRight.setOnClickListener(new View.OnClickListener() {
@@ -468,11 +466,11 @@ public class TagViewRecyclerViewAdapter
                                     SelectedPosition[position]
                                             = (SelectedPosition[position] + 1) % columns.size();
                                 } while (holder.chart.getChartData().getColumns()
-                                         .get(SelectedPosition[position])
-                                         .getValues().size() == 0 ||
-                                         holder.chart.getChartData().getColumns()
-                                         .get(SelectedPosition[position])
-                                         .getValues().get(0).getValue() == 0);
+                                        .get(SelectedPosition[position])
+                                        .getValues().size() == 0 ||
+                                        holder.chart.getChartData().getColumns()
+                                                .get(SelectedPosition[position])
+                                                .getValues().get(0).getValue() == 0);
                                 SelectedValue selectedValue =
                                         new SelectedValue(
                                                 SelectedPosition[position],
@@ -490,11 +488,11 @@ public class TagViewRecyclerViewAdapter
                                             = (SelectedPosition[position] - 1 + columns.size())
                                             % columns.size();
                                 } while (holder.chart.getChartData().getColumns()
-                                         .get(SelectedPosition[position])
-                                         .getValues().size() == 0 ||
-                                         holder.chart.getChartData().getColumns()
-                                                 .get(SelectedPosition[position])
-                                         .getValues().get(0).getValue() == 0);
+                                        .get(SelectedPosition[position])
+                                        .getValues().size() == 0 ||
+                                        holder.chart.getChartData().getColumns()
+                                                .get(SelectedPosition[position])
+                                                .getValues().get(0).getValue() == 0);
                                 SelectedValue selectedValue =
                                         new SelectedValue(
                                                 SelectedPosition[position],
@@ -542,7 +540,7 @@ public class TagViewRecyclerViewAdapter
                                     new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + "");
-                            holder.expanse.setText(CoCoinUtil.GetInMoney((int)(double)SumList.get(position - 1)));
+                            holder.expanse.setText(CoCoinUtil.GetInMoney((int) (double) SumList.get(position - 1)));
 
                         }
                         if (type.get(position - 1).equals(SHOW_IN_MONTH)) {
@@ -591,7 +589,7 @@ public class TagViewRecyclerViewAdapter
                             holder.chart.setOnValueTouchListener(new ValueTouchListener(position - 1));
 
                             holder.date.setText(year + " " + CoCoinUtil.GetMonthShort(month));
-                            holder.expanse.setText(CoCoinUtil.GetInMoney((int)(double)SumList.get(position - 1)));
+                            holder.expanse.setText(CoCoinUtil.GetInMoney((int) (double) SumList.get(position - 1)));
                         }
 
                         holder.iconRight.setOnClickListener(new View.OnClickListener() {
@@ -601,11 +599,11 @@ public class TagViewRecyclerViewAdapter
                                     SelectedPosition[position]
                                             = (SelectedPosition[position] + 1) % columns.size();
                                 } while (holder.chart.getChartData().getColumns()
-                                         .get(SelectedPosition[position])
-                                         .getValues().size() == 0 ||
-                                         holder.chart.getChartData().getColumns()
-                                                 .get(SelectedPosition[position])
-                                         .getValues().get(0).getValue() == 0);
+                                        .get(SelectedPosition[position])
+                                        .getValues().size() == 0 ||
+                                        holder.chart.getChartData().getColumns()
+                                                .get(SelectedPosition[position])
+                                                .getValues().get(0).getValue() == 0);
                                 SelectedValue selectedValue =
                                         new SelectedValue(
                                                 SelectedPosition[position],
@@ -624,10 +622,10 @@ public class TagViewRecyclerViewAdapter
                                             % columns.size();
                                 } while (holder.chart.getChartData().getColumns()
                                         .get(SelectedPosition[position])
-                                         .getValues().size() == 0 ||
+                                        .getValues().size() == 0 ||
                                         holder.chart.getChartData().getColumns()
-                                         .get(SelectedPosition[position])
-                                         .getValues().get(0).getValue() == 0);
+                                                .get(SelectedPosition[position])
+                                                .getValues().get(0).getValue() == 0);
                                 SelectedValue selectedValue =
                                         new SelectedValue(
                                                 SelectedPosition[position],
@@ -643,37 +641,37 @@ public class TagViewRecyclerViewAdapter
     }
 
     public static class viewHolder extends RecyclerView.ViewHolder {
-        @Optional
-        @InjectView(R.id.from)
+
+        @BindView(R.id.from)
         TextView from;
-        @Optional
-        @InjectView(R.id.sum)
+
+        @BindView(R.id.sum)
         TextView sum;
-        @Optional
-        @InjectView(R.id.to)
+
+        @BindView(R.id.to)
         TextView to;
-        @Optional
-        @InjectView(R.id.chart_pie)
+
+        @BindView(R.id.chart_pie)
         PieChartView pie;
-        @Optional
-        @InjectView(R.id.chart)
+
+        @BindView(R.id.chart)
         ColumnChartView chart;
-        @Optional
-        @InjectView(R.id.date)
+
+        @BindView(R.id.date)
         TextView date;
-        @Optional
-        @InjectView(R.id.expanse)
+
+        @BindView(R.id.expanse)
         TextView expanse;
-        @Optional
-        @InjectView(R.id.icon_left)
+
+        @BindView(R.id.icon_left)
         MaterialIconView iconLeft;
-        @Optional
-        @InjectView(R.id.icon_right)
+
+        @BindView(R.id.icon_right)
         MaterialIconView iconRight;
 
         viewHolder(View view) {
             super(view);
-            ButterKnife.inject(this, view);
+            ButterKnife.bind(this, view);
         }
     }
 
@@ -734,7 +732,7 @@ public class TagViewRecyclerViewAdapter
                                     }
                                 }
                             }
-                            ((FragmentActivity)mContext).getSupportFragmentManager()
+                            ((FragmentActivity) mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
                                             mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
@@ -776,7 +774,7 @@ public class TagViewRecyclerViewAdapter
                                     }
                                 }
                             }
-                            ((FragmentActivity)mContext).getSupportFragmentManager()
+                            ((FragmentActivity) mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
                                             mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
@@ -826,7 +824,7 @@ public class TagViewRecyclerViewAdapter
                                     }
                                 }
                             }
-                            ((FragmentActivity)mContext).getSupportFragmentManager()
+                            ((FragmentActivity) mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
                                             mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
@@ -872,7 +870,7 @@ public class TagViewRecyclerViewAdapter
                                     }
                                 }
                             }
-                            ((FragmentActivity)mContext).getSupportFragmentManager()
+                            ((FragmentActivity) mContext).getSupportFragmentManager()
                                     .beginTransaction()
                                     .add(new RecordCheckDialogFragment(
                                             mContext, shownCoCoinRecords, dialogTitle), "MyDialog")
@@ -917,9 +915,9 @@ public class TagViewRecyclerViewAdapter
                 text = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
                         CoCoinUtil.GetPercentString(percent) + "\n" +
                         "于" + CoCoinUtil.GetTagName(tagId);
-                    dialogTitle = mContext.getResources().getString(R.string.in) + timeString +
-                            CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + "\n" +
-                            "于" + CoCoinUtil.GetTagName(tagId);
+                dialogTitle = mContext.getResources().getString(R.string.in) + timeString +
+                        CoCoinUtil.GetSpendString((int) sliceValue.getValue()) + "\n" +
+                        "于" + CoCoinUtil.GetTagName(tagId);
 
             } else {
                 text = CoCoinUtil.GetSpendString((int) sliceValue.getValue()) +
