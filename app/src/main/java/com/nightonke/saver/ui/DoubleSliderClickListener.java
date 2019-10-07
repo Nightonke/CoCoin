@@ -1,7 +1,5 @@
 package com.nightonke.saver.ui;
 
-import android.view.View;
-
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 
 /**

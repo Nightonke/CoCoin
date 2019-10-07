@@ -1,7 +1,5 @@
 package com.nightonke.saver.model;
 
-import java.io.File;
-
 import cn.bmob.v3.BmobObject;
 
 /**

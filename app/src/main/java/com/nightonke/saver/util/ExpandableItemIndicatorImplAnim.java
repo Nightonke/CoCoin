@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.nightonke.saver.R;
-
 import com.wnafee.vector.MorphButton;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)

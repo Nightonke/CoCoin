@@ -3,7 +3,6 @@ package com.nightonke.saver.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.github.johnpersano.supertoasts.SuperToast;
 import com.nightonke.saver.BuildConfig;
@@ -26,7 +25,6 @@ import java.util.Random;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.listener.DeleteListener;
 import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;

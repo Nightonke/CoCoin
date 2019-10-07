@@ -1,7 +1,6 @@
 package com.nightonke.saver.model;
 
 import cn.bmob.v3.BmobObject;
-import cn.bmob.v3.datatype.BmobDate;
 
 /**
  * Created by Weiping on 2016/1/27.
