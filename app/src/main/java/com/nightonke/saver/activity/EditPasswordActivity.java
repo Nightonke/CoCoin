@@ -27,7 +27,6 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.PasswordChangeButtonGridViewAdapter;
 import com.nightonke.saver.adapter.PasswordChangeFragmentAdapter;
 import com.nightonke.saver.fragment.CoCoinFragmentManager;
-import com.nightonke.saver.fragment.PasswordChangeFragment;
 import com.nightonke.saver.model.SettingManager;
 import com.nightonke.saver.model.User;
 import com.nightonke.saver.ui.FixedSpeedScroller;

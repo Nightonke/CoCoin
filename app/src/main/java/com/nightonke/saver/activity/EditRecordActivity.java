@@ -28,7 +28,6 @@ import com.nightonke.saver.fragment.TagChooseFragment;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.ui.CoCoinScrollableViewPager;
-import com.nightonke.saver.ui.CoCoinUnscrollableViewPager;
 import com.nightonke.saver.ui.MyGridView;
 import com.nightonke.saver.util.CoCoinUtil;
 

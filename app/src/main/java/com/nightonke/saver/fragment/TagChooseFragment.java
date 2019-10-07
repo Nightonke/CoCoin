@@ -2,28 +2,19 @@ package com.nightonke.saver.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.TagChooseGridViewAdapter;
-import com.nightonke.saver.model.CoCoin;
 import com.nightonke.saver.model.RecordManager;
 import com.nightonke.saver.ui.MyGridView;
-import com.nightonke.saver.util.CoCoinUtil;
 
 /**
  * Created by 伟平 on 2015/10/27.

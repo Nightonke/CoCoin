@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -21,8 +20,6 @@ import com.nightonke.saver.R;
 import com.nightonke.saver.adapter.RecordCheckDialogRecyclerViewAdapter;
 import com.nightonke.saver.model.CoCoinRecord;
 import com.nightonke.saver.util.CoCoinUtil;
-
-import org.w3c.dom.Text;
 
 import java.util.List;
 

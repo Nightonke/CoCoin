@@ -1,7 +1,6 @@
 package com.nightonke.saver.model;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.preference.PreferenceManager;
 
 import com.nightonke.saver.activity.CoCoinApplication;
