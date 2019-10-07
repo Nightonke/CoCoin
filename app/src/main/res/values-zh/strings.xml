@@ -153,10 +153,6 @@
     <string name="from_invalid">起始时间有误</string>
     <string name="to_invalid">结束时间有误</string>
 
-    <string name="account_book_name_hint">账本名字</string>
-    <string name="user_name_hint">用户名</string>
-    <string name="user_email_hint">邮箱</string>
-
     <string name="test_user_name">Nightonke</string>
     <string name="test_user_email">Nightonke@gmail.com</string>
 
@@ -170,20 +166,13 @@
     <string name="month_color_remind_type">提醒的颜色</string>
     <string name="month_forbidden">超出每月额度时无法记录</string>
 
-    <string name="auto_back_up">自动同步</string>
-
     <string name="account_book_name">账本名字</string>
 
     <string name="change_password">换个密码</string>
 
-    <string name="sort_tag">标签排序</string>
-
     <string name="whether_show_picture">在标签视图中显示图片</string>
 
     <string name="whether_show_circle">甜甜圈饼图</string>
-
-    <string name="default_user_name">您尚未登录！</string>
-    <string name="default_user_email">登录后可备份数据到云端，点我登录吧！</string>
 
     <string name="set_account_book_dialog_title">给账本来个名字！</string>
 
@@ -248,8 +237,6 @@
     <string name="network_disconnection">网络连接断开</string>
 
     <string name="user_name_or_password_incorrect">用户不存在或密码错误</string>
-    <string name="name_or_email_inexist">用户不存在</string>
-    <string name="password_wrong">密码错误！</string>
 
     <string name="log_out_successfully">登出成功！</string>
 
@@ -287,34 +274,18 @@
         请再输入一遍密码吧
     </string>
 
-    <string name="change_password_title">更改密码</string>
-
     <string name="remark_hint">添加备注</string>
 
-    <string name="save_successfully_online">保存并同步成功</string>
     <string name="save_successfully_locale">保存成功</string>
-    <string name="save_failed_online">保存成功\n上传至服务器失败</string>
     <string name="save_failed_locale">保存失败</string>
 
-    <string name="delete_successfully_online">删除成功</string>
     <string name="delete_successfully_locale">删除成功</string>
-    <string name="delete_failed_online">删除失败</string>
     <string name="delete_failed_locale">删除失败</string>
 
-    <string name="update_successfully_online">修改成功</string>
     <string name="update_successfully_locale">修改成功</string>
-    <string name="update_failed_online">修改成功</string>
     <string name="update_failed_locale">修改成功</string>
 
     <string name="guide">引导</string>
-
-    <string name="hey">嗨！</string>
-    <string name="thank">感谢您使用CoCoin。</string>
-    <string name="me">我是一名安卓开发者。</string>
-    <string name="github">项目已开源：github.com/Nightonke/CoCoin</string>
-    <string name="blog">博客：blog.csdn.net/u012925008</string>
-    <string name="email">邮箱：nightonke@outlook.com</string>
-    <string name="thank_again">如果有任何吐槽，就发邮件给我吧！</string>
 
     <string name="login_button">登录/注册</string>
     <string name="logout_button">注销</string>
@@ -370,7 +341,6 @@
     <string name="loaded">加载完成</string>
 
     <string name="update_title">更新</string>
-    <string name="update_content_too_old">您的CoCoin版本过旧，可能无法使用。</string>
     <string name="update_content">我们将为您带来更多的功能，您也可以在设置界面中手动更新。</string>
     <string name="update_never">此版本不提醒</string>
     <string name="update_cancel">取消</string>
@@ -441,22 +411,13 @@
     <string name="report_view_pie"> ● 标签饼图</string>
     <string name="report_view_line"> ● 时间折线图</string>
     <string name="report_view_highest_month"> ● 每月支出排序</string>
-    <string name="report_view_highest_month_show_more">显示更多</string>
-    <string name="report_view_highest_month_show_less">隐藏</string>
     <string name="report_view_highest_day"> ● 支出最多的日期</string>
     <string name="report_view_highest_day_show_more">显示更多</string>
-    <string name="report_view_highest_day_show_less">隐藏</string>
     <string name="report_view_lowest_day"> ● 支出最少的日期</string>
     <string name="report_view_lowest_day_show_more">显示更多</string>
-    <string name="report_view_lowest_day_show_less">隐藏</string>
     <string name="report_view_average_day"> ● 平均每日</string>
     <string name="report_view_average_month"> ● 平均每月</string>
     <string name="report_view_foot">支出报表</string>
-
-    <string name="help_cocoin_title">CoCoin</string>
-    <string name="help_feedback_title">反馈</string>
-    <string name="help_open_library_title">开源库</string>
-    <string name="help_me_title">我</string>
 
     <string name="help_cocoin_content_1"> ● CoCoin，一款多视图记账APP</string>
     <string name="help_cocoin_content_2">
@@ -508,17 +469,12 @@
     <string name="help_feedback_content_1"> ● 很高兴能收到您的反馈，如果您有非文本内容，可以发到我的电子邮箱：Nightonke@outlook.com.</string>
     <string name="help_feedback_content_2">让CoCoin变得更好</string>
     <string name="help_feedback_hint">您可以在此处编辑反馈</string>
-    <string name="help_feedback_edit">编辑</string>
     <string name="help_feedback_send">发送</string>
     <string name="help_feedback_dialog_title">字数不合法</string>
     <string name="help_feedback_dialog_content">您输入的反馈字数过多或过少(1~400).</string>
     <string name="help_feedback_sent">正在发送反馈</string>
     <string name="help_feedback_sent_fail">发送反馈失败！</string>
     <string name="help_feedback_sent_successfully">成功发送，谢谢您的反馈</string>
-    <string name="help_feedback_dialog_title_1">发送反馈</string>
-    <string name="help_feedback_dialog_content_1">您已经编辑了反馈但是并未发送，请问是否发送？</string>
-    <string name="help_feedback_dialog_send">发送</string>
-    <string name="help_feedback_dialog_dont_send">不发送</string>
 
     <string name="help_about_content_0"> ● 关于我</string>
     <string name="help_about_content_1">Nightonke</string>

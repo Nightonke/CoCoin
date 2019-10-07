@@ -9,10 +9,6 @@
     <style name="AppBaseTheme" parent="@style/Theme.AppCompat.Light">
     </style>
 
-    <style name="EditRecordActivityStyle" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/white</item>
-    </style>
-
     <style name="AppTheme" parent="AppBaseTheme">
 
         <item name="md_medium_font">LatoLatin-Light.ttf</item>
@@ -55,37 +51,6 @@
         <item name="color">@color/drawerArrowColor</item>
     </style>
 
-    <style name="LinearLayout" />
-
-    <style name="LinearLayout.GuillotineItem">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:layout_marginTop">@dimen/guillotine_small_margin</item>
-    </style>
-
-    <style name="TextView" />
-
-    <style name="TextView.ToolbarTitle">
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">24sp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
-
-    <style name="TextView.GuillotineItem">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">@dimen/guillotine_small_margin</item>
-        <item name="android:textSize">@dimen/guillotine_item_text_size</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="TextView.GuillotineItem.Selected">
-        <item name="android:textColor">@color/selected_item_color</item>
-    </style>
-
     <style name="Toolbar">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -94,24 +59,10 @@
         <item name="android:background">#2196F3</item>
     </style>
 
-    <style name="ImageView" />
-
-    <style name="ImageView.ContentItem">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_width">match_parent</item>
-    </style>
-
     <style name="ImageView.Hamburger" parent="Widget.AppCompat.ActionButton">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_marginBottom">@dimen/abc_action_bar_overflow_padding_start_material</item>
-    </style>
-
-    <style name="ImageView.GuillotineItem">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:layout_marginLeft">@dimen/guillotine_large_margin</item>
     </style>
 
     <style name="myRecyclerViewStyle">
@@ -126,56 +77,7 @@
         <item name="android:scrollbars">vertical</item>
     </style>
 
-    <style name="myListViewRecyclerViewStyle">
-        <!-- NOTE: clipChildren should be true on API level 10 -->
-        <item name="android:clipChildren">true</item>
-        <item name="android:clipToPadding">false</item>
-        <item name="android:paddingBottom">@dimen/activity_vertical_margin</item>
-        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
-        <item name="android:paddingRight">30dp</item>
-        <item name="android:paddingTop">@dimen/activity_vertical_margin</item>
-        <item name="android:scrollbarStyle">outsideOverlay</item>
-        <item name="android:scrollbars">vertical</item>
-    </style>
-
-    <style name="CoCoinMaterialSearchViewStyle">
-        <!-- Background for the search bar -->
-        <item name="searchBackground">@color/white</item>
-
-        <!-- Change voice icon -->
-        <item name="searchVoiceIcon">@drawable/ic_action_voice_search_inverted</item>
-
-        <!-- Change clear text icon -->
-        <item name="searchCloseIcon">@drawable/ic_action_navigation_close_inverted</item>
-
-        <!-- Change up icon -->
-        <item name="searchBackIcon">@drawable/ic_action_navigation_arrow_back_inverted</item>
-
-        <!-- Change icon for the suggestions -->
-        <item name="searchSuggestionIcon">@drawable/ic_suggestion</item>
-
-        <!-- Change background for the suggestions list view -->
-        <item name="searchSuggestionBackground">@android:color/white</item>
-
-        <!-- Change text color for edit text. This will also be the color of the cursor -->
-        <item name="android:textColor">@color/my_blue</item>
-
-        <!-- Change hint text color for edit text -->
-        <item name="android:textColorHint">@color/my_gray</item>
-
-        <!-- Hint for edit text -->
-        <item name="android:hint">@string/search_hint</item>
-    </style>
-
     <style name="commonListItemStyle">
-    </style>
-
-    <style name="draggerActivityStyle" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="settings_switch">
@@ -185,13 +87,6 @@
         <item name="sw_thumbElevation">1dp</item>
         <item name="sw_trackColor">@drawable/switch_track</item>
         <item name="sw_thumbColor">@drawable/switch_thumb</item>
-    </style>
-
-    <style name="SelectMonthYearDialog" parent="android:style/Theme.Dialog">
-        <item name="android:background">#00000000</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsFloating">true</item>
     </style>
 
 </resources>

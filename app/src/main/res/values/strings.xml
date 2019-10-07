@@ -1,19 +1,8 @@
 <resources>
     <string name="app_name">CoCoin</string>
     <string name="app_splash_name">CoCoin V1.2.0</string>
-    <string name="app_info">
-        CoCoin&#13;&#10;
-        Copyright © Nightonke
-    </string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-
-    <string name="profile">PROFILE</string>
-    <string name="feed">FEED</string>
-    <string name="activity">ACTIVITY</string>
     <string name="title_activity_account_book">AccountBook</string>
-    <string name="title_activity_tag_setting">TagSetting</string>
 
     <string name="custom_view">Custom view</string>
     <string name="tags_view">Tags view</string>
@@ -162,14 +151,9 @@
     <string name="undo">Undo</string>
 
     <string name="deleting">Delete this coCoinRecord</string>
-    <string name="title_activity_edit_record">EditRecordActivity</string>
 
     <string name="from_invalid">The starting time is invalid!</string>
     <string name="to_invalid">The ending time is invalid!</string>
-
-    <string name="account_book_name_hint">Account book title</string>
-    <string name="user_name_hint">User name</string>
-    <string name="user_email_hint">User email</string>
 
     <string name="test_user_name">Nightonke</string>
     <string name="test_user_email">Nightonke@gmail.com</string>
@@ -184,20 +168,13 @@
     <string name="month_color_remind_type">Remind color</string>
     <string name="month_forbidden">Forbidden coCoinRecord money when out of limit</string>
 
-    <string name="auto_back_up">Auto backup records</string>
-
     <string name="account_book_name">Name of account book</string>
 
     <string name="change_password">Change password</string>
 
-    <string name="sort_tag">Sort tags</string>
-
     <string name="whether_show_picture">Show pictures in tags view account book</string>
 
     <string name="whether_show_circle">Doughnut-shape pie chart</string>
-
-    <string name="default_user_name">You haven\'t logged on! After logging on, </string>
-    <string name="default_user_email">you can save your records to cloud. Click me to do so!</string>
 
     <string name="set_account_book_dialog_title">Name your account book!</string>
 
@@ -262,8 +239,6 @@
     <string name="network_disconnection">Network disconnection</string>
 
     <string name="user_name_or_password_incorrect">User doesn\'t exist or password incorrect!</string>
-    <string name="name_or_email_inexist">The user name or email doesn\'t exist!</string>
-    <string name="password_wrong">Password is incorrect!</string>
 
     <string name="log_out_successfully">Log out successfully!</string>
 
@@ -300,34 +275,18 @@
         Just input your password again!
     </string>
 
-    <string name="change_password_title">Change Password</string>
-
     <string name="remark_hint">Add remarks for your record</string>
 
-    <string name="save_successfully_online">Save and sync to cloud successfully!</string>
     <string name="save_successfully_locale">Save successfully!</string>
-    <string name="save_failed_online">Save successfully!\nSync to cloud failed!</string>
     <string name="save_failed_locale">Save failed!</string>
 
-    <string name="delete_successfully_online">Delete and sync to cloud successfully!</string>
     <string name="delete_successfully_locale">Delete successfully!</string>
-    <string name="delete_failed_online">Delete successfully!\nSync to cloud failed!</string>
     <string name="delete_failed_locale">Delete failed!</string>
 
-    <string name="update_successfully_online">Update and sync to cloud successfully!</string>
     <string name="update_successfully_locale">Update successfully!</string>
-    <string name="update_failed_online">Update successfully!\nSync to cloud failed!</string>
     <string name="update_failed_locale">Update failed!</string>
 
     <string name="guide">Guide</string>
-
-    <string name="hey">Hello!</string>
-    <string name="thank">Thanks for using CoCoin.</string>
-    <string name="me">I\'m an android developer.</string>
-    <string name="github">All codes here: github.com/Nightonke/CoCoin</string>
-    <string name="blog">Blog: blog.csdn.net/u012925008</string>
-    <string name="email">Email: nightonke@outlook.com</string>
-    <string name="thank_again">If you get any questions about CoCoin or me, just mail me!</string>
 
     <string name="login_button">Sign in/Sign up</string>
     <string name="logout_button">Sign out</string>
@@ -383,7 +342,6 @@
     <string name="loaded">Loading completed</string>
 
     <string name="update_title">Update</string>
-    <string name="update_content_too_old">Your CoCoin version is too old to use.</string>
     <string name="update_content">CoCoin, keep moving.</string>
     <string name="update_never">don\'t remind</string>
     <string name="update_cancel">cancel</string>
@@ -454,22 +412,13 @@
     <string name="report_view_pie"> ● Tag pie chart</string>
     <string name="report_view_line"> ● Time line chart</string>
     <string name="report_view_highest_month"> ● Sort of months</string>
-    <string name="report_view_highest_month_show_more">Click for more</string>
-    <string name="report_view_highest_month_show_less">Click to hide</string>
     <string name="report_view_highest_day"> ● Highest expense on days</string>
     <string name="report_view_highest_day_show_more">Click for more</string>
-    <string name="report_view_highest_day_show_less">Click to hide</string>
     <string name="report_view_lowest_day"> ● Lowest expense on days</string>
     <string name="report_view_lowest_day_show_more">Click for more</string>
-    <string name="report_view_lowest_day_show_less">Click to hide</string>
     <string name="report_view_average_day"> ● Day average</string>
     <string name="report_view_average_month"> ● Month average</string>
     <string name="report_view_foot">&#160;Expense Report</string>
-
-    <string name="help_cocoin_title">CoCoin</string>
-    <string name="help_feedback_title">Feedback</string>
-    <string name="help_open_library_title">Open Library</string>
-    <string name="help_me_title">Me</string>
 
     <string name="help_cocoin_content_1"> ● CoCoin, Multi-view Accounting Application</string>
     <string name="help_cocoin_content_2">
@@ -520,17 +469,12 @@
     <string name="help_feedback_content_1"> ● It\'s so nice to hear from you. If you wanna send me some images or other non-text feedback, my e-mail is Nightonke@outlook.com.</string>
     <string name="help_feedback_content_2">Let\'s improve CoCoin</string>
     <string name="help_feedback_hint">Write feedback here</string>
-    <string name="help_feedback_edit">Edit</string>
     <string name="help_feedback_send">Send</string>
     <string name="help_feedback_dialog_title">Words Invalid</string>
     <string name="help_feedback_dialog_content">The number of words is invalid(1~400).</string>
     <string name="help_feedback_sent">Sending feedback...</string>
     <string name="help_feedback_sent_fail">Send feedback failed!</string>
     <string name="help_feedback_sent_successfully">Send feedback successfully</string>
-    <string name="help_feedback_dialog_title_1">Send Feedback</string>
-    <string name="help_feedback_dialog_content_1">You have edited feedback but haven\'t sent. Would you like to send it?</string>
-    <string name="help_feedback_dialog_send">send</string>
-    <string name="help_feedback_dialog_dont_send">don\'t send</string>
 
     <string name="help_about_content_0"> ● About Me</string>
     <string name="help_about_content_1">Nightonke</string>

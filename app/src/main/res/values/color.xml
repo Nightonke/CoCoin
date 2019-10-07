@@ -3,26 +3,12 @@
     
     <color name="transparent">#00ffffff</color>
 
-    <color name="guillotine_background">#444153</color>
-    <color name="guillotine_background_dark">#383547</color>
-    <color name="selected_item_color">#30d1d5</color>
-
     <color name="white">#ffffff</color>
-
-    <color name="color_alizarin">#e74c3c</color>
-
-    <color name="book_loading_background">#2196F3</color>
-    <color name="book_loading_book">#ffffff</color>
-    <color name="book_loading_page">#2196F3</color>
-
-    <color name="status_bar">#2196F3</color>
 
     <color name="my_blue">#2196F3</color>
     <color name="my_gray">#616161</color>
     <color name="drawer_text">#212121</color>
     <color name="view_pager_background">#EEEEEE</color>
-
-    <color name="snack_bar">#03A9F4</color>
 
     <color name="sum_header_pie">#FF9800</color>
     <color name="sum_header_histogram">#2196F3</color>
@@ -58,32 +44,15 @@
     <color name="midnight_snack_header">#795548</color>
 
     <color name="correct_password">#8bc34a</color>
-    <color name="wrong_password">#E91E63</color>
 
     <color name="bg_item_normal_state">#fff0f0f0</color>
-    <color name="bg_item_dragging_state">#ffffdddd</color>
-    <color name="bg_item_dragging_active_state">#ffff9999</color>
     <color name="bg_item_swiping_state">#ffddddff</color>
-    <color name="bg_item_swiping_active_state">#ff9999ff</color>
-
-    <color name="bg_group_item_normal_state">#ffddffdd</color>
-    <color name="bg_group_item_normal_pressed_state">#ff99cc99</color>
-    <color name="bg_group_item_expanded_state">#ff88dd88</color>
-    <color name="bg_group_item_expanded_pressed_state">#ff99cc99</color>
-    <color name="bg_group_item_dragging_state">#ffeeccff</color>
-    <color name="bg_group_item_dragging_active_state">#ffee99ff</color>
-    <color name="bg_group_item_swiping_state">#ffddccff</color>
-    <color name="bg_group_item_swiping_active_state">#ffbb99ff</color>
 
     <color name="bg_swipe_item_neutral">#ffffffff</color>
     <color name="bg_swipe_item_pinned">#2196F3</color>
-    <color name="bg_swipe_item_dismiss">#ff2f8b2a</color>
     <color name="bg_swipe_group_item_pinned">#fff45f30</color>
     <color name="bg_swipe_group_item_dismiss">#ff295db3</color>
 
-    <color name="snackbar_action_color_done">#ffccccff</color>
-
-    <color name="fastScrollHandleColor">#FFF</color>
     <color name="fastScrollBarColor">#ffcecece</color>
 
     <color name="setting_ripple">#2196F3</color>
